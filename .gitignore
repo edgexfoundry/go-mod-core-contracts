@@ -1,0 +1,6 @@
+*~
+*.log
+glide.lock
+vendor
+.idea
+go.sum
