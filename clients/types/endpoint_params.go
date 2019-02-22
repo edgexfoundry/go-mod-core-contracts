@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  *******************************************************************************/
+
 package types
 
 // EndpointParams is a type that allows for the passing of common parameters to service clients
