@@ -31,9 +31,9 @@ import (
 
 // Test adding a device using the device client
 func TestAddDevice(t *testing.T) {
+
 	d := models.Device{
 		Id:             "1234",
-		Addressable:    models.Addressable{},
 		AdminState:     "UNLOCKED",
 		Name:           "Test name for device",
 		OperatingState: "ENABLED",
