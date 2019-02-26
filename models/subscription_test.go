@@ -58,7 +58,7 @@ func TestSubscription_String(t *testing.T) {
 		sub  *Subscription
 		want string
 	}{
-		{"test string empty subscription", &TestEmptySubscription, "{\"created\":0,\"modified\":0,\"origin\":0,\"id\":null}"},
+		{"test string empty subscription", &TestEmptySubscription, "{\"id\":null}"},
 		{"test subscription", &TestSubscription, "{\"created\":123,\"modified\":123,\"origin\":123,\"id\":null,\"slug\":\"test slug\",\"receiver\":\"test receiver\",\"description\":\"test description\",\"subscribedCategories\":[\"SW_HEALTH\"],\"subscribedLabels\":[\"test label\"],\"channels\":[{\"type\":\"EMAIL\",\"mailAddresses\":[\"jpwhite_mn@yahoo.com\",\"james_white2@dell.com\"]},{\"type\":\"REST\",\"url\":\"http://www.someendpoint.com/notifications\"}]}"},
 	}
 	for _, tt := range tests {

@@ -26,20 +26,20 @@ import (
  */
 type Command struct {
 	BaseObject `yaml:",inline"`
-	Id         string `json:"id"`
-	Name       string `json:"name" yaml:"name"` // Command name (unique on the profile)
-	Get        *Get   `json:"get" yaml:"get"`   // Get Command
-	Put        *Put   `json:"put" yaml:"put"`   // Put Command
+	Id         string `json:"id" yaml:"id,omitempty"`
+	Name       string `json:"name" yaml:"name,omitempty"` // Command name (unique on the profile)
+	Get        *Get   `json:"get" yaml:"get,omitempty"`   // Get Command
+	Put        *Put   `json:"put" yaml:"put,omitempty"`   // Put Command
 }
 
 // Custom marshaling for making empty strings null
 func (c Command) MarshalJSON() ([]byte, error) {
 	test := struct {
 		BaseObject
-		Id   *string `json:"id"`
-		Name *string `json:"name"` // Command name (unique on the profile)
-		Get  *Get    `json:"get"`  // Get Command
-		Put  *Put    `json:"put"`  // Put Command
+		Id   *string `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"` // Command name (unique on the profile)
+		Get  *Get    `json:"get,omitempty"`  // Get Command
+		Put  *Put    `json:"put,omitempty"`  // Put Command
 	}{
 		BaseObject: c.BaseObject,
 		Get:        c.Get,

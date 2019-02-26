@@ -57,7 +57,7 @@ func TestCommand_String(t *testing.T) {
 			"{\"created\":" + strconv.FormatInt(TestCommand.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(TestCommand.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestCommand.Origin, 10) +
-				",\"id\":null,\"name\":\"" + TestCommand.Name + "\"" +
+				",\"name\":\"" + TestCommand.Name + "\"" +
 				",\"get\":" + TestGet.String() +
 				",\"put\":" + TestPut.String() + "}"},
 	}

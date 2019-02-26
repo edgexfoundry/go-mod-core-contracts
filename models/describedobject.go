@@ -18,7 +18,7 @@ import "encoding/json"
 
 type DescribedObject struct {
 	BaseObject  `yaml:",inline"`
-	Description string `json:"description" yaml:"description"`
+	Description string `json:"description" yaml:"description,omitempty"`
 }
 
 /*

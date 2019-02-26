@@ -68,7 +68,6 @@ func TestDeviceProfile_String(t *testing.T) {
 				",\"modified\":" + strconv.FormatInt(TestDescribedObject.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestDescribedObject.Origin, 10) +
 				",\"description\":\"" + TestDescribedObject.Description + "\"" +
-				",\"id\":\"\"" +
 				",\"name\":\"" + TestProfileName + "\"" +
 				",\"manufacturer\":\"" + TestManufacturer + "\"" +
 				",\"model\":\"" + TestModel + "\"" +

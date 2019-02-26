@@ -27,17 +27,17 @@ import (
  * Response Struct
  */
 type Response struct {
-	Code           string   `json:"code" yaml:"code"`
-	Description    string   `json:"description" yaml:"description"`
-	ExpectedValues []string `json:"expectedValues" yaml:"expectedValues"`
+	Code           string   `json:"code" yaml:"code,omitempty"`
+	Description    string   `json:"description" yaml:"description,omitempty"`
+	ExpectedValues []string `json:"expectedValues" yaml:"expectedValues,omitempty"`
 }
 
 // Custom marshalling to make empty strings null
 func (r Response) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Code           *string  `json:"code"`
-		Description    *string  `json:"description"`
-		ExpectedValues []string `json:"expectedValues"`
+		Code           *string  `json:"code,omitempty"`
+		Description    *string  `json:"description,omitempty"`
+		ExpectedValues []string `json:"expectedValues,omitempty"`
 	}{
 		ExpectedValues: r.ExpectedValues,
 	}

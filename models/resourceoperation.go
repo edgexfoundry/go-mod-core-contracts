@@ -17,25 +17,25 @@ package models
 import "encoding/json"
 
 type ResourceOperation struct {
-	Index     string            `json:"index"`
-	Operation string            `json:"operation"`
-	Object    string            `json:"object"`
-	Parameter string            `json:"parameter"`
-	Resource  string            `json:"resource"`
-	Secondary []string          `json:"secondary"`
-	Mappings  map[string]string `json:"mappings"`
+	Index     string            `json:"index" yaml:"index,omitempty"`
+	Operation string            `json:"operation" yaml:"operation,omitempty"`
+	Object    string            `json:"object" yaml:"object,omitempty"`
+	Parameter string            `json:"parameter" yaml:"parameter,omitempty"`
+	Resource  string            `json:"resource" yaml:"resource,omitempty"`
+	Secondary []string          `json:"secondary" yaml:"secondary,omitempty"`
+	Mappings  map[string]string `json:"mappings" yaml:"mappings,omitempty"`
 }
 
 // Custom marshaling to make empty strings null
 func (ro ResourceOperation) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Index     *string           `json:"index"`
-		Operation *string           `json:"operation"`
-		Object    *string           `json:"object"`
-		Parameter *string           `json:"parameter"`
-		Resource  *string           `json:"resource"`
-		Secondary []string          `json:"secondary"`
-		Mappings  map[string]string `json:"mappings"`
+		Index     *string           `json:"index,omitempty"`
+		Operation *string           `json:"operation,omitempty"`
+		Object    *string           `json:"object,omitempty"`
+		Parameter *string           `json:"parameter,omitempty"`
+		Resource  *string           `json:"resource,omitempty"`
+		Secondary []string          `json:"secondary,omitempty"`
+		Mappings  map[string]string `json:"mappings,omitempty"`
 	}{
 		Secondary: ro.Secondary,
 		Mappings:  ro.Mappings,
