@@ -25,7 +25,7 @@ import (
 type GeneralClient interface {
 	FetchConfiguration(ctx context.Context) (string, error)
 	FetchMetrics(ctx context.Context) (string, error)
-	FetchHealth(ctx context.Context) (string, error)
+	FetchHealth(ctx context.Context, consulUrl string) (string, error)
 }
 
 type generalRestClient struct {
@@ -69,7 +69,7 @@ func (gc *generalRestClient) FetchMetrics(ctx context.Context) (string, error) {
 }
 
 //FetchHealth fetches health information from the service
-func (gc *generalRestClient) FetchHealth(ctx context.Context) (string, error) {
-	body, err := clients.GetRequest(gc.url+clients.ApiHealthRoute, ctx)
+func (gc *generalRestClient) FetchHealth(ctx context.Context, consulUrl string) (string, error) {
+	body, err := clients.GetRequest(consulUrl, ctx)
 	return string(body), err
 }
