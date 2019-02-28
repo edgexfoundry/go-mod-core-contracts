@@ -27,10 +27,14 @@ var TestLabels = []string{"MODBUS", "TEMP"}
 var TestLastConnected = int64(1000000)
 var TestLastReported = int64(1000000)
 var TestLocation = "{40lat;45long}"
-var TestDevice = Device{DescribedObject: TestDescribedObject, Name: TestDeviceName, AdminState: "UNLOCKED", OperatingState: "ENABLED", Addressable: TestAddressable, LastReported: TestLastReported, LastConnected: TestLastConnected, Labels: TestLabels, Location: TestLocation, Service: TestDeviceService, Profile: TestProfile}
+var TestProtocols = newTestProtocols()
+var TestDevice = Device{DescribedObject: TestDescribedObject, Name: TestDeviceName, AdminState: "UNLOCKED", OperatingState: "ENABLED",
+	Protocols: TestProtocols, LastReported: TestLastReported, LastConnected: TestLastConnected,
+	Labels: TestLabels, Location: TestLocation, Service: TestDeviceService, Profile: TestProfile, AutoEvents: newAutoEvent()}
 
 func TestDevice_MarshalJSON(t *testing.T) {
-	var testDeviceBytes = []byte(TestDevice.String())
+	marshaled := TestDevice.String()
+	testDeviceBytes := []byte(marshaled)
 
 	tests := []struct {
 		name    string
@@ -66,14 +70,17 @@ func TestDevice_String(t *testing.T) {
 				",\"modified\":" + strconv.FormatInt(TestDevice.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestDevice.Origin, 10) +
 				",\"description\":\"" + TestDescription + "\"" +
-				",\"id\":null,\"name\":\"" + TestDevice.Name + "\"" +
-				",\"adminState\":\"UNLOCKED\",\"operatingState\":\"ENABLED\",\"addressable\":" + TestAddressable.String() +
+				",\"name\":\"" + TestDevice.Name + "\"" +
+				",\"adminState\":\"UNLOCKED\",\"operatingState\":\"ENABLED\"" +
+				",\"protocols\":{\"modbus-ip\":{\"host\":\"localhost\",\"port\":\"1234\",\"unitID\":\"1\"}," +
+				"\"modbus-rtu\":{\"baudRate\":\"19200\",\"dataBits\":\"8\",\"parity\":\"0\",\"serialPort\":\"/dev/USB0\",\"stopBits\":\"1\",\"unitID\":\"2\"}}" +
 				",\"lastConnected\":" + strconv.FormatInt(TestLastConnected, 10) +
 				",\"lastReported\":" + strconv.FormatInt(TestLastReported, 10) +
 				",\"labels\":" + fmt.Sprint(string(labelSlice)) +
 				",\"location\":\"" + TestLocation + "\"" +
 				",\"service\":" + TestDevice.Service.String() +
 				",\"profile\":" + TestDevice.Profile.String() +
+				",\"autoEvents\":[" + TestAutoEvent.String() + "]" +
 				"}"},
 	}
 	for _, tt := range tests {
@@ -105,4 +112,31 @@ func TestDevice_AllAssociatedValueDescriptors(t *testing.T) {
 			}
 		})
 	}
+}
+
+func newTestProtocols() map[string]map[string]string {
+	p1 := make(map[string]string)
+	p1["host"] = "localhost"
+	p1["port"] = "1234"
+	p1["unitID"] = "1"
+
+	p2 := make(map[string]string)
+	p2["serialPort"] = "/dev/USB0"
+	p2["baudRate"] = "19200"
+	p2["dataBits"] = "8"
+	p2["stopBits"] = "1"
+	p2["parity"] = "0"
+	p2["unitID"] = "2"
+
+	wrap := make(map[string]map[string]string)
+	wrap["modbus-ip"] = p1
+	wrap["modbus-rtu"] = p2
+
+	return wrap
+}
+
+func newAutoEvent() []AutoEvent {
+	a := []AutoEvent{}
+	a = append(a, TestAutoEvent)
+	return a
 }
