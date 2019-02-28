@@ -67,8 +67,7 @@ func TestResourceOperation_String(t *testing.T) {
 				",\"object\":\"" + TestResourceObject + "\"" +
 				",\"parameter\":\"" + TestParameter + "\"" +
 				",\"resource\":\"" + TestResource + "\"" +
-				",\"secondary\":" + fmt.Sprint(string(secondarySlice)) +
-				",\"mappings\":{}}"},
+				",\"secondary\":" + fmt.Sprint(string(secondarySlice)) + "}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

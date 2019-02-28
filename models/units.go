@@ -17,17 +17,17 @@ package models
 import "encoding/json"
 
 type Units struct {
-	Type         string `json:"type"`
-	ReadWrite    string `json:"readWrite" yaml:"readWrite"`
-	DefaultValue string `json:"defaultValue" yaml:"defaultValue"`
+	Type         string `json:"type" yaml:"type,omitempty"`
+	ReadWrite    string `json:"readWrite" yaml:"readWrite,omitempty"`
+	DefaultValue string `json:"defaultValue" yaml:"defaultValue,omitempty"`
 }
 
 // Custom marshaling to make empty strings null
 func (u Units) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Type         *string `json:"type"`
-		ReadWrite    *string `json:"readWrite"`
-		DefaultValue *string `json:"defaultValue"`
+		Type         *string `json:"type,omitempty"`
+		ReadWrite    *string `json:"readWrite,omitempty"`
+		DefaultValue *string `json:"defaultValue,omitempty"`
 	}{}
 
 	// Empty strings are null

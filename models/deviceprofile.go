@@ -26,35 +26,37 @@ import (
  */
 type DeviceProfile struct {
 	DescribedObject `yaml:",inline"`
-	Id              string            `json:"id"`
-	Name            string            `json:"name" yaml:"name"`                 // Non-database identifier (must be unique)
-	Manufacturer    string            `json:"manufacturer" yaml:"manufacturer"` // Manufacturer of the device
-	Model           string            `json:"model" yaml:"model"`               // Model of the device
-	Labels          []string          `json:"labels" yaml:"labels,flow"`        // Labels used to search for groups of profiles
-	DeviceResources []DeviceResource  `json:"deviceResources" yaml:"deviceResources"`
-	Resources       []ProfileResource `json:"resources" yaml:"resources"`
-	Commands        []Command         `json:"commands" yaml:"commands"` // List of commands to Get/Put information for devices associated with this profile
+	Id              string            `json:"id" yaml:"id,omitempty"`
+	Name            string            `json:"name" yaml:"name,omitempty"`                 // Non-database identifier (must be unique)
+	Manufacturer    string            `json:"manufacturer" yaml:"manufacturer,omitempty"` // Manufacturer of the device
+	Model           string            `json:"model" yaml:"model,omitempty"`               // Model of the device
+	Labels          []string          `json:"labels" yaml:"labels,flow,omitempty"`        // Labels used to search for groups of profiles
+	DeviceResources []DeviceResource  `json:"deviceResources" yaml:"deviceResources,omitempty"`
+	Resources       []ProfileResource `json:"resources" yaml:"resources,omitempty"`
+	Commands        []Command         `json:"commands" yaml:"commands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 }
 
 // Custom marshaling so that empty strings and arrays are null
 func (dp DeviceProfile) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject
-		Id              string            `json:"id"`
-		Name            *string           `json:"name"`         // Non-database identifier (must be unique)
-		Manufacturer    *string           `json:"manufacturer"` // Manufacturer of the device
-		Model           *string           `json:"model"`        // Model of the device
-		Labels          []string          `json:"labels"`       // Labels used to search for groups of profiles
-		DeviceResources []DeviceResource  `json:"deviceResources"`
-		Resources       []ProfileResource `json:"resources"`
-		Commands        []Command         `json:"commands"` // List of commands to Get/Put information for devices associated with this profile
+		Id              *string           `json:"id,omitempty"`
+		Name            *string           `json:"name,omitempty"`         // Non-database identifier (must be unique)
+		Manufacturer    *string           `json:"manufacturer,omitempty"` // Manufacturer of the device
+		Model           *string           `json:"model,omitempty"`        // Model of the device
+		Labels          []string          `json:"labels,omitempty"`       // Labels used to search for groups of profiles
+		DeviceResources []DeviceResource  `json:"deviceResources,omitempty"`
+		Resources       []ProfileResource `json:"resources,omitempty"`
+		Commands        []Command         `json:"commands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 	}{
-		Id:              dp.Id,
 		Labels:          dp.Labels,
 		DescribedObject: dp.DescribedObject,
 	}
 
 	// Empty strings are null
+	if dp.Id != "" {
+		test.Id = &dp.Id
+	}
 	if dp.Name != "" {
 		test.Name = &dp.Name
 	}

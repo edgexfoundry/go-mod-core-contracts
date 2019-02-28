@@ -25,7 +25,7 @@ func TestBaseObject_String(t *testing.T) {
 		baseObject *BaseObject
 		want       string
 	}{
-		{"empty base", &EmptyBaseObject, "{\"created\":0,\"modified\":0,\"origin\":0}"},
+		{"empty base", &EmptyBaseObject, "{}"},
 		{"populated base", &TestBaseObject, "{\"created\":123,\"modified\":123,\"origin\":123}"},
 	}
 	for _, tt := range tests {

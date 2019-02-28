@@ -19,21 +19,21 @@ import (
 )
 
 type DeviceResource struct {
-	Description string                 `json:"description"`
-	Name        string                 `json:"name"`
-	Tag         string                 `json:"tag"`
+	Description string                 `json:"description" yaml:"description,omitempty"`
+	Name        string                 `json:"name" yaml:"name,omitempty"`
+	Tag         string                 `json:"tag" yaml:"tag,omitempty"`
 	Properties  ProfileProperty        `json:"properties" yaml:"properties"`
-	Attributes  map[string]interface{} `json:"attributes" yaml:"attributes"`
+	Attributes  map[string]interface{} `json:"attributes" yaml:"attributes,omitempty"`
 }
 
 // Custom marshaling to make empty strings null
 func (do DeviceResource) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Description *string                `json:"description"`
-		Name        *string                `json:"name"`
-		Tag         *string                `json:"tag"`
+		Description *string                `json:"description,omitempty"`
+		Name        *string                `json:"name,omitempty"`
+		Tag         *string                `json:"tag,omitempty"`
 		Properties  ProfileProperty        `json:"properties"`
-		Attributes  map[string]interface{} `json:"attributes"`
+		Attributes  map[string]interface{} `json:"attributes,omitempty"`
 	}{
 		Properties: do.Properties,
 	}

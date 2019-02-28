@@ -61,8 +61,7 @@ func TestDeviceResource_String(t *testing.T) {
 			"{\"description\":\"" + TestDeviceResourceDescription + "\"" +
 				",\"name\":\"" + TestDeviceResourceName + "\"" +
 				",\"tag\":\"" + TestDeviceResourceTag + "\"" +
-				",\"properties\":" + TestProfileProperty.String() +
-				",\"attributes\":null}"},
+				",\"properties\":" + TestProfileProperty.String() + "}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
