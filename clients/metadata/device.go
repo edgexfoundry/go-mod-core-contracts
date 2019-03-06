@@ -37,8 +37,6 @@ type DeviceClient interface {
 	DeviceForName(name string, ctx context.Context) (models.Device, error)
 	Devices(ctx context.Context) ([]models.Device, error)
 	DevicesByLabel(label string, ctx context.Context) ([]models.Device, error)
-	DevicesForAddressable(addressableid string, ctx context.Context) ([]models.Device, error)
-	DevicesForAddressableByName(addressableName string, ctx context.Context) ([]models.Device, error)
 	DevicesForProfile(profileid string, ctx context.Context) ([]models.Device, error)
 	DevicesForProfileByName(profileName string, ctx context.Context) ([]models.Device, error)
 	DevicesForService(serviceid string, ctx context.Context) ([]models.Device, error)
@@ -154,16 +152,6 @@ func (d *DeviceRestClient) DevicesForProfile(profileId string, ctx context.Conte
 // Get the devices for a profile (by name)
 func (d *DeviceRestClient) DevicesForProfileByName(profileName string, ctx context.Context) ([]models.Device, error) {
 	return d.requestDeviceSlice(d.url+"/profilename/"+url.QueryEscape(profileName), ctx)
-}
-
-// Get the devices for an addressable
-func (d *DeviceRestClient) DevicesForAddressable(addressableId string, ctx context.Context) ([]models.Device, error) {
-	return d.requestDeviceSlice(d.url+"/addressable/"+addressableId, ctx)
-}
-
-// Get the devices for an addressable (by name)
-func (d *DeviceRestClient) DevicesForAddressableByName(addressableName string, ctx context.Context) ([]models.Device, error) {
-	return d.requestDeviceSlice(d.url+"/addressablename/"+url.QueryEscape(addressableName), ctx)
 }
 
 // Add a device - handle error codes
