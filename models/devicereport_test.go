@@ -22,9 +22,10 @@ import (
 	"testing"
 )
 
+var TestIntervalaction = "Test Interval Action"
 var TestReportName = "Test Report.NAME"
 var TestReportExpected = []string{"vD1", "vD2"}
-var TestDeviceReport = DeviceReport{BaseObject: TestBaseObject, Name: TestReportName, Device: TestDeviceName, Event: TestScheduleEventName, Expected: TestReportExpected}
+var TestDeviceReport = DeviceReport{BaseObject: TestBaseObject, Name: TestReportName, Device: TestDeviceName, Action: TestIntervalaction, Expected: TestReportExpected}
 
 func TestDeviceReport_MarshalJSON(t *testing.T) {
 	var emptyDeviceReport = DeviceReport{}
@@ -68,7 +69,7 @@ func TestDeviceReport_String(t *testing.T) {
 				",\"id\":\"\"" +
 				",\"name\":\"" + TestReportName + "\"" +
 				",\"device\":\"" + TestDeviceName + "\"" +
-				",\"event\":\"" + TestScheduleEventName + "\"" +
+				",\"action\":\"" + TestIntervalaction + "\"" +
 				",\"expected\":" + fmt.Sprint(string(expectedlSlice)) +
 				"}"},
 	}

@@ -38,8 +38,6 @@ const (
 	ApiReadingRoute            = "/api/v1/reading"
 	ApiRegistrationRoute       = "/api/v1/registration"
 	ApiRegistrationByNameRoute = ApiRegistrationRoute + "/name"
-	ApiScheduleRoute           = "/api/v1/schedule"
-	ApiScheduleEventRoute      = "/api/v1/scheduleevent"
 	ApiSubscriptionRoute       = "/api/v1/subscription"
 	ApiTransmissionRoute       = "/api/v1/transmission"
 	ApiValueDescriptorRoute    = "/api/v1/valuedescriptor"

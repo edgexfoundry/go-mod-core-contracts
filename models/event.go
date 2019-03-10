@@ -31,7 +31,6 @@ type Event struct {
 	Created  int64     `json:"created"`
 	Modified int64     `json:"modified"`
 	Origin   int64     `json:"origin"`
-	Event    string    `json:"event"`    // Schedule event identifier
 	Readings []Reading `json:"readings"` // List of readings
 }
 
@@ -44,7 +43,6 @@ func (e Event) MarshalJSON() ([]byte, error) {
 		Created  int64     `json:"created,omitempty"`
 		Modified int64     `json:"modified,omitempty"`
 		Origin   int64     `json:"origin,omitempty"`
-		Event    *string   `json:"event,omitempty"`    // Schedule event identifier
 		Readings []Reading `json:"readings,omitempty"` // List of readings
 	}{
 		Pushed:   e.Pushed,
@@ -59,9 +57,6 @@ func (e Event) MarshalJSON() ([]byte, error) {
 	}
 	if e.Device != "" {
 		test.Device = &e.Device
-	}
-	if e.Event != "" {
-		test.Event = &e.Event
 	}
 
 	// Empty arrays are null
