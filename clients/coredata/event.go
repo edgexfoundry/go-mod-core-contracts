@@ -131,7 +131,7 @@ func (e *EventRestClient) EventsForDeviceAndValueDescriptor(deviceId string, vd 
 
 // Add event
 func (e *EventRestClient) Add(event *models.Event, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest(e.url, event, ctx)
+	return clients.PostRequest(e.url, []byte(event.String()), ctx)
 }
 
 // Delete event by id

@@ -15,6 +15,8 @@
 package models
 
 import (
+	"encoding/json"
+	"fmt"
 	"reflect"
 	"strconv"
 	"testing"
@@ -22,7 +24,8 @@ import (
 
 var TestValueDescriptorName = "Temperature"
 var TestValue = "45"
-var TestReading = Reading{Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: TestDeviceName, Name: TestValueDescriptorName, Value: TestValue}
+var TestBinaryValue = []byte{0xbf }
+var TestReading = Reading{Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: TestDeviceName, Name: TestValueDescriptorName, Value: TestValue, BinaryValue: TestBinaryValue}
 
 func TestReading_MarshalJSON(t *testing.T) {
 	var emptyReading = Reading{}
@@ -53,6 +56,7 @@ func TestReading_MarshalJSON(t *testing.T) {
 }
 
 func TestReading_String(t *testing.T) {
+	var binarySlice, _ = json.Marshal(TestReading.BinaryValue)
 	tests := []struct {
 		name string
 		r    Reading
@@ -66,6 +70,7 @@ func TestReading_String(t *testing.T) {
 				",\"device\":\"" + TestDeviceName + "\"" +
 				",\"name\":\"" + TestValueDescriptorName + "\"" +
 				",\"value\":\"" + TestValue + "\"" +
+				",\"binaryValue\":" + fmt.Sprint(string(binarySlice)) +
 				"}"},
 	}
 	for _, tt := range tests {

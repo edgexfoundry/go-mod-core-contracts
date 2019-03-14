@@ -126,7 +126,9 @@ func (dpc *DeviceProfileRestClient) Update(dp models.DeviceProfile, ctx context.
 }
 
 func (dpc *DeviceProfileRestClient) Upload(yamlString string, ctx context.Context) (string, error) {
-	return clients.PostRequest(dpc.url+"/upload", []byte(yamlString), clients.ContentYaml, ctx)
+	ctx = context.WithValue(ctx, clients.ContentType, clients.ContentTypeYAML)
+
+	return clients.PostRequest(dpc.url+"/upload", []byte(yamlString), ctx)
 }
 
 func (dpc *DeviceProfileRestClient) UploadFile(yamlFilePath string, ctx context.Context) (string, error) {

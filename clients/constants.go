@@ -58,3 +58,10 @@ const (
 	SystemManagementAgentServiceKey = "edgex-sys-mgmt-agent"
 	SupportSchedulerServiceKey      = "edgex-support-scheduler"
 )
+
+const (
+	ContentType     = "Content-Type"
+	ContentTypeCBOR = "application/cbor"
+	ContentTypeJSON = "application/json"
+	ContentTypeYAML = "application/x-yaml"
+)

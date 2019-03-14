@@ -30,12 +30,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-const (
-	ContentType = "Content-Type"
-	ContentJson = "application/json"
-	ContentYaml = "application/x-yaml"
-)
-
 // Helper method to get the body from the response after making the request
 func getBody(resp *http.Response) ([]byte, error) {
 	body, err := ioutil.ReadAll(resp.Body)
@@ -100,11 +94,18 @@ func PostJsonRequest(url string, data interface{}, ctx context.Context) (string,
 		return "", err
 	}
 
-	return PostRequest(url, jsonStr, ContentJson, ctx)
+	ctx = context.WithValue(ctx, ContentType, ContentTypeJSON)
+
+	return PostRequest(url, jsonStr, ctx)
 }
 
 // Helper method to make the post request and return the body
-func PostRequest(url string, data []byte, content string, ctx context.Context) (string, error) {
+func PostRequest(url string, data []byte, ctx context.Context) (string, error) {
+	content := fromContext(ContentType, ctx)
+	if content == "" {
+		content = ContentTypeJSON
+	}
+
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 	if err != nil {
 		return "", err
@@ -201,15 +202,17 @@ func PutRequest(url string, body []byte, ctx context.Context) (string, error) {
 
 	if body != nil {
 		req, err = http.NewRequest(http.MethodPut, url, bytes.NewReader(body))
+
+		content := fromContext(ContentType, ctx)
+		if content == "" {
+			content = ContentTypeJSON
+		}
+		req.Header.Set(ContentType, content)
 	} else {
 		req, err = http.NewRequest(http.MethodPut, url, nil)
 	}
 	if err != nil {
 		return "", err
-	}
-
-	if body != nil {
-		req.Header.Set(ContentType, ContentJson)
 	}
 
 	c := NewCorrelatedRequest(req, ctx)
