@@ -114,13 +114,13 @@ func TestDevice_AllAssociatedValueDescriptors(t *testing.T) {
 	}
 }
 
-func newTestProtocols() map[string]map[string]string {
-	p1 := make(map[string]string)
+func newTestProtocols() map[string]ProtocolProperties {
+	p1 := make(ProtocolProperties)
 	p1["host"] = "localhost"
 	p1["port"] = "1234"
 	p1["unitID"] = "1"
 
-	p2 := make(map[string]string)
+	p2 := make(ProtocolProperties)
 	p2["serialPort"] = "/dev/USB0"
 	p2["baudRate"] = "19200"
 	p2["dataBits"] = "8"
@@ -128,7 +128,7 @@ func newTestProtocols() map[string]map[string]string {
 	p2["parity"] = "0"
 	p2["unitID"] = "2"
 
-	wrap := make(map[string]map[string]string)
+	wrap := make(map[string]ProtocolProperties)
 	wrap["modbus-ip"] = p1
 	wrap["modbus-rtu"] = p2
 

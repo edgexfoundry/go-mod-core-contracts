@@ -26,36 +26,39 @@ import (
  */
 type Device struct {
 	DescribedObject
-	Id             string                       `json:"id"`
-	Name           string                       `json:"name"`           // Unique name for identifying a device
-	AdminState     AdminState                   `json:"adminState"`     // Admin state (locked/unlocked)
-	OperatingState OperatingState               `json:"operatingState"` // Operating state (enabled/disabled)
-	Protocols      map[string]map[string]string `json:"protocols"`      // A map of supported protocols for the given device
-	LastConnected  int64                        `json:"lastConnected"`  // Time (milliseconds) that the device last provided any feedback or responded to any request
-	LastReported   int64                        `json:"lastReported"`   // Time (milliseconds) that the device reported data to the core microservice
-	Labels         []string                     `json:"labels"`         // Other labels applied to the device to help with searching
-	Location       interface{}                  `json:"location"`       // Device service specific location (interface{} is an empty interface so it can be anything)
-	Service        DeviceService                `json:"service"`        // Associated Device Service - One per device
-	Profile        DeviceProfile                `json:"profile"`        // Associated Device Profile - Describes the device
-	AutoEvents     []AutoEvent                  `json:"autoEvents"`     // A list of auto-generated events coming from the device
+	Id             string                        `json:"id"`
+	Name           string                        `json:"name"`           // Unique name for identifying a device
+	AdminState     AdminState                    `json:"adminState"`     // Admin state (locked/unlocked)
+	OperatingState OperatingState                `json:"operatingState"` // Operating state (enabled/disabled)
+	Protocols      map[string]ProtocolProperties `json:"protocols"`      // A map of supported protocols for the given device
+	LastConnected  int64                         `json:"lastConnected"`  // Time (milliseconds) that the device last provided any feedback or responded to any request
+	LastReported   int64                         `json:"lastReported"`   // Time (milliseconds) that the device reported data to the core microservice
+	Labels         []string                      `json:"labels"`         // Other labels applied to the device to help with searching
+	Location       interface{}                   `json:"location"`       // Device service specific location (interface{} is an empty interface so it can be anything)
+	Service        DeviceService                 `json:"service"`        // Associated Device Service - One per device
+	Profile        DeviceProfile                 `json:"profile"`        // Associated Device Profile - Describes the device
+	AutoEvents     []AutoEvent                   `json:"autoEvents"`     // A list of auto-generated events coming from the device
 }
+
+// ProtocolProperties contains the device connection information in key/value pair
+type ProtocolProperties map[string]string
 
 // Custom marshaling to make empty strings null
 func (d Device) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject
-		Id             *string                      `json:"id,omitempty"`
-		Name           *string                      `json:"name,omitempty"`
-		AdminState     AdminState                   `json:"adminState,omitempty"`
-		OperatingState OperatingState               `json:"operatingState,omitempty"`
-		Protocols      map[string]map[string]string `json:"protocols,omitempty"`
-		LastConnected  int64                        `json:"lastConnected,omitempty"`
-		LastReported   int64                        `json:"lastReported,omitempty"`
-		Labels         []string                     `json:"labels,omitempty"`
-		Location       interface{}                  `json:"location,omitempty"`
-		Service        DeviceService                `json:"service,omitempty"`
-		Profile        DeviceProfile                `json:"profile,omitempty"`
-		AutoEvents     []AutoEvent                  `json:"autoEvents,omitempty"`
+		Id             *string                       `json:"id,omitempty"`
+		Name           *string                       `json:"name,omitempty"`
+		AdminState     AdminState                    `json:"adminState,omitempty"`
+		OperatingState OperatingState                `json:"operatingState,omitempty"`
+		Protocols      map[string]ProtocolProperties `json:"protocols,omitempty"`
+		LastConnected  int64                         `json:"lastConnected,omitempty"`
+		LastReported   int64                         `json:"lastReported,omitempty"`
+		Labels         []string                      `json:"labels,omitempty"`
+		Location       interface{}                   `json:"location,omitempty"`
+		Service        DeviceService                 `json:"service,omitempty"`
+		Profile        DeviceProfile                 `json:"profile,omitempty"`
+		AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty"`
 	}{
 		DescribedObject: d.DescribedObject,
 		AdminState:      d.AdminState,
