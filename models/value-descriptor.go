@@ -35,6 +35,7 @@ type ValueDescriptor struct {
 	UomLabel     string      `json:"uomLabel"`
 	Formatting   string      `json:"formatting"`
 	Labels       []string    `json:"labels"`
+	MediaType    string      `json:"mediaType,omitempty"`
 }
 
 // Custom marshaling to make empty strings null
@@ -53,6 +54,7 @@ func (v ValueDescriptor) MarshalJSON() ([]byte, error) {
 		UomLabel     *string      `json:"uomLabel,omitempty"`
 		Formatting   *string      `json:"formatting,omitempty"`
 		Labels       []string     `json:"labels,omitempty"`
+		MediaType    *string       `json:"mediaType,omitempty"`
 	}{
 		Created:  v.Created,
 		Modified: v.Modified,
@@ -87,6 +89,9 @@ func (v ValueDescriptor) MarshalJSON() ([]byte, error) {
 	}
 	if v.Formatting != "" {
 		test.Formatting = &v.Formatting
+	}
+	if v.MediaType != "" {
+		test.MediaType = &v.MediaType
 	}
 
 	return json.Marshal(test)

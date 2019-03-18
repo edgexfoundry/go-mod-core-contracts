@@ -31,7 +31,7 @@ var TestUoMLabel = "C"
 var TestDefaultValue = 32
 var TestFormatting = "%d"
 var TestVDLabels = []string{"temp", "room temp"}
-var TestValueDescriptor = ValueDescriptor{Created: 123, Modified: 123, Origin: 123, Name: TestVDName, Description: TestVDDescription, Min: TestMin, Max: TestMax, DefaultValue: TestDefaultValue, Formatting: TestFormatting, Labels: TestVDLabels, UomLabel: TestUoMLabel }
+var TestValueDescriptor = ValueDescriptor{Created: 123, Modified: 123, Origin: 123, Name: TestVDName, Description: TestVDDescription, Min: TestMin, Max: TestMax, DefaultValue: TestDefaultValue, Formatting: TestFormatting, Labels: TestVDLabels, UomLabel: TestUoMLabel, MediaType: TestMediaType }
 
 func TestValueDescriptor_MarshalJSON(t *testing.T) {
 	var resultTestVDBytes = []byte(TestValueDescriptor.String())
@@ -76,6 +76,7 @@ func TestValueDescriptor_String(t *testing.T) {
 				",\"uomLabel\":\"" + TestValueDescriptor.UomLabel + "\"" +
 				",\"formatting\":\"" + TestValueDescriptor.Formatting + "\"" +
 				",\"labels\":" + fmt.Sprint(string(labelSlice)) +
+				",\"mediaType\":\"" + TestValueDescriptor.MediaType + "\"" +
 			    "}"},
 	}
 	for _, tt := range tests {
