@@ -14,9 +14,14 @@
 
 package models
 
-import "testing"
+import (
+	"testing"
 
-var TestProfileProperty = ProfileProperty{Value: TestPropertyValue, Units: TestUnits}
+	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+)
+
+var TestMediaType = clients.ContentTypeCBOR
+var TestProfileProperty = ProfileProperty{Value: TestPropertyValue, Units: TestUnits, MediaType: TestMediaType}
 
 func TestProfileProperty_String(t *testing.T) {
 	tests := []struct {
@@ -26,7 +31,9 @@ func TestProfileProperty_String(t *testing.T) {
 	}{
 		{"profile property to string", TestProfileProperty,
 			"{\"value\":" + TestPropertyValue.String() +
-				",\"units\":" + TestUnits.String() + "}"},
+				",\"units\":" + TestUnits.String() +
+				",\"mediaType\":" + "\"" + TestMediaType + "\"" +
+				"}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
