@@ -16,6 +16,8 @@ package models
 
 import (
 	"encoding/json"
+
+	"github.com/ugorji/go/codec"
 )
 
 /*
@@ -25,13 +27,26 @@ import (
  * Event struct to hold event data
  */
 type Event struct {
-	ID       string    `json:"id"`
-	Pushed   int64     `json:"pushed"`
-	Device   string    `json:"device"` // Device identifier (name or id)
-	Created  int64     `json:"created"`
-	Modified int64     `json:"modified"`
-	Origin   int64     `json:"origin"`
-	Readings []Reading `json:"readings"` // List of readings
+	ID       string    `json:"id" codec:"omitempty"`
+	Pushed   int64     `json:"pushed" codec:"omitempty"`
+	Device   string    `json:"device" codec:"omitempty"` // Device identifier (name or id)
+	Created  int64     `json:"created" codec:"omitempty"`
+	Modified int64     `json:"modified" codec:"omitempty"`
+	Origin   int64     `json:"origin" codec:"omitempty"`
+	Readings []Reading `json:"readings" codec:"omitempty"` // List of readings
+}
+
+func encodeAsCBOR(e Event) ([]byte, error) {
+	var handle codec.CborHandle
+	var byteBuffer = make([]byte, 0, 64)
+	enc := codec.NewEncoderBytes(&byteBuffer, &handle)
+
+	err := enc.Encode(e)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return byteBuffer, nil
 }
 
 // Custom marshaling to make empty strings null
@@ -74,4 +89,13 @@ func (e Event) String() string {
 	}
 
 	return string(out)
+}
+
+func (e Event) CBOR() []byte {
+	cbor, err := encodeAsCBOR(e)
+	if err != nil {
+		return []byte{}
+	}
+
+	return cbor
 }

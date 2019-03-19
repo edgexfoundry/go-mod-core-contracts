@@ -131,7 +131,12 @@ func (e *EventRestClient) EventsForDeviceAndValueDescriptor(deviceId string, vd 
 
 // Add event
 func (e *EventRestClient) Add(event *models.Event, ctx context.Context) (string, error) {
-	return clients.PostRequest(e.url, []byte(event.String()), ctx)
+	content := clients.FromContext(clients.ContentType, ctx)
+	if content == clients.ContentTypeCBOR {
+		return clients.PostRequest(e.url, event.CBOR(), ctx)
+	} else {
+		return clients.PostJsonRequest(e.url, event, ctx)
+	}
 }
 
 // Delete event by id
