@@ -101,7 +101,7 @@ func PostJsonRequest(url string, data interface{}, ctx context.Context) (string,
 
 // Helper method to make the post request and return the body
 func PostRequest(url string, data []byte, ctx context.Context) (string, error) {
-	content := fromContext(ContentType, ctx)
+	content := FromContext(ContentType, ctx)
 	if content == "" {
 		content = ContentTypeJSON
 	}
@@ -203,7 +203,7 @@ func PutRequest(url string, body []byte, ctx context.Context) (string, error) {
 	if body != nil {
 		req, err = http.NewRequest(http.MethodPut, url, bytes.NewReader(body))
 
-		content := fromContext(ContentType, ctx)
+		content := FromContext(ContentType, ctx)
 		if content == "" {
 			content = ContentTypeJSON
 		}
@@ -273,7 +273,7 @@ type CorrelatedRequest struct {
 
 func NewCorrelatedRequest(req *http.Request, ctx context.Context) CorrelatedRequest {
 	c := CorrelatedRequest{Request: req}
-	correlation := fromContext(CorrelationHeader, ctx)
+	correlation := FromContext(CorrelationHeader, ctx)
 	if len(correlation) == 0 {
 		correlation = uuid.New().String()
 	}
