@@ -22,39 +22,41 @@ import (
  * Value Descriptor Struct
  */
 type ValueDescriptor struct {
-	Id           string      `json:"id"`
-	Created      int64       `json:"created"`
-	Description  string      `json:"description"`
-	Modified     int64       `json:"modified"`
-	Origin       int64       `json:"origin"`
-	Name         string      `json:"name"`
-	Min          interface{} `json:"min"`
-	Max          interface{} `json:"max"`
-	DefaultValue interface{} `json:"defaultValue"`
-	Type         string      `json:"type"`
-	UomLabel     string      `json:"uomLabel"`
-	Formatting   string      `json:"formatting"`
-	Labels       []string    `json:"labels"`
-	MediaType    string      `json:"mediaType,omitempty"`
+	Id            string      `json:"id"`
+	Created       int64       `json:"created"`
+	Description   string      `json:"description"`
+	Modified      int64       `json:"modified"`
+	Origin        int64       `json:"origin"`
+	Name          string      `json:"name"`
+	Min           interface{} `json:"min"`
+	Max           interface{} `json:"max"`
+	DefaultValue  interface{} `json:"defaultValue"`
+	Type          string      `json:"type"`
+	UomLabel      string      `json:"uomLabel"`
+	Formatting    string      `json:"formatting"`
+	Labels        []string    `json:"labels"`
+	MediaType     string      `json:"mediaType"`
+	FloatEncoding string      `json:"floatEncoding"`
 }
 
 // Custom marshaling to make empty strings null
 func (v ValueDescriptor) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Id           *string      `json:"id,omitempty"`
-		Created      int64        `json:"created,omitempty"`
-		Description  *string      `json:"description,omitempty"`
-		Modified     int64        `json:"modified,omitempty"`
-		Origin       int64        `json:"origin,omitempty"`
-		Name         *string      `json:"name,omitempty"`
-		Min          *interface{} `json:"min,omitempty"`
-		Max          *interface{} `json:"max,omitempty"`
-		DefaultValue *interface{} `json:"defaultValue,omitempty"`
-		Type         *string      `json:"type,omitempty"`
-		UomLabel     *string      `json:"uomLabel,omitempty"`
-		Formatting   *string      `json:"formatting,omitempty"`
-		Labels       []string     `json:"labels,omitempty"`
-		MediaType    *string       `json:"mediaType,omitempty"`
+		Id            *string      `json:"id,omitempty"`
+		Created       int64        `json:"created,omitempty"`
+		Description   *string      `json:"description,omitempty"`
+		Modified      int64        `json:"modified,omitempty"`
+		Origin        int64        `json:"origin,omitempty"`
+		Name          *string      `json:"name,omitempty"`
+		Min           *interface{} `json:"min,omitempty"`
+		Max           *interface{} `json:"max,omitempty"`
+		DefaultValue  *interface{} `json:"defaultValue,omitempty"`
+		Type          *string      `json:"type,omitempty"`
+		UomLabel      *string      `json:"uomLabel,omitempty"`
+		Formatting    *string      `json:"formatting,omitempty"`
+		Labels        []string     `json:"labels,omitempty"`
+		MediaType     *string      `json:"mediaType,omitempty"`
+		FloatEncoding *string      `json:"floatEncoding,omitempty"`
 	}{
 		Created:  v.Created,
 		Modified: v.Modified,
@@ -92,6 +94,9 @@ func (v ValueDescriptor) MarshalJSON() ([]byte, error) {
 	}
 	if v.MediaType != "" {
 		test.MediaType = &v.MediaType
+	}
+	if v.FloatEncoding != "" {
+		test.FloatEncoding = &v.FloatEncoding
 	}
 
 	return json.Marshal(test)

@@ -32,7 +32,8 @@ var TestPVOffset = "0.0"
 var TestPVBase = "0"
 var TestPVAssertion = "0"
 var TestPVPrecision = "1"
-var TestPropertyValue = PropertyValue{Type: TestPVType, ReadWrite: TestPVReadWrite, Minimum: TestPVMinimum, Maximum: TestPVMaximum, DefaultValue: TestPVDefaultValue, Size: TestPVSize, Mask: TestPVMask, Shift: TestPVShift, Scale: TestPVScale, Offset: TestPVOffset, Base: TestPVBase, Assertion: TestPVAssertion, Precision: TestPVPrecision}
+var TestPVFloatEncoding = "Base64"
+var TestPropertyValue = PropertyValue{Type: TestPVType, ReadWrite: TestPVReadWrite, Minimum: TestPVMinimum, Maximum: TestPVMaximum, DefaultValue: TestPVDefaultValue, Size: TestPVSize, Mask: TestPVMask, Shift: TestPVShift, Scale: TestPVScale, Offset: TestPVOffset, Base: TestPVBase, Assertion: TestPVAssertion, Precision: TestPVPrecision, FloatEncoding: TestPVFloatEncoding}
 
 func TestPropertyValue_MarshalJSON(t *testing.T) {
 	var emptyPropertyValue = PropertyValue{}
@@ -81,7 +82,8 @@ func TestPropertyValue_String(t *testing.T) {
 				",\"offset\":\"" + TestPVOffset + "\"" +
 				",\"base\":\"" + TestPVBase + "\"" +
 				",\"assertion\":\"" + TestPVAssertion + "\"" +
-				",\"precision\":\"" + TestPVPrecision + "\"}"},
+				",\"precision\":\"" + TestPVPrecision + "\"" +
+				",\"floatEncoding\":\"" + TestPVFloatEncoding + "\"}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
