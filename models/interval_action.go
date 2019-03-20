@@ -91,6 +91,9 @@ func (ia IntervalAction) MarshalJSON() ([]byte, error) {
 	if ia.Address != "" {
 		test.Address = &ia.Address
 	}
+	if ia.Path != "" {
+		test.Path = &ia.Path
+	}
 	if ia.Publisher != "" {
 		test.Publisher = &ia.Publisher
 	}
