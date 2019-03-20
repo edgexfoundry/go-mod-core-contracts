@@ -21,25 +21,25 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-// CommandClient : client to interact with core command
+// The CommandClient interface defines interactions with the EdgeX Core Command microservice.
 type CommandClient interface {
 	Get(id string, cID string, ctx context.Context) (string, error)
 	Put(id string, cID string, body string, ctx context.Context) (string, error)
 }
 
-type CommandRestClient struct {
+type commandRestClient struct {
 	url      string
 	endpoint clients.Endpointer
 }
 
-// NewCommandClient : Create an instance of CommandClient
+// NewCommandClient creates an instance of CommandClient
 func NewCommandClient(params types.EndpointParams, m clients.Endpointer) CommandClient {
-	c := CommandRestClient{endpoint: m}
+	c := commandRestClient{endpoint: m}
 	c.init(params)
 	return &c
 }
 
-func (c *CommandRestClient) init(params types.EndpointParams) {
+func (c *commandRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
 		ch := make(chan string, 1)
 		go c.endpoint.Monitor(params, ch)
@@ -56,13 +56,13 @@ func (c *CommandRestClient) init(params types.EndpointParams) {
 	}
 }
 
-// Get : issue GET command
-func (cc *CommandRestClient) Get(id string, cID string, ctx context.Context) (string, error) {
-	body, err := clients.GetRequest(cc.url+"/"+id+"/command/"+cID, ctx)
+// Get issues a GET command targeting the specified device, using the specified command
+func (cc *commandRestClient) Get(deviceId string, commandId string, ctx context.Context) (string, error) {
+	body, err := clients.GetRequest(cc.url+"/"+deviceId+"/command/"+commandId, ctx)
 	return string(body), err
 }
 
-// Put : Issue PUT command
-func (cc *CommandRestClient) Put(id string, cID string, body string, ctx context.Context) (string, error) {
-	return clients.PutRequest(cc.url+"/"+id+"/command/"+cID, []byte(body), ctx)
+// Put issues a PUT command targeting the specified device, using the specified command
+func (cc *commandRestClient) Put(deviceId string, commandId string, body string, ctx context.Context) (string, error) {
+	return clients.PutRequest(cc.url+"/"+deviceId+"/command/"+commandId, []byte(body), ctx)
 }
