@@ -23,8 +23,10 @@ import (
 
 // The CommandClient interface defines interactions with the EdgeX Core Command microservice.
 type CommandClient interface {
-	Get(id string, cID string, ctx context.Context) (string, error)
-	Put(id string, cID string, body string, ctx context.Context) (string, error)
+	// Get issues a GET command targeting the specified device, using the specified command
+	Get(deviceId string, commandId string, ctx context.Context) (string, error)
+	// Put issues a PUT command targeting the specified device, using the specified command
+	Put(deviceId string, commandId string, body string, ctx context.Context) (string, error)
 }
 
 type commandRestClient struct {
@@ -56,13 +58,11 @@ func (c *commandRestClient) init(params types.EndpointParams) {
 	}
 }
 
-// Get issues a GET command targeting the specified device, using the specified command
 func (cc *commandRestClient) Get(deviceId string, commandId string, ctx context.Context) (string, error) {
 	body, err := clients.GetRequest(cc.url+"/"+deviceId+"/command/"+commandId, ctx)
 	return string(body), err
 }
 
-// Put issues a PUT command targeting the specified device, using the specified command
 func (cc *commandRestClient) Put(deviceId string, commandId string, body string, ctx context.Context) (string, error) {
 	return clients.PutRequest(cc.url+"/"+deviceId+"/command/"+commandId, []byte(body), ctx)
 }
