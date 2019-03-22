@@ -100,7 +100,7 @@ func TestNewReadingClientWithConsul(t *testing.T) {
 
 	rc := NewReadingClient(params, mockReadingEndpoint{})
 
-	r, ok := rc.(*ReadingRestClient)
+	r, ok := rc.(*readingRestClient)
 	if !ok {
 		t.Error("rc is not of expected type")
 	}

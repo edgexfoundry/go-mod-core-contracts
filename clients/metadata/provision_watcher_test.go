@@ -87,7 +87,7 @@ func TestNewProvisionWatcherClientWithConsul(t *testing.T) {
 
 	sc := NewProvisionWatcherClient(params, MockEndpoint{})
 
-	r, ok := sc.(*ProvisionWatcherRestClient)
+	r, ok := sc.(*provisionWatcherRestClient)
 	if !ok {
 		t.Error("sc is not of expected type")
 	}

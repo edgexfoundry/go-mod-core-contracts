@@ -14,28 +14,36 @@
 
 package logger
 
+// MockLogger is a type that can be used for mocking the LoggingClient interface during unit tests
 type MockLogger struct {
 }
 
+// NewMockClient creates a mock instance of LoggingClient
 func NewMockClient() LoggingClient {
 	return MockLogger{}
 }
 
+// SetLogLevel simulates setting a log severity level
 func (lc MockLogger) SetLogLevel(loglevel string) error {
 	return nil
 }
 
+// Info simulates logging an entry at the INFO severity level
 func (lc MockLogger) Info(msg string, args ...interface{}) {
 }
 
+// Debug simulates logging an entry at the DEBUG severity level
 func (lc MockLogger) Debug(msg string, args ...interface{}) {
 }
 
+// Error simulates logging an entry at the ERROR severity level
 func (lc MockLogger) Error(msg string, args ...interface{}) {
 }
 
+// Trace simulates logging an entry at the TRACE severity level
 func (lc MockLogger) Trace(msg string, args ...interface{}) {
 }
 
+// Warn simulates logging an entry at the WARN severity level
 func (lc MockLogger) Warn(msg string, args ...interface{}) {
 }

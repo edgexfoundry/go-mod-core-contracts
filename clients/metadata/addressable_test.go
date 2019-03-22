@@ -39,7 +39,7 @@ func TestNewAddressableClientWithConsul(t *testing.T) {
 
 	ac := NewAddressableClient(params, MockEndpoint{})
 
-	r, ok := ac.(*AddressableRestClient)
+	r, ok := ac.(*addressableRestClient)
 	if !ok {
 		t.Error("sc is not of expected type")
 	}

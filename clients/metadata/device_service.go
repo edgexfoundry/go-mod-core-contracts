@@ -25,30 +25,33 @@ import (
 )
 
 /*
-Service client for interacting with the device service section of metadata
+DeviceServiceClient defines the interface for interactions with the DeviceService endpoint on the EdgeX Foundry
+core-metadata service.
 */
 type DeviceServiceClient interface {
+	// Add a new device service
 	Add(ds *models.DeviceService, ctx context.Context) (string, error)
+	// DeviceServiceForName loads a device service for the specified name
 	DeviceServiceForName(name string, ctx context.Context) (models.DeviceService, error)
+	// UpdateLastConnected updates a device service's last connected timestamp for the specified service ID
 	UpdateLastConnected(id string, time int64, ctx context.Context) error
+	// UpdateLastReported updates a device service's last reported timestamp for the specified service ID
 	UpdateLastReported(id string, time int64, ctx context.Context) error
 }
 
-type DeviceServiceRestClient struct {
+type deviceServiceRestClient struct {
 	url      string
 	endpoint clients.Endpointer
 }
 
-/*
-Return an instance of DeviceServiceClient
-*/
+// NewDeviceServiceClient creates an instance of DeviceServiceClient
 func NewDeviceServiceClient(params types.EndpointParams, m clients.Endpointer) DeviceServiceClient {
-	s := DeviceServiceRestClient{endpoint: m}
+	s := deviceServiceRestClient{endpoint: m}
 	s.init(params)
 	return &s
 }
 
-func (d *DeviceServiceRestClient) init(params types.EndpointParams) {
+func (d *deviceServiceRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
 		ch := make(chan string, 1)
 		go d.endpoint.Monitor(params, ch)
@@ -66,7 +69,7 @@ func (d *DeviceServiceRestClient) init(params types.EndpointParams) {
 }
 
 // Helper method to request and decode a device service
-func (s *DeviceServiceRestClient) requestDeviceService(url string, ctx context.Context) (models.DeviceService, error) {
+func (s *deviceServiceRestClient) requestDeviceService(url string, ctx context.Context) (models.DeviceService, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return models.DeviceService{}, err
@@ -77,24 +80,20 @@ func (s *DeviceServiceRestClient) requestDeviceService(url string, ctx context.C
 	return ds, err
 }
 
-// Update the last connected time for the device service
-func (s *DeviceServiceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
+func (s *deviceServiceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
 	_, err := clients.PutRequest(s.url+"/"+id+"/lastconnected/"+strconv.FormatInt(time, 10), nil, ctx)
 	return err
 }
 
-// Update the last reported time for the device service
-func (s *DeviceServiceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
+func (s *deviceServiceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
 	_, err := clients.PutRequest(s.url+"/"+id+"/lastreported/"+strconv.FormatInt(time, 10), nil, ctx)
 	return err
 }
 
-// Add a new deviceservice
-func (s *DeviceServiceRestClient) Add(ds *models.DeviceService, ctx context.Context) (string, error) {
+func (s *deviceServiceRestClient) Add(ds *models.DeviceService, ctx context.Context) (string, error) {
 	return clients.PostJsonRequest(s.url, ds, ctx)
 }
 
-// Request deviceservice for specified name
-func (s *DeviceServiceRestClient) DeviceServiceForName(name string, ctx context.Context) (models.DeviceService, error) {
+func (s *deviceServiceRestClient) DeviceServiceForName(name string, ctx context.Context) (models.DeviceService, error) {
 	return s.requestDeviceService(s.url+"/name/"+name, ctx)
 }

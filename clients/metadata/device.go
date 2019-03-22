@@ -26,47 +26,66 @@ import (
 )
 
 /*
-Device client for interacting with the device section of metadata
+DeviceClient defines the interface for interactions with the Device endpoint on the EdgeX Foundry core-metadata service.
 */
 type DeviceClient interface {
+	// Add creates a new device
 	Add(dev *models.Device, ctx context.Context) (string, error)
+	// Delete eliminates a device for the specified ID
 	Delete(id string, ctx context.Context) error
+	// DeleteByName eliminates a device for the specified name
 	DeleteByName(name string, ctx context.Context) error
+	// CheckForDevice will return a Device if one already exists for the specified device name
 	CheckForDevice(token string, ctx context.Context) (models.Device, error)
+	// Device loads the device for the specified ID
 	Device(id string, ctx context.Context) (models.Device, error)
+	// DeviceForName loads the device for the specified name
 	DeviceForName(name string, ctx context.Context) (models.Device, error)
+	// Devices lists all devices
 	Devices(ctx context.Context) ([]models.Device, error)
+	// DevicesByLabel lists all devices for the specified label
 	DevicesByLabel(label string, ctx context.Context) ([]models.Device, error)
+	// DevicesForProfile lists all devices for the specified profile ID
 	DevicesForProfile(profileid string, ctx context.Context) ([]models.Device, error)
+	// DevicesForProfileByName lists all devices for the specified profile name
 	DevicesForProfileByName(profileName string, ctx context.Context) ([]models.Device, error)
+	// DevicesForService lists all devices for the specified device service ID
 	DevicesForService(serviceid string, ctx context.Context) ([]models.Device, error)
+	// DevicesForServiceByName lists all devices for the specified device service name
 	DevicesForServiceByName(serviceName string, ctx context.Context) ([]models.Device, error)
+	// Update the specified device
 	Update(dev models.Device, ctx context.Context) error
+	// UpdateAdminState modifies a device's AdminState for the specified device ID
 	UpdateAdminState(id string, adminState string, ctx context.Context) error
+	// UpdateAdminStateByName modifies a device's AdminState according to the specified device name
 	UpdateAdminStateByName(name string, adminState string, ctx context.Context) error
+	// UpdateLastConnected updates a device's last connected timestamp according to the specified device ID
 	UpdateLastConnected(id string, time int64, ctx context.Context) error
+	// UpdateLastConnectedByName updates a device's last connected timestamp according to the specified device name
 	UpdateLastConnectedByName(name string, time int64, ctx context.Context) error
+	// UpdateLastReported updates a device's last reported timestamp according to the specified device ID
 	UpdateLastReported(id string, time int64, ctx context.Context) error
+	// UpdateLastReportedByName updates a device's last reported timestamp according to the specified device name
 	UpdateLastReportedByName(name string, time int64, ctx context.Context) error
+	// UpdateOpState updates a device's last OperatingState according to the specified device ID
 	UpdateOpState(id string, opState string, ctx context.Context) error
+	// UpdateOpStateByName updates a device's last OperatingState according to the specified device name
 	UpdateOpStateByName(name string, opState string, ctx context.Context) error
 }
 
-type DeviceRestClient struct {
+type deviceRestClient struct {
 	url      string
 	endpoint clients.Endpointer
 }
 
-/*
-Return an instance of DeviceClient
-*/
+// NewDeviceClient creates an instance of DeviceClient
 func NewDeviceClient(params types.EndpointParams, m clients.Endpointer) DeviceClient {
-	d := DeviceRestClient{endpoint: m}
+	d := deviceRestClient{endpoint: m}
 	d.init(params)
 	return &d
 }
 
-func (d *DeviceRestClient) init(params types.EndpointParams) {
+func (d *deviceRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
 		ch := make(chan string, 1)
 		go d.endpoint.Monitor(params, ch)
@@ -84,7 +103,7 @@ func (d *DeviceRestClient) init(params types.EndpointParams) {
 }
 
 // Helper method to request and decode a device
-func (d *DeviceRestClient) requestDevice(url string, ctx context.Context) (models.Device, error) {
+func (d *deviceRestClient) requestDevice(url string, ctx context.Context) (models.Device, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return models.Device{}, err
@@ -96,7 +115,7 @@ func (d *DeviceRestClient) requestDevice(url string, ctx context.Context) (model
 }
 
 // Helper method to request and decode a device slice
-func (d *DeviceRestClient) requestDeviceSlice(url string, ctx context.Context) ([]models.Device, error) {
+func (d *deviceRestClient) requestDeviceSlice(url string, ctx context.Context) ([]models.Device, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return []models.Device{}, err
@@ -107,117 +126,94 @@ func (d *DeviceRestClient) requestDeviceSlice(url string, ctx context.Context) (
 	return dSlice, err
 }
 
-//Use the models.Event.Device property for the supplied token parameter.
-//The above property is currently double-purposed and needs to be refactored.
-//This call replaces the previous two calls necessary to lookup a device by id followed by name.
-func (d *DeviceRestClient) CheckForDevice(token string, ctx context.Context) (models.Device, error) {
+func (d *deviceRestClient) CheckForDevice(token string, ctx context.Context) (models.Device, error) {
 	return d.requestDevice(d.url+"/check/"+token, ctx)
 }
 
-// Get the device by id
-func (d *DeviceRestClient) Device(id string, ctx context.Context) (models.Device, error) {
+func (d *deviceRestClient) Device(id string, ctx context.Context) (models.Device, error) {
 	return d.requestDevice(d.url+"/"+id, ctx)
 }
 
-// Get a list of all devices
-func (d *DeviceRestClient) Devices(ctx context.Context) ([]models.Device, error) {
+func (d *deviceRestClient) Devices(ctx context.Context) ([]models.Device, error) {
 	return d.requestDeviceSlice(d.url, ctx)
 }
 
-// Get the device by name
-func (d *DeviceRestClient) DeviceForName(name string, ctx context.Context) (models.Device, error) {
+func (d *deviceRestClient) DeviceForName(name string, ctx context.Context) (models.Device, error) {
 	return d.requestDevice(d.url+"/name/"+url.QueryEscape(name), ctx)
 }
 
-// Get the device by label
-func (d *DeviceRestClient) DevicesByLabel(label string, ctx context.Context) ([]models.Device, error) {
+func (d *deviceRestClient) DevicesByLabel(label string, ctx context.Context) ([]models.Device, error) {
 	return d.requestDeviceSlice(d.url+"/label/"+url.QueryEscape(label), ctx)
 }
 
-// Get the devices that are on a service
-func (d *DeviceRestClient) DevicesForService(serviceId string, ctx context.Context) ([]models.Device, error) {
+func (d *deviceRestClient) DevicesForService(serviceId string, ctx context.Context) ([]models.Device, error) {
 	return d.requestDeviceSlice(d.url+"/service/"+serviceId, ctx)
 }
 
-// Get the devices that are on a service(by name)
-func (d *DeviceRestClient) DevicesForServiceByName(serviceName string, ctx context.Context) ([]models.Device, error) {
+func (d *deviceRestClient) DevicesForServiceByName(serviceName string, ctx context.Context) ([]models.Device, error) {
 	return d.requestDeviceSlice(d.url+"/servicename/"+url.QueryEscape(serviceName), ctx)
 }
 
-// Get the devices for a profile
-func (d *DeviceRestClient) DevicesForProfile(profileId string, ctx context.Context) ([]models.Device, error) {
+func (d *deviceRestClient) DevicesForProfile(profileId string, ctx context.Context) ([]models.Device, error) {
 	return d.requestDeviceSlice(d.url+"/profile/"+profileId, ctx)
 }
 
-// Get the devices for a profile (by name)
-func (d *DeviceRestClient) DevicesForProfileByName(profileName string, ctx context.Context) ([]models.Device, error) {
+func (d *deviceRestClient) DevicesForProfileByName(profileName string, ctx context.Context) ([]models.Device, error) {
 	return d.requestDeviceSlice(d.url+"/profilename/"+url.QueryEscape(profileName), ctx)
 }
 
-// Add a device - handle error codes
-func (d *DeviceRestClient) Add(dev *models.Device, ctx context.Context) (string, error) {
+func (d *deviceRestClient) Add(dev *models.Device, ctx context.Context) (string, error) {
 	return clients.PostJsonRequest(d.url, dev, ctx)
 }
 
-// Update a device - handle error codes
-func (d *DeviceRestClient) Update(dev models.Device, ctx context.Context) error {
+func (d *deviceRestClient) Update(dev models.Device, ctx context.Context) error {
 	return clients.UpdateRequest(d.url, dev, ctx)
 }
 
-// Update the lastConnected value for a device (specified by id)
-func (d *DeviceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
+func (d *deviceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
 	_, err := clients.PutRequest(d.url+"/"+id+"/lastconnected/"+strconv.FormatInt(time, 10), nil, ctx)
 	return err
 }
 
-// Update the lastConnected value for a device (specified by name)
-func (d *DeviceRestClient) UpdateLastConnectedByName(name string, time int64, ctx context.Context) error {
+func (d *deviceRestClient) UpdateLastConnectedByName(name string, time int64, ctx context.Context) error {
 	_, err := clients.PutRequest(d.url+"/name/"+url.QueryEscape(name)+"/lastconnected/"+strconv.FormatInt(time, 10), nil, ctx)
 	return err
 }
 
-// Update the lastReported value for a device (specified by id)
-func (d *DeviceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
+func (d *deviceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
 	_, err := clients.PutRequest(d.url+"/"+id+"/lastreported/"+strconv.FormatInt(time, 10), nil, ctx)
 	return err
 }
 
-// Update the lastReported value for a device (specified by name)
-func (d *DeviceRestClient) UpdateLastReportedByName(name string, time int64, ctx context.Context) error {
+func (d *deviceRestClient) UpdateLastReportedByName(name string, time int64, ctx context.Context) error {
 	_, err := clients.PutRequest(d.url+"/name/"+url.QueryEscape(name)+"/lastreported/"+strconv.FormatInt(time, 10), nil, ctx)
 	return err
 }
 
-// Update the opState value for a device (specified by id)
-func (d *DeviceRestClient) UpdateOpState(id string, opState string, ctx context.Context) error {
+func (d *deviceRestClient) UpdateOpState(id string, opState string, ctx context.Context) error {
 	_, err := clients.PutRequest(d.url+"/"+id+"/opstate/"+opState, nil, ctx)
 	return err
 }
 
-// Update the opState value for a device (specified by name)
-func (d *DeviceRestClient) UpdateOpStateByName(name string, opState string, ctx context.Context) error {
+func (d *deviceRestClient) UpdateOpStateByName(name string, opState string, ctx context.Context) error {
 	_, err := clients.PutRequest(d.url+"/name/"+url.QueryEscape(name)+"/opstate/"+opState, nil, ctx)
 	return err
 }
 
-// Update the adminState value for a device (specified by id)
-func (d *DeviceRestClient) UpdateAdminState(id string, adminState string, ctx context.Context) error {
+func (d *deviceRestClient) UpdateAdminState(id string, adminState string, ctx context.Context) error {
 	_, err := clients.PutRequest(d.url+"/"+id+"/adminstate/"+adminState, nil, ctx)
 	return err
 }
 
-// Update the adminState value for a device (specified by name)
-func (d *DeviceRestClient) UpdateAdminStateByName(name string, adminState string, ctx context.Context) error {
+func (d *deviceRestClient) UpdateAdminStateByName(name string, adminState string, ctx context.Context) error {
 	_, err := clients.PutRequest(d.url+"/name/"+url.QueryEscape(name)+"/adminstate/"+adminState, nil, ctx)
 	return err
 }
 
-// Delete a device (specified by id)
-func (d *DeviceRestClient) Delete(id string, ctx context.Context) error {
+func (d *deviceRestClient) Delete(id string, ctx context.Context) error {
 	return clients.DeleteRequest(d.url+"/id/"+id, ctx)
 }
 
-// Delete a device (specified by name)
-func (d *DeviceRestClient) DeleteByName(name string, ctx context.Context) error {
+func (d *deviceRestClient) DeleteByName(name string, ctx context.Context) error {
 	return clients.DeleteRequest(d.url+"/name/"+url.QueryEscape(name), ctx)
 }

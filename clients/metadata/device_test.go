@@ -91,7 +91,7 @@ func TestNewDeviceClientWithConsul(t *testing.T) {
 
 	dc := NewDeviceClient(params, MockEndpoint{})
 
-	r, ok := dc.(*DeviceRestClient)
+	r, ok := dc.(*deviceRestClient)
 	if !ok {
 		t.Error("dc is not of expected type")
 	}

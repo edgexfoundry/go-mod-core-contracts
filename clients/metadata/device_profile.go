@@ -24,32 +24,44 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-// Device Profile client for interacting with the device profile section of metadata
+/*
+DeviceProfileClient defines the interface for interactions with the DeviceProfile endpoint on the EdgeX Foundry
+core-metadata service.
+*/
 type DeviceProfileClient interface {
+	// Add a new device profile
 	Add(dp *models.DeviceProfile, ctx context.Context) (string, error)
+	// Delete eliminates a device profile for the specified ID
 	Delete(id string, ctx context.Context) error
+	// DeleteByName eliminates a device profile for the specified name
 	DeleteByName(name string, ctx context.Context) error
+	// DeviceProfile loads the device profile for the specified ID
 	DeviceProfile(id string, ctx context.Context) (models.DeviceProfile, error)
+	// DeviceProfiles lists all device profiles
 	DeviceProfiles(ctx context.Context) ([]models.DeviceProfile, error)
+	// DeviceProfileForName loads the device profile for the specified name
 	DeviceProfileForName(name string, ctx context.Context) (models.DeviceProfile, error)
+	// Update a device profile
 	Update(dp models.DeviceProfile, ctx context.Context) error
+	// Upload a new device profile using raw YAML content
 	Upload(yamlString string, ctx context.Context) (string, error)
+	// Upload a new device profile using a file in YAML format
 	UploadFile(yamlFilePath string, ctx context.Context) (string, error)
 }
 
-type DeviceProfileRestClient struct {
+type deviceProfileRestClient struct {
 	url      string
 	endpoint clients.Endpointer
 }
 
 // Return an instance of DeviceProfileClient
 func NewDeviceProfileClient(params types.EndpointParams, m clients.Endpointer) DeviceProfileClient {
-	d := DeviceProfileRestClient{endpoint: m}
+	d := deviceProfileRestClient{endpoint: m}
 	d.init(params)
 	return &d
 }
 
-func (d *DeviceProfileRestClient) init(params types.EndpointParams) {
+func (d *deviceProfileRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
 		ch := make(chan string, 1)
 		go d.endpoint.Monitor(params, ch)
@@ -67,7 +79,7 @@ func (d *DeviceProfileRestClient) init(params types.EndpointParams) {
 }
 
 // Helper method to request and decode a device profile
-func (dpc *DeviceProfileRestClient) requestDeviceProfile(url string, ctx context.Context) (models.DeviceProfile, error) {
+func (dpc *deviceProfileRestClient) requestDeviceProfile(url string, ctx context.Context) (models.DeviceProfile, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return models.DeviceProfile{}, err
@@ -79,7 +91,7 @@ func (dpc *DeviceProfileRestClient) requestDeviceProfile(url string, ctx context
 }
 
 // Helper method to request and decode a device profile slice
-func (dpc *DeviceProfileRestClient) requestDeviceProfileSlice(url string, ctx context.Context) ([]models.DeviceProfile, error) {
+func (dpc *deviceProfileRestClient) requestDeviceProfileSlice(url string, ctx context.Context) ([]models.DeviceProfile, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return []models.DeviceProfile{}, err
@@ -90,47 +102,40 @@ func (dpc *DeviceProfileRestClient) requestDeviceProfileSlice(url string, ctx co
 	return dpSlice, err
 }
 
-// Add a new device profile to metadata
-func (dpc *DeviceProfileRestClient) Add(dp *models.DeviceProfile, ctx context.Context) (string, error) {
+func (dpc *deviceProfileRestClient) Add(dp *models.DeviceProfile, ctx context.Context) (string, error) {
 	return clients.PostJsonRequest(dpc.url, dp, ctx)
 }
 
-// Delete a device profile (specified by id)
-func (dpc *DeviceProfileRestClient) Delete(id string, ctx context.Context) error {
+func (dpc *deviceProfileRestClient) Delete(id string, ctx context.Context) error {
 	return clients.DeleteRequest(dpc.url+"/id/"+id, ctx)
 }
 
-// Delete a device profile (specified by name)
-func (dpc *DeviceProfileRestClient) DeleteByName(name string, ctx context.Context) error {
+func (dpc *deviceProfileRestClient) DeleteByName(name string, ctx context.Context) error {
 	return clients.DeleteRequest(dpc.url+"/name/"+url.QueryEscape(name), ctx)
 }
 
-// Get the device profile by id
-func (dpc *DeviceProfileRestClient) DeviceProfile(id string, ctx context.Context) (models.DeviceProfile, error) {
+func (dpc *deviceProfileRestClient) DeviceProfile(id string, ctx context.Context) (models.DeviceProfile, error) {
 	return dpc.requestDeviceProfile(dpc.url+"/"+id, ctx)
 }
 
-// Get a list of all devices
-func (dpc *DeviceProfileRestClient) DeviceProfiles(ctx context.Context) ([]models.DeviceProfile, error) {
+func (dpc *deviceProfileRestClient) DeviceProfiles(ctx context.Context) ([]models.DeviceProfile, error) {
 	return dpc.requestDeviceProfileSlice(dpc.url, ctx)
 }
 
-// Get the device profile by name
-func (dpc *DeviceProfileRestClient) DeviceProfileForName(name string, ctx context.Context) (models.DeviceProfile, error) {
+func (dpc *deviceProfileRestClient) DeviceProfileForName(name string, ctx context.Context) (models.DeviceProfile, error) {
 	return dpc.requestDeviceProfile(dpc.url+"/name/"+name, ctx)
 }
 
-// Update an existing device profile in metadata
-func (dpc *DeviceProfileRestClient) Update(dp models.DeviceProfile, ctx context.Context) error {
+func (dpc *deviceProfileRestClient) Update(dp models.DeviceProfile, ctx context.Context) error {
 	return clients.UpdateRequest(dpc.url, dp, ctx)
 }
 
-func (dpc *DeviceProfileRestClient) Upload(yamlString string, ctx context.Context) (string, error) {
+func (dpc *deviceProfileRestClient) Upload(yamlString string, ctx context.Context) (string, error) {
 	ctx = context.WithValue(ctx, clients.ContentType, clients.ContentTypeYAML)
 
 	return clients.PostRequest(dpc.url+"/upload", []byte(yamlString), ctx)
 }
 
-func (dpc *DeviceProfileRestClient) UploadFile(yamlFilePath string, ctx context.Context) (string, error) {
+func (dpc *deviceProfileRestClient) UploadFile(yamlFilePath string, ctx context.Context) (string, error) {
 	return clients.UploadFileRequest(dpc.url+"/uploadfile", yamlFilePath, ctx)
 }
