@@ -19,9 +19,10 @@ import "encoding/json"
 // AutoEvent supports auto-generated events sourced from a device service
 type AutoEvent struct {
 	// Frequency indicates how often the specific resource needs to be polled.
-	// It represents the number of events per day.
-	// For example, 86400 would be once per second, 24 would be once per hour etc.
-	Frequency uint32 `json:"frequency,omitempty"`
+	// It represents as a duration string. A duration string is a possibly signed sequence of decimal numbers,
+	// each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m".
+	// Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+	Frequency string `json:"frequency,omitempty"`
 	// OnChange indicates whether the device service will generate an event only,
 	// if the reading value is different from the previous one.
 	// If true, only generate events when readings change
