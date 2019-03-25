@@ -33,7 +33,7 @@ var TestPVBase = "0"
 var TestPVAssertion = "0"
 var TestPVPrecision = "1"
 var TestPVFloatEncoding = "Base64"
-var TestPropertyValue = PropertyValue{Type: TestPVType, ReadWrite: TestPVReadWrite, Minimum: TestPVMinimum, Maximum: TestPVMaximum, DefaultValue: TestPVDefaultValue, Size: TestPVSize, Mask: TestPVMask, Shift: TestPVShift, Scale: TestPVScale, Offset: TestPVOffset, Base: TestPVBase, Assertion: TestPVAssertion, Precision: TestPVPrecision, FloatEncoding: TestPVFloatEncoding}
+var TestPropertyValue = PropertyValue{Type: TestPVType, ReadWrite: TestPVReadWrite, Minimum: TestPVMinimum, Maximum: TestPVMaximum, DefaultValue: TestPVDefaultValue, Size: TestPVSize, Mask: TestPVMask, Shift: TestPVShift, Scale: TestPVScale, Offset: TestPVOffset, Base: TestPVBase, Assertion: TestPVAssertion, Precision: TestPVPrecision, FloatEncoding: TestPVFloatEncoding, MediaType: TestMediaType}
 
 func TestPropertyValue_MarshalJSON(t *testing.T) {
 	var emptyPropertyValue = PropertyValue{}
@@ -83,7 +83,9 @@ func TestPropertyValue_String(t *testing.T) {
 				",\"base\":\"" + TestPVBase + "\"" +
 				",\"assertion\":\"" + TestPVAssertion + "\"" +
 				",\"precision\":\"" + TestPVPrecision + "\"" +
-				",\"floatEncoding\":\"" + TestPVFloatEncoding + "\"}"},
+				",\"floatEncoding\":\"" + TestPVFloatEncoding + "\"" +
+				",\"mediaType\":" + "\"" + TestMediaType + "\"" +
+				"}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
