@@ -20,7 +20,7 @@ import (
 	"testing"
 )
 
-var TestAutoEvent = AutoEvent{Resource: "TestDevice", Frequency: 123, OnChange: true}
+var TestAutoEvent = AutoEvent{Resource: "TestDevice", Frequency: "300ms", OnChange: true}
 
 func TestAutoEvent_MarshalJSON(t *testing.T) {
 	empty := AutoEvent{}
@@ -87,7 +87,7 @@ func TestAutoEvent_String(t *testing.T) {
 		want string
 	}{
 		{"auto event to string", TestAutoEvent,
-			"{\"frequency\":123,\"onChange\":true,\"resource\":\"TestDevice\"}"},
+			"{\"frequency\":\"300ms\",\"onChange\":true,\"resource\":\"TestDevice\"}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
