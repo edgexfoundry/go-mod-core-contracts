@@ -24,7 +24,7 @@ import (
 
 var TestValueDescriptorName = "Temperature"
 var TestValue = "45"
-var TestBinaryValue = []byte{0xbf }
+var TestBinaryValue = []byte{0xbf}
 var TestReading = Reading{Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: TestDeviceName, Name: TestValueDescriptorName, Value: TestValue, BinaryValue: TestBinaryValue}
 
 func TestReading_MarshalJSON(t *testing.T) {

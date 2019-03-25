@@ -33,8 +33,8 @@ type Reading struct {
 	Modified    int64  `json:"modified"`
 	Device      string `json:"device"`
 	Name        string `json:"name"`
-	Value       string `json:"value"` // Device sensor data value
-	BinaryValue []byte `json:"binaryValue"`  // Binary data payload
+	Value       string `json:"value"`       // Device sensor data value
+	BinaryValue []byte `json:"binaryValue"` // Binary data payload
 }
 
 // Custom marshaling to make empty strings null

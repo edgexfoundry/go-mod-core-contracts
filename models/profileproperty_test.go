@@ -21,7 +21,7 @@ import (
 )
 
 var TestMediaType = clients.ContentTypeCBOR
-var TestProfileProperty = ProfileProperty{Value: TestPropertyValue, Units: TestUnits, MediaType: TestMediaType}
+var TestProfileProperty = ProfileProperty{Value: TestPropertyValue, Units: TestUnits}
 
 func TestProfileProperty_String(t *testing.T) {
 	tests := []struct {
@@ -32,7 +32,6 @@ func TestProfileProperty_String(t *testing.T) {
 		{"profile property to string", TestProfileProperty,
 			"{\"value\":" + TestPropertyValue.String() +
 				",\"units\":" + TestUnits.String() +
-				",\"mediaType\":" + "\"" + TestMediaType + "\"" +
 				"}"},
 	}
 	for _, tt := range tests {

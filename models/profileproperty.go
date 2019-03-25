@@ -17,9 +17,8 @@ package models
 import "encoding/json"
 
 type ProfileProperty struct {
-	Value     PropertyValue `json:"value"`
-	Units     Units         `json:"units"`
-	MediaType string        `json:"mediaType,omitempty"`
+	Value PropertyValue `json:"value"`
+	Units Units         `json:"units"`
 }
 
 /*
