@@ -98,7 +98,7 @@ func TestNewValueDescriptorClientWithConsul(t *testing.T) {
 
 	vdc := NewValueDescriptorClient(params, mockEndpoint{})
 
-	r, ok := vdc.(*ValueDescriptorRestClient)
+	r, ok := vdc.(*valueDescriptorRestClient)
 	if !ok {
 		t.Error("vdc is not of expected type")
 	}

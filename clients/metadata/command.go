@@ -24,32 +24,36 @@ import (
 )
 
 /*
-Command client for interacting with the command section of metadata
+CommandClient defines the interface for interactions with the Command endpoint on the EdgeX Foundry core-metadata service.
 */
 type CommandClient interface {
+	// Add a new command
 	Add(com *models.Command, ctx context.Context) (string, error)
+	// Command obtains the command for the specified ID
 	Command(id string, ctx context.Context) (models.Command, error)
+	// Commands lists all the commands
 	Commands(ctx context.Context) ([]models.Command, error)
+	// CommandsForName lists all the commands for the specified name
 	CommandsForName(name string, ctx context.Context) ([]models.Command, error)
+	// Delete a command for the specified ID
 	Delete(id string, ctx context.Context) error
+	// Update a command
 	Update(com models.Command, ctx context.Context) error
 }
 
-type CommandRestClient struct {
+type commandRestClient struct {
 	url      string
 	endpoint clients.Endpointer
 }
 
-/*
-Return an instance of CommandClient
-*/
+// NewCommandClient creates an instance of CommandClient
 func NewCommandClient(params types.EndpointParams, m clients.Endpointer) CommandClient {
-	c := CommandRestClient{endpoint: m}
+	c := commandRestClient{endpoint: m}
 	c.init(params)
 	return &c
 }
 
-func (c *CommandRestClient) init(params types.EndpointParams) {
+func (c *commandRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
 		ch := make(chan string, 1)
 		go c.endpoint.Monitor(params, ch)
@@ -67,7 +71,7 @@ func (c *CommandRestClient) init(params types.EndpointParams) {
 }
 
 // Helper method to request and decode a command
-func (c *CommandRestClient) requestCommand(url string, ctx context.Context) (models.Command, error) {
+func (c *commandRestClient) requestCommand(url string, ctx context.Context) (models.Command, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return models.Command{}, err
@@ -79,7 +83,7 @@ func (c *CommandRestClient) requestCommand(url string, ctx context.Context) (mod
 }
 
 // Helper method to request and decode a command slice
-func (c *CommandRestClient) requestCommandSlice(url string, ctx context.Context) ([]models.Command, error) {
+func (c *commandRestClient) requestCommandSlice(url string, ctx context.Context) ([]models.Command, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return []models.Command{}, err
@@ -90,32 +94,26 @@ func (c *CommandRestClient) requestCommandSlice(url string, ctx context.Context)
 	return comSlice, err
 }
 
-// Get a command by id
-func (c *CommandRestClient) Command(id string, ctx context.Context) (models.Command, error) {
+func (c *commandRestClient) Command(id string, ctx context.Context) (models.Command, error) {
 	return c.requestCommand(c.url+"/"+id, ctx)
 }
 
-// Get a list of all the commands
-func (c *CommandRestClient) Commands(ctx context.Context) ([]models.Command, error) {
+func (c *commandRestClient) Commands(ctx context.Context) ([]models.Command, error) {
 	return c.requestCommandSlice(c.url, ctx)
 }
 
-// Get a list of commands for a certain name
-func (c *CommandRestClient) CommandsForName(name string, ctx context.Context) ([]models.Command, error) {
+func (c *commandRestClient) CommandsForName(name string, ctx context.Context) ([]models.Command, error) {
 	return c.requestCommandSlice(c.url+"/name/"+name, ctx)
 }
 
-// Add a new command
-func (c *CommandRestClient) Add(com *models.Command, ctx context.Context) (string, error) {
+func (c *commandRestClient) Add(com *models.Command, ctx context.Context) (string, error) {
 	return clients.PostJsonRequest(c.url, com, ctx)
 }
 
-// Update a command
-func (c *CommandRestClient) Update(com models.Command, ctx context.Context) error {
+func (c *commandRestClient) Update(com models.Command, ctx context.Context) error {
 	return clients.UpdateRequest(c.url, com, ctx)
 }
 
-// Delete a command
-func (c *CommandRestClient) Delete(id string, ctx context.Context) error {
+func (c *commandRestClient) Delete(id string, ctx context.Context) error {
 	return clients.DeleteRequest(c.url+"/id/"+id, ctx)
 }

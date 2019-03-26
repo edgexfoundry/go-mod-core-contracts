@@ -13,6 +13,9 @@
  * the License.
  *******************************************************************************/
 
+/*
+Package general provides a client for calling operational endpoints that are present on all service APIs.
+*/
 package general
 
 import (
@@ -23,7 +26,9 @@ import (
 )
 
 type GeneralClient interface {
+	// FetchConfiguration obtains configuration information from the target service.
 	FetchConfiguration(ctx context.Context) (string, error)
+	// FetchMetrics obtains metrics information from the target service.
 	FetchMetrics(ctx context.Context) (string, error)
 }
 
@@ -32,6 +37,7 @@ type generalRestClient struct {
 	endpoint clients.Endpointer
 }
 
+// NewGeneralClient creates an instance of GeneralClient
 func NewGeneralClient(params types.EndpointParams, m clients.Endpointer) GeneralClient {
 	gc := generalRestClient{endpoint: m}
 	gc.init(params)
@@ -55,13 +61,11 @@ func (gc *generalRestClient) init(params types.EndpointParams) {
 	}
 }
 
-// FetchConfiguration fetch configuration information from the service.
 func (gc *generalRestClient) FetchConfiguration(ctx context.Context) (string, error) {
 	body, err := clients.GetRequest(gc.url+clients.ApiConfigRoute, ctx)
 	return string(body), err
 }
 
-// FetchMetrics fetch metrics information from the service.
 func (gc *generalRestClient) FetchMetrics(ctx context.Context) (string, error) {
 	body, err := clients.GetRequest(gc.url+clients.ApiMetricsRoute, ctx)
 	return string(body), err

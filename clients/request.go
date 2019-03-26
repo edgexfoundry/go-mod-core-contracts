@@ -267,10 +267,13 @@ func DeleteRequest(url string, ctx context.Context) error {
 	return nil
 }
 
+// CorrelatedRequest is a wrapper type for use in managing Correlation IDs during service to service API calls.
 type CorrelatedRequest struct {
 	*http.Request
 }
 
+// NewCorrelatedRequest will add the Correlation ID header to the supplied request. If no Correlation ID header is
+// present in the supplied context, one will be created along with a value.
 func NewCorrelatedRequest(req *http.Request, ctx context.Context) CorrelatedRequest {
 	c := CorrelatedRequest{Request: req}
 	correlation := FromContext(CorrelationHeader, ctx)

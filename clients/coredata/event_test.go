@@ -136,7 +136,7 @@ func TestNewEventClientWithConsul(t *testing.T) {
 
 	ec := NewEventClient(params, mockEventEndpoint{})
 
-	r, ok := ec.(*EventRestClient)
+	r, ok := ec.(*eventRestClient)
 	if !ok {
 		t.Error("ec is not of expected type")
 	}

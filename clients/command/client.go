@@ -12,6 +12,9 @@
  * the License.
  *******************************************************************************/
 
+/*
+ Package command provides a client for integration with the core-command service.
+*/
 package command
 
 import (

@@ -33,7 +33,7 @@ func TestNewCommandClientWithConsul(t *testing.T) {
 
 	cc := NewCommandClient(params, MockEndpoint{})
 
-	r, ok := cc.(*CommandRestClient)
+	r, ok := cc.(*commandRestClient)
 	if !ok {
 		t.Error("cc is not of expected type")
 	}

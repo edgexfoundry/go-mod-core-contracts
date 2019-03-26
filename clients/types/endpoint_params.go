@@ -12,20 +12,17 @@
  * the License.
  *******************************************************************************/
 
+/*
+ Package types provides supporting types that facilitate the various service client implementations.
+*/
 package types
 
 // EndpointParams is a type that allows for the passing of common parameters to service clients
-// for initialization. As defined, they are:
-// * ServiceKey = the key of the service as found in the service registry (e.g. Consul)
-// * Path = the path to the service's endpoint following port number in the URL
-// * UseRegistry = an indication of whether or not endpoint information should be obtained from
-//                 a service registry provider.
-// * Url = if a service registry is not being used, then provide the full URL endpoint
-// * Interval = the interval in milliseconds governing how often the client polls to keep the endpoint current
+// for initialization.
 type EndpointParams struct {
-	ServiceKey  string
-	Path        string
-	UseRegistry bool
-	Url         string
-	Interval    int
+	ServiceKey  string // The key of the service as found in the service registry (e.g. Consul)
+	Path        string // The path to the service's endpoint following port number in the URL
+	UseRegistry bool   // An indication of whether or not endpoint information should be obtained from a service registry provider.
+	Url         string // If a service registry is not being used, then provide the full URL endpoint
+	Interval    int    // The interval in milliseconds governing how often the client polls to keep the endpoint current
 }

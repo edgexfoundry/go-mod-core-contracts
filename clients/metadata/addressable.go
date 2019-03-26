@@ -12,6 +12,9 @@
  * the License.
  *******************************************************************************/
 
+/*
+ Package metadata provides clients used for integration with the core-metadata service.
+*/
 package metadata
 
 import (
@@ -25,31 +28,34 @@ import (
 )
 
 /*
-Addressable client for interacting with the addressable section of metadata
+AddressableClient defines the interface for interactions with the Addressable endpoint on the EdgeX Foundry core-metadata service.
 */
 type AddressableClient interface {
+	// Add creates a new Addressable and returns the ID of the new item if successful.
 	Add(addr *models.Addressable, ctx context.Context) (string, error)
+	// Addressable returns an Addressable for the specified ID
 	Addressable(id string, ctx context.Context) (models.Addressable, error)
+	// Addressable returns an Addressable for the specified name
 	AddressableForName(name string, ctx context.Context) (models.Addressable, error)
+	// Update will update the Addressable data
 	Update(addr models.Addressable, ctx context.Context) error
+	// Delete will eliminate the Addressable for the specified ID
 	Delete(id string, ctx context.Context) error
 }
 
-type AddressableRestClient struct {
+type addressableRestClient struct {
 	url      string
 	endpoint clients.Endpointer
 }
 
-/*
-Return an instance of AddressableClient
-*/
+// NewAddressableClient creates an instance of AddressableClient
 func NewAddressableClient(params types.EndpointParams, m clients.Endpointer) AddressableClient {
-	a := AddressableRestClient{endpoint: m}
+	a := addressableRestClient{endpoint: m}
 	a.init(params)
 	return &a
 }
 
-func (a *AddressableRestClient) init(params types.EndpointParams) {
+func (a *addressableRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
 		ch := make(chan string, 1)
 		go a.endpoint.Monitor(params, ch)
@@ -67,7 +73,7 @@ func (a *AddressableRestClient) init(params types.EndpointParams) {
 }
 
 // Helper method to request and decode an addressable
-func (a *AddressableRestClient) requestAddressable(url string, ctx context.Context) (models.Addressable, error) {
+func (a *addressableRestClient) requestAddressable(url string, ctx context.Context) (models.Addressable, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return models.Addressable{}, err
@@ -78,28 +84,22 @@ func (a *AddressableRestClient) requestAddressable(url string, ctx context.Conte
 	return add, err
 }
 
-// Add an addressable - handle error codes
-// Returns the ID of the addressable and an error
-func (a *AddressableRestClient) Add(addr *models.Addressable, ctx context.Context) (string, error) {
+func (a *addressableRestClient) Add(addr *models.Addressable, ctx context.Context) (string, error) {
 	return clients.PostJsonRequest(a.url, addr, ctx)
 }
 
-// Get an addressable by id
-func (a *AddressableRestClient) Addressable(id string, ctx context.Context) (models.Addressable, error) {
+func (a *addressableRestClient) Addressable(id string, ctx context.Context) (models.Addressable, error) {
 	return a.requestAddressable(a.url+"/"+id, ctx)
 }
 
-// Get the addressable by name
-func (a *AddressableRestClient) AddressableForName(name string, ctx context.Context) (models.Addressable, error) {
+func (a *addressableRestClient) AddressableForName(name string, ctx context.Context) (models.Addressable, error) {
 	return a.requestAddressable(a.url+"/name/"+url.QueryEscape(name), ctx)
 }
 
-// Update a addressable
-func (a *AddressableRestClient) Update(addr models.Addressable, ctx context.Context) error {
+func (a *addressableRestClient) Update(addr models.Addressable, ctx context.Context) error {
 	return clients.UpdateRequest(a.url, addr, ctx)
 }
 
-// Delete a addressable (specified by id)
-func (a *AddressableRestClient) Delete(id string, ctx context.Context) error {
+func (a *addressableRestClient) Delete(id string, ctx context.Context) error {
 	return clients.DeleteRequest(a.url+"/id/"+id, ctx)
 }

@@ -24,33 +24,44 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-// Addressable client for interacting with the addressable section of metadata
+// ValueDescriptorClient defines the interface for interactions with the Value Descriptor endpoint on the EdgeX Foundry core-data service.
 type ValueDescriptorClient interface {
+	// ValueDescriptors returns a list of all value descriptors
 	ValueDescriptors(ctx context.Context) ([]models.ValueDescriptor, error)
+	// ValueDescriptor returns the value descriptor for the specified id
 	ValueDescriptor(id string, ctx context.Context) (models.ValueDescriptor, error)
+	// ValueDescriptorForName returns the value descriptor for the specified name
 	ValueDescriptorForName(name string, ctx context.Context) (models.ValueDescriptor, error)
+	// ValueDescriptorsByLabel returns the value descriptors for the specified label
 	ValueDescriptorsByLabel(label string, ctx context.Context) ([]models.ValueDescriptor, error)
+	// ValueDescriptorsForDevice returns the value descriptors associated with readings from the specified device (by id)
 	ValueDescriptorsForDevice(deviceId string, ctx context.Context) ([]models.ValueDescriptor, error)
+	// ValueDescriptorsForDeviceByName returns the value descriptors associated with readings from the specified device (by name)
 	ValueDescriptorsForDeviceByName(deviceName string, ctx context.Context) ([]models.ValueDescriptor, error)
+	// ValueDescriptorsByUomLabel returns the value descriptors for the specified uomLabel
 	ValueDescriptorsByUomLabel(uomLabel string, ctx context.Context) ([]models.ValueDescriptor, error)
+	// Adds the specified value descriptor
 	Add(vdr *models.ValueDescriptor, ctx context.Context) (string, error)
+	// Updates the specified value descriptor
 	Update(vdr *models.ValueDescriptor, ctx context.Context) error
+	// Delete eliminates a value descriptor (specified by id)
 	Delete(id string, ctx context.Context) error
+	// Delete eliminates a value descriptor (specified by name)
 	DeleteByName(name string, ctx context.Context) error
 }
 
-type ValueDescriptorRestClient struct {
+type valueDescriptorRestClient struct {
 	url      string
 	endpoint clients.Endpointer
 }
 
 func NewValueDescriptorClient(params types.EndpointParams, m clients.Endpointer) ValueDescriptorClient {
-	v := ValueDescriptorRestClient{endpoint: m}
+	v := valueDescriptorRestClient{endpoint: m}
 	v.init(params)
 	return &v
 }
 
-func (d *ValueDescriptorRestClient) init(params types.EndpointParams) {
+func (d *valueDescriptorRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
 		ch := make(chan string, 1)
 		go d.endpoint.Monitor(params, ch)
@@ -68,7 +79,7 @@ func (d *ValueDescriptorRestClient) init(params types.EndpointParams) {
 }
 
 // Helper method to request and decode a valuedescriptor slice
-func (v *ValueDescriptorRestClient) requestValueDescriptorSlice(url string, ctx context.Context) ([]models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) requestValueDescriptorSlice(url string, ctx context.Context) ([]models.ValueDescriptor, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return []models.ValueDescriptor{}, err
@@ -80,7 +91,7 @@ func (v *ValueDescriptorRestClient) requestValueDescriptorSlice(url string, ctx 
 }
 
 // Helper method to request and decode a device
-func (v *ValueDescriptorRestClient) requestValueDescriptor(url string, ctx context.Context) (models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) requestValueDescriptor(url string, ctx context.Context) (models.ValueDescriptor, error) {
 	data, err := clients.GetRequest(url, ctx)
 	if err != nil {
 		return models.ValueDescriptor{}, err
@@ -91,57 +102,46 @@ func (v *ValueDescriptorRestClient) requestValueDescriptor(url string, ctx conte
 	return vdr, err
 }
 
-// Get a list of all value descriptors
-func (v *ValueDescriptorRestClient) ValueDescriptors(ctx context.Context) ([]models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) ValueDescriptors(ctx context.Context) ([]models.ValueDescriptor, error) {
 	return v.requestValueDescriptorSlice(v.url, ctx)
 }
 
-// Get the value descriptor by id
-func (v *ValueDescriptorRestClient) ValueDescriptor(id string, ctx context.Context) (models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) ValueDescriptor(id string, ctx context.Context) (models.ValueDescriptor, error) {
 	return v.requestValueDescriptor(v.url+"/"+id, ctx)
 }
 
-// Get the value descriptor by name
-func (v *ValueDescriptorRestClient) ValueDescriptorForName(name string, ctx context.Context) (models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) ValueDescriptorForName(name string, ctx context.Context) (models.ValueDescriptor, error) {
 	return v.requestValueDescriptor(v.url+"/name/"+url.QueryEscape(name), ctx)
 }
 
-// Get the value descriptors by label
-func (v *ValueDescriptorRestClient) ValueDescriptorsByLabel(label string, ctx context.Context) ([]models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) ValueDescriptorsByLabel(label string, ctx context.Context) ([]models.ValueDescriptor, error) {
 	return v.requestValueDescriptorSlice(v.url+"/label/"+url.QueryEscape(label), ctx)
 }
 
-// Get the value descriptors for a device (by id)
-func (v *ValueDescriptorRestClient) ValueDescriptorsForDevice(deviceId string, ctx context.Context) ([]models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) ValueDescriptorsForDevice(deviceId string, ctx context.Context) ([]models.ValueDescriptor, error) {
 	return v.requestValueDescriptorSlice(v.url+"/deviceid/"+deviceId, ctx)
 }
 
-// Get the value descriptors for a device (by name)
-func (v *ValueDescriptorRestClient) ValueDescriptorsForDeviceByName(deviceName string, ctx context.Context) ([]models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) ValueDescriptorsForDeviceByName(deviceName string, ctx context.Context) ([]models.ValueDescriptor, error) {
 	return v.requestValueDescriptorSlice(v.url+"/devicename/"+deviceName, ctx)
 }
 
-// Get the value descriptors for a uomLabel
-func (v *ValueDescriptorRestClient) ValueDescriptorsByUomLabel(uomLabel string, ctx context.Context) ([]models.ValueDescriptor, error) {
+func (v *valueDescriptorRestClient) ValueDescriptorsByUomLabel(uomLabel string, ctx context.Context) ([]models.ValueDescriptor, error) {
 	return v.requestValueDescriptorSlice(v.url+"/uomlabel/"+uomLabel, ctx)
 }
 
-// Add a value descriptor
-func (v *ValueDescriptorRestClient) Add(vdr *models.ValueDescriptor, ctx context.Context) (string, error) {
+func (v *valueDescriptorRestClient) Add(vdr *models.ValueDescriptor, ctx context.Context) (string, error) {
 	return clients.PostJsonRequest(v.url, vdr, ctx)
 }
 
-// Update a value descriptor
-func (v *ValueDescriptorRestClient) Update(vdr *models.ValueDescriptor, ctx context.Context) error {
+func (v *valueDescriptorRestClient) Update(vdr *models.ValueDescriptor, ctx context.Context) error {
 	return clients.UpdateRequest(v.url, vdr, ctx)
 }
 
-// Delete a value descriptor (specified by id)
-func (v *ValueDescriptorRestClient) Delete(id string, ctx context.Context) error {
+func (v *valueDescriptorRestClient) Delete(id string, ctx context.Context) error {
 	return clients.DeleteRequest(v.url+"/id/"+id, ctx)
 }
 
-// Delete a value descriptor (specified by name)
-func (v *ValueDescriptorRestClient) DeleteByName(name string, ctx context.Context) error {
+func (v *valueDescriptorRestClient) DeleteByName(name string, ctx context.Context) error {
 	return clients.DeleteRequest(v.url+"/name/"+name, ctx)
 }
