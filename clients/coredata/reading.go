@@ -149,11 +149,6 @@ func (r *readingRestClient) ReadingsForInterval(start int, end int, limit int, c
 	return r.requestReadingSlice(r.url+"/"+strconv.Itoa(start)+"/"+strconv.Itoa(end)+"/"+strconv.Itoa(limit), ctx)
 }
 
-// Candidate for elimination -- issue #45
-func (r *readingRestClient) ReadingsForDeviceAndValueDescriptor(deviceId string, vd string, limit int, ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url+"/device/"+url.QueryEscape(deviceId)+"/valuedescriptor/"+url.QueryEscape(vd)+"/"+strconv.Itoa(limit), ctx)
-}
-
 func (r *readingRestClient) Add(reading *models.Reading, ctx context.Context) (string, error) {
 	return clients.PostJsonRequest(r.url, reading, ctx)
 }
