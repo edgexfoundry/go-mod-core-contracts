@@ -20,7 +20,7 @@ import (
 
 // Deprecated: DeviceReport isn't utilized and needs to be removed.
 type DeviceReport struct {
-	BaseObject
+	Timestamps
 	Id       string   `json:"id"`
 	Name     string   `json:"name"`     // non-database identifier for a device report - must be unique
 	Device   string   `json:"device"`   // associated device name - should be a valid and unique device name
@@ -31,14 +31,14 @@ type DeviceReport struct {
 // Custom marshaling to make empty strings null
 func (dr DeviceReport) MarshalJSON() ([]byte, error) {
 	test := struct {
-		BaseObject
+		Timestamps
 		Id       string   `json:"id"`
 		Name     *string  `json:"name"`     // non-database identifier for a device report - must be unique
 		Device   *string  `json:"device"`   // associated device name - should be a valid and unique device name
 		Action   *string  `json:"action"`   // associated interval action name - should be a valid and unique interval action name
 		Expected []string `json:"expected"` // array of value descriptor names describing the types of data captured in the report
 	}{
-		BaseObject: dr.BaseObject,
+		Timestamps: dr.Timestamps,
 		Id:         dr.Id,
 		Expected:   dr.Expected,
 	}

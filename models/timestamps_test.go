@@ -16,48 +16,48 @@ package models
 
 import "testing"
 
-var TestBaseObject = BaseObject{Created: 123, Modified: 123, Origin: 123}
-var EmptyBaseObject = BaseObject{}
+var TestTimestamps = Timestamps{Created: 123, Modified: 123, Origin: 123}
+var EmptyTimestamps = Timestamps{}
 
-func TestBaseObject_String(t *testing.T) {
+func TestTimestamps_String(t *testing.T) {
 	tests := []struct {
 		name       string
-		baseObject *BaseObject
+		timestamps *Timestamps
 		want       string
 	}{
-		{"empty base", &EmptyBaseObject, "{}"},
-		{"populated base", &TestBaseObject, "{\"created\":123,\"modified\":123,\"origin\":123}"},
+		{"empty timestamps", &EmptyTimestamps, "{}"},
+		{"populated timestamps", &TestTimestamps, "{\"created\":123,\"modified\":123,\"origin\":123}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.baseObject.String(); got != tt.want {
-				t.Errorf("BaseObject.String() = %v, want %v", got, tt.want)
+			if got := tt.timestamps.String(); got != tt.want {
+				t.Errorf("Timestamps.String() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestBaseObject_compareTo(t *testing.T) {
+func TestTimestamps_compareTo(t *testing.T) {
 	type args struct {
-		i BaseObject
+		i Timestamps
 	}
-	var sameBaseObject = args{TestBaseObject}
-	var newerBaseObject = args{BaseObject{234, 234, 234}}
-	var olderBaseObject = args{BaseObject{1, 1, 1}}
+	var sameTimestamps = args{TestTimestamps}
+	var newerTimestamps = args{Timestamps{234, 234, 234}}
+	var olderTimestamps = args{Timestamps{1, 1, 1}}
 	tests := []struct {
 		name string
-		ba   *BaseObject
+		ba   *Timestamps
 		args args
 		want int
 	}{
-		{"same object", &TestBaseObject, sameBaseObject, -1},
-		{"newer", &TestBaseObject, newerBaseObject, 1},
-		{"older", &TestBaseObject, olderBaseObject, -1},
+		{"same timestamps", &TestTimestamps, sameTimestamps, -1},
+		{"newer", &TestTimestamps, newerTimestamps, 1},
+		{"older", &TestTimestamps, olderTimestamps, -1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.ba.compareTo(tt.args.i); got != tt.want {
-				t.Errorf("BaseObject.compareTo() = %v, want %v", got, tt.want)
+				t.Errorf("Timestamps.compareTo() = %v, want %v", got, tt.want)
 			}
 		})
 	}

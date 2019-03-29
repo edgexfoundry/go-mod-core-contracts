@@ -21,7 +21,7 @@ import (
 )
 
 var TestEmptyTransmission = Transmission{}
-var TestTransmission = Transmission{BaseObject: TestBaseObject, Notification: TestNotification, Receiver: "test receiver",
+var TestTransmission = Transmission{Timestamps: TestTimestamps, Notification: TestNotification, Receiver: "test receiver",
 	Channel: Channel{Type: ChannelType(Email), MailAddresses: []string{"jpwhite_mn@yahoo.com", "james_white2@dell.com"}}, Status: TransmissionStatus(Sent), ResendCount: 0, Records: []TransmissionRecord{TestSentTransRecord}}
 
 func TestTransmission_MarshalJSON(t *testing.T) {

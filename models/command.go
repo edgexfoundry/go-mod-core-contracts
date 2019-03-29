@@ -20,7 +20,7 @@ import (
 
 // Command defines a specific read/write operation targeting a device
 type Command struct {
-	BaseObject `yaml:",inline"`
+	Timestamps `yaml:",inline"`
 	Id         string `json:"id" yaml:"id,omitempty"`     // Id is a unique identifier, such as a UUID
 	Name       string `json:"name" yaml:"name,omitempty"` // Command name (unique on the profile)
 	Get        *Get   `json:"get" yaml:"get,omitempty"`   // Get Command
@@ -30,13 +30,13 @@ type Command struct {
 // MarshalJSON implements the Marshaler interface. Empty strings will be null.
 func (c Command) MarshalJSON() ([]byte, error) {
 	test := struct {
-		BaseObject
+		Timestamps
 		Id   *string `json:"id,omitempty"`
 		Name *string `json:"name,omitempty"` // Command name (unique on the profile)
 		Get  *Get    `json:"get,omitempty"`  // Get Command
 		Put  *Put    `json:"put,omitempty"`  // Put Command
 	}{
-		BaseObject: c.BaseObject,
+		Timestamps: c.Timestamps,
 		Get:        c.Get,
 		Put:        c.Put,
 	}

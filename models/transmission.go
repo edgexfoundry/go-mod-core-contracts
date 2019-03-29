@@ -20,7 +20,7 @@ import (
 )
 
 type Transmission struct {
-	BaseObject
+	Timestamps
 	ID           string               `json:"id"`
 	Notification Notification         `json:"notification"`
 	Receiver     string               `json:"receiver,omitempty"`
@@ -33,7 +33,7 @@ type Transmission struct {
 // Custom marshaling to make empty strings null
 func (t Transmission) MarshalJSON() ([]byte, error) {
 	test := struct {
-		BaseObject
+		Timestamps
 		ID           *string              `json:"id"`
 		Notification Notification         `json:"notification,omitempty"`
 		Receiver     *string              `json:"receiver,omitempty"`
@@ -42,7 +42,7 @@ func (t Transmission) MarshalJSON() ([]byte, error) {
 		ResendCount  int                  `json:"resendcount"`
 		Records      []TransmissionRecord `json:"records,omitempty"`
 	}{
-		BaseObject:   t.BaseObject,
+		Timestamps:   t.Timestamps,
 		Notification: t.Notification,
 		Channel:      t.Channel,
 		Status:       t.Status,

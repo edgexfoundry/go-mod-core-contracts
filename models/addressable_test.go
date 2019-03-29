@@ -32,7 +32,7 @@ const testUser = "edgexer"
 const testPassword = "password"
 const testTopic = "device_topic"
 
-var TestAddressable = Addressable{BaseObject: TestBaseObject, Name: testAddrName, Protocol: testProtocol, HTTPMethod: testMethod, Address: testAddress, Port: testPort, Path: clients.ApiDeviceRoute, Publisher: testPublisher, User: testUser, Password: testPassword, Topic: testTopic}
+var TestAddressable = Addressable{Timestamps: TestTimestamps, Name: testAddrName, Protocol: testProtocol, HTTPMethod: testMethod, Address: testAddress, Port: testPort, Path: clients.ApiDeviceRoute, Publisher: testPublisher, User: testUser, Password: testPassword, Topic: testTopic}
 var EmptyAddressable = Addressable{}
 
 func TestAddressable_MarshalJSON(t *testing.T) {

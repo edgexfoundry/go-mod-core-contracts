@@ -20,7 +20,7 @@ import (
 )
 
 type Notification struct {
-	BaseObject
+	Timestamps
 	ID          string                `json:"id,omitempty"`
 	Slug        string                `json:"slug,omitempty"`
 	Sender      string                `json:"sender,omitempty"`
@@ -35,7 +35,7 @@ type Notification struct {
 
 func (n Notification) MarshalJSON() ([]byte, error) {
 	test := struct {
-		BaseObject
+		Timestamps
 		ID          *string               `json:"id"`
 		Slug        *string               `json:"slug,omitempty,omitempty"`
 		Sender      *string               `json:"sender,omitempty"`
@@ -47,7 +47,7 @@ func (n Notification) MarshalJSON() ([]byte, error) {
 		Labels      []string              `json:"labels,omitempty"`
 		ContentType *string               `json:"contenttype,omitempty"`
 	}{
-		BaseObject: n.BaseObject,
+		Timestamps: n.Timestamps,
 		Category:   n.Category,
 		Severity:   n.Severity,
 		Status:     n.Status,

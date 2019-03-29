@@ -21,7 +21,7 @@ import (
 )
 
 var TestCommandName = "test command name"
-var TestCommand = Command{BaseObject: TestBaseObject, Name: TestCommandName, Get: &TestGet, Put: &TestPut}
+var TestCommand = Command{Timestamps: TestTimestamps, Name: TestCommandName, Get: &TestGet, Put: &TestPut}
 
 func TestCommand_MarshalJSON(t *testing.T) {
 	var testCommandBytes = []byte(TestCommand.String())
