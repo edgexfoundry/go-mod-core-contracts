@@ -35,7 +35,7 @@ type Interval struct {
 // Custom marshaling to make empty strings null
 func (i Interval) MarshalJSON() ([]byte, error) {
 	test := struct {
-		BaseObject
+		Timestamps
 		ID        *string `json:"id,omitempty"`
 		Created   int64   `json:"created,omitempty"`
 		Modified  int64   `json:"modified,omitempty"`

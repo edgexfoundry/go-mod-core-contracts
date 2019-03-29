@@ -44,12 +44,7 @@ const (
 	ErrorLog = "ERROR"
 )
 
-var logLevels = []string{
-	TraceLog,
-	DebugLog,
-	InfoLog,
-	WarnLog,
-	ErrorLog}
+var logLevels = LogLevels()
 
 // LoggingClient defines the interface for logging operations.
 type LoggingClient interface {
@@ -122,6 +117,16 @@ func NewClient(owningServiceName string, isRemote bool, logTarget string, logLev
 	}
 
 	return lc
+}
+
+// LogLevels returns an array of the possible log levels in order from most to least verbose.
+func LogLevels()[]string{
+	return []string{
+		TraceLog,
+		DebugLog,
+		InfoLog,
+		WarnLog,
+		ErrorLog}
 }
 
 func (f *fileWriter) Write(p []byte) (n int, err error) {

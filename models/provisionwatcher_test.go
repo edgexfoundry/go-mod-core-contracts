@@ -31,7 +31,7 @@ var TestIdentifiers = map[string]string{
 	TestPWNameKey1: TestPWVal1,
 	TestPWNameKey2: TestPWVal2,
 }
-var TestProvisionWatcher = ProvisionWatcher{BaseObject: TestBaseObject, Name: TestPWName, Identifiers: TestIdentifiers, Profile: TestProfile, Service: TestDeviceService}
+var TestProvisionWatcher = ProvisionWatcher{Timestamps: TestTimestamps, Name: TestPWName, Identifiers: TestIdentifiers, Profile: TestProfile, Service: TestDeviceService}
 
 func TestProvisionWatcher_MarshalJSON(t *testing.T) {
 	var testPWBytes = []byte(TestProvisionWatcher.String())

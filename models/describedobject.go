@@ -17,7 +17,7 @@ package models
 import "encoding/json"
 
 type DescribedObject struct {
-	BaseObject  `yaml:",inline"`
+	Timestamps  `yaml:",inline"`
 	Description string `json:"description" yaml:"description,omitempty"`
 }
 

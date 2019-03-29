@@ -28,7 +28,7 @@ import (
  * Addressable struct
  */
 type Addressable struct {
-	BaseObject
+	Timestamps
 	Id         string `json:"id"`
 	Name       string `json:"name"`
 	Protocol   string `json:"protocol"`    // Protocol for the address (HTTP/TCP)
@@ -47,7 +47,7 @@ type Addressable struct {
 // Treat the strings as pointers so they can be null in JSON
 func (a Addressable) MarshalJSON() ([]byte, error) {
 	aux := struct {
-		BaseObject
+		Timestamps
 		Id         *string `json:"id,omitempty"`
 		Name       *string `json:"name,omitempty"`
 		Protocol   *string `json:"protocol,omitempty"`    // Protocol for the address (HTTP/TCP)
@@ -62,7 +62,7 @@ func (a Addressable) MarshalJSON() ([]byte, error) {
 		BaseURL    *string `json:"baseURL,omitempty"`
 		URL        *string `json:"url,omitempty"`
 	}{
-		BaseObject: a.BaseObject,
+		Timestamps: a.Timestamps,
 		Port:       a.Port,
 	}
 

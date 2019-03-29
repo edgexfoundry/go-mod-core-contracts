@@ -18,7 +18,7 @@ import (
 	"encoding/json"
 )
 
-type BaseObject struct {
+type Timestamps struct {
 	Created  int64 `json:"created,omitempty" yaml:"created,omitempty"`
 	Modified int64 `json:"modified,omitempty" yaml:"modified,omitempty"`
 	Origin   int64 `json:"origin,omitempty" yaml:"origin,omitempty"`
@@ -27,7 +27,7 @@ type BaseObject struct {
 /*
  * String function for representing a device
  */
-func (o *BaseObject) String() string {
+func (o *Timestamps) String() string {
 	out, err := json.Marshal(o)
 	if err != nil {
 		return err.Error()
@@ -38,7 +38,7 @@ func (o *BaseObject) String() string {
 /*
  * Compare the Created of two objects to determine given is newer
  */
-func (ba *BaseObject) compareTo(i BaseObject) int {
+func (ba *Timestamps) compareTo(i Timestamps) int {
 	if i.Created > ba.Created {
 		return 1
 	}
