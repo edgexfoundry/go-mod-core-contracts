@@ -20,7 +20,7 @@ import (
 	"strings"
 )
 
-// AdminState : unlocked or locked
+// AdminState controls the range of values which constitute valid administrative states for a device
 type AdminState string
 
 const (
@@ -30,9 +30,7 @@ const (
 	Unlocked = "UNLOCKED"
 )
 
-/*
- *  Unmarshal the enum type
- */
+// UnmarshalJSON implements the Unmarshaler interface for the enum type
 func (as *AdminState) UnmarshalJSON(data []byte) error {
 	// Extract the string from data.
 	var s string
@@ -49,11 +47,13 @@ func (as *AdminState) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// IsAdminStateType allows external code to verify whether the supplied string is a valid AdminState value
 func IsAdminStateType(as string) bool {
 	_, found := GetAdminState(as)
 	return found
 }
 
+// GetAdminState returns the AdminState value for the supplied string if the string is valid
 func GetAdminState(as string) (AdminState, bool) {
 	as = strings.ToUpper(as)
 	retValue, err := map[string]AdminState{"LOCKED": Locked, "UNLOCKED": Unlocked}[as]

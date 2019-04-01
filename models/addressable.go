@@ -21,16 +21,11 @@ import (
 	"strings"
 )
 
-/*
- * This file is the model for addressable in EdgeX
- * Addressable holds information about a specific address
- *
- * Addressable struct
- */
+// Addressable holds information indicating how to contact a specific endpoint
 type Addressable struct {
 	BaseObject
-	Id         string `json:"id"`
-	Name       string `json:"name"`
+	Id         string `json:"id"`          // ID is a unique identifier for the Addressable, such as a UUID
+	Name       string `json:"name"`        // Name is a unique name given to the Addressable
 	Protocol   string `json:"protocol"`    // Protocol for the address (HTTP/TCP)
 	HTTPMethod string `json:"method"`      // Method for connecting (i.e. POST)
 	Address    string `json:"address"`     // Address of the addressable
@@ -156,6 +151,7 @@ func (a Addressable) String() string {
 	return string(out)
 }
 
+// GetBaseURL returns a base URL consisting of protocol, host and port as a string assembled from the constituent parts of the Addressable
 func (a Addressable) GetBaseURL() string {
 	protocol := strings.ToLower(a.Protocol)
 	address := a.Address
@@ -164,8 +160,8 @@ func (a Addressable) GetBaseURL() string {
 	return baseUrl
 }
 
-// Get the callback url for the addressable if all relevant tokens have values.
-// If any token is missing, string will be empty
+// GetCallbackURL() returns the callback url for the addressable if all relevant tokens have values.
+// If any token is missing, string will be empty. Tokens include protocol, address, port and path.
 func (a Addressable) GetCallbackURL() string {
 	url := ""
 	if len(a.Protocol) > 0 && len(a.Address) > 0 && a.Port > 0 && len(a.Path) > 0 {

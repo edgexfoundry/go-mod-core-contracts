@@ -14,6 +14,7 @@
 
 package models
 
+// ActionType indicates the various types of actions
 type ActionType string
 
 const (

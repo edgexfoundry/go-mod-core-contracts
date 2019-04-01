@@ -18,12 +18,14 @@ import (
 	"encoding/json"
 )
 
+// DeviceService represents a service that is responsible for proxying connectivity between a set of devices and the
+// EdgeX Foundry core services.
 type DeviceService struct {
 	Service
 	AdminState AdminState `json:"adminState"` // Device Service Admin State
 }
 
-// Custom Marshaling to make empty strings null
+// MarshalJSON implements the Marshaler interface in order to make empty strings null
 func (ds DeviceService) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject `json:",inline"`
@@ -57,7 +59,7 @@ func (ds DeviceService) MarshalJSON() ([]byte, error) {
 	return json.Marshal(test)
 }
 
-// Custom unmarshaling funcion
+// UnmarshalJSON implements the Unmarshaler interface providing custom unmarshaling functionality.
 func (ds *DeviceService) UnmarshalJSON(data []byte) error {
 	type Alias struct {
 		DescribedObject `json:",inline"`

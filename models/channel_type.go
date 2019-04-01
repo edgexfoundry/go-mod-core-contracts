@@ -20,6 +20,7 @@ import (
 	"fmt"
 )
 
+// ChannelType controls the range of values which constitute valid delivery types for channels
 type ChannelType string
 
 const (
@@ -27,6 +28,7 @@ const (
 	Email = "EMAIL"
 )
 
+// UnmarshalJSON implements the Unmarshaler interface for the type
 func (as *ChannelType) UnmarshalJSON(data []byte) error {
 	// Extract the string from data.
 	var s string
@@ -42,6 +44,7 @@ func (as *ChannelType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// IsChannelType allows external code to verify whether the supplied string is a valid ChannelType value
 func IsChannelType(as string) bool {
 	_, err := map[string]ChannelType{"REST": Rest, "EMAIL": Email}[as]
 	if !err {

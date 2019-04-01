@@ -18,21 +18,16 @@ import (
 	"encoding/json"
 )
 
-/*
- * This file is the model for a command in EdgeX
- *
- *
- * Command struct
- */
+// Command defines a specific read/write operation targeting a device
 type Command struct {
 	BaseObject `yaml:",inline"`
-	Id         string `json:"id" yaml:"id,omitempty"`
+	Id         string `json:"id" yaml:"id,omitempty"`     // Id is a unique identifier, such as a UUID
 	Name       string `json:"name" yaml:"name,omitempty"` // Command name (unique on the profile)
 	Get        *Get   `json:"get" yaml:"get,omitempty"`   // Get Command
 	Put        *Put   `json:"put" yaml:"put,omitempty"`   // Put Command
 }
 
-// Custom marshaling for making empty strings null
+// MarshalJSON implements the Marshaler interface. Empty strings will be null.
 func (c Command) MarshalJSON() ([]byte, error) {
 	test := struct {
 		BaseObject
@@ -69,6 +64,7 @@ func (c Command) String() string {
 	return string(out)
 }
 
+// UnmarshalJSON implements the Unmarshaler interface for the Command type
 func (c *Command) UnmarshalJSON(b []byte) error {
 	type Alias Command
 	alias := &struct {
@@ -90,8 +86,8 @@ func (c *Command) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// Append all the associated value descriptors to the list
-// Associated by PUT command parameters and PUT/GET command return values
+// AllAssociatedValueDescriptors will append all the associated value descriptors to the list
+// associated by PUT command parameters and PUT/GET command return values
 func (c *Command) AllAssociatedValueDescriptors(vdNames *map[string]string) {
 	// Check and add Get value descriptors
 	if &(c.Get) != nil {

@@ -18,12 +18,8 @@ import (
 	"encoding/json"
 )
 
-/*
- *This file is the model for a device profile in EdgeX
- *
- *
- * Device profile struct
- */
+// DeviceProfile represents the attributes and operational capabilities of a device. It is a template for which
+// there can be multiple matching devices within a given system.
 type DeviceProfile struct {
 	DescribedObject `yaml:",inline"`
 	Id              string            `json:"id" yaml:"id,omitempty"`
@@ -36,7 +32,7 @@ type DeviceProfile struct {
 	Commands        []Command         `json:"commands" yaml:"commands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 }
 
-// Custom marshaling so that empty strings and arrays are null
+// MarshalJSON implements the Marshaler interface so that empty strings and arrays are null
 func (dp DeviceProfile) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject

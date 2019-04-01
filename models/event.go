@@ -20,20 +20,15 @@ import (
 	"github.com/ugorji/go/codec"
 )
 
-/*
- * This file is for the Event model in EdgeX
- *
- *
- * Event struct to hold event data
- */
+// Event represents a single measurable event read from a device
 type Event struct {
-	ID       string    `json:"id" codec:"omitempty"`
-	Pushed   int64     `json:"pushed" codec:"omitempty"`
-	Device   string    `json:"device" codec:"omitempty"` // Device identifier (name or id)
-	Created  int64     `json:"created" codec:"omitempty"`
-	Modified int64     `json:"modified" codec:"omitempty"`
-	Origin   int64     `json:"origin" codec:"omitempty"`
-	Readings []Reading `json:"readings" codec:"omitempty"` // List of readings
+	ID       string    `json:"id" codec:"omitempty"`       // ID uniquely identifies an event, for example a UUID
+	Pushed   int64     `json:"pushed" codec:"omitempty"`   // Pushed is a timestamp indicating when the event was exported. If unexported, the value is zero.
+	Device   string    `json:"device" codec:"omitempty"`   // Device identifies the source of the event, can be a device name or id. Usually the device name.
+	Created  int64     `json:"created" codec:"omitempty"`  // Created is a timestamp indicating when the event was created.
+	Modified int64     `json:"modified" codec:"omitempty"` // Modified is a timestamp indicating when the event was last modified.
+	Origin   int64     `json:"origin" codec:"omitempty"`   // Origin is a timestamp that can communicate the time of the original reading, prior to event creation
+	Readings []Reading `json:"readings" codec:"omitempty"` // Readings will contain zero to many entries for the associated readings of a given event.
 }
 
 func encodeAsCBOR(e Event) ([]byte, error) {
@@ -49,7 +44,7 @@ func encodeAsCBOR(e Event) ([]byte, error) {
 	return byteBuffer, nil
 }
 
-// Custom marshaling to make empty strings null
+// MarshalJSON implements the Marshaler interface in order to make empty strings null
 func (e Event) MarshalJSON() ([]byte, error) {
 	test := struct {
 		ID       *string   `json:"id,omitempty"`
@@ -82,6 +77,7 @@ func (e Event) MarshalJSON() ([]byte, error) {
 	return json.Marshal(test)
 }
 
+// String provides a JSON representation of the Event as a string
 func (e Event) String() string {
 	out, err := json.Marshal(e)
 	if err != nil {
@@ -91,6 +87,7 @@ func (e Event) String() string {
 	return string(out)
 }
 
+// CBOR provides a byte array CBOR-encoded representation of the Event
 func (e Event) CBOR() []byte {
 	cbor, err := encodeAsCBOR(e)
 	if err != nil {

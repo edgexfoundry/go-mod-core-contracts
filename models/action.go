@@ -18,10 +18,11 @@ import (
 	"encoding/json"
 )
 
+// Action describes state related to the capabilities of a device
 type Action struct {
-	Path      string     `json:"path" yaml:"path,omitempty"`           // path used by service for action on a device or sensor
-	Responses []Response `json:"responses" yaml:"responses,omitempty"` // responses from get or put requests to service
-	URL       string     `json:"url,omitempty" yaml:"url,omitempty"`   // url for requests from command service
+	Path      string     `json:"path" yaml:"path,omitempty"`           // Path used by service for action on a device or sensor
+	Responses []Response `json:"responses" yaml:"responses,omitempty"` // Responses from get or put requests to service
+	URL       string     `json:"url,omitempty" yaml:"url,omitempty"`   // Url for requests from command service
 }
 
 /*

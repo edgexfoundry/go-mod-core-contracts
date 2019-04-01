@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 )
 
+// DeviceResource represents a value on a device that can be read or written
 type DeviceResource struct {
 	Description string                 `json:"description" yaml:"description,omitempty"`
 	Name        string                 `json:"name" yaml:"name,omitempty"`
@@ -26,7 +27,7 @@ type DeviceResource struct {
 	Attributes  map[string]interface{} `json:"attributes" yaml:"attributes,omitempty"`
 }
 
-// Custom marshaling to make empty strings null
+// MarshalJSON implements the Marshaler interface in order to make empty strings null
 func (do DeviceResource) MarshalJSON() ([]byte, error) {
 	test := struct {
 		Description *string                `json:"description,omitempty"`

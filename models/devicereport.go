@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 )
 
+// Deprecated: DeviceReport isn't utilized and needs to be removed.
 type DeviceReport struct {
 	BaseObject
 	Id       string   `json:"id"`
