@@ -87,3 +87,16 @@ func (dp DeviceProfile) String() string {
 	}
 	return string(out)
 }
+
+func (p *DeviceProfile) AllAssociatedValueDescriptors(vdNames *[]string) {
+	//Get the value descriptors with a map (set) where the keys are the value descriptor names
+	vdNamesMap := map[string]string{}
+	for _, c := range p.CoreCommands {
+		c.AllAssociatedValueDescriptors(&vdNamesMap)
+	}
+
+	// Add the map keys (value descriptor names) to the list
+	for vd := range vdNamesMap {
+		*vdNames = append(*vdNames, vd)
+	}
+}

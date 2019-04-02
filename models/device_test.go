@@ -30,7 +30,7 @@ var TestLocation = "{40lat;45long}"
 var TestProtocols = newTestProtocols()
 var TestDevice = Device{DescribedObject: TestDescribedObject, Name: TestDeviceName, AdminState: "UNLOCKED", OperatingState: "ENABLED",
 	Protocols: TestProtocols, LastReported: TestLastReported, LastConnected: TestLastConnected,
-	Labels: TestLabels, Location: TestLocation, Service: TestDeviceService, Profile: TestProfile, AutoEvents: newAutoEvent()}
+	Labels: TestLabels, Location: TestLocation, Service: TestDeviceService, ProfileName: TestProfile.Name, AutoEvents: newAutoEvent()}
 
 func TestDevice_MarshalJSON(t *testing.T) {
 	marshaled := TestDevice.String()
@@ -79,7 +79,7 @@ func TestDevice_String(t *testing.T) {
 				",\"labels\":" + fmt.Sprint(string(labelSlice)) +
 				",\"location\":\"" + TestLocation + "\"" +
 				",\"service\":" + TestDevice.Service.String() +
-				",\"profile\":" + TestDevice.Profile.String() +
+				",\"profileName\":\"" + TestDevice.ProfileName  + "\"" +
 				",\"autoEvents\":[" + TestAutoEvent.String() + "]" +
 				"}"},
 	}
@@ -99,14 +99,14 @@ func TestDevice_AllAssociatedValueDescriptors(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		d    *Device
+		p    *DeviceProfile
 		args args
 	}{
-		{"get associated value descriptors", &TestDevice, args{vdNames: &assocVD}},
+		{"get associated value descriptors", &TestProfile, args{vdNames: &assocVD}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.d.AllAssociatedValueDescriptors(tt.args.vdNames)
+			tt.p.AllAssociatedValueDescriptors(tt.args.vdNames)
 			if len(*tt.args.vdNames) != 2 {
 				t.Error("Associated value descriptor size > than expected")
 			}

@@ -17,7 +17,6 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 )
 
@@ -84,9 +83,9 @@ func createUrl(basePath string, cmdId string) string {
 }
 
 /*
- * CommandResponseFromDevice will create a CommandResponse struct from the supplied Device struct
+ * CommandResponseFromDevice will create a CommandResponse struct from the supplied Device struct its DeviceProfile
  */
-func CommandResponseFromDevice(d Device, cmdURL string) CommandResponse {
+func CommandResponseFromDevice(d Device, dp DeviceProfile, cmdURL string) CommandResponse {
 	cmdResp := CommandResponse{
 		Id:             d.Id,
 		Name:           d.Name,
@@ -96,7 +95,7 @@ func CommandResponseFromDevice(d Device, cmdURL string) CommandResponse {
 		LastReported:   d.LastReported,
 		Labels:         d.Labels,
 		Location:       d.Location,
-		Commands:       d.Profile.CoreCommands,
+		Commands:       dp.CoreCommands,
 	}
 
 	basePath := fmt.Sprintf("%s%s/%s/command/", cmdURL, clients.ApiDeviceRoute, d.Id)

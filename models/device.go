@@ -31,7 +31,7 @@ type Device struct {
 	Labels         []string                      `json:"labels"`         // Other labels applied to the device to help with searching
 	Location       interface{}                   `json:"location"`       // Device service specific location (interface{} is an empty interface so it can be anything)
 	Service        DeviceService                 `json:"service"`        // Associated Device Service - One per device
-	Profile        DeviceProfile                 `json:"profile"`        // Associated Device Profile - Describes the device
+	ProfileName    string                        `json:"profileName"`	 // Associated Device Profile Name
 	AutoEvents     []AutoEvent                   `json:"autoEvents"`     // A list of auto-generated events coming from the device
 }
 
@@ -52,7 +52,7 @@ func (d Device) MarshalJSON() ([]byte, error) {
 		Labels         []string                      `json:"labels,omitempty"`
 		Location       interface{}                   `json:"location,omitempty"`
 		Service        DeviceService                 `json:"service,omitempty"`
-		Profile        DeviceProfile                 `json:"profile,omitempty"`
+		ProfileName    string                        `json:"profileName,omitempty"`
 		AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty"`
 	}{
 		DescribedObject: d.DescribedObject,
@@ -64,7 +64,7 @@ func (d Device) MarshalJSON() ([]byte, error) {
 		Labels:          d.Labels,
 		Location:        d.Location,
 		Service:         d.Service,
-		Profile:         d.Profile,
+		ProfileName:     d.ProfileName,
 		AutoEvents:      d.AutoEvents,
 	}
 
@@ -89,18 +89,4 @@ func (d Device) String() string {
 		return err.Error()
 	}
 	return string(out)
-}
-
-// AllAssociatedValueDescriptors returns all the associated value descriptors through Put command parameters and Put/Get command return values
-func (d *Device) AllAssociatedValueDescriptors(vdNames *[]string) {
-	// Get the value descriptors with a map (set) where the keys are the value descriptor names
-	vdNamesMap := map[string]string{}
-	for _, c := range d.Profile.CoreCommands {
-		c.AllAssociatedValueDescriptors(&vdNamesMap)
-	}
-
-	// Add the map keys (value descriptor names) to the list
-	for vd := range vdNamesMap {
-		*vdNames = append(*vdNames, vd)
-	}
 }
