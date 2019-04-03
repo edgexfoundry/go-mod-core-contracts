@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 )
 
+// CallbackAlert indicates an action to take when a callback fires.
 type CallbackAlert struct {
 	ActionType ActionType `json:"type"`
 	Id         string     `json:"id"`
@@ -39,6 +40,9 @@ func (ca CallbackAlert) MarshalJSON() ([]byte, error) {
 	return json.Marshal(test)
 }
 
+/*
+ * String function for representing a CallbackAlert
+ */
 func (ca CallbackAlert) String() string {
 	out, err := json.Marshal(ca)
 	if err != nil {

@@ -18,15 +18,10 @@ import (
 	"encoding/json"
 )
 
-/*
- * This file is the model for the Device object in EdgeX
- *
- *
- * Device struct
- */
+// Device represents a registered device participating within the EdgeX Foundry ecosystem
 type Device struct {
 	DescribedObject
-	Id             string                        `json:"id"`
+	Id             string                        `json:"id"`             // ID uniquely identifies the device, a UUID for example
 	Name           string                        `json:"name"`           // Unique name for identifying a device
 	AdminState     AdminState                    `json:"adminState"`     // Admin state (locked/unlocked)
 	OperatingState OperatingState                `json:"operatingState"` // Operating state (enabled/disabled)
@@ -43,7 +38,7 @@ type Device struct {
 // ProtocolProperties contains the device connection information in key/value pair
 type ProtocolProperties map[string]string
 
-// Custom marshaling to make empty strings null
+// MarshalJSON implements the Marshaler interface in order to make empty strings null
 func (d Device) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject
@@ -96,7 +91,7 @@ func (d Device) String() string {
 	return string(out)
 }
 
-// Return all the associated value descriptors through Put command parameters and Put/Get command return values
+// AllAssociatedValueDescriptors returns all the associated value descriptors through Put command parameters and Put/Get command return values
 func (d *Device) AllAssociatedValueDescriptors(vdNames *[]string) {
 	// Get the value descriptors with a map (set) where the keys are the value descriptor names
 	vdNamesMap := map[string]string{}

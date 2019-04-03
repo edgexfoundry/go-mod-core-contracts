@@ -21,14 +21,9 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 )
 
-/*
- * This file is the model for the CommandResponse object in EdgeX
- *
- *
- * CommandResponse struct
- */
+// CommandResponse identifies a specific device along with its supported commands.
 type CommandResponse struct {
-	Id             string         `json:"id"`
+	Id             string         `json:"id"`             // Id uniquely identifies the CommandResponse, UUID for example.
 	Name           string         `json:"name"`           // Unique name for identifying a device
 	AdminState     AdminState     `json:"adminState"`     // Admin state (locked/unlocked)
 	OperatingState OperatingState `json:"operatingState"` // Operating state (enabled/disabled)
@@ -39,7 +34,7 @@ type CommandResponse struct {
 	Commands       []Command      `json:"commands"`       // Associated Device Profile - Describes the device
 }
 
-// Custom marshaling to make empty strings null
+// MarshalJSON implements the Marshaler interface for custom marshaling to make empty strings null
 func (cr CommandResponse) MarshalJSON() ([]byte, error) {
 	res := struct {
 		Id             *string        `json:"id"`
@@ -89,7 +84,7 @@ func createUrl(basePath string, cmdId string) string {
 }
 
 /*
- * Create a Command Response struct from a Device Struct
+ * CommandResponseFromDevice will create a CommandResponse struct from the supplied Device struct
  */
 func CommandResponseFromDevice(d Device, cmdURL string) CommandResponse {
 	cmdResp := CommandResponse{

@@ -20,6 +20,7 @@ import (
 	"fmt"
 )
 
+// NotificationsCategory controls the range of values which constitute valid categories for notifications
 type NotificationsCategory string
 
 const (
@@ -28,6 +29,7 @@ const (
 	Swhealth = "SW_HEALTH"
 )
 
+// UnmarshalJSON implements the Unmarshaler interface for the type
 func (as *NotificationsCategory) UnmarshalJSON(data []byte) error {
 	// Extract the string from data.
 	var s string
@@ -43,6 +45,7 @@ func (as *NotificationsCategory) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// IsNotificationsCategory allows external code to verify whether the supplied string is a valid NotificationsCategory value
 func IsNotificationsCategory(as string) bool {
 	_, err := map[string]NotificationsCategory{"SECURITY": Security, "HW_HEALTH": Hwhealth, "SW_HEALTH": Swhealth}[as]
 	if !err {
