@@ -19,7 +19,7 @@ import (
 )
 
 type ProvisionWatcher struct {
-	BaseObject
+	Timestamps
 	Id             string            `json:"id"`
 	Name           string            `json:"name"`           // unique name and identifier of the addressable
 	Identifiers    map[string]string `json:"identifiers"`    // set of key value pairs that identify type of of address (MAC, HTTP,...) and address to watch for (00-05-1B-A1-99-99, 10.0.0.1,...)
@@ -31,7 +31,7 @@ type ProvisionWatcher struct {
 // Custom marshaling to make empty strings null
 func (pw ProvisionWatcher) MarshalJSON() ([]byte, error) {
 	test := struct {
-		BaseObject
+		Timestamps
 		Id             string            `json:"id"`
 		Name           *string           `json:"name"`           // unique name and identifier of the addressable
 		Identifiers    map[string]string `json:"identifiers"`    // set of key value pairs that identify type of of address (MAC, HTTP,...) and address to watch for (00-05-1B-A1-99-99, 10.0.0.1,...)
@@ -40,7 +40,7 @@ func (pw ProvisionWatcher) MarshalJSON() ([]byte, error) {
 		OperatingState OperatingState    `json:"operatingState"` // operational state - either enabled or disabled
 	}{
 		Id:             pw.Id,
-		BaseObject:     pw.BaseObject,
+		Timestamps:     pw.Timestamps,
 		Profile:        pw.Profile,
 		Service:        pw.Service,
 		OperatingState: pw.OperatingState,

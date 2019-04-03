@@ -21,7 +21,7 @@ import (
 )
 
 var TestEmptySubscription = Subscription{}
-var TestSubscription = Subscription{BaseObject: TestBaseObject, Slug: "test slug", Receiver: "test receiver", Description: "test description",
+var TestSubscription = Subscription{Timestamps: TestTimestamps, Slug: "test slug", Receiver: "test receiver", Description: "test description",
 	SubscribedCategories: []NotificationsCategory{NotificationsCategory(Swhealth)}, SubscribedLabels: []string{"test label"},
 	Channels: []Channel{TestEChannel, TestRChannel}}
 

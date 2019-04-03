@@ -26,7 +26,7 @@ import (
  * Subscription struct
  */
 type Subscription struct {
-	BaseObject
+	Timestamps
 	ID                   string                  `json:"id"`
 	Slug                 string                  `json:"slug,omitempty"`
 	Receiver             string                  `json:"receiver,omitempty"`
@@ -39,7 +39,7 @@ type Subscription struct {
 // Custom marshaling to make empty strings null
 func (s Subscription) MarshalJSON() ([]byte, error) {
 	test := struct {
-		BaseObject
+		Timestamps
 		ID                   *string                 `json:"id"`
 		Slug                 *string                 `json:"slug,omitempty"`
 		Receiver             *string                 `json:"receiver,omitempty"`
@@ -48,7 +48,7 @@ func (s Subscription) MarshalJSON() ([]byte, error) {
 		SubscribedLabels     []string                `json:"subscribedLabels,omitempty"`
 		Channels             []Channel               `json:"channels,omitempty"`
 	}{
-		BaseObject:           s.BaseObject,
+		Timestamps:           s.Timestamps,
 		SubscribedCategories: s.SubscribedCategories,
 		SubscribedLabels:     s.SubscribedLabels,
 		Channels:             s.Channels,

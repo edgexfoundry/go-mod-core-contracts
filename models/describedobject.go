@@ -20,7 +20,7 @@ import "encoding/json"
 // with a Description property IS A DescribedObject. However since there is no inheritance in Go, this should be
 // eliminated and the Description property moved to the relevant types. 4 types currently use this.
 type DescribedObject struct {
-	BaseObject  `yaml:",inline"`
+	Timestamps  `yaml:",inline"`
 	Description string `json:"description" yaml:"description,omitempty"` // Description. Capicé?
 }
 

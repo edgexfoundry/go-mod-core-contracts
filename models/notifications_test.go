@@ -21,7 +21,7 @@ import (
 )
 
 var TestEmptyNotification = Notification{}
-var TestNotification = Notification{BaseObject: BaseObject{Created: 123, Modified: 123}, Category: NotificationsCategory("SECURITY"),
+var TestNotification = Notification{Timestamps: Timestamps{Created: 123, Modified: 123}, Category: NotificationsCategory("SECURITY"),
 	Content: "test content", Description: "test description", Labels: []string{"label1", "labe2"}, Sender: "test sender",
 	Severity: NotificationsSeverity("CRITICAL"), Slug: "test slug", Status: NotificationsStatus("NEW")}
 
@@ -40,7 +40,7 @@ func TestNotification_MarshalJSON(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			n := Notification{
-				BaseObject:  tt.notification.BaseObject,
+				Timestamps:  tt.notification.Timestamps,
 				ID:          tt.notification.ID,
 				Slug:        tt.notification.Slug,
 				Sender:      tt.notification.Sender,
