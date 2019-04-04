@@ -21,9 +21,9 @@ import (
 
 // Channel supports transmissions and notifications with fields for delivery via email or REST
 type Channel struct {
-	Type          ChannelType `json:"type,omitempty"`           // Type indicates whether the channel facilitates email or REST
-	MailAddresses []string    `json:"mailAddresses,omitempty"`  // MailAddresses contains email addresses
-	Url           string      `json:"url,omitempty"`            // URL contains a REST API destination
+	Type          ChannelType `json:"type,omitempty"`          // Type indicates whether the channel facilitates email or REST
+	MailAddresses []string    `json:"mailAddresses,omitempty"` // MailAddresses contains email addresses
+	Url           string      `json:"url,omitempty"`           // URL contains a REST API destination
 }
 
 func (c Channel) String() string {

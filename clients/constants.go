@@ -12,7 +12,6 @@
  * the License.
  *******************************************************************************/
 
-
 package clients
 
 // Do not assume that if a constant is identified by your IDE as not being used within this module that it is not being
@@ -21,7 +20,7 @@ package clients
 //
 // Miscellaneous constants
 const (
-	ClientMonitorDefault = 15000	// Defaults the interval at which a given service client will refresh its endpoint from the Registry, if used
+	ClientMonitorDefault = 15000            // Defaults the interval at which a given service client will refresh its endpoint from the Registry, if used
 	CorrelationHeader    = "correlation-id" // Sets the key of the Correlation ID HTTP header
 )
 

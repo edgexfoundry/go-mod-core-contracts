@@ -34,9 +34,9 @@ func (e ErrResponseNil) Error() string {
 // calls service B and service A needs to make a decision with regard to how it should respond to its own caller based on
 // the error thrown from service B.
 type ErrServiceClient struct {
-	StatusCode int			// StatusCode contains the HTTP status code returned from the target service
-	bodyBytes  []byte		// bodyBytes contains the response from the target service
-	errMsg     string       // errMsg contains the error message to be returned. See the Error() method below.
+	StatusCode int    // StatusCode contains the HTTP status code returned from the target service
+	bodyBytes  []byte // bodyBytes contains the response from the target service
+	errMsg     string // errMsg contains the error message to be returned. See the Error() method below.
 }
 
 // NewErrServiceClient returns an instance of the error interface with ErrServiceClient as its implementation.

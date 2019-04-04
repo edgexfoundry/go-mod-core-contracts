@@ -120,7 +120,7 @@ func NewClient(owningServiceName string, isRemote bool, logTarget string, logLev
 }
 
 // LogLevels returns an array of the possible log levels in order from most to least verbose.
-func LogLevels()[]string{
+func LogLevels() []string {
 	return []string{
 		TraceLog,
 		DebugLog,
