@@ -14,7 +14,7 @@
 
 /*
 Package scheduler provides clients used for integration with the support-scheduler service.
- */
+*/
 package scheduler
 
 import (
