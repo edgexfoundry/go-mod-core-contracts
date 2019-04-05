@@ -96,7 +96,7 @@ func CommandResponseFromDevice(d Device, cmdURL string) CommandResponse {
 		LastReported:   d.LastReported,
 		Labels:         d.Labels,
 		Location:       d.Location,
-		Commands:       d.Profile.Commands,
+		Commands:       d.Profile.CoreCommands,
 	}
 
 	basePath := fmt.Sprintf("%s%s/%s/command/", cmdURL, clients.ApiDeviceRoute, d.Id)

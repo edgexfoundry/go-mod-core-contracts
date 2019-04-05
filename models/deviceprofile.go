@@ -28,8 +28,8 @@ type DeviceProfile struct {
 	Model           string            `json:"model" yaml:"model,omitempty"`               // Model of the device
 	Labels          []string          `json:"labels" yaml:"labels,flow,omitempty"`        // Labels used to search for groups of profiles
 	DeviceResources []DeviceResource  `json:"deviceResources" yaml:"deviceResources,omitempty"`
-	Resources       []ProfileResource `json:"resources" yaml:"resources,omitempty"`
-	Commands        []Command         `json:"commands" yaml:"commands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
+	DeviceCommands  []ProfileResource `json:"deviceCommands" yaml:"resources,omitempty"`
+	CoreCommands    []Command         `json:"coreCommands" yaml:"commands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 }
 
 // MarshalJSON implements the Marshaler interface so that empty strings and arrays are null
@@ -42,8 +42,8 @@ func (dp DeviceProfile) MarshalJSON() ([]byte, error) {
 		Model           *string           `json:"model,omitempty"`        // Model of the device
 		Labels          []string          `json:"labels,omitempty"`       // Labels used to search for groups of profiles
 		DeviceResources []DeviceResource  `json:"deviceResources,omitempty"`
-		Resources       []ProfileResource `json:"resources,omitempty"`
-		Commands        []Command         `json:"commands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
+		DeviceCommands  []ProfileResource `json:"deviceCommands,omitempty"`
+		CoreCommands    []Command         `json:"coreCommands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 	}{
 		Labels:          dp.Labels,
 		DescribedObject: dp.DescribedObject,
@@ -67,11 +67,11 @@ func (dp DeviceProfile) MarshalJSON() ([]byte, error) {
 	if len(dp.DeviceResources) > 0 {
 		test.DeviceResources = dp.DeviceResources
 	}
-	if len(dp.Resources) > 0 {
-		test.Resources = dp.Resources
+	if len(dp.DeviceCommands) > 0 {
+		test.DeviceCommands = dp.DeviceCommands
 	}
-	if len(dp.Commands) > 0 {
-		test.Commands = dp.Commands
+	if len(dp.CoreCommands) > 0 {
+		test.CoreCommands = dp.CoreCommands
 	}
 
 	return json.Marshal(test)
