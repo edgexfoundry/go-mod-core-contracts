@@ -28,8 +28,8 @@ type DeviceProfile struct {
 	Model           string            `json:"model" yaml:"model,omitempty"`               // Model of the device
 	Labels          []string          `json:"labels" yaml:"labels,flow,omitempty"`        // Labels used to search for groups of profiles
 	DeviceResources []DeviceResource  `json:"deviceResources" yaml:"deviceResources,omitempty"`
-	DeviceCommands  []ProfileResource `json:"deviceCommands" yaml:"resources,omitempty"`
-	CoreCommands    []Command         `json:"coreCommands" yaml:"commands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
+	DeviceCommands  []ProfileResource `json:"deviceCommands" yaml:"deviceCommands,omitempty"`
+	CoreCommands    []Command         `json:"coreCommands" yaml:"coreCommands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 }
 
 // MarshalJSON implements the Marshaler interface so that empty strings and arrays are null
