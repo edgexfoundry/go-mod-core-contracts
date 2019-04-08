@@ -95,7 +95,7 @@ func (d Device) String() string {
 func (d *Device) AllAssociatedValueDescriptors(vdNames *[]string) {
 	// Get the value descriptors with a map (set) where the keys are the value descriptor names
 	vdNamesMap := map[string]string{}
-	for _, c := range d.Profile.Commands {
+	for _, c := range d.Profile.CoreCommands {
 		c.AllAssociatedValueDescriptors(&vdNamesMap)
 	}
 

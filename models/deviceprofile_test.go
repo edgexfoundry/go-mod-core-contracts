@@ -27,7 +27,7 @@ var TestManufacturer = "Test Manufacturer"
 var TestModel = "Test Model"
 var TestProfileLabels = []string{"labe1", "label2"}
 var TestProfileDescription = "Test Description"
-var TestProfile = DeviceProfile{DescribedObject: TestDescribedObject, Name: TestProfileName, Manufacturer: TestManufacturer, Model: TestModel, Labels: TestProfileLabels, DeviceResources: []DeviceResource{TestDeviceResource}, Resources: []ProfileResource{TestProfileResource}, Commands: []Command{TestCommand}}
+var TestProfile = DeviceProfile{DescribedObject: TestDescribedObject, Name: TestProfileName, Manufacturer: TestManufacturer, Model: TestModel, Labels: TestProfileLabels, DeviceResources: []DeviceResource{TestDeviceResource}, DeviceCommands: []ProfileResource{TestProfileResource}, CoreCommands: []Command{TestCommand}}
 
 func TestDeviceProfile_MarshalJSON(t *testing.T) {
 	var emptyDeviceProfile = DeviceProfile{}
@@ -73,8 +73,8 @@ func TestDeviceProfile_String(t *testing.T) {
 				",\"model\":\"" + TestModel + "\"" +
 				",\"labels\":" + fmt.Sprint(string(labelSlice)) +
 				",\"deviceResources\":[" + TestDeviceResource.String() + "]" +
-				",\"resources\":[" + TestProfileResource.String() + "]" +
-				",\"commands\":[" + TestCommand.String() + "]" +
+				",\"deviceCommands\":[" + TestProfileResource.String() + "]" +
+				",\"coreCommands\":[" + TestCommand.String() + "]" +
 				"}"},
 	}
 	for _, tt := range tests {
