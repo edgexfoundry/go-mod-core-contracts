@@ -22,6 +22,7 @@ import (
 
 type UpdateRequest struct {
 	models.OperatingState `json:"operatingState"`
+	isValidated           bool // internal member used for validation check
 }
 
 func (u UpdateRequest) MarshalJSON() ([]byte, error) {
@@ -36,17 +37,27 @@ func (u UpdateRequest) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements the Unmarshaler interface for the type
 func (u *UpdateRequest) UnmarshalJSON(data []byte) error {
+	var err error
 	type Alias struct {
 		OperatingState models.OperatingState `json:"operatingState"`
 	}
 	a := Alias{}
 
 	// Error with unmarshal
-	if err := json.Unmarshal(data, &a); err != nil {
+	if err = json.Unmarshal(data, &a); err != nil {
 		return err
 	}
 
 	u.OperatingState = a.OperatingState
+	u.isValidated, err = u.Validate()
 
-	return nil
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (u UpdateRequest) Validate() (bool, error) {
+	if !u.isValidated {
+		return u.OperatingState.Validate()
+	}
+	return u.isValidated, nil
 }

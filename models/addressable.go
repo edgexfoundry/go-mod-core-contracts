@@ -17,6 +17,7 @@ package models
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"strconv"
 	"strings"
 )
@@ -24,17 +25,18 @@ import (
 // Addressable holds information indicating how to contact a specific endpoint
 type Addressable struct {
 	Timestamps
-	Id         string `json:"id"`          // ID is a unique identifier for the Addressable, such as a UUID
-	Name       string `json:"name"`        // Name is a unique name given to the Addressable
-	Protocol   string `json:"protocol"`    // Protocol for the address (HTTP/TCP)
-	HTTPMethod string `json:"method"`      // Method for connecting (i.e. POST)
-	Address    string `json:"address"`     // Address of the addressable
-	Port       int    `json:"port,Number"` // Port for the address
-	Path       string `json:"path"`        // Path for callbacks
-	Publisher  string `json:"publisher"`   // For message bus protocols
-	User       string `json:"user"`        // User id for authentication
-	Password   string `json:"password"`    // Password of the user for authentication for the addressable
-	Topic      string `json:"topic"`       // Topic for message bus addressables
+	Id          string `json:"id"`          // ID is a unique identifier for the Addressable, such as a UUID
+	Name        string `json:"name"`        // Name is a unique name given to the Addressable
+	Protocol    string `json:"protocol"`    // Protocol for the address (HTTP/TCP)
+	HTTPMethod  string `json:"method"`      // Method for connecting (i.e. POST)
+	Address     string `json:"address"`     // Address of the addressable
+	Port        int    `json:"port,Number"` // Port for the address
+	Path        string `json:"path"`        // Path for callbacks
+	Publisher   string `json:"publisher"`   // For message bus protocols
+	User        string `json:"user"`        // User id for authentication
+	Password    string `json:"password"`    // Password of the user for authentication for the addressable
+	Topic       string `json:"topic"`       // Topic for message bus addressables
+	isValidated bool   // internal member used for validation check
 }
 
 // Custom marshaling for JSON
@@ -138,6 +140,57 @@ func (a Addressable) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(aux)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the Addressable type
+func (a *Addressable) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Timestamps `json:",inline"`
+		Id         string `json:"id"`
+		Name       string `json:"name"`
+		Protocol   string `json:"protocol"`
+		HTTPMethod string `json:"method"`
+		Address    string `json:"address"`
+		Port       int    `json:"port,Number"`
+		Path       string `json:"path"`
+		Publisher  string `json:"publisher"`
+		User       string `json:"user"`
+		Password   string `json:"password"`
+		Topic      string `json:"topic"`
+	}
+	alias := Alias{}
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &alias); err != nil {
+		return err
+	}
+
+	a.Timestamps = alias.Timestamps
+	a.Id = alias.Id
+	a.Name = alias.Name
+	a.Protocol = alias.Protocol
+	a.HTTPMethod = alias.HTTPMethod
+	a.Address = alias.Address
+	a.Port = alias.Port
+	a.Path = alias.Path
+	a.Publisher = alias.Publisher
+	a.User = alias.User
+	a.Password = alias.Password
+	a.Topic = alias.Topic
+	a.isValidated, err = a.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (a Addressable) Validate() (bool, error) {
+	if !a.isValidated {
+		if a.Id == "" && a.Name == "" {
+			return false, errors.New("Addressable ID and Name are both blank")
+		}
+		return true, nil
+	}
+	return a.isValidated, nil
 }
 
 /*

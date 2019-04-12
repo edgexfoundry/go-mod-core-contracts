@@ -16,18 +16,27 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"regexp"
+	"strconv"
+)
+
+const (
+	frequencyPattern = `^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$`
 )
 
 // Interval a period of time
 type Interval struct {
-	Timestamps Timestamps
-	ID         string `json:"id"`
-	Name       string `json:"name"`      // non-database identifier for a shcedule (*must be quitue)
-	Start      string `json:"start"`     // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
-	End        string `json:"end"`       // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
-	Frequency  string `json:"frequency"` // how frequently should the event occur according ISO 8601
-	Cron       string `json:"cron"`      // cron styled regular expression indicating how often the action under interval should occur.  Use either runOnce, frequency or cron and not all.
-	RunOnce    bool   `json:"runOnce"`   // boolean indicating that this interval runs one time - at the time indicated by the start
+	Timestamps  Timestamps
+	ID          string `json:"id"`
+	Name        string `json:"name"`      // non-database identifier for a shcedule (*must be quitue)
+	Start       string `json:"start"`     // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
+	End         string `json:"end"`       // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
+	Frequency   string `json:"frequency"` // how frequently should the event occur according ISO 8601
+	Cron        string `json:"cron"`      // cron styled regular expression indicating how often the action under interval should occur.  Use either runOnce, frequency or cron and not all.
+	RunOnce     bool   `json:"runOnce"`   // boolean indicating that this interval runs one time - at the time indicated by the start
+	isValidated bool   // internal member used for validation check
 }
 
 // Custom marshaling to make empty strings null
@@ -67,6 +76,90 @@ func (i Interval) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the Interval type
+func (i *Interval) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Timestamps Timestamps `json:",inline"`
+		ID         *string    `json:"id"`
+		Name       *string    `json:"name"`
+		Start      *string    `json:"start"`
+		End        *string    `json:"end"`
+		Frequency  *string    `json:"frequency"`
+		Cron       *string    `json:"cron"`
+		RunOnce    bool       `json:"runOnce"`
+	}
+	a := Alias{}
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Nillable fields
+	if a.ID != nil {
+		i.ID = *a.ID
+	}
+	if a.Name != nil {
+		i.Name = *a.Name
+	}
+	if a.Start != nil {
+		i.Start = *a.Start
+	}
+	if a.End != nil {
+		i.End = *a.End
+	}
+	if a.Frequency != nil {
+		i.Frequency = *a.Frequency
+	}
+	if a.Cron != nil {
+		i.Cron = *a.Cron
+	}
+	i.Timestamps = a.Timestamps
+	i.RunOnce = a.RunOnce
+
+	i.isValidated, err = i.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (i Interval) Validate() (bool, error) {
+	if !i.isValidated {
+		if i.ID == "" && i.Name == "" {
+			return false, errors.New("Interval ID and Name are both blank")
+		}
+		if i.Start != "" {
+			_, err := strconv.ParseInt(i.Start, 10, 64)
+			if err != nil {
+				return false, fmt.Errorf("error parsing Start %v", err)
+			}
+		}
+		if i.End != "" {
+			_, err := strconv.ParseInt(i.End, 10, 64)
+			if err != nil {
+				return false, fmt.Errorf("error parsing End %v", err)
+			}
+		}
+		if i.Frequency != "" {
+			matched, _ := regexp.MatchString(frequencyPattern, i.Frequency)
+			if matched {
+				if i.Frequency == "P" || i.Frequency == "PT" {
+					matched = false
+				}
+			}
+			if !matched {
+				return false, fmt.Errorf("invalid Interval Frequency %s", i.Frequency)
+			}
+		}
+		err := validate(i)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return i.isValidated, nil
 }
 
 /*

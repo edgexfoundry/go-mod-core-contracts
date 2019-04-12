@@ -16,6 +16,7 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 )
 
 type ProvisionWatcher struct {
@@ -26,6 +27,7 @@ type ProvisionWatcher struct {
 	Profile        DeviceProfile     `json:"profile"`        // device profile that should be applied to the devices available at the identifier addresses
 	Service        DeviceService     `json:"service"`        // device service that owns the watcher
 	OperatingState OperatingState    `json:"operatingState"` // operational state - either enabled or disabled
+	isValidated    bool              // internal member used for validation check
 }
 
 // Custom marshaling to make empty strings null
@@ -57,6 +59,56 @@ func (pw ProvisionWatcher) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the ProvisionWatcher type
+func (pw *ProvisionWatcher) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Timestamps     `json:",inline"`
+		Id             string            `json:"id"`
+		Name           *string           `json:"name"`
+		Identifiers    map[string]string `json:"identifiers"`
+		Profile        DeviceProfile     `json:"profile"`
+		Service        DeviceService     `json:"service"`
+		OperatingState OperatingState    `json:"operatingState"`
+	}
+	a := Alias{}
+
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Name can be nil
+	if a.Name != nil {
+		pw.Name = *a.Name
+	}
+	pw.Timestamps = a.Timestamps
+	pw.Id = a.Id
+	pw.Identifiers = a.Identifiers
+	pw.Profile = a.Profile
+	pw.Service = a.Service
+	pw.OperatingState = a.OperatingState
+
+	pw.isValidated, err = pw.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (pw ProvisionWatcher) Validate() (bool, error) {
+	if !pw.isValidated {
+		if pw.Name == "" {
+			return false, errors.New("provision watcher name is blank")
+		}
+		err := validate(pw)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return pw.isValidated, nil
 }
 
 /*

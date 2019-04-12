@@ -38,22 +38,30 @@ func (as *AdminState) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("AdminState should be a string, got %s", data)
 	}
 
-	s = strings.ToUpper(s)
-	got, err := map[string]AdminState{"LOCKED": Locked, "UNLOCKED": Unlocked}[s]
-	if !err {
-		return fmt.Errorf("invalid AdminState %q", s)
-	}
-	*as = got
+	new := AdminState(strings.ToUpper(s))
+	*as = new
+
 	return nil
 }
 
-// IsAdminStateType allows external code to verify whether the supplied string is a valid AdminState value
-func IsAdminStateType(as string) bool {
-	_, found := GetAdminState(as)
-	return found
+// Validate satisfies the Validator interface
+func (as AdminState) Validate() (bool, error) {
+	_, found := map[string]AdminState{"LOCKED": Locked, "UNLOCKED": Unlocked}[string(as)]
+	if !found {
+		return false, fmt.Errorf("invalid AdminState %q", as)
+	}
+	return true, nil
 }
 
-// GetAdminState returns the AdminState value for the supplied string if the string is valid
+// GetAdminState is called from within the router logic of the core services. For example, there are PUT calls
+// like the one below from core-metadata which specify their update parameters in the URL
+//
+// d.HandleFunc("/{"+ID+"}/"+URLADMINSTATE+"/{"+ADMINSTATE+"}", restSetDeviceAdminStateById).Methods(http.MethodPut)
+//
+// Updates like this should be refactored to pass a body containing the new values instead of via the URL. This
+// would allow us to utilize the model validation above and remove the logic from the controller.
+//
+// This will be removed once work on the following issue begins -- https://github.com/edgexfoundry/edgex-go/issues/1244
 func GetAdminState(as string) (AdminState, bool) {
 	as = strings.ToUpper(as)
 	retValue, err := map[string]AdminState{"LOCKED": Locked, "UNLOCKED": Unlocked}[as]

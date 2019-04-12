@@ -39,40 +39,14 @@ func TestAdminState_UnmarshalJSON(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var expected = string(*tt.as)
-			if err := tt.as.UnmarshalJSON(tt.args.data); (err != nil) != tt.wantErr {
-				t.Errorf("AdminState.UnmarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
+			if err := tt.as.UnmarshalJSON(tt.args.data); err != nil {
+				t.Errorf("AdminState.UnmarshalJSON() error = %v", err)
 			} else {
-				// if the bytes did unmarshal, make sure they unmarshaled to correct enum by comparing it to expected results
-				var unmarshaledResult = string(*tt.as)
-				if err == nil && !(IsAdminStateType(unmarshaledResult) && unmarshaledResult == expected) {
+				if _, err = tt.as.Validate(); (err != nil) != tt.wantErr {
+					// if the bytes did unmarshal, make sure they unmarshaled to correct enum by comparing it to expected results
+					var unmarshaledResult = string(*tt.as)
 					t.Errorf("Unmarshal did not result in expected admin state string.  Expected:  %s, got: %s", expected, unmarshaledResult)
 				}
-			}
-		})
-	}
-}
-
-func TestIsAdminStateType(t *testing.T) {
-	type args struct {
-		as string
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		{"LOCKED", args{"LOCKED"}, true},
-		{"UNLOCKED", args{"UNLOCKED"}, true},
-		{"locked", args{"locked"}, true},
-		{"unlocked", args{"unlocked"}, true},
-		{"Locked", args{"Locked"}, true},
-		{"Unlocked", args{"Unlocked"}, true},
-		{"non valid", args{"junk"}, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := IsAdminStateType(tt.args.as); got != tt.want {
-				t.Errorf("IsAdminStateType() = %v, want %v", got, tt.want)
 			}
 		})
 	}

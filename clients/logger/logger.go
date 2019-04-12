@@ -35,17 +35,6 @@ import (
 	"github.com/go-kit/kit/log"
 )
 
-// These constants identify the log levels in order of increasing severity.
-const (
-	TraceLog = "TRACE"
-	DebugLog = "DEBUG"
-	InfoLog  = "INFO"
-	WarnLog  = "WARN"
-	ErrorLog = "ERROR"
-)
-
-var logLevels = LogLevels()
-
 // LoggingClient defines the interface for logging operations.
 type LoggingClient interface {
 	// SetLogLevel sets minimum severity log level. If a logging method is called with a lower level of severity than
@@ -79,7 +68,7 @@ type fileWriter struct {
 // NewClient creates an instance of LoggingClient
 func NewClient(owningServiceName string, isRemote bool, logTarget string, logLevel string) LoggingClient {
 	if !IsValidLogLevel(logLevel) {
-		logLevel = InfoLog
+		logLevel = models.InfoLog
 	}
 
 	// Set up logging client
@@ -108,7 +97,7 @@ func NewClient(owningServiceName string, isRemote bool, logTarget string, logLev
 	// Set up the loggers
 	lc.levelLoggers = map[string]log.Logger{}
 
-	for _, logLevel := range logLevels {
+	for _, logLevel := range logLevels() {
 		lc.levelLoggers[logLevel] = log.WithPrefix(lc.rootLogger, "level", logLevel)
 	}
 
@@ -120,13 +109,13 @@ func NewClient(owningServiceName string, isRemote bool, logTarget string, logLev
 }
 
 // LogLevels returns an array of the possible log levels in order from most to least verbose.
-func LogLevels() []string {
+func logLevels() []string {
 	return []string{
-		TraceLog,
-		DebugLog,
-		InfoLog,
-		WarnLog,
-		ErrorLog}
+		models.TraceLog,
+		models.DebugLog,
+		models.InfoLog,
+		models.WarnLog,
+		models.ErrorLog}
 }
 
 func (f *fileWriter) Write(p []byte) (n int, err error) {
@@ -140,9 +129,9 @@ func (f *fileWriter) Write(p []byte) (n int, err error) {
 	return len(p), err
 }
 
-// IsValidLogLevel checks if is a valid log level
+// IsValidLogLevel checks if `l` is a valid log level
 func IsValidLogLevel(l string) bool {
-	for _, name := range logLevels {
+	for _, name := range logLevels() {
 		if name == l {
 			return true
 		}
@@ -158,7 +147,7 @@ func newFileWriter(logTarget string) (io.Writer, error) {
 
 func (lc edgeXLogger) log(logLevel string, msg string, args ...interface{}) {
 	// Check minimum log level
-	for _, name := range logLevels {
+	for _, name := range logLevels() {
 		if name == *lc.logLevel {
 			break
 		}
@@ -216,23 +205,23 @@ func (lc edgeXLogger) SetLogLevel(logLevel string) error {
 }
 
 func (lc edgeXLogger) Info(msg string, args ...interface{}) {
-	lc.log(InfoLog, msg, args...)
+	lc.log(models.InfoLog, msg, args...)
 }
 
 func (lc edgeXLogger) Trace(msg string, args ...interface{}) {
-	lc.log(TraceLog, msg, args...)
+	lc.log(models.TraceLog, msg, args...)
 }
 
 func (lc edgeXLogger) Debug(msg string, args ...interface{}) {
-	lc.log(DebugLog, msg, args...)
+	lc.log(models.DebugLog, msg, args...)
 }
 
 func (lc edgeXLogger) Warn(msg string, args ...interface{}) {
-	lc.log(WarnLog, msg, args...)
+	lc.log(models.WarnLog, msg, args...)
 }
 
 func (lc edgeXLogger) Error(msg string, args ...interface{}) {
-	lc.log(ErrorLog, msg, args...)
+	lc.log(models.ErrorLog, msg, args...)
 }
 
 // Build the log entry object

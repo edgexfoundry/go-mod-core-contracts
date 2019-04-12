@@ -16,8 +16,8 @@ package models
 
 import "testing"
 
-var TestTimestamps = Timestamps{Created: 123, Modified: 123, Origin: 123}
-var EmptyTimestamps = Timestamps{}
+var testTimestamps = Timestamps{Created: 123, Modified: 123, Origin: 123}
+var emptyTimestamps = Timestamps{}
 
 func TestTimestamps_String(t *testing.T) {
 	tests := []struct {
@@ -25,8 +25,8 @@ func TestTimestamps_String(t *testing.T) {
 		timestamps *Timestamps
 		want       string
 	}{
-		{"empty timestamps", &EmptyTimestamps, "{}"},
-		{"populated timestamps", &TestTimestamps, "{\"created\":123,\"modified\":123,\"origin\":123}"},
+		{"empty timestamps", &emptyTimestamps, "{}"},
+		{"populated timestamps", &testTimestamps, "{\"created\":123,\"modified\":123,\"origin\":123}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -41,7 +41,7 @@ func TestTimestamps_compareTo(t *testing.T) {
 	type args struct {
 		i Timestamps
 	}
-	var sameTimestamps = args{TestTimestamps}
+	var sameTimestamps = args{testTimestamps}
 	var newerTimestamps = args{Timestamps{234, 234, 234}}
 	var olderTimestamps = args{Timestamps{1, 1, 1}}
 	tests := []struct {
@@ -50,9 +50,9 @@ func TestTimestamps_compareTo(t *testing.T) {
 		args args
 		want int
 	}{
-		{"same timestamps", &TestTimestamps, sameTimestamps, -1},
-		{"newer", &TestTimestamps, newerTimestamps, 1},
-		{"older", &TestTimestamps, olderTimestamps, -1},
+		{"same timestamps", &testTimestamps, sameTimestamps, -1},
+		{"newer", &testTimestamps, newerTimestamps, 1},
+		{"older", &testTimestamps, olderTimestamps, -1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

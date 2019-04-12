@@ -20,7 +20,7 @@ import (
 	"testing"
 )
 
-var TestEvent = Event{Pushed: 123, Created: 123, Origin: 123, Modified: 123, Readings: []Reading{TestReading}}
+var TestEvent = Event{Pushed: 123, Created: 123, Device: TestDeviceName, Origin: 123, Modified: 123, Readings: []Reading{TestReading}}
 
 func TestEvent_MarshalJSON(t *testing.T) {
 	var emptyEvent = Event{}
@@ -58,7 +58,8 @@ func TestEvent_String(t *testing.T) {
 	}{
 		{"event to string", TestEvent,
 			"{\"pushed\":" + strconv.FormatInt(TestEvent.Pushed, 10) +
-				",\"created\":" + strconv.FormatInt(TestEvent.Created, 10) +
+				",\"device\":\"" + TestDeviceName +
+				"\",\"created\":" + strconv.FormatInt(TestEvent.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(TestEvent.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestEvent.Origin, 10) +
 				",\"readings\":[" + TestReading.String() + "]" +
@@ -68,6 +69,31 @@ func TestEvent_String(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.e.String(); got != tt.want {
 				t.Errorf("Event.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestEventValidation(t *testing.T) {
+	invalid := TestEvent
+	invalid.Device = ""
+
+	tests := []struct {
+		name        string
+		e           Event
+		expectError bool
+	}{
+		{"valid event", TestEvent, false},
+		{"invalid event", invalid, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.e.Validate()
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
 			}
 		})
 	}

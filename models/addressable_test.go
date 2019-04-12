@@ -32,7 +32,7 @@ const testUser = "edgexer"
 const testPassword = "password"
 const testTopic = "device_topic"
 
-var TestAddressable = Addressable{Timestamps: TestTimestamps, Name: testAddrName, Protocol: testProtocol, HTTPMethod: testMethod, Address: testAddress, Port: testPort, Path: clients.ApiDeviceRoute, Publisher: testPublisher, User: testUser, Password: testPassword, Topic: testTopic}
+var TestAddressable = Addressable{Timestamps: testTimestamps, Name: testAddrName, Protocol: testProtocol, HTTPMethod: testMethod, Address: testAddress, Port: testPort, Path: clients.ApiDeviceRoute, Publisher: testPublisher, User: testUser, Password: testPassword, Topic: testTopic}
 var EmptyAddressable = Addressable{}
 
 func TestAddressable_MarshalJSON(t *testing.T) {
@@ -104,5 +104,31 @@ func TestAddressableNoCallback(t *testing.T) {
 	url := EmptyAddressable.GetCallbackURL()
 	if len(url) > 0 {
 		t.Errorf("url was not expected")
+	}
+}
+
+func TestAddressableValidation(t *testing.T) {
+	invalid := TestAddressable
+	invalid.Name = ""
+	invalid.Id = ""
+
+	tests := []struct {
+		name        string
+		a           Addressable
+		expectError bool
+	}{
+		{"valid addressable", TestAddressable, false},
+		{"invalid addressable", invalid, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.a.Validate()
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
+			}
+		})
 	}
 }

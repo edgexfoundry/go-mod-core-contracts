@@ -16,15 +16,17 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 )
 
 // Command defines a specific read/write operation targeting a device
 type Command struct {
-	Timestamps `yaml:",inline"`
-	Id         string `json:"id" yaml:"id,omitempty"`     // Id is a unique identifier, such as a UUID
-	Name       string `json:"name" yaml:"name,omitempty"` // Command name (unique on the profile)
-	Get        *Get   `json:"get" yaml:"get,omitempty"`   // Get Command
-	Put        *Put   `json:"put" yaml:"put,omitempty"`   // Put Command
+	Timestamps  `yaml:",inline"`
+	Id          string `json:"id" yaml:"id,omitempty"`     // Id is a unique identifier, such as a UUID
+	Name        string `json:"name" yaml:"name,omitempty"` // Command name (unique on the profile)
+	Get         Get    `json:"get" yaml:"get,omitempty"`   // Get Command
+	Put         Put    `json:"put" yaml:"put,omitempty"`   // Put Command
+	isValidated bool   // internal member used for validation check
 }
 
 // MarshalJSON implements the Marshaler interface. Empty strings will be null.
@@ -33,8 +35,8 @@ func (c Command) MarshalJSON() ([]byte, error) {
 		Timestamps
 		Id   *string `json:"id,omitempty"`
 		Name *string `json:"name,omitempty"` // Command name (unique on the profile)
-		Get  *Get    `json:"get,omitempty"`  // Get Command
-		Put  *Put    `json:"put,omitempty"`  // Put Command
+		Get  Get     `json:"get,omitempty"`  // Get Command
+		Put  Put     `json:"put,omitempty"`  // Put Command
 	}{
 		Timestamps: c.Timestamps,
 		Get:        c.Get,
@@ -53,6 +55,53 @@ func (c Command) MarshalJSON() ([]byte, error) {
 	return json.Marshal(test)
 }
 
+// UnmarshalJSON implements the Unmarshaler interface for the Command type
+func (c *Command) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Timestamps `json:",inline"`
+		Id         *string `json:"id"`
+		Name       *string `json:"name"` // Command name (unique on the profile)
+		Get        Get     `json:"get"`  // Get Command
+		Put        Put     `json:"put"`  // Put Command
+	}
+	a := Alias{}
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Check nil fields
+	if a.Id != nil {
+		c.Id = *a.Id
+	}
+	if a.Name != nil {
+		c.Name = *a.Name
+	}
+	c.Get = a.Get
+	c.Put = a.Put
+	c.Timestamps = a.Timestamps
+
+	c.isValidated, err = c.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (c Command) Validate() (bool, error) {
+	if !c.isValidated {
+		if c.Name == "" {
+			return false, errors.New("Name cannot be blank")
+		}
+		err := validate(c)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return c.isValidated, nil
+}
+
 /*
  * String() function for formatting
  */
@@ -62,28 +111,6 @@ func (c Command) String() string {
 		return err.Error()
 	}
 	return string(out)
-}
-
-// UnmarshalJSON implements the Unmarshaler interface for the Command type
-func (c *Command) UnmarshalJSON(b []byte) error {
-	type Alias Command
-	alias := &struct {
-		*Alias
-	}{
-		Alias: (*Alias)(c),
-	}
-
-	if err := json.Unmarshal(b, &alias); err != nil {
-		return err
-	}
-	c = (*Command)(alias.Alias)
-	if c.Get == nil {
-		c.Get = &Get{}
-	}
-	if c.Put == nil {
-		c.Put = &Put{}
-	}
-	return nil
 }
 
 // AllAssociatedValueDescriptors will append all the associated value descriptors to the list

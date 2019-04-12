@@ -7,6 +7,7 @@
 package logger
 
 import (
+	"github.com/edgexfoundry/go-mod-core-contracts/models"
 	"testing"
 )
 
@@ -15,11 +16,11 @@ func TestIsValidLogLevel(t *testing.T) {
 		level string
 		res   bool
 	}{
-		{TraceLog, true},
-		{DebugLog, true},
-		{InfoLog, true},
-		{WarnLog, true},
-		{ErrorLog, true},
+		{models.TraceLog, true},
+		{models.DebugLog, true},
+		{models.InfoLog, true},
+		{models.WarnLog, true},
+		{models.ErrorLog, true},
 		{"EERROR", false},
 		{"ERRORR", false},
 		{"INF", false},

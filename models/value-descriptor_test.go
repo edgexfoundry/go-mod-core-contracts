@@ -89,3 +89,32 @@ func TestValueDescriptor_String(t *testing.T) {
 		})
 	}
 }
+
+func TestValueDescriptorValidation(t *testing.T) {
+	invalidName := TestValueDescriptor
+	invalidName.Name = ""
+
+	invalidFormat := TestValueDescriptor
+	invalidFormat.Formatting = "wut?"
+
+	tests := []struct {
+		name        string
+		vd          ValueDescriptor
+		expectError bool
+	}{
+		{"valid value descriptor", TestValueDescriptor, false},
+		{"invalid format string", invalidFormat, true},
+		{"invalid name", invalidName, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.vd.Validate()
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
+			}
+		})
+	}
+}

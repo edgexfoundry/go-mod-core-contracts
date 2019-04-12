@@ -16,6 +16,7 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 )
 
 // Device represents a registered device participating within the EdgeX Foundry ecosystem
@@ -33,6 +34,7 @@ type Device struct {
 	Service        DeviceService                 `json:"service"`        // Associated Device Service - One per device
 	Profile        DeviceProfile                 `json:"profile"`        // Associated Device Profile - Describes the device
 	AutoEvents     []AutoEvent                   `json:"autoEvents"`     // A list of auto-generated events coming from the device
+	isValidated    bool                          // internal member used for validation check
 }
 
 // ProtocolProperties contains the device connection information in key/value pair
@@ -78,6 +80,72 @@ func (d Device) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the Device type
+func (d *Device) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		DescribedObject `json:",inline"`
+		Id              *string                       `json:"id"`
+		Name            *string                       `json:"name"`
+		AdminState      AdminState                    `json:"adminState"`
+		OperatingState  OperatingState                `json:"operatingState"`
+		Protocols       map[string]ProtocolProperties `json:"protocols"`
+		LastConnected   int64                         `json:"lastConnected"`
+		LastReported    int64                         `json:"lastReported"`
+		Labels          []string                      `json:"labels"`
+		Location        interface{}                   `json:"location"`
+		Service         DeviceService                 `json:"service"`
+		Profile         DeviceProfile                 `json:"profile"`
+		AutoEvents      []AutoEvent                   `json:"autoEvents"`
+	}
+	a := Alias{}
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Check nil fields
+	if a.Id != nil {
+		d.Id = *a.Id
+	}
+	if a.Name != nil {
+		d.Name = *a.Name
+	}
+	d.DescribedObject = a.DescribedObject
+	d.AdminState = a.AdminState
+	d.OperatingState = a.OperatingState
+	d.Protocols = a.Protocols
+	d.LastConnected = a.LastConnected
+	d.LastReported = a.LastReported
+	d.Labels = a.Labels
+	d.Location = a.Location
+	d.Service = a.Service
+	d.Profile = a.Profile
+	d.AutoEvents = a.AutoEvents
+
+	d.isValidated, err = d.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (d Device) Validate() (bool, error) {
+	if !d.isValidated {
+		if d.Id == "" && d.Name == "" {
+			return false, errors.New("Device ID and Name are both blank")
+		}
+		if len(d.Protocols) == 0 {
+			return false, errors.New("no supporting protocol specified for device")
+		}
+		err := validate(d)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return d.isValidated, nil
 }
 
 /*
