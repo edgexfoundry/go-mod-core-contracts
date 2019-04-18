@@ -20,31 +20,30 @@ import (
 
 // Interval a period of time
 type Interval struct {
-	ID        string `json:"id"`
-	Created   int64  `json:"created"`
-	Modified  int64  `json:"modified"`
-	Origin    int64  `json:"origin"`    // not currently used reserved for interval origin source
-	Name      string `json:"name"`      // non-database identifier for a shcedule (*must be quitue)
-	Start     string `json:"start"`     // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
-	End       string `json:"end"`       // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
-	Frequency string `json:"frequency"` // how frequently should the event occur according ISO 8601
-	Cron      string `json:"cron"`      // cron styled regular expression indicating how often the action under interval should occur.  Use either runOnce, frequency or cron and not all.
-	RunOnce   bool   `json:"runOnce"`   // boolean indicating that this interval runs one time - at the time indicated by the start
+	Timestamps Timestamps
+	ID         string `json:"id"`
+	Name       string `json:"name"`      // non-database identifier for a shcedule (*must be quitue)
+	Start      string `json:"start"`     // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
+	End        string `json:"end"`       // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
+	Frequency  string `json:"frequency"` // how frequently should the event occur according ISO 8601
+	Cron       string `json:"cron"`      // cron styled regular expression indicating how often the action under interval should occur.  Use either runOnce, frequency or cron and not all.
+	RunOnce    bool   `json:"runOnce"`   // boolean indicating that this interval runs one time - at the time indicated by the start
 }
 
 // Custom marshaling to make empty strings null
 func (i Interval) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Timestamps
-		ID        *string `json:"id,omitempty"`
-		Name      *string `json:"name,omitempty"`      // non-database identifier for a shcedule (*must be quitue)
-		Start     *string `json:"start,omitempty"`     // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
-		End       *string `json:"end,omitempty"`       // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
-		Frequency *string `json:"frequency,omitempty"` // how frequently should the event occur
-		Cron      *string `json:"cron,omitempty"`      // cron styled regular expression indicating how often the action under schedule should occur.  Use either runOnce, frequency or cron and not all.
-		RunOnce   bool    `json:"runOnce,omitempty"`   // boolean indicating that this interval runs one time - at the time indicated by the start
+		Timestamps Timestamps `json:",inline"`
+		ID         *string    `json:"id,omitempty"`
+		Name       *string    `json:"name,omitempty"`      // non-database identifier for a shcedule (*must be quitue)
+		Start      *string    `json:"start,omitempty"`     // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
+		End        *string    `json:"end,omitempty"`       // Start time i ISO 8601 format YYYYMMDD'T'HHmmss 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd'T'HHmmss")
+		Frequency  *string    `json:"frequency,omitempty"` // how frequently should the event occur
+		Cron       *string    `json:"cron,omitempty"`      // cron styled regular expression indicating how often the action under schedule should occur.  Use either runOnce, frequency or cron and not all.
+		RunOnce    bool       `json:"runOnce,omitempty"`   // boolean indicating that this interval runs one time - at the time indicated by the start
 	}{
-		RunOnce: i.RunOnce,
+		Timestamps: i.Timestamps,
+		RunOnce:    i.RunOnce,
 	}
 
 	// Empty strings are null
