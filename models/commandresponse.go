@@ -86,7 +86,7 @@ func createUrl(basePath string, cmdId string) string {
 /*
  * CommandResponseFromDevice will create a CommandResponse struct from the supplied Device struct
  */
-func CommandResponseFromDevice(d Device, cmdURL string) CommandResponse {
+func CommandResponseFromDevice(d Device, commands []Command, cmdURL string) CommandResponse {
 	cmdResp := CommandResponse{
 		Id:             d.Id,
 		Name:           d.Name,
@@ -96,7 +96,7 @@ func CommandResponseFromDevice(d Device, cmdURL string) CommandResponse {
 		LastReported:   d.LastReported,
 		Labels:         d.Labels,
 		Location:       d.Location,
-		Commands:       d.Profile.CoreCommands,
+		Commands:       commands,
 	}
 
 	basePath := fmt.Sprintf("%s%s/%s/command/", cmdURL, clients.ApiDeviceRoute, d.Id)
