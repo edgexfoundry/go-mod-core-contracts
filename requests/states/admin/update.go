@@ -12,6 +12,24 @@
  * the License.
  *******************************************************************************/
 
-package contracts
+package admin
 
-//Must be a .go file of some sort in the root, otherwise "make test" will fail.
+import (
+	"encoding/json"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/models"
+)
+
+type UpdateRequest struct {
+	models.AdminState `json:"adminState"`
+}
+
+func (u UpdateRequest) MarshalJSON() ([]byte, error) {
+	test := struct {
+		AdminState models.AdminState `json:"adminState,omitempty"`
+	}{
+		AdminState: u.AdminState,
+	}
+
+	return json.Marshal(test)
+}
