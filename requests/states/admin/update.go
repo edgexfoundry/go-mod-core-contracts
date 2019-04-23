@@ -33,3 +33,20 @@ func (u UpdateRequest) MarshalJSON() ([]byte, error) {
 
 	return json.Marshal(test)
 }
+
+// UnmarshalJSON implements the Unmarshaler interface for the type
+func (u *UpdateRequest) UnmarshalJSON(data []byte) error {
+	type Alias struct {
+		AdminState models.AdminState `json:"adminState"`
+	}
+	a := Alias{}
+
+	// Error with unmarshal
+	if err := json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	u.AdminState = a.AdminState
+
+	return nil
+}
