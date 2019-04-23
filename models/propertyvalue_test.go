@@ -32,7 +32,7 @@ var TestPVOffset = "0.0"
 var TestPVBase = "0"
 var TestPVAssertion = "0"
 var TestPVPrecision = "1"
-var TestPVFloatEncoding = "Base64"
+var TestPVFloatEncoding = Base64Encoding
 var TestPropertyValue = PropertyValue{Type: TestPVType, ReadWrite: TestPVReadWrite, Minimum: TestPVMinimum, Maximum: TestPVMaximum, DefaultValue: TestPVDefaultValue, Size: TestPVSize, Mask: TestPVMask, Shift: TestPVShift, Scale: TestPVScale, Offset: TestPVOffset, Base: TestPVBase, Assertion: TestPVAssertion, Precision: TestPVPrecision, FloatEncoding: TestPVFloatEncoding, MediaType: TestMediaType}
 
 func TestPropertyValue_MarshalJSON(t *testing.T) {

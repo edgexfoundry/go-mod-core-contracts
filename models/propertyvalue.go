@@ -18,6 +18,13 @@ import (
 	"encoding/json"
 )
 
+const (
+	// Base64Encoding : the float value is represented in Base64 encoding
+	Base64Encoding = "Base64"
+	// ENotation : the float value is represented in eNotation
+	ENotation = "eNotation"
+)
+
 type PropertyValue struct {
 	Type          string `json:"type" yaml:"type,omitempty"`                 // ValueDescriptor Type of property after transformations
 	ReadWrite     string `json:"readWrite" yaml:"readWrite,omitempty"`       // Read/Write Permissions set for this property
