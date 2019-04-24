@@ -20,8 +20,8 @@ import (
 	"testing"
 )
 
-var TestCommandName = "test command name"
-var TestCommand = Command{Timestamps: TestTimestamps, Name: TestCommandName, Get: &TestGet, Put: &TestPut}
+var testCommandName = "test command name"
+var TestCommand = Command{Timestamps: testTimestamps, Name: testCommandName, Get: TestGet, Put: TestPut}
 
 func TestCommand_MarshalJSON(t *testing.T) {
 	var testCommandBytes = []byte(TestCommand.String())
@@ -87,6 +87,30 @@ func TestCommand_AllAssociatedValueDescriptors(t *testing.T) {
 			tt.c.AllAssociatedValueDescriptors(tt.args.vdNames)
 			if len(*tt.args.vdNames) != 2 {
 				t.Error("Associated value descriptor size > than expected")
+			}
+		})
+	}
+}
+
+func TestCommandValidation(t *testing.T) {
+	invalid := TestCommand
+	invalid.Name = ""
+	tests := []struct {
+		name        string
+		cmd         Command
+		expectError bool
+	}{
+		{"valid command", TestCommand, false},
+		{"invalid command", invalid, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.cmd.Validate()
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
 			}
 		})
 	}

@@ -40,21 +40,30 @@ func (os *OperatingState) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("OperatingState should be a string, got %s", data)
 	}
 
-	s = strings.ToUpper(s)
-	got, err := map[string]OperatingState{"ENABLED": Enabled, "DISABLED": Disabled}[s]
-	if !err {
-		return fmt.Errorf("invalid OperatingState %q", s)
-	}
-	*os = got
+	new := OperatingState(strings.ToUpper(s))
+	*os = new
+
 	return nil
 }
 
-// IsOperatingStateType : return if ostype
-func IsOperatingStateType(os string) bool {
-	_, found := GetOperatingState(os)
-	return found
+// Validate satisfies the Validator interface
+func (os OperatingState) Validate() (bool, error) {
+	_, found := map[string]OperatingState{"ENABLED": Enabled, "DISABLED": Disabled}[string(os)]
+	if !found {
+		return false, fmt.Errorf("invalid OperatingState %q", os)
+	}
+	return true, nil
 }
 
+// GetOperatingState is called from within the router logic of the core services. For example, there are PUT calls
+// like the one below from core-metadata which specify their update parameters in the URL
+//
+// d.HandleFunc("/{"+ID+"}/"+OPSTATE+"/{"+OPSTATE+"}", restSetDeviceOpStateById).Methods(http.MethodPut)
+//
+// Updates like this should be refactored to pass a body containing the new values instead of via the URL. This
+// would allow us to utilize the model validation above and remove the logic from the controller.
+//
+// This will be removed once work on the following issue begins -- https://github.com/edgexfoundry/edgex-go/issues/1244
 func GetOperatingState(os string) (OperatingState, bool) {
 	os = strings.ToUpper(os)
 	o, err := map[string]OperatingState{"ENABLED": Enabled, "DISABLED": Disabled}[os]

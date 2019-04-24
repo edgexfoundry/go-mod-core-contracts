@@ -21,8 +21,16 @@ import (
 // DeviceService represents a service that is responsible for proxying connectivity between a set of devices and the
 // EdgeX Foundry core services.
 type DeviceService struct {
-	Service
-	AdminState AdminState `json:"adminState"` // Device Service Admin State
+	DescribedObject
+	Id             string         `json:"id"`
+	Name           string         `json:"name"`           // time in milliseconds that the device last provided any feedback or responded to any request
+	LastConnected  int64          `json:"lastConnected"`  // time in milliseconds that the device last reported data to the core
+	LastReported   int64          `json:"lastReported"`   // operational state - either enabled or disabled
+	OperatingState OperatingState `json:"operatingState"` // operational state - ether enabled or disableddc
+	Labels         []string       `json:"labels"`         // tags or other labels applied to the device service for search or other identification needs
+	Addressable    Addressable    `json:"addressable"`    // address (MQTT topic, HTTP address, serial bus, etc.) for reaching the service
+	AdminState     AdminState     `json:"adminState"`     // Device Service Admin State
+	isValidated    bool           // internal member used for validation check
 }
 
 // MarshalJSON implements the Marshaler interface in order to make empty strings null
@@ -59,8 +67,9 @@ func (ds DeviceService) MarshalJSON() ([]byte, error) {
 	return json.Marshal(test)
 }
 
-// UnmarshalJSON implements the Unmarshaler interface providing custom unmarshaling functionality.
+// UnmarshalJSON implements the Unmarshaler interface for the DeviceService type
 func (ds *DeviceService) UnmarshalJSON(data []byte) error {
+	var err error
 	type Alias struct {
 		DescribedObject `json:",inline"`
 		Id              string         `json:"id"`
@@ -75,7 +84,7 @@ func (ds *DeviceService) UnmarshalJSON(data []byte) error {
 	a := Alias{}
 
 	// Error with unmarshaling
-	if err := json.Unmarshal(data, &a); err != nil {
+	if err = json.Unmarshal(data, &a); err != nil {
 		return err
 	}
 
@@ -94,7 +103,21 @@ func (ds *DeviceService) UnmarshalJSON(data []byte) error {
 		ds.Name = *a.Name
 	}
 
-	return nil
+	ds.isValidated, err = ds.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (ds DeviceService) Validate() (bool, error) {
+	if !ds.isValidated {
+		err := validate(ds)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return ds.isValidated, nil
 }
 
 /*

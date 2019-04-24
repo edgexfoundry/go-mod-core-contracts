@@ -16,28 +16,30 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 	"strconv"
 	"strings"
 )
 
 type IntervalAction struct {
-	ID         string `json:"id"`
-	Created    int64  `json:"created"`
-	Modified   int64  `json:"modified"`
-	Origin     int64  `json:"origin"`
-	Name       string `json:"name"`
-	Interval   string `json:"interval"`
-	Parameters string `json:"parameters"`
-	Target     string `json:"target"`
-	Protocol   string `json:"protocol"`
-	HTTPMethod string `json:"httpMethod"`
-	Address    string `json:"address"`
-	Port       int    `json:"port"`
-	Path       string `json:"path"`
-	Publisher  string `json:"publisher"`
-	User       string `json:"user"`
-	Password   string `json:"password"`
-	Topic      string `json:"topic"`
+	ID          string `json:"id"`
+	Created     int64  `json:"created"`
+	Modified    int64  `json:"modified"`
+	Origin      int64  `json:"origin"`
+	Name        string `json:"name"`
+	Interval    string `json:"interval"`
+	Parameters  string `json:"parameters"`
+	Target      string `json:"target"`
+	Protocol    string `json:"protocol"`
+	HTTPMethod  string `json:"httpMethod"`
+	Address     string `json:"address"`
+	Port        int    `json:"port"`
+	Path        string `json:"path"`
+	Publisher   string `json:"publisher"`
+	User        string `json:"user"`
+	Password    string `json:"password"`
+	Topic       string `json:"topic"`
+	isValidated bool   // internal member used for validation check
 }
 
 func (ia IntervalAction) MarshalJSON() ([]byte, error) {
@@ -108,6 +110,101 @@ func (ia IntervalAction) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the IntervalAction type
+func (ia *IntervalAction) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		ID         *string `json:"id"`
+		Created    int64   `json:"created"`
+		Modified   int64   `json:"modified"`
+		Origin     int64   `json:"origin"`
+		Name       *string `json:"name"`
+		Interval   *string `json:"interval"`
+		Parameters *string `json:"parameters"`
+		Target     *string `json:"target"`
+		Protocol   *string `json:"protocol"`
+		HTTPMethod *string `json:"httpMethod"`
+		Address    *string `json:"address"`
+		Port       int     `json:"port"`
+		Path       *string `json:"path"`
+		Publisher  *string `json:"publisher"`
+		User       *string `json:"user"`
+		Password   *string `json:"password"`
+		Topic      *string `json:"topic"`
+	}
+	a := Alias{}
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Nillable fields
+	if a.ID != nil {
+		ia.ID = *a.ID
+	}
+	if a.Name != nil {
+		ia.Name = *a.Name
+	}
+	if a.Interval != nil {
+		ia.Interval = *a.Interval
+	}
+	if a.Parameters != nil {
+		ia.Parameters = *a.Parameters
+	}
+	if a.Target != nil {
+		ia.Target = *a.Target
+	}
+	if a.Protocol != nil {
+		ia.Protocol = *a.Protocol
+	}
+	if a.HTTPMethod != nil {
+		ia.HTTPMethod = *a.HTTPMethod
+	}
+	if a.Address != nil {
+		ia.Address = *a.Address
+	}
+	if a.Path != nil {
+		ia.Path = *a.Path
+	}
+	if a.Publisher != nil {
+		ia.Publisher = *a.Publisher
+	}
+	if a.User != nil {
+		ia.User = *a.User
+	}
+	if a.Password != nil {
+		ia.Password = *a.Password
+	}
+	if a.Topic != nil {
+		ia.Topic = *a.Topic
+	}
+	ia.Created = a.Created
+	ia.Modified = a.Modified
+	ia.Origin = a.Origin
+	ia.Port = a.Port
+
+	ia.isValidated, err = ia.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (ia IntervalAction) Validate() (bool, error) {
+	if !ia.isValidated {
+		if ia.ID == "" && ia.Name == "" {
+			return false, errors.New("IntervalAction ID and Name are both blank")
+		}
+		if ia.Target == "" {
+			return false, errors.New("intervalAction target is blank")
+		}
+		if ia.Interval == "" {
+			return false, errors.New("intervalAction interval is blank")
+		}
+		return true, nil
+	}
+	return ia.isValidated, nil
 }
 
 func (ia IntervalAction) String() string {

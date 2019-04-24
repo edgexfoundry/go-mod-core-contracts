@@ -14,29 +14,38 @@
 
 package models
 
-import (
-	"strconv"
-	"testing"
-)
+import "testing"
 
-var TestDescribedObject = DescribedObject{Timestamps: testTimestamps, Description: TestDescription}
+var testNotifyUpdate = NotifyUpdate{Name: "For Testing", Operation: NotifyUpdateAdd}
 
-func TestDescribedObject_String(t *testing.T) {
+func TestNotifyUpdateValidation(t *testing.T) {
+	invalidName := testNotifyUpdate
+	invalidName.Name = ""
+
+	invalidOp := testNotifyUpdate
+	invalidOp.Operation = ""
+
+	invalidOpNotBlank := testNotifyUpdate
+	invalidOpNotBlank.Operation = "blah"
+
 	tests := []struct {
-		name string
-		o    DescribedObject
-		want string
+		name        string
+		nu          NotifyUpdate
+		expectError bool
 	}{
-		{"described object to string", TestDescribedObject,
-			"{\"created\":" + strconv.FormatInt(TestDescribedObject.Created, 10) +
-				",\"modified\":" + strconv.FormatInt(TestDescribedObject.Modified, 10) +
-				",\"origin\":" + strconv.FormatInt(TestDescribedObject.Origin, 10) +
-				",\"description\":\"" + TestDescription + "\"}"},
+		{"valid notify update", testNotifyUpdate, false},
+		{"invalid name", invalidName, true},
+		{"invalid operation", invalidOp, true},
+		{"invalid operation value", invalidOpNotBlank, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.o.String(); got != tt.want {
-				t.Errorf("DescribedObject.String() = %v, want %v", got, tt.want)
+			_, err := tt.nu.Validate()
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
 			}
 		})
 	}

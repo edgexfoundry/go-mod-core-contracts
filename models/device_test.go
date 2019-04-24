@@ -114,6 +114,36 @@ func TestDevice_AllAssociatedValueDescriptors(t *testing.T) {
 	}
 }
 
+func TestDeviceValidation(t *testing.T) {
+	invalidIdentifiers := TestDevice
+	invalidIdentifiers.Name = ""
+	invalidIdentifiers.Id = ""
+
+	invalidProtocols := TestDevice
+	invalidProtocols.Protocols = map[string]ProtocolProperties{}
+
+	tests := []struct {
+		name        string
+		d           Device
+		expectError bool
+	}{
+		{"valid device", TestDevice, false},
+		{"invalid device identifiers", invalidIdentifiers, true},
+		{"invalid protocols", invalidProtocols, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.d.Validate()
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
+			}
+		})
+	}
+}
+
 func newTestProtocols() map[string]ProtocolProperties {
 	p1 := make(ProtocolProperties)
 	p1["host"] = "localhost"

@@ -138,7 +138,7 @@ func TestGetAddressable(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if receivedAddressable != addressable {
+	if receivedAddressable.String() != addressable.String() {
 		t.Errorf("expected addressable: %s, actual addressable: %s", receivedAddressable, addressable)
 	}
 }
@@ -183,7 +183,7 @@ func TestGetAddressableForName(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if receivedAddressable != addressable {
+	if receivedAddressable.String() != addressable.String() {
 		t.Errorf("expected addressable: %s, actual addressable: %s", receivedAddressable, addressable)
 	}
 }

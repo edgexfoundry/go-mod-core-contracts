@@ -15,6 +15,7 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -71,54 +72,115 @@ type Registration struct {
 	Compression string            `json:"compression,omitempty"`
 	Enable      bool              `json:"enable"`
 	Destination string            `json:"destination,omitempty"`
+	isValidated bool              // internal member used for validation check
 }
 
+// UnmarshalJSON implements the Unmarshaler interface for the DeviceService type
+func (r *Registration) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		ID          *string           `json:"id"`
+		Created     int64             `json:"created"`
+		Modified    int64             `json:"modified"`
+		Origin      int64             `json:"origin"`
+		Name        *string           `json:"name"`
+		Addressable Addressable       `json:"addressable"`
+		Format      *string           `json:"format"`
+		Filter      Filter            `json:"filter.go"`
+		Encryption  EncryptionDetails `json:"encryption"`
+		Compression *string           `json:"compression"`
+		Enable      bool              `json:"enable"`
+		Destination *string           `json:"destination"`
+	}
+	a := Alias{}
+
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Fields can be nil
+	if a.ID != nil {
+		r.ID = *a.ID
+	}
+	if a.Name != nil {
+		r.Name = *a.Name
+	}
+	if a.Format != nil {
+		r.Format = *a.Format
+	}
+	if a.Compression != nil {
+		r.Compression = *a.Compression
+	}
+	if a.Destination != nil {
+		r.Destination = *a.Destination
+	}
+	r.Created = a.Created
+	r.Modified = a.Modified
+	r.Origin = a.Origin
+	r.Addressable = a.Addressable
+	r.Filter = a.Filter
+	r.Encryption = a.Encryption
+	r.Enable = a.Enable
+
+	r.isValidated, err = r.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
 func (reg Registration) Validate() (bool, error) {
+	if !reg.isValidated {
+		if reg.Name == "" {
+			return false, fmt.Errorf("Name is required")
+		}
 
-	if reg.Name == "" {
-		return false, fmt.Errorf("Name is required")
+		if reg.Compression == "" {
+			reg.Compression = CompNone
+		}
+
+		if reg.Compression != CompNone &&
+			reg.Compression != CompGzip &&
+			reg.Compression != CompZip {
+			return false, fmt.Errorf("Compression invalid: %s", reg.Compression)
+		}
+
+		if reg.Format != FormatJSON &&
+			reg.Format != FormatXML &&
+			reg.Format != FormatSerialized &&
+			reg.Format != FormatIoTCoreJSON &&
+			reg.Format != FormatAzureJSON &&
+			reg.Format != FormatAWSJSON &&
+			reg.Format != FormatCSV &&
+			reg.Format != FormatThingsBoardJSON &&
+			reg.Format != FormatNOOP {
+			return false, fmt.Errorf("Format invalid: %s", reg.Format)
+		}
+
+		if reg.Destination != DestMQTT &&
+			reg.Destination != DestZMQ &&
+			reg.Destination != DestIotCoreMQTT &&
+			reg.Destination != DestAzureMQTT &&
+			reg.Destination != DestAWSMQTT &&
+			reg.Destination != DestRest &&
+			reg.Destination != DestInfluxDB {
+			return false, fmt.Errorf("Destination invalid: %s", reg.Destination)
+		}
+
+		if reg.Encryption.Algo == "" {
+			reg.Encryption.Algo = EncNone
+		}
+
+		if reg.Encryption.Algo != EncNone &&
+			reg.Encryption.Algo != EncAes {
+			return false, fmt.Errorf("Encryption invalid: %s", reg.Encryption.Algo)
+		}
+		err := validate(reg)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
 	}
 
-	if reg.Compression == "" {
-		reg.Compression = CompNone
-	}
-
-	if reg.Compression != CompNone &&
-		reg.Compression != CompGzip &&
-		reg.Compression != CompZip {
-		return false, fmt.Errorf("Compression invalid: %s", reg.Compression)
-	}
-
-	if reg.Format != FormatJSON &&
-		reg.Format != FormatXML &&
-		reg.Format != FormatSerialized &&
-		reg.Format != FormatIoTCoreJSON &&
-		reg.Format != FormatAzureJSON &&
-		reg.Format != FormatAWSJSON &&
-		reg.Format != FormatCSV &&
-		reg.Format != FormatThingsBoardJSON &&
-		reg.Format != FormatNOOP {
-		return false, fmt.Errorf("Format invalid: %s", reg.Format)
-	}
-
-	if reg.Destination != DestMQTT &&
-		reg.Destination != DestZMQ &&
-		reg.Destination != DestIotCoreMQTT &&
-		reg.Destination != DestAzureMQTT &&
-		reg.Destination != DestAWSMQTT &&
-		reg.Destination != DestRest &&
-		reg.Destination != DestInfluxDB {
-		return false, fmt.Errorf("Destination invalid: %s", reg.Destination)
-	}
-
-	if reg.Encryption.Algo == "" {
-		reg.Encryption.Algo = EncNone
-	}
-
-	if reg.Encryption.Algo != EncNone &&
-		reg.Encryption.Algo != EncAes {
-		return false, fmt.Errorf("Encryption invalid: %s", reg.Encryption.Algo)
-	}
-
-	return true, nil
+	return reg.isValidated, nil
 }

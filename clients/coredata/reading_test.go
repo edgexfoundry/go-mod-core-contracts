@@ -18,6 +18,7 @@ package coredata
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -26,14 +27,25 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 const (
-	TestReadingDevice1 = "device1"
-	TestReadingDevice2 = "device2"
+	testReadingDevice1 = "device1"
+	testReadingDevice2 = "device2"
 )
 
+var testReading = models.Reading{Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: "test device name",
+	Name: "Temperature", Value: "45", BinaryValue: []byte{0xbf}}
+
 func TestGetReadings(t *testing.T) {
+	reading1 := testReading
+	reading1.Device = testReadingDevice1
+
+	reading2 := testReading
+	reading2.Device = testReadingDevice2
+
+	readings := []models.Reading{reading1, reading2}
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 
@@ -45,15 +57,11 @@ func TestGetReadings(t *testing.T) {
 			t.Errorf("expected uri path is %s, actual uri path is %s", clients.ApiReadingRoute, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte("[" +
-			"{" +
-			"\"Device\" : \"" + TestReadingDevice1 + "\"" +
-			"}," +
-			"{" +
-			"\"Device\" : \"" + TestReadingDevice2 + "\"" +
-			"}" +
-			"]"))
-
+		data, err := json.Marshal(readings)
+		if err != nil {
+			t.Errorf("marshaling error: %s", err.Error())
+		}
+		w.Write(data)
 	}))
 
 	defer ts.Close()
@@ -71,6 +79,7 @@ func TestGetReadings(t *testing.T) {
 
 	rArr, err := rc.Readings(context.Background())
 	if err != nil {
+		t.Errorf(err.Error())
 		t.FailNow()
 	}
 
@@ -79,13 +88,13 @@ func TestGetReadings(t *testing.T) {
 	}
 
 	r1 := rArr[0]
-	if r1.Device != TestReadingDevice1 {
-		t.Errorf("expected first reading's device is : %s, actual reading is : %s", TestReadingDevice1, r1.Device)
+	if r1.Device != testReadingDevice1 {
+		t.Errorf("expected first reading's device is : %s, actual reading is : %s", testReadingDevice1, r1.Device)
 	}
 
 	r2 := rArr[1]
-	if r2.Device != TestReadingDevice2 {
-		t.Errorf("expected second reading's device is : %s, actual reading is : %s ", TestReadingDevice2, r2.Device)
+	if r2.Device != testReadingDevice2 {
+		t.Errorf("expected second reading's device is : %s, actual reading is : %s ", testReadingDevice2, r2.Device)
 	}
 }
 

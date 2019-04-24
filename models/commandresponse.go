@@ -79,10 +79,6 @@ func (d CommandResponse) String() string {
 	return string(out)
 }
 
-func createUrl(basePath string, cmdId string) string {
-	return basePath + cmdId
-}
-
 /*
  * CommandResponseFromDevice will create a CommandResponse struct from the supplied Device struct
  */
@@ -101,13 +97,11 @@ func CommandResponseFromDevice(d Device, commands []Command, cmdURL string) Comm
 
 	basePath := fmt.Sprintf("%s%s/%s/command/", cmdURL, clients.ApiDeviceRoute, d.Id)
 
+	// TODO: Find a way to encapsulate this within the "Action" struct if possible
 	for _, c := range cmdResp.Commands {
-		if c.Get != nil {
-			c.Get.URL = createUrl(basePath, c.Id)
-		}
-		if c.Put != nil {
-			c.Put.URL = createUrl(basePath, c.Id)
-		}
+		url := basePath + c.Id
+		c.Get.URL = url
+		c.Put.URL = url
 	}
 
 	return cmdResp

@@ -16,6 +16,7 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 )
 
 /*
@@ -35,6 +36,7 @@ type Reading struct {
 	Name        string `json:"name"`
 	Value       string `json:"value"`       // Device sensor data value
 	BinaryValue []byte `json:"binaryValue"` // Binary data payload
+	isValidated bool   // internal member used for validation check
 }
 
 // Custom marshaling to make empty strings null
@@ -72,6 +74,66 @@ func (r Reading) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the Reading type
+func (r *Reading) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Id          *string `json:"id"`
+		Pushed      int64   `json:"pushed"`
+		Created     int64   `json:"created"`
+		Origin      int64   `json:"origin"`
+		Modified    int64   `json:"modified"`
+		Device      *string `json:"device"`
+		Name        *string `json:"name"`
+		Value       *string `json:"value"`
+		BinaryValue []byte  `json:"binaryValue"`
+	}
+	a := Alias{}
+
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Set the fields
+	if a.Id != nil {
+		r.Id = *a.Id
+	}
+	if a.Device != nil {
+		r.Device = *a.Device
+	}
+	if a.Name != nil {
+		r.Name = *a.Name
+	}
+	if a.Value != nil {
+		r.Id = *a.Value
+	}
+	r.Pushed = a.Pushed
+	r.Created = a.Created
+	r.Origin = a.Origin
+	r.Modified = a.Modified
+	r.BinaryValue = a.BinaryValue
+
+	r.isValidated, err = r.Validate()
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (r Reading) Validate() (bool, error) {
+	if !r.isValidated {
+		if r.Device == "" {
+			return false, errors.New("source device for reading not specified")
+		}
+		if r.Name == "" {
+			return false, errors.New("name for reading's value descriptor not specified")
+		}
+		if r.Value == "" && len(r.BinaryValue) == 0 {
+			return false, errors.New("reading has no value")
+		}
+	}
+	return true, nil
 }
 
 /*

@@ -40,40 +40,14 @@ func TestOperatingState_UnmarshalJSON(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var expected = string(*tt.os)
-			if err := tt.os.UnmarshalJSON(tt.args.data); (err != nil) != tt.wantErr {
-				t.Errorf("OperatingState.UnmarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
+			if err := tt.os.UnmarshalJSON(tt.args.data); err != nil {
+				t.Errorf("OperatingState.UnmarshalJSON() error = %v", err)
 			} else {
-				// if the bytes did unmarshal, make sure they unmarshaled to correct enum by comparing it to expected results
-				var unmarshaledResult = string(*tt.os)
-				if err == nil && !(IsOperatingStateType(unmarshaledResult) && unmarshaledResult == expected) {
-					t.Errorf("Unmarshal did not result in expected operating state string.  Expected:  %s, got: %s", expected, unmarshaledResult)
+				if _, err = tt.os.Validate(); (err != nil) != tt.wantErr {
+					// if the bytes did unmarshal, make sure they unmarshaled to correct enum by comparing it to expected results
+					var unmarshaledResult = string(*tt.os)
+					t.Errorf("Unmarshal did not result in expected admin operating string.  Expected:  %s, got: %s", expected, unmarshaledResult)
 				}
-			}
-		})
-	}
-}
-
-func TestIsOperatingStateType(t *testing.T) {
-	type args struct {
-		os string
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		{"DISABLED", args{"DISABLED"}, true},
-		{"ENABLED", args{"ENABLED"}, true},
-		{"disabled", args{"disabled"}, true},
-		{"enabled", args{"enabled"}, true},
-		{"Disabled", args{"Disabled"}, true},
-		{"Enabled", args{"Enabled"}, true},
-		{"non valid", args{"junk"}, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := IsOperatingStateType(tt.args.os); got != tt.want {
-				t.Errorf("IsOperatingStateType() = %v, want %v", got, tt.want)
 			}
 		})
 	}

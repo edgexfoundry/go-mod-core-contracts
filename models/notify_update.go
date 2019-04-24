@@ -14,7 +14,56 @@
 
 package models
 
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
+
 type NotifyUpdate struct {
-	Name      string `json:"name"`
-	Operation string `json:"operation"`
+	Name        string `json:"name"`
+	Operation   string `json:"operation"`
+	isValidated bool   // internal member used for validation check
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the NotifyUpdate type
+func (n *NotifyUpdate) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Name      *string `json:"name"`
+		Operation *string `json:"operation"`
+	}
+	a := Alias{}
+
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	//Nillable fields
+	if a.Name != nil {
+		n.Name = *a.Name
+	}
+	if a.Operation != nil {
+		n.Operation = *a.Operation
+	}
+
+	n.isValidated, err = n.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (n NotifyUpdate) Validate() (bool, error) {
+	if !n.isValidated {
+		if n.Name == "" || n.Operation == "" {
+			return false, errors.New("Name and Operation must both have a value")
+		}
+		if n.Operation != NotifyUpdateAdd &&
+			n.Operation != NotifyUpdateUpdate &&
+			n.Operation != NotifyUpdateDelete {
+			return false, fmt.Errorf("Invalid value for operation %s", n.Operation)
+		}
+	}
+	return true, nil
 }

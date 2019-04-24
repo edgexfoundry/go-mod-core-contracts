@@ -31,7 +31,8 @@ var TestIdentifiers = map[string]string{
 	TestPWNameKey1: TestPWVal1,
 	TestPWNameKey2: TestPWVal2,
 }
-var TestProvisionWatcher = ProvisionWatcher{Timestamps: TestTimestamps, Name: TestPWName, Identifiers: TestIdentifiers, Profile: TestProfile, Service: TestDeviceService}
+var TestProvisionWatcher = ProvisionWatcher{Timestamps: testTimestamps, Name: TestPWName, Identifiers: TestIdentifiers,
+	Profile: TestProfile, Service: TestDeviceService, OperatingState: "ENABLED"}
 
 func TestProvisionWatcher_MarshalJSON(t *testing.T) {
 	var testPWBytes = []byte(TestProvisionWatcher.String())
@@ -73,13 +74,38 @@ func TestProvisionWatcher_String(t *testing.T) {
 				",\"identifiers\":" + fmt.Sprintf("%s", data) +
 				",\"profile\":" + TestProvisionWatcher.Profile.String() +
 				",\"service\":" + TestProvisionWatcher.Service.String() +
-				",\"operatingState\":\"\"" +
+				",\"operatingState\":\"ENABLED\"" +
 				"}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.pw.String(); got != tt.want {
 				t.Errorf("ProvisionWatcher.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestProvisionWatcherValidation(t *testing.T) {
+	invalid := TestProvisionWatcher
+	invalid.Name = ""
+
+	tests := []struct {
+		name        string
+		pw          ProvisionWatcher
+		expectError bool
+	}{
+		{"valid provision watcher", TestProvisionWatcher, false},
+		{"invalid provision watcher", invalid, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.pw.Validate()
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
 			}
 		})
 	}

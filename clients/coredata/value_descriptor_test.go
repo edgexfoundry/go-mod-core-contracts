@@ -16,6 +16,7 @@ package coredata
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -24,14 +25,27 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 const (
-	TestValueDesciptorDescription1 = "value descriptor1"
-	TestValueDesciptorDescription2 = "value descriptor2"
+	testValueDesciptorDescription1 = "value descriptor1"
+	testValueDesciptorDescription2 = "value descriptor2"
 )
 
+var testValueDescriptor = models.ValueDescriptor{Created: 123, Modified: 123, Origin: 123, Name: "Temperature",
+	Description: "test description", Min: -70, Max: 140, DefaultValue: 32, Formatting: "%d",
+	Labels: []string{"temp", "room temp"}, UomLabel: "F", MediaType: clients.ContentTypeJSON, FloatEncoding: "eNotation"}
+
 func TestGetvaluedescriptors(t *testing.T) {
+	descriptor1 := testValueDescriptor
+	descriptor1.Description = testValueDesciptorDescription1
+
+	descriptor2 := testValueDescriptor
+	descriptor2.Description = testValueDesciptorDescription2
+
+	descriptors := []models.ValueDescriptor{descriptor1, descriptor2}
+
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 
@@ -43,14 +57,11 @@ func TestGetvaluedescriptors(t *testing.T) {
 			t.Errorf("expected uri path is %s, actual uri path is %s", clients.ApiValueDescriptorRoute, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte("[" +
-			"{" +
-			"\"Description\" : \"" + TestValueDesciptorDescription1 + "\"" +
-			"}," +
-			"{" +
-			"\"Description\" : \"" + TestValueDesciptorDescription2 + "\"" +
-			"}" +
-			"]"))
+		data, err := json.Marshal(descriptors)
+		if err != nil {
+			t.Errorf("marshaling error: %s", err.Error())
+		}
+		w.Write(data)
 
 	}))
 
@@ -69,6 +80,7 @@ func TestGetvaluedescriptors(t *testing.T) {
 
 	vdArr, err := vdc.ValueDescriptors(context.Background())
 	if err != nil {
+		t.Errorf(err.Error())
 		t.FailNow()
 	}
 
@@ -77,13 +89,13 @@ func TestGetvaluedescriptors(t *testing.T) {
 	}
 
 	vd1 := vdArr[0]
-	if vd1.Description != TestValueDesciptorDescription1 {
-		t.Errorf("expected first value descriptor's description is : %s, actual description is : %s", TestValueDesciptorDescription1, vd1.Description)
+	if vd1.Description != testValueDesciptorDescription1 {
+		t.Errorf("expected first value descriptor's description is : %s, actual description is : %s", testValueDesciptorDescription1, vd1.Description)
 	}
 
 	vd2 := vdArr[1]
-	if vd2.Description != TestValueDesciptorDescription2 {
-		t.Errorf("expected second value descriptor's description is : %s, actual description is : %s ", TestValueDesciptorDescription2, vd2.Description)
+	if vd2.Description != testValueDesciptorDescription2 {
+		t.Errorf("expected second value descriptor's description is : %s, actual description is : %s ", testValueDesciptorDescription2, vd2.Description)
 	}
 }
 

@@ -16,6 +16,9 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"regexp"
 )
 
 /*
@@ -37,6 +40,7 @@ type ValueDescriptor struct {
 	Labels        []string    `json:"labels"`
 	MediaType     string      `json:"mediaType"`
 	FloatEncoding string      `json:"floatEncoding"`
+	isValidated   bool        // internal member used for validation check
 }
 
 // Custom marshaling to make empty strings null
@@ -100,6 +104,95 @@ func (v ValueDescriptor) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the ValueDescriptor type
+func (v *ValueDescriptor) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Id            *string      `json:"id"`
+		Created       int64        `json:"created"`
+		Description   *string      `json:"description"`
+		Modified      int64        `json:"modified"`
+		Origin        int64        `json:"origin"`
+		Name          *string      `json:"name"`
+		Min           *interface{} `json:"min"`
+		Max           *interface{} `json:"max"`
+		DefaultValue  *interface{} `json:"defaultValue"`
+		Type          *string      `json:"type"`
+		UomLabel      *string      `json:"uomLabel"`
+		Formatting    *string      `json:"formatting"`
+		Labels        []string     `json:"labels"`
+		MediaType     *string      `json:"mediaType"`
+		FloatEncoding *string      `json:"floatEncoding"`
+	}
+	a := Alias{}
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Set the fields
+	if a.Id != nil {
+		v.Id = *a.Id
+	}
+	if a.Description != nil {
+		v.Description = *a.Description
+	}
+	if a.Name != nil {
+		v.Name = *a.Name
+	}
+	if a.Min != nil {
+		v.Min = *a.Min
+	}
+	if a.Max != nil {
+		v.Max = *a.Max
+	}
+	if a.DefaultValue != nil {
+		v.DefaultValue = *a.DefaultValue
+	}
+	if a.Type != nil {
+		v.Type = *a.Type
+	}
+	if a.UomLabel != nil {
+		v.UomLabel = *a.UomLabel
+	}
+	if a.Formatting != nil {
+		v.Formatting = *a.Formatting
+	}
+	if a.MediaType != nil {
+		v.MediaType = *a.MediaType
+	}
+	if a.FloatEncoding != nil {
+		v.FloatEncoding = *a.FloatEncoding
+	}
+	v.Created = a.Created
+	v.Modified = a.Modified
+	v.Origin = a.Origin
+	v.Labels = a.Labels
+
+	v.isValidated, err = v.Validate()
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (v ValueDescriptor) Validate() (bool, error) {
+	if !v.isValidated {
+		if v.Formatting != "" {
+			formatSpecifier := "%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])"
+			match, err := regexp.MatchString(formatSpecifier, v.Formatting)
+			if err != nil {
+				return false, fmt.Errorf("error validating format string: %s", v.Formatting)
+			}
+			if !match {
+				return false, fmt.Errorf("format is not a valid printf format: %s", v.Formatting)
+			}
+		}
+		if v.Name == "" {
+			return false, errors.New("name for value descriptor not specified")
+		}
+	}
+	return true, nil
 }
 
 /*

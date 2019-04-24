@@ -12,31 +12,32 @@
  * the License.
  *******************************************************************************/
 
-package models
+package operating
 
 import (
-	"strconv"
+	"github.com/edgexfoundry/go-mod-core-contracts/models"
 	"testing"
 )
 
-var TestDescribedObject = DescribedObject{Timestamps: testTimestamps, Description: TestDescription}
-
-func TestDescribedObject_String(t *testing.T) {
+func TestUpdateValidation(t *testing.T) {
 	tests := []struct {
-		name string
-		o    DescribedObject
-		want string
+		name        string
+		up          UpdateRequest
+		expectError bool
 	}{
-		{"described object to string", TestDescribedObject,
-			"{\"created\":" + strconv.FormatInt(TestDescribedObject.Created, 10) +
-				",\"modified\":" + strconv.FormatInt(TestDescribedObject.Modified, 10) +
-				",\"origin\":" + strconv.FormatInt(TestDescribedObject.Origin, 10) +
-				",\"description\":\"" + TestDescription + "\"}"},
+		{"valid - enabled", UpdateRequest{OperatingState: models.OperatingState("ENABLED")}, false},
+		{"valid - disabled", UpdateRequest{OperatingState: models.OperatingState("DISABLED")}, false},
+		{"invalid - blank", UpdateRequest{OperatingState: models.OperatingState("")}, true},
+		{"invalid - garbage", UpdateRequest{OperatingState: models.OperatingState("QWERTY")}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.o.String(); got != tt.want {
-				t.Errorf("DescribedObject.String() = %v, want %v", got, tt.want)
+			_, err := tt.up.Validate()
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
 			}
 		})
 	}
