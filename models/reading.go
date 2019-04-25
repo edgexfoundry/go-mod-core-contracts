@@ -26,16 +26,17 @@ import (
  *
  * Struct for the Reading object in EdgeX
  */
+
 type Reading struct {
-	Id          string `json:"id"`
-	Pushed      int64  `json:"pushed"`  // When the data was pushed out of EdgeX (0 - not pushed yet)
-	Created     int64  `json:"created"` // When the reading was created
-	Origin      int64  `json:"origin"`
-	Modified    int64  `json:"modified"`
-	Device      string `json:"device"`
-	Name        string `json:"name"`
-	Value       string `json:"value"`       // Device sensor data value
-	BinaryValue []byte `json:"binaryValue"` // Binary data payload
+	Id          string `json:"id" codec:"id,omitempty"`
+	Pushed      int64  `json:"pushed" codec:"pushed,omitempty"`   // When the data was pushed out of EdgeX (0 - not pushed yet)
+	Created     int64  `json:"created" codec:"created,omitempty"` // When the reading was created
+	Origin      int64  `json:"origin" codec:"origin,omitempty"`
+	Modified    int64  `json:"modified" codec:"modified,omitempty"`
+	Device      string `json:"device" codec:"device,omitempty"`
+	Name        string `json:"name" codec:"name,omitempty"`
+	Value       string `json:"value"  codec:"value,omitempty"`            // Device sensor data value
+	BinaryValue []byte `json:"binaryValue" codec:"binaryValue,omitempty"` // Binary data payload
 	isValidated bool   // internal member used for validation check
 }
 

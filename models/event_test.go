@@ -18,6 +18,8 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
+
+	"github.com/ugorji/go/codec"
 )
 
 var TestEvent = Event{Pushed: 123, Created: 123, Device: TestDeviceName, Origin: 123, Modified: 123, Readings: []Reading{TestReading}}
@@ -96,5 +98,20 @@ func TestEventValidation(t *testing.T) {
 				t.Errorf("did not receive expected error: %s", tt.name)
 			}
 		})
+	}
+}
+
+func Test_encodeAsCBOR(t *testing.T) {
+	bytes := TestEvent.CBOR()
+	var evt Event
+	var handle codec.CborHandle
+	dec := codec.NewDecoderBytes(bytes, &handle)
+	err := dec.Decode(&evt)
+	if err != nil {
+		t.Error("Error decoding Event: " + err.Error())
+	}
+
+	if !reflect.DeepEqual(TestEvent, evt) {
+		t.Error("Failed to properly decode event")
 	}
 }
