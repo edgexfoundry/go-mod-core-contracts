@@ -20,12 +20,15 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
+
+	"github.com/ugorji/go/codec"
 )
 
+var TestId = "Thermometer"
 var TestValueDescriptorName = "Temperature"
 var TestValue = "45"
 var TestBinaryValue = []byte{0xbf}
-var TestReading = Reading{Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: TestDeviceName, Name: TestValueDescriptorName, Value: TestValue, BinaryValue: TestBinaryValue}
+var TestReading = Reading{Id: TestId, Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: TestDeviceName, Name: TestValueDescriptorName, Value: TestValue, BinaryValue: TestBinaryValue}
 
 func TestReading_MarshalJSON(t *testing.T) {
 	var emptyReading = Reading{}
@@ -63,7 +66,8 @@ func TestReading_String(t *testing.T) {
 		want string
 	}{
 		{"reading to string", TestReading,
-			"{\"pushed\":" + strconv.FormatInt(TestReading.Pushed, 10) +
+			"{\"id\":\"" + TestId + "\"" +
+				",\"pushed\":" + strconv.FormatInt(TestReading.Pushed, 10) +
 				",\"created\":" + strconv.FormatInt(TestReading.Created, 10) +
 				",\"origin\":" + strconv.FormatInt(TestReading.Origin, 10) +
 				",\"modified\":" + strconv.FormatInt(TestReading.Modified, 10) +
@@ -103,5 +107,26 @@ func TestReadingValidation(t *testing.T) {
 				t.Errorf("did not receive expected error: %s", tt.name)
 			}
 		})
+	}
+}
+
+func TestCborEncoding(t *testing.T) {
+	handle := codec.CborHandle{}
+	bytes := make([]byte, 32)
+	enc := codec.NewEncoderBytes(&bytes, &handle)
+	err := enc.Encode(&TestReading)
+	if err != nil {
+		t.Error("Failed to encode Reading: " + err.Error())
+	}
+
+	var rd Reading
+	dec := codec.NewDecoderBytes(bytes, &handle)
+	err = dec.Decode(&rd)
+	if err != nil {
+		t.Error("Failed to encode reading")
+	}
+
+	if !reflect.DeepEqual(TestReading, rd) {
+		t.Error("Failed to properly encode all reading data")
 	}
 }
