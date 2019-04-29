@@ -109,7 +109,7 @@ func (r *Reading) UnmarshalJSON(data []byte) error {
 		r.Name = *a.Name
 	}
 	if a.Value != nil {
-		r.Id = *a.Value
+		r.Value = *a.Value
 	}
 	r.Pushed = a.Pushed
 	r.Created = a.Created
