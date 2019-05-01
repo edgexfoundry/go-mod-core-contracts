@@ -20,21 +20,21 @@ import (
 
 // DeviceResource represents a value on a device that can be read or written
 type DeviceResource struct {
-	Description string                 `json:"description" yaml:"description,omitempty"`
-	Name        string                 `json:"name" yaml:"name,omitempty"`
-	Tag         string                 `json:"tag" yaml:"tag,omitempty"`
-	Properties  ProfileProperty        `json:"properties" yaml:"properties"`
-	Attributes  map[string]interface{} `json:"attributes" yaml:"attributes,omitempty"`
+	Description string            `json:"description" yaml:"description,omitempty"`
+	Name        string            `json:"name" yaml:"name,omitempty"`
+	Tag         string            `json:"tag" yaml:"tag,omitempty"`
+	Properties  ProfileProperty   `json:"properties" yaml:"properties"`
+	Attributes  map[string]string `json:"attributes" yaml:"attributes,omitempty"`
 }
 
 // MarshalJSON implements the Marshaler interface in order to make empty strings null
 func (do DeviceResource) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Description *string                `json:"description,omitempty"`
-		Name        *string                `json:"name,omitempty"`
-		Tag         *string                `json:"tag,omitempty"`
-		Properties  ProfileProperty        `json:"properties"`
-		Attributes  map[string]interface{} `json:"attributes,omitempty"`
+		Description *string           `json:"description,omitempty"`
+		Name        *string           `json:"name,omitempty"`
+		Tag         *string           `json:"tag,omitempty"`
+		Properties  ProfileProperty   `json:"properties"`
+		Attributes  map[string]string `json:"attributes,omitempty"`
 	}{
 		Properties: do.Properties,
 	}
