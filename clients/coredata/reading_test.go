@@ -36,7 +36,10 @@ const (
 )
 
 var testReading = models.Reading{Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: "test device name",
-	Name: "Temperature", Value: "45", BinaryValue: []byte{0xbf}}
+	Name: "Temperature", Value: "45"}
+
+var testBinaryReading = models.Reading{Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: "test device name",
+	Name: "Temperature", BinaryValue: []byte{0xbf}}
 
 func TestGetReadings(t *testing.T) {
 	reading1 := testReading
