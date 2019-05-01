@@ -49,6 +49,8 @@ type EventClient interface {
 	EventsForDeviceAndValueDescriptor(deviceId string, vd string, limit int, ctx context.Context) ([]models.Event, error)
 	// Add will post a new event
 	Add(event *models.Event, ctx context.Context) (string, error)
+	//AddBytes posts a new event using an array of bytes, supporting encoding of the event by the caller.
+	AddBytes(event []byte, ctx context.Context) (string, error)
 	// DeleteForDevice will delete events by the specified device name
 	DeleteForDevice(id string, ctx context.Context) error
 	// DeleteOld deletes events according to their age
@@ -57,6 +59,9 @@ type EventClient interface {
 	Delete(id string, ctx context.Context) error
 	// MarkPushed designates an event as having been successfully exported
 	MarkPushed(id string, ctx context.Context) error
+	// MarshalEvent will perform JSON or CBOR encoding of the supplied Event. If one or more Readings on the Event
+	// has a populated BinaryValue, the marshaling will be CBOR. Default is JSON.
+	MarshalEvent(e models.Event) ([]byte, error)
 }
 
 type eventRestClient struct {
@@ -149,6 +154,10 @@ func (e *eventRestClient) Add(event *models.Event, ctx context.Context) (string,
 	}
 }
 
+func (e *eventRestClient) AddBytes(event []byte, ctx context.Context) (string, error) {
+	return clients.PostRequest(e.url, event, ctx)
+}
+
 func (e *eventRestClient) Delete(id string, ctx context.Context) error {
 	return clients.DeleteRequest(e.url+"/id/"+id, ctx)
 }
@@ -164,4 +173,13 @@ func (e *eventRestClient) DeleteOld(age int, ctx context.Context) error {
 func (e *eventRestClient) MarkPushed(id string, ctx context.Context) error {
 	_, err := clients.PutRequest(e.url+"/id/"+id, nil, ctx)
 	return err
+}
+
+func (e *eventRestClient) MarshalEvent(event models.Event) (data []byte, err error) {
+	for _, r := range event.Readings {
+		if len(r.BinaryValue) > 0 {
+			return event.CBOR(), nil
+		}
+	}
+	return json.Marshal(event)
 }

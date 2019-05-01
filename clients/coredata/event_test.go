@@ -18,6 +18,7 @@ package coredata
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -26,6 +27,8 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/models"
+	"github.com/ugorji/go/codec"
 )
 
 const (
@@ -33,6 +36,8 @@ const (
 	TestEventDevice1 = "device1"
 	TestEventDevice2 = "device2"
 )
+
+var testEvent models.Event = models.Event{Device: TestEventDevice1, Created: 123, Modified: 123, Origin: 123}
 
 func TestMarkPushed(t *testing.T) {
 
@@ -146,6 +151,52 @@ func TestNewEventClientWithConsul(t *testing.T) {
 		t.Error("url was not initialized")
 	} else if r.url != deviceUrl {
 		t.Errorf("unexpected url value %s", r.url)
+	}
+}
+
+func TestMarshalEvent(t *testing.T) {
+	var eventResult models.Event
+	binaryEvent := testEvent
+	binaryEvent.Readings = append(binaryEvent.Readings, testBinaryReading)
+
+	regularEvent := testEvent
+	regularEvent.Readings = append(regularEvent.Readings, testReading)
+
+	client := NewEventClient(types.EndpointParams{Url: "test"}, mockEventEndpoint{})
+
+	tests := []struct {
+		name        string
+		content     string
+		e           models.Event
+		expectError bool
+	}{
+		{"cborMarshalOK", "cbor", binaryEvent, false},
+		{"cborMarshalFail", "cbor", regularEvent, true},
+		{"jsonMarshalOK", "json", regularEvent, false},
+		{"jsonMarshalFail", "json", binaryEvent, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := client.MarshalEvent(tt.e)
+			if err != nil {
+				t.Errorf("unexpected error MarshalEvent %v", err)
+			}
+			switch tt.content {
+			case "json":
+				err = json.Unmarshal(data, &eventResult)
+			case "cbor":
+				h := codec.CborHandle{}
+				dec := codec.NewDecoderBytes(data, &h)
+				err = dec.Decode(&eventResult)
+			}
+
+			if !tt.expectError && err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if tt.expectError && err == nil {
+				t.Errorf("did not receive expected error: %s", tt.name)
+			}
+		})
 	}
 }
 
