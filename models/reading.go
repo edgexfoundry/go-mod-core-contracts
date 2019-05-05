@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 )
 
 /*
@@ -125,13 +124,13 @@ func (r *Reading) UnmarshalJSON(data []byte) error {
 func (r Reading) Validate() (bool, error) {
 	if !r.isValidated {
 		if r.Device == "" {
-			return false, errors.New("source device for reading not specified")
+			return false, NewErrContractInvalid("source device for reading not specified")
 		}
 		if r.Name == "" {
-			return false, errors.New("name for reading's value descriptor not specified")
+			return false, NewErrContractInvalid("name for reading's value descriptor not specified")
 		}
 		if r.Value == "" && len(r.BinaryValue) == 0 {
-			return false, errors.New("reading has no value")
+			return false, NewErrContractInvalid("reading has no value")
 		}
 	}
 	return true, nil

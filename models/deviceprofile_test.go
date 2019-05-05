@@ -87,6 +87,7 @@ func TestDeviceProfile_String(t *testing.T) {
 }
 
 func TestDeviceProfileValidation(t *testing.T) {
+	valid := TestProfile
 	invalidIdentifiers := TestProfile
 	invalidIdentifiers.Name = ""
 	invalidIdentifiers.Id = ""
@@ -99,19 +100,14 @@ func TestDeviceProfileValidation(t *testing.T) {
 		dp          DeviceProfile
 		expectError bool
 	}{
-		{"valid device profile", TestProfile, false},
+		{"valid device profile", valid, false},
 		{"invalid profile identifiers", invalidIdentifiers, true},
 		{"invalid profile commands", invalidCommands, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.dp.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

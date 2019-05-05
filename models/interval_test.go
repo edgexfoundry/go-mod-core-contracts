@@ -20,6 +20,8 @@ var testInterval = Interval{Name: "Test Interval", Timestamps: testTimestamps, S
 	End: "1464039919109", Frequency: "P1D"}
 
 func TestIntervalValidation(t *testing.T) {
+	valid := testInterval
+
 	invalidIdentifiers := testInterval
 	invalidIdentifiers.Name = ""
 	invalidIdentifiers.ID = ""
@@ -38,7 +40,7 @@ func TestIntervalValidation(t *testing.T) {
 		i           Interval
 		expectError bool
 	}{
-		{"valid interval", testInterval, false},
+		{"valid interval", valid, false},
 		{"invalid interval identifiers", invalidIdentifiers, true},
 		{"invalid interval start", invalidStart, true},
 		{"invalid interval end", invalidEnd, true},
@@ -47,12 +49,7 @@ func TestIntervalValidation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.i.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

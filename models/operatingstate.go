@@ -50,7 +50,7 @@ func (os *OperatingState) UnmarshalJSON(data []byte) error {
 func (os OperatingState) Validate() (bool, error) {
 	_, found := map[string]OperatingState{"ENABLED": Enabled, "DISABLED": Disabled}[string(os)]
 	if !found {
-		return false, fmt.Errorf("invalid OperatingState %q", os)
+		return false, NewErrContractInvalid(fmt.Sprintf("invalid OperatingState %q", os))
 	}
 	return true, nil
 }

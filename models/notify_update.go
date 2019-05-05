@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 )
 
@@ -57,12 +56,12 @@ func (n *NotifyUpdate) UnmarshalJSON(data []byte) error {
 func (n NotifyUpdate) Validate() (bool, error) {
 	if !n.isValidated {
 		if n.Name == "" || n.Operation == "" {
-			return false, errors.New("Name and Operation must both have a value")
+			return false, NewErrContractInvalid("Name and Operation must both have a value")
 		}
 		if n.Operation != NotifyUpdateAdd &&
 			n.Operation != NotifyUpdateUpdate &&
 			n.Operation != NotifyUpdateDelete {
-			return false, fmt.Errorf("Invalid value for operation %s", n.Operation)
+			return false, NewErrContractInvalid(fmt.Sprintf("Invalid value for operation %s", n.Operation))
 		}
 	}
 	return true, nil

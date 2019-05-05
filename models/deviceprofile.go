@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 )
 
 // DeviceProfile represents the attributes and operational capabilities of a device. It is a template for which
@@ -127,7 +126,7 @@ func (dp *DeviceProfile) UnmarshalJSON(data []byte) error {
 func (dp DeviceProfile) Validate() (bool, error) {
 	if !dp.isValidated {
 		if dp.Id == "" && dp.Name == "" {
-			return false, errors.New("Device ID and Name are both blank")
+			return false, NewErrContractInvalid("Device ID and Name are both blank")
 		}
 		// Check if there are duplicate names in the device profile command list
 		cmds := map[string]int{}
@@ -135,7 +134,7 @@ func (dp DeviceProfile) Validate() (bool, error) {
 			if _, ok := cmds[c.Name]; !ok {
 				cmds[c.Name] = 1
 			} else {
-				return false, errors.New("duplicate names in device profile commands")
+				return false, NewErrContractInvalid("duplicate names in device profile commands")
 			}
 		}
 		err := validate(dp)

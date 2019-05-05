@@ -111,7 +111,7 @@ func (le LogEntry) Validate() (bool, error) {
 				return true, nil
 			}
 		}
-		return false, fmt.Errorf("Invalid level in LogEntry: %s", le.Level)
+		return false, NewErrContractInvalid(fmt.Sprintf("Invalid level in LogEntry: %s", le.Level))
 	}
 	return le.isValidated, nil
 }

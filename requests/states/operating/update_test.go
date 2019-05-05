@@ -33,8 +33,14 @@ func TestUpdateValidation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.up.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
+			if err != nil {
+				if !tt.expectError {
+					t.Errorf("unexpected error: %v", err)
+				}
+				_, ok := err.(models.ErrContractInvalid)
+				if !ok {
+					t.Errorf("incorrect error type returned")
+				}
 			}
 			if tt.expectError && err == nil {
 				t.Errorf("did not receive expected error: %s", tt.name)

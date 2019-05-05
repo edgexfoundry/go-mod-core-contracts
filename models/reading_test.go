@@ -87,12 +87,14 @@ func TestReading_String(t *testing.T) {
 }
 
 func TestReadingValidation(t *testing.T) {
+	valid := TestReading
+
 	tests := []struct {
 		name        string
 		r           Reading
 		expectError bool
 	}{
-		{"valid reading", TestReading, false},
+		{"valid reading", valid, false},
 		{"invalid device", Reading{Name: "test", Value: "0"}, true},
 		{"invalid name", Reading{Device: "test", Value: "0"}, true},
 		{"invalid value", Reading{Device: "test", Name: "test"}, true},
@@ -100,12 +102,7 @@ func TestReadingValidation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.r.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

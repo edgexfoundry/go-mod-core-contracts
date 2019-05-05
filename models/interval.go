@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -128,18 +127,18 @@ func (i *Interval) UnmarshalJSON(data []byte) error {
 func (i Interval) Validate() (bool, error) {
 	if !i.isValidated {
 		if i.ID == "" && i.Name == "" {
-			return false, errors.New("Interval ID and Name are both blank")
+			return false, NewErrContractInvalid("Interval ID and Name are both blank")
 		}
 		if i.Start != "" {
 			_, err := strconv.ParseInt(i.Start, 10, 64)
 			if err != nil {
-				return false, fmt.Errorf("error parsing Start %v", err)
+				return false, NewErrContractInvalid(fmt.Sprintf("error parsing Start %v", err))
 			}
 		}
 		if i.End != "" {
 			_, err := strconv.ParseInt(i.End, 10, 64)
 			if err != nil {
-				return false, fmt.Errorf("error parsing End %v", err)
+				return false, NewErrContractInvalid(fmt.Sprintf("error parsing End %v", err))
 			}
 		}
 		if i.Frequency != "" {
@@ -150,7 +149,7 @@ func (i Interval) Validate() (bool, error) {
 				}
 			}
 			if !matched {
-				return false, fmt.Errorf("invalid Interval Frequency %s", i.Frequency)
+				return false, NewErrContractInvalid(fmt.Sprintf("invalid Interval Frequency %s", i.Frequency))
 			}
 		}
 		err := validate(i)

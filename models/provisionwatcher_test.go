@@ -87,6 +87,8 @@ func TestProvisionWatcher_String(t *testing.T) {
 }
 
 func TestProvisionWatcherValidation(t *testing.T) {
+	valid := TestProvisionWatcher
+
 	invalid := TestProvisionWatcher
 	invalid.Name = ""
 
@@ -95,18 +97,13 @@ func TestProvisionWatcherValidation(t *testing.T) {
 		pw          ProvisionWatcher
 		expectError bool
 	}{
-		{"valid provision watcher", TestProvisionWatcher, false},
+		{"valid provision watcher", valid, false},
 		{"invalid provision watcher", invalid, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.pw.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

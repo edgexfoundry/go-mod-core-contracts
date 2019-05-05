@@ -17,7 +17,6 @@ package models
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"strconv"
 	"strings"
 )
@@ -186,7 +185,7 @@ func (a *Addressable) UnmarshalJSON(data []byte) error {
 func (a Addressable) Validate() (bool, error) {
 	if !a.isValidated {
 		if a.Id == "" && a.Name == "" {
-			return false, errors.New("Addressable ID and Name are both blank")
+			return false, NewErrContractInvalid("Addressable ID and Name are both blank")
 		}
 		return true, nil
 	}

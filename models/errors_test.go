@@ -14,34 +14,20 @@
 
 package models
 
-import (
-	"testing"
-)
+import "testing"
 
-var testLogEntry = LogEntry{Level: InfoLog, Created: 123, Message: "We logged some stuff"}
-
-func TestLogEntryValidation(t *testing.T) {
-	valid := testLogEntry
-
-	invalid := testLogEntry
-	invalid.Level = "blah"
-
-	blank := testLogEntry
-	blank.Level = ""
-
-	tests := []struct {
-		name        string
-		le          LogEntry
-		expectError bool
-	}{
-		{"valid log entry", valid, false},
-		{"invalid log level", invalid, true},
-		{"blank log level", blank, true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, err := tt.le.Validate()
-			checkValidationError(err, tt.expectError, tt.name, t)
-		})
+func checkValidationError(err error, expectError bool, testName string, t *testing.T) {
+	if err != nil {
+		if !expectError {
+			t.Errorf("unexpected error: %v", err)
+		}
+		_, ok := err.(ErrContractInvalid)
+		if !ok {
+			t.Errorf("incorrect error type returned")
+		}
+	} else {
+		if expectError {
+			t.Errorf("did not receive expected error: %s", testName)
+		}
 	}
 }
