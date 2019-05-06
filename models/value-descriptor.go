@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 )
@@ -182,14 +181,14 @@ func (v ValueDescriptor) Validate() (bool, error) {
 			formatSpecifier := "%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])"
 			match, err := regexp.MatchString(formatSpecifier, v.Formatting)
 			if err != nil {
-				return false, fmt.Errorf("error validating format string: %s", v.Formatting)
+				return false, NewErrContractInvalid(fmt.Sprintf("error validating format string: %s", v.Formatting))
 			}
 			if !match {
-				return false, fmt.Errorf("format is not a valid printf format: %s", v.Formatting)
+				return false, NewErrContractInvalid(fmt.Sprintf("format is not a valid printf format: %s", v.Formatting))
 			}
 		}
 		if v.Name == "" {
-			return false, errors.New("name for value descriptor not specified")
+			return false, NewErrContractInvalid("name for value descriptor not specified")
 		}
 	}
 	return true, nil

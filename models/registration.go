@@ -132,7 +132,7 @@ func (r *Registration) UnmarshalJSON(data []byte) error {
 func (reg Registration) Validate() (bool, error) {
 	if !reg.isValidated {
 		if reg.Name == "" {
-			return false, fmt.Errorf("Name is required")
+			return false, NewErrContractInvalid("Name is required")
 		}
 
 		if reg.Compression == "" {
@@ -142,7 +142,7 @@ func (reg Registration) Validate() (bool, error) {
 		if reg.Compression != CompNone &&
 			reg.Compression != CompGzip &&
 			reg.Compression != CompZip {
-			return false, fmt.Errorf("Compression invalid: %s", reg.Compression)
+			return false, NewErrContractInvalid(fmt.Sprintf("Compression invalid: %s", reg.Compression))
 		}
 
 		if reg.Format != FormatJSON &&
@@ -154,7 +154,7 @@ func (reg Registration) Validate() (bool, error) {
 			reg.Format != FormatCSV &&
 			reg.Format != FormatThingsBoardJSON &&
 			reg.Format != FormatNOOP {
-			return false, fmt.Errorf("Format invalid: %s", reg.Format)
+			return false, NewErrContractInvalid(fmt.Sprintf("Format invalid: %s", reg.Format))
 		}
 
 		if reg.Destination != DestMQTT &&
@@ -164,7 +164,7 @@ func (reg Registration) Validate() (bool, error) {
 			reg.Destination != DestAWSMQTT &&
 			reg.Destination != DestRest &&
 			reg.Destination != DestInfluxDB {
-			return false, fmt.Errorf("Destination invalid: %s", reg.Destination)
+			return false, NewErrContractInvalid(fmt.Sprintf("Destination invalid: %s", reg.Destination))
 		}
 
 		if reg.Encryption.Algo == "" {
@@ -173,7 +173,7 @@ func (reg Registration) Validate() (bool, error) {
 
 		if reg.Encryption.Algo != EncNone &&
 			reg.Encryption.Algo != EncAes {
-			return false, fmt.Errorf("Encryption invalid: %s", reg.Encryption.Algo)
+			return false, NewErrContractInvalid(fmt.Sprintf("Encryption invalid: %s", reg.Encryption.Algo))
 		}
 		err := validate(reg)
 		if err != nil {

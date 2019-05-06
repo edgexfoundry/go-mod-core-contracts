@@ -16,8 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
-
 	"github.com/ugorji/go/codec"
 )
 
@@ -119,7 +117,7 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 func (e Event) Validate() (bool, error) {
 	if !e.isValidated {
 		if e.Device == "" {
-			return false, errors.New("source device for event not specified")
+			return false, NewErrContractInvalid("source device for event not specified")
 		}
 	}
 	return true, nil

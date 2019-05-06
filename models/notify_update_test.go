@@ -19,6 +19,8 @@ import "testing"
 var testNotifyUpdate = NotifyUpdate{Name: "For Testing", Operation: NotifyUpdateAdd}
 
 func TestNotifyUpdateValidation(t *testing.T) {
+	valid := testNotifyUpdate
+
 	invalidName := testNotifyUpdate
 	invalidName.Name = ""
 
@@ -33,7 +35,7 @@ func TestNotifyUpdateValidation(t *testing.T) {
 		nu          NotifyUpdate
 		expectError bool
 	}{
-		{"valid notify update", testNotifyUpdate, false},
+		{"valid notify update", valid, false},
 		{"invalid name", invalidName, true},
 		{"invalid operation", invalidOp, true},
 		{"invalid operation value", invalidOpNotBlank, true},
@@ -41,12 +43,7 @@ func TestNotifyUpdateValidation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.nu.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

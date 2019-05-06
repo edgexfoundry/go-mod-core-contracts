@@ -93,6 +93,7 @@ func TestCommand_AllAssociatedValueDescriptors(t *testing.T) {
 }
 
 func TestCommandValidation(t *testing.T) {
+	valid := TestCommand
 	invalid := TestCommand
 	invalid.Name = ""
 	tests := []struct {
@@ -100,18 +101,13 @@ func TestCommandValidation(t *testing.T) {
 		cmd         Command
 		expectError bool
 	}{
-		{"valid command", TestCommand, false},
+		{"valid command", valid, false},
 		{"invalid command", invalid, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.cmd.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

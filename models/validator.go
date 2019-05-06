@@ -38,7 +38,7 @@ func validate(t interface{}) error {
 				cast := v.(Validator)
 				_, err := cast.Validate()
 				if err != nil {
-					return err
+					return NewErrContractInvalid(err.Error())
 				}
 			}
 		}

@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 )
 
 // Device represents a registered device participating within the EdgeX Foundry ecosystem
@@ -134,10 +133,10 @@ func (d *Device) UnmarshalJSON(data []byte) error {
 func (d Device) Validate() (bool, error) {
 	if !d.isValidated {
 		if d.Id == "" && d.Name == "" {
-			return false, errors.New("Device ID and Name are both blank")
+			return false, NewErrContractInvalid("Device ID and Name are both blank")
 		}
 		if len(d.Protocols) == 0 {
-			return false, errors.New("no supporting protocol specified for device")
+			return false, NewErrContractInvalid("no supporting protocol specified for device")
 		}
 		err := validate(d)
 		if err != nil {

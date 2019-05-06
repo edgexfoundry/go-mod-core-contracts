@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 )
 
 // Command defines a specific read/write operation targeting a device
@@ -91,7 +90,7 @@ func (c *Command) UnmarshalJSON(data []byte) error {
 func (c Command) Validate() (bool, error) {
 	if !c.isValidated {
 		if c.Name == "" {
-			return false, errors.New("Name cannot be blank")
+			return false, NewErrContractInvalid("Name cannot be blank")
 		}
 		err := validate(c)
 		if err != nil {

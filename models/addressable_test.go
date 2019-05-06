@@ -108,6 +108,7 @@ func TestAddressableNoCallback(t *testing.T) {
 }
 
 func TestAddressableValidation(t *testing.T) {
+	valid := TestAddressable
 	invalid := TestAddressable
 	invalid.Name = ""
 	invalid.Id = ""
@@ -117,18 +118,13 @@ func TestAddressableValidation(t *testing.T) {
 		a           Addressable
 		expectError bool
 	}{
-		{"valid addressable", TestAddressable, false},
+		{"valid addressable", valid, false},
 		{"invalid addressable", invalid, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.a.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }
