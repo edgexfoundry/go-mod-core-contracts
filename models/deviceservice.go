@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 )
 
 // DeviceService represents a service that is responsible for proxying connectivity between a set of devices and the
@@ -113,7 +112,7 @@ func (ds *DeviceService) UnmarshalJSON(data []byte) error {
 func (ds DeviceService) Validate() (bool, error) {
 	if !ds.isValidated {
 		if ds.Id == "" && ds.Name == "" {
-			return false, errors.New("Device Service ID and Name are both blank")
+			return false, NewErrContractInvalid("Device Service ID and Name are both blank")
 		}
 		return true, nil
 	}

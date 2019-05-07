@@ -119,7 +119,7 @@ func TestDeviceService_String(t *testing.T) {
 func TestDeviceServiceValidation(t *testing.T) {
 	valid := TestDeviceService
 	invalid := TestDeviceService
-	invalid.Addressable.Name = ""
+	invalid.Name = ""
 
 	tests := []struct {
 		name        string
