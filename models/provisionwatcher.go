@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 )
 
 type ProvisionWatcher struct {
@@ -100,7 +99,7 @@ func (pw *ProvisionWatcher) UnmarshalJSON(data []byte) error {
 func (pw ProvisionWatcher) Validate() (bool, error) {
 	if !pw.isValidated {
 		if pw.Name == "" {
-			return false, errors.New("provision watcher name is blank")
+			return false, NewErrContractInvalid("provision watcher name is blank")
 		}
 		err := validate(pw)
 		if err != nil {

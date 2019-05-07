@@ -14,34 +14,19 @@
 
 package models
 
-import (
-	"testing"
-)
+// ErrContractInvalid is a specific error type for handling model validation failures. Type checking within
+// the calling application will facilitate more explicit error handling whereby it's clear that validation
+// has failed as opposed to something unexpected happening.
+type ErrContractInvalid struct {
+	errMsg string
+}
 
-var testLogEntry = LogEntry{Level: InfoLog, Created: 123, Message: "We logged some stuff"}
+// NewErrContractInvalid returns an instance of the error interface with ErrContractInvalid as its implementation.
+func NewErrContractInvalid(message string) error {
+	return ErrContractInvalid{errMsg: message}
+}
 
-func TestLogEntryValidation(t *testing.T) {
-	valid := testLogEntry
-
-	invalid := testLogEntry
-	invalid.Level = "blah"
-
-	blank := testLogEntry
-	blank.Level = ""
-
-	tests := []struct {
-		name        string
-		le          LogEntry
-		expectError bool
-	}{
-		{"valid log entry", valid, false},
-		{"invalid log level", invalid, true},
-		{"blank log level", blank, true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, err := tt.le.Validate()
-			checkValidationError(err, tt.expectError, tt.name, t)
-		})
-	}
+// Error fulfills the error interface and returns an error message assembled from the state of ErrContractInvalid.
+func (e ErrContractInvalid) Error() string {
+	return e.errMsg
 }

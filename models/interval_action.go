@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"errors"
 	"strconv"
 	"strings"
 )
@@ -194,13 +193,13 @@ func (ia *IntervalAction) UnmarshalJSON(data []byte) error {
 func (ia IntervalAction) Validate() (bool, error) {
 	if !ia.isValidated {
 		if ia.ID == "" && ia.Name == "" {
-			return false, errors.New("IntervalAction ID and Name are both blank")
+			return false, NewErrContractInvalid("IntervalAction ID and Name are both blank")
 		}
 		if ia.Target == "" {
-			return false, errors.New("intervalAction target is blank")
+			return false, NewErrContractInvalid("intervalAction target is blank")
 		}
 		if ia.Interval == "" {
-			return false, errors.New("intervalAction interval is blank")
+			return false, NewErrContractInvalid("intervalAction interval is blank")
 		}
 		return true, nil
 	}

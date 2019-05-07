@@ -43,10 +43,17 @@ func TestOperatingState_UnmarshalJSON(t *testing.T) {
 			if err := tt.os.UnmarshalJSON(tt.args.data); err != nil {
 				t.Errorf("OperatingState.UnmarshalJSON() error = %v", err)
 			} else {
-				if _, err = tt.os.Validate(); (err != nil) != tt.wantErr {
-					// if the bytes did unmarshal, make sure they unmarshaled to correct enum by comparing it to expected results
-					var unmarshaledResult = string(*tt.os)
-					t.Errorf("Unmarshal did not result in expected admin operating string.  Expected:  %s, got: %s", expected, unmarshaledResult)
+				_, err = tt.os.Validate()
+				if err != nil {
+					if !tt.wantErr {
+						// if the bytes did unmarshal, make sure they unmarshaled to correct enum by comparing it to expected results
+						var unmarshaledResult = string(*tt.os)
+						t.Errorf("Unmarshal did not result in expected admin operating string.  Expected:  %s, got: %s", expected, unmarshaledResult)
+					}
+					_, ok := err.(ErrContractInvalid)
+					if !ok {
+						t.Errorf("incorrect error type returned")
+					}
 				}
 			}
 		})

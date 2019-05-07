@@ -77,6 +77,7 @@ func TestEvent_String(t *testing.T) {
 }
 
 func TestEventValidation(t *testing.T) {
+	valid := TestEvent
 	invalid := TestEvent
 	invalid.Device = ""
 
@@ -85,18 +86,13 @@ func TestEventValidation(t *testing.T) {
 		e           Event
 		expectError bool
 	}{
-		{"valid event", TestEvent, false},
+		{"valid event", valid, false},
 		{"invalid event", invalid, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.e.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

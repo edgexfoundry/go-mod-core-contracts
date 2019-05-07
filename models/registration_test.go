@@ -23,6 +23,8 @@ var testRegistration = Registration{ID: uuid.New().String(), Name: "Test Registr
 	Format: FormatJSON, Destination: DestZMQ, Addressable: TestAddressable}
 
 func TestRegistrationValidation(t *testing.T) {
+	valid := testRegistration
+
 	invalidName := testRegistration
 	invalidName.Name = ""
 
@@ -43,7 +45,7 @@ func TestRegistrationValidation(t *testing.T) {
 		r           Registration
 		expectError bool
 	}{
-		{"valid registration", testRegistration, false},
+		{"valid registration", valid, false},
 		{"invalid registration name", invalidName, true},
 		{"invalid registration compression", invalidCompression, true},
 		{"invalid registration format", invalidFormat, true},
@@ -53,12 +55,7 @@ func TestRegistrationValidation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.r.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

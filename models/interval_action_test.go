@@ -20,6 +20,8 @@ var testIntervalAction = IntervalAction{Name: "Test Interval Action", Interval: 
 	Address: "localhost", Port: 48080, Protocol: "http", HTTPMethod: "DELETE", Path: "/api/v1/event/removeold/age/604800000"}
 
 func TestIntervalActionValidation(t *testing.T) {
+	valid := testIntervalAction
+
 	invalidIdentifiers := testIntervalAction
 	invalidIdentifiers.Name = ""
 	invalidIdentifiers.ID = ""
@@ -35,7 +37,7 @@ func TestIntervalActionValidation(t *testing.T) {
 		ia          IntervalAction
 		expectError bool
 	}{
-		{"valid interval action", testIntervalAction, false},
+		{"valid interval action", valid, false},
 		{"invalid identifiers", invalidIdentifiers, true},
 		{"invalid target", invalidTarget, true},
 		{"invalid interval", invalidInterval, true},
@@ -43,12 +45,7 @@ func TestIntervalActionValidation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.ia.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }

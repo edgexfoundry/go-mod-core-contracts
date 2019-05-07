@@ -54,6 +54,7 @@ func TestDeviceService_MarshalJSON(t *testing.T) {
 }
 
 func TestDeviceService_UnmarshalJSON(t *testing.T) {
+	valid := TestDeviceService
 	fmt.Println(TestDeviceService.String())
 	var resultTestBytes = []byte(TestDeviceService.String())
 	type args struct {
@@ -65,8 +66,8 @@ func TestDeviceService_UnmarshalJSON(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{"unmarshal normal device service with success", &TestDeviceService, args{resultTestBytes}, false},
-		{"unmarshal normal device service failed", &TestDeviceService, args{[]byte("{nonsense}")}, true},
+		{"unmarshal normal device service with success", &valid, args{resultTestBytes}, false},
+		{"unmarshal normal device service failed", &valid, args{[]byte("{nonsense}")}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -116,8 +117,22 @@ func TestDeviceService_String(t *testing.T) {
 }
 
 func TestDeviceServiceValidation(t *testing.T) {
-	isValid, err := TestDeviceService.Validate()
-	if !isValid {
-		t.Errorf(err.Error())
+	valid := TestDeviceService
+	invalid := TestDeviceService
+	invalid.Addressable.Name = ""
+
+	tests := []struct {
+		name        string
+		ds          DeviceService
+		expectError bool
+	}{
+		{"valid", valid, false},
+		{"invalid", invalid, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.ds.Validate()
+			checkValidationError(err, tt.expectError, tt.name, t)
+		})
 	}
 }

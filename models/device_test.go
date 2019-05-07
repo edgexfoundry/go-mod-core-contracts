@@ -115,6 +115,7 @@ func TestDevice_AllAssociatedValueDescriptors(t *testing.T) {
 }
 
 func TestDeviceValidation(t *testing.T) {
+	valid := TestDevice
 	invalidIdentifiers := TestDevice
 	invalidIdentifiers.Name = ""
 	invalidIdentifiers.Id = ""
@@ -127,19 +128,14 @@ func TestDeviceValidation(t *testing.T) {
 		d           Device
 		expectError bool
 	}{
-		{"valid device", TestDevice, false},
+		{"valid device", valid, false},
 		{"invalid device identifiers", invalidIdentifiers, true},
 		{"invalid protocols", invalidProtocols, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.d.Validate()
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-			}
-			if tt.expectError && err == nil {
-				t.Errorf("did not receive expected error: %s", tt.name)
-			}
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }
