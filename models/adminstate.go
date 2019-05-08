@@ -45,10 +45,10 @@ func (as *AdminState) UnmarshalJSON(data []byte) error {
 }
 
 // Validate satisfies the Validator interface
-func (as AdminState) Validate() (bool, error) {
-	_, found := map[string]AdminState{"LOCKED": Locked, "UNLOCKED": Unlocked}[string(as)]
+func (as *AdminState) Validate() (bool, error) {
+	_, found := map[string]AdminState{"LOCKED": Locked, "UNLOCKED": Unlocked}[string(*as)]
 	if !found {
-		return false, NewErrContractInvalid(fmt.Sprintf("invalid AdminState %q", as))
+		return false, NewErrContractInvalid(fmt.Sprintf("invalid AdminState %q", *as))
 	}
 	return true, nil
 }
