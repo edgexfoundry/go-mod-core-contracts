@@ -95,7 +95,7 @@ func TestReadingValidation(t *testing.T) {
 		expectError bool
 	}{
 		{"valid reading", valid, false},
-		{"invalid device", Reading{Name: "test", Value: "0"}, true},
+		{"empty device", Reading{Name: "test", Value: "0"}, false},
 		{"invalid name", Reading{Device: "test", Value: "0"}, true},
 		{"invalid value", Reading{Device: "test", Name: "test"}, true},
 	}
