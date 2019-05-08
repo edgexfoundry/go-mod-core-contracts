@@ -96,12 +96,11 @@ func CommandResponseFromDevice(d Device, commands []Command, cmdURL string) Comm
 	}
 
 	basePath := fmt.Sprintf("%s%s/%s/command/", cmdURL, clients.ApiDeviceRoute, d.Id)
-
 	// TODO: Find a way to encapsulate this within the "Action" struct if possible
-	for _, c := range cmdResp.Commands {
-		url := basePath + c.Id
-		c.Get.URL = url
-		c.Put.URL = url
+	for i := 0; i < len(cmdResp.Commands); i++ {
+		url := basePath + cmdResp.Commands[i].Id
+		cmdResp.Commands[i].Get.URL = url
+		cmdResp.Commands[i].Put.URL = url
 	}
 
 	return cmdResp
