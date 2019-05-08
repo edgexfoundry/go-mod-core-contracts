@@ -111,6 +111,7 @@ func (dp *DeviceProfile) UnmarshalJSON(data []byte) error {
 	if a.Model != nil {
 		dp.Model = *a.Model
 	}
+	dp.DescribedObject = a.DescribedObject
 	dp.Labels = a.Labels
 	dp.DeviceResources = a.DeviceResources
 	dp.DeviceCommands = a.DeviceCommands
