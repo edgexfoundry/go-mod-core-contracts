@@ -123,9 +123,6 @@ func (r *Reading) UnmarshalJSON(data []byte) error {
 // Validate satisfies the Validator interface
 func (r Reading) Validate() (bool, error) {
 	if !r.isValidated {
-		if r.Device == "" {
-			return false, NewErrContractInvalid("source device for reading not specified")
-		}
 		if r.Name == "" {
 			return false, NewErrContractInvalid("name for reading's value descriptor not specified")
 		}
