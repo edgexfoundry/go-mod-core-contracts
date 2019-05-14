@@ -33,6 +33,7 @@ import (
 
 const (
 	TestId           = "5aae1f4fe4b0d019b26a56b8"
+	TestChecksum     = "04698a6f20feecb8bbf7cd01e59d31ba1ce17b24ba14b71a8fb370065d951f57"
 	TestEventDevice1 = "device1"
 	TestEventDevice2 = "device2"
 )
@@ -68,6 +69,41 @@ func TestMarkPushed(t *testing.T) {
 	ec := NewEventClient(params, mockEventEndpoint{})
 
 	err := ec.MarkPushed(TestId, context.Background())
+
+	if err != nil {
+		t.FailNow()
+	}
+}
+
+func TestMarkPushedByChecksum(t *testing.T) {
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+
+		if r.Method != http.MethodPut {
+			t.Errorf("expected http method is PUT, active http method is : %s", r.Method)
+		}
+
+		url := clients.ApiEventRoute + "/checksum/" + TestChecksum
+		if r.URL.EscapedPath() != url {
+			t.Errorf("expected uri path is %s, actual uri path is %s", url, r.URL.EscapedPath())
+		}
+	}))
+
+	defer ts.Close()
+
+	url := ts.URL + clients.ApiEventRoute
+
+	params := types.EndpointParams{
+		ServiceKey:  clients.CoreDataServiceKey,
+		Path:        clients.ApiEventRoute,
+		UseRegistry: false,
+		Url:         url,
+		Interval:    clients.ClientMonitorDefault}
+
+	ec := NewEventClient(params, mockEventEndpoint{})
+
+	err := ec.MarkPushedByChecksum(TestChecksum, context.Background())
 
 	if err != nil {
 		t.FailNow()
