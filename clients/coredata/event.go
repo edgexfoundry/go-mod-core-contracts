@@ -59,6 +59,8 @@ type EventClient interface {
 	Delete(id string, ctx context.Context) error
 	// MarkPushed designates an event as having been successfully exported
 	MarkPushed(id string, ctx context.Context) error
+	// MarkPushedByChecksum designates an event as having been successfully exported using a checksum for the respective event.
+	MarkPushedByChecksum(checksum string, ctx context.Context) error
 	// MarshalEvent will perform JSON or CBOR encoding of the supplied Event. If one or more Readings on the Event
 	// has a populated BinaryValue, the marshaling will be CBOR. Default is JSON.
 	MarshalEvent(e models.Event) ([]byte, error)
@@ -172,6 +174,11 @@ func (e *eventRestClient) DeleteOld(age int, ctx context.Context) error {
 
 func (e *eventRestClient) MarkPushed(id string, ctx context.Context) error {
 	_, err := clients.PutRequest(e.url+"/id/"+id, nil, ctx)
+	return err
+}
+
+func (e *eventRestClient) MarkPushedByChecksum(checksum string, ctx context.Context) error {
+	_, err := clients.PutRequest(e.url+"/checksum/"+checksum, nil, ctx)
 	return err
 }
 
