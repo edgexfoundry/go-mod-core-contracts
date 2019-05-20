@@ -18,11 +18,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
-	"strconv"
+	"time"
 )
 
 const (
 	frequencyPattern = `^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$`
+	timestampLayout  = "20060102T150405"
 )
 
 // Interval a period of time
@@ -130,13 +131,13 @@ func (i Interval) Validate() (bool, error) {
 			return false, NewErrContractInvalid("Interval ID and Name are both blank")
 		}
 		if i.Start != "" {
-			_, err := strconv.ParseInt(i.Start, 10, 64)
+			_, err := time.Parse(timestampLayout, i.Start)
 			if err != nil {
 				return false, NewErrContractInvalid(fmt.Sprintf("error parsing Start %v", err))
 			}
 		}
 		if i.End != "" {
-			_, err := strconv.ParseInt(i.End, 10, 64)
+			_, err := time.Parse(timestampLayout, i.End)
 			if err != nil {
 				return false, NewErrContractInvalid(fmt.Sprintf("error parsing End %v", err))
 			}
