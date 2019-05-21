@@ -67,7 +67,7 @@ type Registration struct {
 	Name        string            `json:"name,omitempty"`
 	Addressable Addressable       `json:"addressable,omitempty"`
 	Format      string            `json:"format,omitempty"`
-	Filter      Filter            `json:"filter.go,omitempty"`
+	Filter      Filter            `json:"filter,omitempty"`
 	Encryption  EncryptionDetails `json:"encryption,omitempty"`
 	Compression string            `json:"compression,omitempty"`
 	Enable      bool              `json:"enable"`
@@ -86,7 +86,7 @@ func (r *Registration) UnmarshalJSON(data []byte) error {
 		Name        *string           `json:"name"`
 		Addressable Addressable       `json:"addressable"`
 		Format      *string           `json:"format"`
-		Filter      Filter            `json:"filter.go"`
+		Filter      Filter            `json:"filter"`
 		Encryption  EncryptionDetails `json:"encryption"`
 		Compression *string           `json:"compression"`
 		Enable      bool              `json:"enable"`
