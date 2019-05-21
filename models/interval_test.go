@@ -16,8 +16,8 @@ package models
 
 import "testing"
 
-var testInterval = Interval{Name: "Test Interval", Timestamps: testTimestamps, Start: "1464039919104",
-	End: "1464039919109", Frequency: "P1D"}
+var testInterval = Interval{Name: "Test Interval", Timestamps: testTimestamps, Start: "20180101T000000",
+	End: "20200101T000000", Frequency: "P1D"}
 
 func TestIntervalValidation(t *testing.T) {
 	valid := testInterval
