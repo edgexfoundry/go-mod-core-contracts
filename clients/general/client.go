@@ -20,9 +20,10 @@ package general
 
 import (
 	"context"
-
+	"encoding/json"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/requests/states/configuration"
 )
 
 type GeneralClient interface {
@@ -30,6 +31,8 @@ type GeneralClient interface {
 	FetchConfiguration(ctx context.Context) (string, error)
 	// FetchMetrics obtains metrics information from the target service.
 	FetchMetrics(ctx context.Context) (string, error)
+	// SetConfiguration sets configuration information into the target service.
+	SetConfiguration(service string, config *configuration.SetConfigRequest, ctx context.Context) error
 }
 
 type generalRestClient struct {
@@ -69,4 +72,14 @@ func (gc *generalRestClient) FetchConfiguration(ctx context.Context) (string, er
 func (gc *generalRestClient) FetchMetrics(ctx context.Context) (string, error) {
 	body, err := clients.GetRequest(gc.url+clients.ApiMetricsRoute, ctx)
 	return string(body), err
+}
+
+func (gc *generalRestClient) SetConfiguration(service string, config *configuration.SetConfigRequest, ctx context.Context) error {
+
+	c, err := json.Marshal(config)
+	if err != nil {
+		_, err = clients.PutRequest(gc.url+clients.ApiConfigRoute, c, ctx)
+		return err
+	}
+	return err
 }
