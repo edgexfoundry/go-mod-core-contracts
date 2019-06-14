@@ -35,6 +35,8 @@ type CommandClient interface {
 	Commands(ctx context.Context) ([]models.Command, error)
 	// CommandsForName lists all the commands for the specified name
 	CommandsForName(name string, ctx context.Context) ([]models.Command, error)
+	// CommandsForDeviceId list all commands for device with specified ID
+	CommandsForDeviceId(id string, ctx context.Context) ([]models.Command, error)
 	// Delete a command for the specified ID
 	Delete(id string, ctx context.Context) error
 	// Update a command
@@ -104,6 +106,10 @@ func (c *commandRestClient) Commands(ctx context.Context) ([]models.Command, err
 
 func (c *commandRestClient) CommandsForName(name string, ctx context.Context) ([]models.Command, error) {
 	return c.requestCommandSlice(c.url+"/name/"+name, ctx)
+}
+
+func (c *commandRestClient) CommandsForDeviceId(id string, ctx context.Context) ([]models.Command, error) {
+	return c.requestCommandSlice(c.url+"/device/"+id, ctx)
 }
 
 func (c *commandRestClient) Add(com *models.Command, ctx context.Context) (string, error) {
