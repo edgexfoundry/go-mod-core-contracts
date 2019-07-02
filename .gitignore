@@ -4,3 +4,4 @@ glide.lock
 vendor
 .idea
 go.sum
+coverage.out
