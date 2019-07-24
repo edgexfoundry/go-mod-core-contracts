@@ -20,6 +20,9 @@ import (
 	"regexp"
 )
 
+// defaultValueDescriptorFormat defines the default formatting value used with creating a ValueDescriptor from a DeviceResource.
+const defaultValueDescriptorFormat = "%s"
+
 /*
  * Value Descriptor Struct
  */
@@ -203,4 +206,24 @@ func (a ValueDescriptor) String() string {
 		return err.Error()
 	}
 	return string(out)
+}
+
+// From creates a ValueDescriptor based on the information provided in the DeviceResource.
+func From(dr DeviceResource) ValueDescriptor {
+	value := dr.Properties.Value
+	units := dr.Properties.Units
+	desc := ValueDescriptor{
+		Name:          dr.Name,
+		Min:           value.Minimum,
+		Max:           value.Maximum,
+		Type:          value.Type,
+		UomLabel:      units.DefaultValue,
+		DefaultValue:  value.DefaultValue,
+		Formatting:    defaultValueDescriptorFormat,
+		Description:   dr.Description,
+		FloatEncoding: value.FloatEncoding,
+		MediaType:     value.MediaType,
+	}
+
+	return desc
 }
