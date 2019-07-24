@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -113,5 +114,46 @@ func TestValueDescriptorValidation(t *testing.T) {
 			_, err := tt.vd.Validate()
 			checkValidationError(err, tt.expectError, tt.name, t)
 		})
+	}
+}
+
+func TestFrom(t *testing.T) {
+	observed := From(TestDeviceResource)
+
+	errs := make([]string, 0)
+
+	if observed.Name != TestDeviceResource.Name {
+		errs = append(errs, "Name")
+	}
+	if observed.Description != TestDeviceResource.Description {
+		errs = append(errs, "Description")
+	}
+	if observed.Max != TestDeviceResource.Properties.Value.Maximum {
+		errs = append(errs, "Max")
+	}
+	if observed.Min != TestDeviceResource.Properties.Value.Minimum {
+		errs = append(errs, "Min")
+	}
+	if observed.Type != TestDeviceResource.Properties.Value.Type {
+		errs = append(errs, "Type")
+	}
+	if observed.FloatEncoding != TestDeviceResource.Properties.Value.FloatEncoding {
+		errs = append(errs, "FloatEncoding")
+	}
+	if observed.MediaType != TestDeviceResource.Properties.Value.MediaType {
+		errs = append(errs, "MediaType")
+	}
+	if observed.DefaultValue != TestDeviceResource.Properties.Value.DefaultValue {
+		errs = append(errs, "DefaultValue")
+	}
+	if observed.UomLabel != TestDeviceResource.Properties.Units.DefaultValue {
+		errs = append(errs, "UomLabel")
+	}
+	if observed.Formatting != defaultValueDescriptorFormat {
+		errs = append(errs, "UomLabel")
+	}
+
+	if len(errs) > 0 {
+		t.Errorf("The ValueDescriptor field(s) did not match the data provided in the DeviceResource: %s", strings.Join(errs, ", "))
 	}
 }
