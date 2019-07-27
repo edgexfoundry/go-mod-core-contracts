@@ -18,6 +18,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/url"
+	"strings"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
@@ -133,7 +134,15 @@ func (v *valueDescriptorRestClient) ValueDescriptorsByUomLabel(uomLabel string, 
 	return v.requestValueDescriptorSlice(v.url+"/uomlabel/"+uomLabel, ctx)
 }
 func (v *valueDescriptorRestClient) ValueDescriptorsUsage(names []string, ctx context.Context) (map[string]bool, error) {
-	data, err := clients.GetRequest(v.url+"/usage", ctx)
+	u, err := url.Parse(v.url + "/usage")
+	if err != nil {
+		return nil, err
+	}
+
+	q := u.Query()
+	q.Add("names", strings.Join(names, ","))
+	u.RawQuery = q.Encode()
+	data, err := clients.GetRequest(u.String(), ctx)
 	if err != nil {
 		return nil, err
 	}
