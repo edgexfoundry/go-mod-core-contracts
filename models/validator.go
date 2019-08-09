@@ -18,6 +18,10 @@ import (
 	"reflect"
 )
 
+const (
+	ValidateTag = "validate"
+)
+
 // Validator provides an interface for struct types to implement validation of their internal state. They can also
 // indicate to a caller whether their validation has already been completed.
 //
@@ -30,10 +34,12 @@ type Validator interface {
 
 func validate(t interface{}) error {
 	val := reflect.ValueOf(t)
+	typ := reflect.TypeOf(t)
 	fields := val.NumField()
 	for f := 0; f < fields; f++ {
 		field := val.Field(f)
-		if field.Type().NumMethod() > 0 && field.CanInterface() {
+		typfield := typ.Field(f)
+		if field.Type().NumMethod() > 0 && field.CanInterface() && typfield.Tag.Get(ValidateTag) != "-" {
 			if v, ok := field.Interface().(Validator); ok {
 				cast := v.(Validator)
 				_, err := cast.Validate()
