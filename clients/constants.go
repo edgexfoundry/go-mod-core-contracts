@@ -73,4 +73,5 @@ const (
 	ContentTypeCBOR = "application/cbor"
 	ContentTypeJSON = "application/json"
 	ContentTypeYAML = "application/x-yaml"
+	ContentTypeText = "text/plain"
 )
