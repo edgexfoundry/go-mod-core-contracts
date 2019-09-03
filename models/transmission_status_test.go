@@ -33,6 +33,7 @@ func TestTransmissionStatus_UnmarshalJSON(t *testing.T) {
 		{"test marshal of sent", &sent, []byte("\"SENT\""), false},
 		{"test marshal of acknowledged", &acknowledge, []byte("\"ACKNOWLEDGED\""), false},
 		{"test marshal of trx escalated", &trxescalated, []byte("\"TRXESCALATED\""), false},
+		{"error unmarshal", &trxescalated, nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -59,6 +60,27 @@ func TestIsTransmissionStatus(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := IsTransmissionStatus(tt.args); got != tt.want {
 				t.Errorf("IsTransmissionStatus() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsTransmissionValidate(t *testing.T) {
+	tests := []struct {
+		name string
+		ts   TransmissionStatus
+		want bool
+	}{
+		{"test FAILED", TransmissionStatus(Failed), true},
+		{"test SENT", TransmissionStatus(Sent), true},
+		{"test ACKNOWLEDGED", TransmissionStatus(Acknowledged), true},
+		{"test TRXESCALATED", TransmissionStatus(Trxescalated), true},
+		{"test fail on non-tran status", TransmissionStatus("foo"), false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got, _ := tt.ts.Validate(); got != tt.want {
+				t.Errorf("Validate() = %v, want %v", got, tt.want)
 			}
 		})
 	}
