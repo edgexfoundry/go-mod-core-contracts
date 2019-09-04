@@ -18,6 +18,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 type TransmissionStatus string
@@ -39,13 +40,19 @@ func (as *TransmissionStatus) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("TransmissionStatus should be a string, got %s", data)
 	}
 
-	got, err := map[string]TransmissionStatus{"FAILED": Failed, "SENT": Sent, "ACKNOWLEDGED": Acknowledged, "TRXESCALATED": Trxescalated}[s]
-	if !err {
-		return fmt.Errorf("invalid TransmissionStatus %q", s)
-	}
-	*as = got
+	new := TransmissionStatus(strings.ToUpper(s))
+	*as = new
 	return nil
 }
+
+func (as TransmissionStatus) Validate() (bool, error) {
+	_, found := map[string]TransmissionStatus{"FAILED": Failed, "SENT": Sent, "ACKNOWLEDGED": Acknowledged, "TRXESCALATED": Trxescalated}[string(as)]
+	if !found {
+		return false, NewErrContractInvalid(fmt.Sprintf("invalid Transmission Status %q", as))
+	}
+	return true, nil
+}
+
 func IsTransmissionStatus(as string) bool {
 	_, err := map[string]TransmissionStatus{"FAILED": Failed, "SENT": Sent, "ACKNOWLEDGED": Acknowledged, "TRXESCALATED": Trxescalated}[as]
 	if !err {

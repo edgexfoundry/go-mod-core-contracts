@@ -28,6 +28,7 @@ type Transmission struct {
 	Status       TransmissionStatus   `json:"status,omitempty"`
 	ResendCount  int                  `json:"resendcount"`
 	Records      []TransmissionRecord `json:"records,omitempty"`
+	isValidated  bool
 }
 
 // Custom marshaling to make empty strings null
@@ -57,6 +58,74 @@ func (t Transmission) MarshalJSON() ([]byte, error) {
 		test.Receiver = &t.Receiver
 	}
 	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the Transmission type
+func (t *Transmission) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Timestamps
+		ID           *string              `json:"id"`
+		Notification Notification         `json:"notification,omitempty"`
+		Receiver     *string              `json:"receiver,omitempty"`
+		Channel      Channel              `json:"channel,omitempty"`
+		Status       TransmissionStatus   `json:"status,omitempty"`
+		ResendCount  int                  `json:"resendcount"`
+		Records      []TransmissionRecord `json:"records,omitempty"`
+	}
+	a := Alias{}
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Nillable fields
+	if a.ID != nil {
+		t.ID = *a.ID
+	}
+	if a.Receiver != nil {
+		t.Receiver = *a.Receiver
+	}
+
+	t.Notification = a.Notification
+	t.Channel = a.Channel
+	t.Status = a.Status
+	t.ResendCount = a.ResendCount
+	t.Records = a.Records
+	t.Timestamps = a.Timestamps
+
+	t.isValidated, err = t.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (t Transmission) Validate() (bool, error) {
+	if !t.isValidated {
+
+		if t.Notification.Slug == "" {
+			return false, NewErrContractInvalid("Transmission's Notification is blank")
+		}
+		if t.Receiver == "" {
+			return false, NewErrContractInvalid("Transmission's Receiver is blank")
+		}
+		if t.Channel.Type == "" {
+			return false, NewErrContractInvalid("Transmission's Channel is blank")
+		}
+		if t.Status == "" {
+			return false, NewErrContractInvalid("Transmission's Status is blank")
+		}
+		if t.ResendCount < 0 {
+			return false, NewErrContractInvalid("Transmission's ResendCount is blank")
+		}
+
+		err := validate(t)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return t.isValidated, nil
 }
 
 /*

@@ -67,3 +67,75 @@ func TestTransmission_String(t *testing.T) {
 		})
 	}
 }
+
+func TestTransmissionValidation(t *testing.T) {
+	valid := TestTransmission
+
+	invalidNotification := TestTransmission
+	invalidNotification.Notification = Notification{}
+
+	invalidChannel := TestTransmission
+	invalidChannel.Channel = Channel{}
+
+	invalidReceiver := TestTransmission
+	invalidReceiver.Receiver = ""
+
+	invalidStatus := TestTransmission
+	invalidStatus.Status = ""
+
+	invalidResendCount := TestTransmission
+	invalidResendCount.ResendCount = -1
+
+	tests := []struct {
+		name        string
+		t           Transmission
+		expectError bool
+	}{
+		{"valid transmission", valid, false},
+		{"invalid transmisison identifiers", invalidNotification, true},
+		{"invalid channel", invalidChannel, true},
+		{"invalid receiver", invalidReceiver, true},
+		{"invalid status", invalidStatus, true},
+		{"invalid resend count", invalidResendCount, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.t.Validate()
+			checkValidationError(err, tt.expectError, tt.name, t)
+		})
+	}
+}
+
+func TestTransmission_UnmarshalJSON(t *testing.T) {
+
+	var foo = Transmission{}
+
+	TestTransmissionJSON, _ := TestTransmission.MarshalJSON()
+
+	TestTransmissionWithID := TestTransmission
+	TestTransmissionWithID.ID = TestId
+	TestTransmissionWithIDJSON, _ := TestTransmissionWithID.MarshalJSON()
+
+	type args struct {
+		data []byte
+	}
+	tests := []struct {
+		name    string
+		t       *Transmission
+		args    args
+		wantErr bool
+	}{
+		{"success", &foo, args{TestTransmissionJSON}, false},
+		{"json unmarshal error", &foo, args{[]byte("\"{}\"")}, true},
+		{"with id error", &foo, args{TestTransmissionWithIDJSON}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.t.UnmarshalJSON(tt.args.data)
+
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Transmission.UnmarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
