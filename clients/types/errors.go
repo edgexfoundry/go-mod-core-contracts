@@ -41,7 +41,7 @@ type ErrServiceClient struct {
 
 // NewErrServiceClient returns an instance of the error interface with ErrServiceClient as its implementation.
 func NewErrServiceClient(statusCode int, body []byte) error {
-	e := &ErrServiceClient{StatusCode: statusCode, bodyBytes: body}
+	e := ErrServiceClient{StatusCode: statusCode, bodyBytes: body}
 	return e
 }
 
