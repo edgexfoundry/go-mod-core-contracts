@@ -22,16 +22,18 @@ import (
 
 var testCommandName = "test command name"
 var TestCommand = Command{Timestamps: testTimestamps, Name: testCommandName, Get: TestGet, Put: TestPut}
+var TestCommandGetOnly = Command{Timestamps: testTimestamps, Name: testCommandName, Get: TestGet}
+var TestCommandPutOnly = Command{Timestamps: testTimestamps, Name: testCommandName, Put: TestPut}
 
 func TestCommand_MarshalJSON(t *testing.T) {
-	var testCommandBytes = []byte(TestCommand.String())
 	tests := []struct {
 		name    string
 		c       Command
-		want    []byte
 		wantErr bool
 	}{
-		{"successful marshalling", TestCommand, testCommandBytes, false},
+		{"Successful marshalling", TestCommand, false},
+		{"Successful, GET only", TestCommandGetOnly, false},
+		{"Successful, PUT only", TestCommandPutOnly, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -40,8 +42,10 @@ func TestCommand_MarshalJSON(t *testing.T) {
 				t.Errorf("Command.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Command.MarshalJSON() = %v, want %v", got, tt.want)
+
+			want := []byte(tt.c.String())
+			if !reflect.DeepEqual(got, want) {
+				t.Errorf("Command.MarshalJSON() = %v, want %v", got, want)
 			}
 		})
 	}
@@ -59,6 +63,18 @@ func TestCommand_String(t *testing.T) {
 				",\"origin\":" + strconv.FormatInt(TestCommand.Origin, 10) +
 				",\"name\":\"" + TestCommand.Name + "\"" +
 				",\"get\":" + TestGet.String() +
+				",\"put\":" + TestPut.String() + "}"},
+		{"command to string, GET only", TestCommandGetOnly,
+			"{\"created\":" + strconv.FormatInt(TestCommandGetOnly.Created, 10) +
+				",\"modified\":" + strconv.FormatInt(TestCommandGetOnly.Modified, 10) +
+				",\"origin\":" + strconv.FormatInt(TestCommandGetOnly.Origin, 10) +
+				",\"name\":\"" + TestCommandGetOnly.Name + "\"" +
+				",\"get\":" + TestGet.String() + "}"},
+		{"command to string, PUT only", TestCommandPutOnly,
+			"{\"created\":" + strconv.FormatInt(TestCommandPutOnly.Created, 10) +
+				",\"modified\":" + strconv.FormatInt(TestCommandPutOnly.Modified, 10) +
+				",\"origin\":" + strconv.FormatInt(TestCommandPutOnly.Origin, 10) +
+				",\"name\":\"" + TestCommandPutOnly.Name + "\"" +
 				",\"put\":" + TestPut.String() + "}"},
 	}
 	for _, tt := range tests {
@@ -102,6 +118,8 @@ func TestCommandValidation(t *testing.T) {
 		expectError bool
 	}{
 		{"valid command", valid, false},
+		{"valid, GET only", TestCommandGetOnly, false},
+		{"valid, PUT only", TestCommandPutOnly, false},
 		{"invalid command", invalid, true},
 	}
 	for _, tt := range tests {
