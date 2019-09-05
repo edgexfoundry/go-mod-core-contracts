@@ -35,8 +35,8 @@ func (c Command) MarshalJSON() ([]byte, error) {
 		Timestamps
 		Id   *string `json:"id,omitempty"`
 		Name *string `json:"name,omitempty"` // Command name (unique on the profile)
-		Get  *Get     `json:"get,omitempty"`  // Get Command
-		Put  *Put     `json:"put,omitempty"`  // Put Command
+		Get  *Get    `json:"get,omitempty"`  // Get Command
+		Put  *Put    `json:"put,omitempty"`  // Put Command
 	}{
 		Timestamps: c.Timestamps,
 		Get:        &c.Get,
