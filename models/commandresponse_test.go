@@ -15,30 +15,23 @@
 package models
 
 import (
-	"strconv"
 	"testing"
 )
 
-var TestDescribedObject = DescribedObject{Timestamps: testTimestamps, Description: TestDescription}
-var TestEmptyDescribedObject = DescribedObject{}
+var TestCommandResponseEmpty = CommandResponse{}
 
-func TestDescribedObject_String(t *testing.T) {
+func TestCommandResponse_String(t *testing.T) {
 	tests := []struct {
 		name string
-		o    DescribedObject
+		o    CommandResponse
 		want string
 	}{
-		{"described object to string", TestDescribedObject,
-			"{\"created\":" + strconv.FormatInt(TestDescribedObject.Created, 10) +
-				",\"modified\":" + strconv.FormatInt(TestDescribedObject.Modified, 10) +
-				",\"origin\":" + strconv.FormatInt(TestDescribedObject.Origin, 10) +
-				",\"description\":\"" + TestDescription + "\"}"},
-		{"empty described object to string", TestEmptyDescribedObject, "{}"},
+		{"empty described object to string", TestCommandResponseEmpty, "{}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.o.String(); got != tt.want {
-				t.Errorf("DescribedObject.String() = %v, want %v", got, tt.want)
+				t.Errorf("CommandResponse.String() = %v, want %v", got, tt.want)
 			}
 		})
 	}

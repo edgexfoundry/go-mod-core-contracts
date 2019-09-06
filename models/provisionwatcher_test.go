@@ -39,6 +39,8 @@ var TestBlockIds = map[string][]string{
 var TestProvisionWatcher = ProvisionWatcher{Timestamps: testTimestamps, Name: TestPWName, Identifiers: TestIdentifiers,
 	BlockingIdentifiers: TestBlockIds, Profile: TestProfile, Service: TestDeviceService, AdminState: "UNLOCKED"}
 
+var TestProvisionWatcherEmpty = ProvisionWatcher{}
+
 func TestProvisionWatcher_MarshalJSON(t *testing.T) {
 	var testPWBytes = []byte(TestProvisionWatcher.String())
 	tests := []struct {
@@ -83,6 +85,7 @@ func TestProvisionWatcher_String(t *testing.T) {
 				",\"service\":" + TestProvisionWatcher.Service.String() +
 				",\"adminState\":\"UNLOCKED\"" +
 				"}"},
+		{"provision watcher to string, empty", TestProvisionWatcherEmpty, "{}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

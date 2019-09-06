@@ -29,6 +29,7 @@ var TestDeviceCommand = "test device command"
 var TestSecondary = []string{"test secondary"}
 var TestMappings = make(map[string]string)
 var TestResourceOperation = ResourceOperation{Index: TestResourceIndex, Operation: TestOperation, DeviceResource: TestRODeviceResource, Parameter: TestParameter, DeviceCommand: TestDeviceCommand, Secondary: TestSecondary, Mappings: TestMappings}
+var TestResourceOperationEmpty = ResourceOperation{}
 
 func TestResourceOperation_MarshalJSON(t *testing.T) {
 	var testResourceOperationBytes = []byte(TestResourceOperation.String())
@@ -39,6 +40,7 @@ func TestResourceOperation_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshalling", TestResourceOperation, testResourceOperationBytes, false},
+		{"successful marshalling, empty", TestResourceOperationEmpty, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -70,6 +72,7 @@ func TestResourceOperation_String(t *testing.T) {
 				",\"resource\":\"" + TestDeviceCommand + "\"" +
 				",\"deviceCommand\":\"" + TestDeviceCommand + "\"" +
 				",\"secondary\":" + fmt.Sprint(string(secondarySlice)) + "}"},
+		{"resource operation to string, empty", TestResourceOperationEmpty, "{}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

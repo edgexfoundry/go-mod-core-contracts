@@ -20,11 +20,11 @@ import (
 )
 
 var TestResponse = Response{Code: TestCode, Description: TestDescription, ExpectedValues: TestExpectedvalues}
+var TestResponseEmpty = Response{}
 
 func TestResponse_MarshalJSON(t *testing.T) {
-	var emptyResponse = Response{}
 	var resultTestBytes = []byte(TestResponse.String())
-	var resultEmptyTestBytes = []byte(emptyResponse.String())
+	var resultEmptyTestBytes = []byte(TestResponseEmpty.String())
 
 	tests := []struct {
 		name    string
@@ -33,7 +33,7 @@ func TestResponse_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshal", TestResponse, resultTestBytes, false},
-		{"successful empty marshal", emptyResponse, resultEmptyTestBytes, false},
+		{"successful empty marshal", TestResponseEmpty, resultEmptyTestBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -55,10 +55,11 @@ func TestResponse_String(t *testing.T) {
 		a    Response
 		want string
 	}{
-		{"resonse to string", TestResponse,
+		{"response to string", TestResponse,
 			"{\"code\":\"" + TestCode + "\"" +
 				",\"description\":\"" + TestDescription + "\"" +
 				",\"expectedValues\":[\"" + TestExpectedvalue1 + "\",\"" + TestExpectedvalue2 + "\"]}"},
+		{"response to string, empty", TestResponseEmpty, "{}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

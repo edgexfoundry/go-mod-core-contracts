@@ -20,6 +20,7 @@ import (
 )
 
 var TestGet = Get{Action: TestAction}
+var TestGetEmpty = Get{}
 
 func TestGet_MarshalJSON(t *testing.T) {
 	var testGetBytes = []byte(TestGet.String())
@@ -30,6 +31,7 @@ func TestGet_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshalling", TestGet, testGetBytes, false},
+		{"successful marshalling, empty", TestGetEmpty, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -52,6 +54,7 @@ func TestGet_String(t *testing.T) {
 		want string
 	}{
 		{"get to string", TestGet, TestGet.Action.String()},
+		{"get to string, empty", TestGetEmpty, "{}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

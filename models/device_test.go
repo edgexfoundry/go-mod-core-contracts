@@ -31,6 +31,7 @@ var TestProtocols = newTestProtocols()
 var TestDevice = Device{DescribedObject: TestDescribedObject, Name: TestDeviceName, AdminState: "UNLOCKED", OperatingState: "ENABLED",
 	Protocols: TestProtocols, LastReported: TestLastReported, LastConnected: TestLastConnected,
 	Labels: TestLabels, Location: TestLocation, Service: TestDeviceService, Profile: TestProfile, AutoEvents: newAutoEvent()}
+var TestDeviceEmpty = Device{}
 
 func TestDevice_MarshalJSON(t *testing.T) {
 	marshaled := TestDevice.String()
@@ -43,6 +44,7 @@ func TestDevice_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshal", TestDevice, testDeviceBytes, false},
+		{"successful marshal, empty object", TestDeviceEmpty, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -82,6 +84,7 @@ func TestDevice_String(t *testing.T) {
 				",\"profile\":" + TestDevice.Profile.String() +
 				",\"autoEvents\":[" + TestAutoEvent.String() + "]" +
 				"}"},
+		{"device to string, empty", TestDeviceEmpty, "{}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

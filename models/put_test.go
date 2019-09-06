@@ -20,6 +20,7 @@ import (
 )
 
 var TestPut = Put{Action: TestAction, ParameterNames: TestExpectedvalues}
+var TestPutEmpty = Put{}
 
 func TestPut_MarshalJSON(t *testing.T) {
 	var testPutBytes = []byte(TestPut.String())
@@ -30,6 +31,7 @@ func TestPut_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshalling", TestPut, testPutBytes, false},
+		{"successful marshalling, empty", TestPutEmpty, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -58,6 +60,7 @@ func TestPut_String(t *testing.T) {
 				"\",\"expectedValues\":[\"" + TestExpectedvalue1 +
 				"\",\"" + TestExpectedvalue2 +
 				"\"]}],\"parameterNames\":[\"" + TestExpectedvalue1 + "\",\"" + TestExpectedvalue2 + "\"]}"},
+		{"put to string, empty", TestPutEmpty, "{}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
