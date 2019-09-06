@@ -52,18 +52,3 @@ func (as AdminState) Validate() (bool, error) {
 	}
 	return true, nil
 }
-
-// GetAdminState is called from within the router logic of the core services. For example, there are PUT calls
-// like the one below from core-metadata which specify their update parameters in the URL
-//
-// d.HandleFunc("/{"+ID+"}/"+URLADMINSTATE+"/{"+ADMINSTATE+"}", restSetDeviceAdminStateById).Methods(http.MethodPut)
-//
-// Updates like this should be refactored to pass a body containing the new values instead of via the URL. This
-// would allow us to utilize the model validation above and remove the logic from the controller.
-//
-// This will be removed once work on the following issue begins -- https://github.com/edgexfoundry/edgex-go/issues/1244
-func GetAdminState(as string) (AdminState, bool) {
-	as = strings.ToUpper(as)
-	retValue, err := map[string]AdminState{"LOCKED": Locked, "UNLOCKED": Unlocked}[as]
-	return retValue, err
-}

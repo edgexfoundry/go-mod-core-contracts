@@ -54,18 +54,3 @@ func (os OperatingState) Validate() (bool, error) {
 	}
 	return true, nil
 }
-
-// GetOperatingState is called from within the router logic of the core services. For example, there are PUT calls
-// like the one below from core-metadata which specify their update parameters in the URL
-//
-// d.HandleFunc("/{"+ID+"}/"+OPSTATE+"/{"+OPSTATE+"}", restSetDeviceOpStateById).Methods(http.MethodPut)
-//
-// Updates like this should be refactored to pass a body containing the new values instead of via the URL. This
-// would allow us to utilize the model validation above and remove the logic from the controller.
-//
-// This will be removed once work on the following issue begins -- https://github.com/edgexfoundry/edgex-go/issues/1244
-func GetOperatingState(os string) (OperatingState, bool) {
-	os = strings.ToUpper(os)
-	o, err := map[string]OperatingState{"ENABLED": Enabled, "DISABLED": Disabled}[os]
-	return o, err
-}
