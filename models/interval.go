@@ -143,6 +143,7 @@ func (i Interval) Validate() (bool, error) {
 			}
 		}
 		if i.Frequency != "" {
+			/* legacy frequencyPattern */
 			matched, _ := regexp.MatchString(frequencyPattern, i.Frequency)
 			if matched {
 				if i.Frequency == "P" || i.Frequency == "PT" {
@@ -150,7 +151,11 @@ func (i Interval) Validate() (bool, error) {
 				}
 			}
 			if !matched {
-				return false, NewErrContractInvalid(fmt.Sprintf("invalid Interval Frequency %s", i.Frequency))
+				// parse frequency example "1h15m30s10us9ns"
+				_, err := time.ParseDuration(i.Frequency)
+				if err != nil {
+					return false, NewErrContractInvalid(fmt.Sprintf("invalid Interval frequency %s format", i.Frequency))
+				}
 			}
 		}
 		err := validate(i)
