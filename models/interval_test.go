@@ -35,16 +35,24 @@ func TestIntervalValidation(t *testing.T) {
 	invalidFrequency := testInterval
 	invalidFrequency.Frequency = "blah"
 
+	invalidNewFrequency := testInterval
+	invalidNewFrequency.Frequency = "10mzz"
+
+	validNewFrequency := testInterval
+	validNewFrequency.Frequency = "10h20m15s11us"
+
 	tests := []struct {
 		name        string
 		i           Interval
 		expectError bool
 	}{
-		{"valid interval", valid, false},
+		{"valid interval legacy frequency", valid, false},
+		{"valid interval", validNewFrequency, false},
 		{"invalid interval identifiers", invalidIdentifiers, true},
 		{"invalid interval start", invalidStart, true},
 		{"invalid interval end", invalidEnd, true},
 		{"invalid interval frequency", invalidFrequency, true},
+		{"invalid interval new frequency", invalidNewFrequency, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
