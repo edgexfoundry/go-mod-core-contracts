@@ -21,17 +21,21 @@ import (
 )
 
 var testCommandName = "test command name"
-var TestCommand = Command{Timestamps: testTimestamps, Name: testCommandName, Get: TestGet, Put: TestPut}
+var TestCommand = Command{Timestamps: testTimestamps, Id: TestId, Name: testCommandName, Get: TestGet, Put: TestPut}
+var TestCommandGetOnly = Command{Timestamps: testTimestamps, Id: TestId, Name: testCommandName, Get: TestGet}
+var TestCommandPutOnly = Command{Timestamps: testTimestamps, Id: TestId, Name: testCommandName, Put: TestPut}
+var TestCommandEmpty = Command{}
 
 func TestCommand_MarshalJSON(t *testing.T) {
-	var testCommandBytes = []byte(TestCommand.String())
 	tests := []struct {
 		name    string
 		c       Command
-		want    []byte
 		wantErr bool
 	}{
-		{"successful marshalling", TestCommand, testCommandBytes, false},
+		{"Successful marshalling", TestCommand, false},
+		{"Successful, GET only", TestCommandGetOnly, false},
+		{"Successful, PUT only", TestCommandPutOnly, false},
+		{"Successful, empty", TestCommandEmpty, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -40,8 +44,10 @@ func TestCommand_MarshalJSON(t *testing.T) {
 				t.Errorf("Command.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Command.MarshalJSON() = %v, want %v", got, tt.want)
+
+			want := []byte(tt.c.String())
+			if !reflect.DeepEqual(got, want) {
+				t.Errorf("Command.MarshalJSON() = %v, want %v", got, want)
 			}
 		})
 	}
@@ -57,9 +63,30 @@ func TestCommand_String(t *testing.T) {
 			"{\"created\":" + strconv.FormatInt(TestCommand.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(TestCommand.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestCommand.Origin, 10) +
+				",\"id\":\"" + TestCommand.Id + "\"" +
 				",\"name\":\"" + TestCommand.Name + "\"" +
 				",\"get\":" + TestGet.String() +
-				",\"put\":" + TestPut.String() + "}"},
+				",\"put\":" + TestPut.String() + "}",
+		},
+		{"command to string, GET only", TestCommandGetOnly,
+			"{\"created\":" + strconv.FormatInt(TestCommandGetOnly.Created, 10) +
+				",\"modified\":" + strconv.FormatInt(TestCommandGetOnly.Modified, 10) +
+				",\"origin\":" + strconv.FormatInt(TestCommandGetOnly.Origin, 10) +
+				",\"id\":\"" + TestCommandGetOnly.Id + "\"" +
+				",\"name\":\"" + TestCommandGetOnly.Name + "\"" +
+				",\"get\":" + TestGet.String() + "}",
+		},
+		{"command to string, PUT only", TestCommandPutOnly,
+			"{\"created\":" + strconv.FormatInt(TestCommandPutOnly.Created, 10) +
+				",\"modified\":" + strconv.FormatInt(TestCommandPutOnly.Modified, 10) +
+				",\"origin\":" + strconv.FormatInt(TestCommandPutOnly.Origin, 10) +
+				",\"id\":\"" + TestCommandPutOnly.Id + "\"" +
+				",\"name\":\"" + TestCommandPutOnly.Name + "\"" +
+				",\"put\":" + TestPut.String() + "}",
+		},
+		{"command to string, empty", TestCommandEmpty,
+			"{}",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -102,6 +129,8 @@ func TestCommandValidation(t *testing.T) {
 		expectError bool
 	}{
 		{"valid command", valid, false},
+		{"valid, GET only", TestCommandGetOnly, false},
+		{"valid, PUT only", TestCommandPutOnly, false},
 		{"invalid command", invalid, true},
 	}
 	for _, tt := range tests {
