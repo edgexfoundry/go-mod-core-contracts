@@ -31,13 +31,14 @@ type Notification struct {
 	Status      NotificationsStatus   `json:"status,omitempty"`
 	Labels      []string              `json:"labels,omitempty"`
 	ContentType string                `json:"contenttype,omitempty"`
+	isValidated bool                  // internal member used for validation check
 }
 
 func (n Notification) MarshalJSON() ([]byte, error) {
 	test := struct {
 		Timestamps
 		ID          *string               `json:"id"`
-		Slug        *string               `json:"slug,omitempty,omitempty"`
+		Slug        *string               `json:"slug,omitempty"`
 		Sender      *string               `json:"sender,omitempty"`
 		Category    NotificationsCategory `json:"category,omitempty"`
 		Severity    NotificationsSeverity `json:"severity,omitempty"`
@@ -73,6 +74,94 @@ func (n Notification) MarshalJSON() ([]byte, error) {
 		test.ContentType = &n.ContentType
 	}
 	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the Notification type
+func (n *Notification) UnmarshalJSON(data []byte) error {
+	var err error
+	type Alias struct {
+		Timestamps
+		ID          *string               `json:"id"`
+		Slug        *string               `json:"slug,omitempty,omitempty"`
+		Sender      *string               `json:"sender,omitempty"`
+		Category    NotificationsCategory `json:"category,omitempty"`
+		Severity    NotificationsSeverity `json:"severity,omitempty"`
+		Content     *string               `json:"content,omitempty"`
+		Description *string               `json:"description,omitempty"`
+		Status      NotificationsStatus   `json:"status,omitempty"`
+		Labels      []string              `json:"labels,omitempty"`
+		ContentType *string               `json:"contenttype,omitempty"`
+	}
+	a := Alias{}
+	// Error with unmarshaling
+	if err = json.Unmarshal(data, &a); err != nil {
+		return err
+	}
+
+	// Nillable fields
+	if a.ID != nil {
+		n.ID = *a.ID
+	}
+	if a.Slug != nil {
+		n.Slug = *a.Slug
+	}
+	if a.Sender != nil {
+		n.Sender = *a.Sender
+	}
+	if a.Content != nil {
+		n.Content = *a.Content
+	}
+	if a.Description != nil {
+		n.Description = *a.Description
+	}
+	if a.ContentType != nil {
+		n.ContentType = *a.ContentType
+	}
+	n.Timestamps = a.Timestamps
+	n.Category = a.Category
+	n.Severity = a.Severity
+	n.Status = a.Status
+	n.Labels = a.Labels
+
+	n.isValidated, err = n.Validate()
+
+	return err
+}
+
+// Validate satisfies the Validator interface
+func (n Notification) Validate() (bool, error) {
+	if !n.isValidated {
+		if n.ID == "" && n.Slug == "" {
+			return false, NewErrContractInvalid("Notifiaction ID and Slug are both blank")
+		}
+		if n.Sender == "" {
+			return false, NewErrContractInvalid("Sender is empty")
+		}
+		if n.Content == "" {
+			return false, NewErrContractInvalid("Content is empty")
+		}
+		if n.Category == "" {
+			return false, NewErrContractInvalid("Category is empty")
+		}
+		if n.Severity == "" {
+			return false, NewErrContractInvalid("Severity is empty")
+		}
+		if n.Severity != "" && n.Severity != "CRITICAL" && n.Severity != "NORMAL" {
+			return false, NewErrContractInvalid("Invalid notification severity")
+		}
+		if n.Category != "" && n.Category != "SECURITY" && n.Category != "HW_HEALTH" && n.Category != "SW_HEALTH" {
+			return false, NewErrContractInvalid("Invalid notification severity")
+		}
+		if n.Status != "" && n.Status != "NEW" && n.Status != "PROCESSED" && n.Status != "ESCALATED" {
+			return false, NewErrContractInvalid("Invalid notification severity")
+		}
+		err := validate(n)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return n.isValidated, nil
 }
 
 /*
