@@ -44,11 +44,10 @@ func (as *ChannelType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// IsChannelType allows external code to verify whether the supplied string is a valid ChannelType value
-func IsChannelType(as string) bool {
-	_, err := map[string]ChannelType{"REST": Rest, "EMAIL": Email}[as]
+func (as ChannelType) Validate() (bool, error) {
+	_, err := map[string]ChannelType{"REST": Rest, "EMAIL": Email}[string(as)]
 	if !err {
-		return false
+		return false, NewErrContractInvalid(fmt.Sprintf("invalid Channeltype %q", as))
 	}
-	return true
+	return true, nil
 }
