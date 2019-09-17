@@ -40,21 +40,24 @@ func TestChannelType_UnmarshalJSON(t *testing.T) {
 	}
 }
 
-func TestIsChannelType(t *testing.T) {
+func TestChannelType_Validate(t *testing.T) {
+	var eChannelType = ChannelType(Email)
+	var rChannelType = ChannelType(Rest)
+	var invalid = ChannelType("foo")
+
 	tests := []struct {
-		name string
-		arg  string
-		want bool
+		name        string
+		ct          ChannelType
+		expectError bool
 	}{
-		{"test email", Email, true},
-		{"test rest", Rest, true},
-		{"test fail on not a channel type", "foo", false},
+		{"valid EMAIL channel", eChannelType, false},
+		{"valid REST channel", rChannelType, false},
+		{"invalid channel type", invalid, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IsChannelType(tt.arg); got != tt.want {
-				t.Errorf("IsChannelType() = %v, want %v", got, tt.want)
-			}
+			_, err := tt.ct.Validate()
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }
