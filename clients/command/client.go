@@ -26,10 +26,14 @@ import (
 
 // The CommandClient interface defines interactions with the EdgeX Core Command microservice.
 type CommandClient interface {
-	// Get issues a GET command targeting the specified device, using the specified command
+	// Get issues a GET command targeting the specified device, using the specified command id
 	Get(deviceId string, commandId string, ctx context.Context) (string, error)
-	// Put issues a PUT command targeting the specified device, using the specified command
+	// Put issues a PUT command targeting the specified device, using the specified command id
 	Put(deviceId string, commandId string, body string, ctx context.Context) (string, error)
+	// GetDeviceCommandByNames issues a GET command targeting the specified device, using the specified device and command name
+	GetDeviceCommandByNames(deviceName string, commandName string, ctx context.Context) (string, error)
+	// PutDeviceCommandByNames issues a PUT command targeting the specified device, using the specified device and command names
+	PutDeviceCommandByNames(deviceName string, commandName string, body string, ctx context.Context) (string, error)
 }
 
 type commandRestClient struct {
@@ -68,4 +72,13 @@ func (cc *commandRestClient) Get(deviceId string, commandId string, ctx context.
 
 func (cc *commandRestClient) Put(deviceId string, commandId string, body string, ctx context.Context) (string, error) {
 	return clients.PutRequest(cc.url+"/"+deviceId+"/command/"+commandId, []byte(body), ctx)
+}
+
+func (cc *commandRestClient) GetDeviceCommandByNames(deviceName string, commandName string, ctx context.Context) (string, error) {
+	body, err := clients.GetRequest(cc.url+"/name/"+deviceName+"/command/"+commandName, ctx)
+	return string(body), err
+}
+
+func (cc *commandRestClient) PutDeviceCommandByNames(deviceName string, commandName string, body string, ctx context.Context) (string, error) {
+	return clients.PutRequest(cc.url+"/name/"+deviceName+"/command/"+commandName, []byte(body), ctx)
 }
