@@ -9,6 +9,7 @@ package notifications
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -130,4 +131,8 @@ func (e mockNotificationEndpoint) Monitor(params types.EndpointParams, ch chan s
 	default:
 		ch <- ""
 	}
+}
+
+func (e mockNotificationEndpoint) Fetch(params types.EndpointParams) string {
+	return fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
 }

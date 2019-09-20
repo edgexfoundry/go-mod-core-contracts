@@ -57,7 +57,7 @@ func TestUpdateDeviceProfile(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	dpc := NewDeviceProfileClient(params, MockEndpoint{})
+	dpc := NewDeviceProfileClient(params, mockCoreMetaDataEndpoint{})
 
 	err := dpc.Update(p, context.Background())
 	if err != nil {

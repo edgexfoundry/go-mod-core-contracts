@@ -57,6 +57,9 @@ func NewAddressableClient(params types.EndpointParams, m clients.Endpointer) Add
 
 func (a *addressableRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
+		//Fetch URL in real time for immediate use
+		a.url = a.endpoint.Fetch(params)
+		//Set up refresh interval to keep URL current
 		ch := make(chan string, 1)
 		go a.endpoint.Monitor(params, ch)
 		go func(ch chan string) {

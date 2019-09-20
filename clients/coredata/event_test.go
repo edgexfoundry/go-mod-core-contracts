@@ -66,7 +66,7 @@ func TestMarkPushed(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	ec := NewEventClient(params, mockEventEndpoint{})
+	ec := NewEventClient(params, mockCoreDataEndpoint{})
 
 	err := ec.MarkPushed(TestId, context.Background())
 
@@ -101,7 +101,7 @@ func TestMarkPushedByChecksum(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	ec := NewEventClient(params, mockEventEndpoint{})
+	ec := NewEventClient(params, mockCoreDataEndpoint{})
 
 	err := ec.MarkPushedByChecksum(TestChecksum, context.Background())
 
@@ -144,7 +144,7 @@ func TestGetEvents(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	ec := NewEventClient(params, mockEventEndpoint{})
+	ec := NewEventClient(params, mockCoreDataEndpoint{})
 
 	eArr, err := ec.Events(context.Background())
 	if err != nil {
@@ -175,7 +175,7 @@ func TestNewEventClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	ec := NewEventClient(params, mockEventEndpoint{})
+	ec := NewEventClient(params, mockCoreDataEndpoint{})
 
 	r, ok := ec.(*eventRestClient)
 	if !ok {
@@ -198,7 +198,7 @@ func TestMarshalEvent(t *testing.T) {
 	regularEvent := testEvent
 	regularEvent.Readings = append(regularEvent.Readings, testReading)
 
-	client := NewEventClient(types.EndpointParams{Url: "test"}, mockEventEndpoint{})
+	client := NewEventClient(types.EndpointParams{Url: "test"}, mockCoreDataEndpoint{})
 
 	tests := []struct {
 		name        string
@@ -236,10 +236,9 @@ func TestMarshalEvent(t *testing.T) {
 	}
 }
 
-type mockEventEndpoint struct {
-}
+type mockCoreDataEndpoint struct{}
 
-func (e mockEventEndpoint) Monitor(params types.EndpointParams, ch chan string) {
+func (e mockCoreDataEndpoint) Monitor(params types.EndpointParams, ch chan string) {
 	switch params.ServiceKey {
 	case clients.CoreDataServiceKey:
 		url := fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
@@ -248,4 +247,8 @@ func (e mockEventEndpoint) Monitor(params types.EndpointParams, ch chan string) 
 	default:
 		ch <- ""
 	}
+}
+
+func (e mockCoreDataEndpoint) Fetch(params types.EndpointParams) string {
+	return fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
 }

@@ -19,7 +19,6 @@ package coredata
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -78,7 +77,7 @@ func TestGetReadings(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	rc := NewReadingClient(params, mockReadingEndpoint{})
+	rc := NewReadingClient(params, mockCoreDataEndpoint{})
 
 	rArr, err := rc.Readings(context.Background())
 	if err != nil {
@@ -110,7 +109,7 @@ func TestNewReadingClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	rc := NewReadingClient(params, mockReadingEndpoint{})
+	rc := NewReadingClient(params, mockCoreDataEndpoint{})
 
 	r, ok := rc.(*readingRestClient)
 	if !ok {
@@ -122,19 +121,5 @@ func TestNewReadingClientWithConsul(t *testing.T) {
 		t.Error("url was not initialized")
 	} else if r.url != deviceUrl {
 		t.Errorf("unexpected url value %s", r.url)
-	}
-}
-
-type mockReadingEndpoint struct {
-}
-
-func (r mockReadingEndpoint) Monitor(params types.EndpointParams, ch chan string) {
-	switch params.ServiceKey {
-	case clients.CoreDataServiceKey:
-		url := fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
-		ch <- url
-		break
-	default:
-		ch <- ""
 	}
 }

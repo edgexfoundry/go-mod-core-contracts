@@ -19,9 +19,10 @@ import "github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 //Endpointer is the interface for types that need to implement or simulate integration
 //with a service discovery provider.
 type Endpointer interface {
-	//Monitor is responsible for looking up information about the service endpoint corresponding
-	//to the params.ServiceKey property. The name "Monitor" implies that this lookup will be done
-	//at a regular interval. Information about the service from the discovery provider should be
-	//used to construct a URL which will then be pushed to the supplied channel.
+	//Fetch will return a string containing the URL for a service endpoint corresponding to the params.ServiceKey property.
+	Fetch(params types.EndpointParams) string
+	//Monitor is responsible for refreshing information about the service endpoint corresponding
+	//to the params.ServiceKey property on a set interval. Information about the service from the
+	//discovery provider should be used to construct a URL which will then be pushed to the supplied channel.
 	Monitor(params types.EndpointParams, ch chan string)
 }

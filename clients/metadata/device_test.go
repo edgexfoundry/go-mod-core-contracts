@@ -68,7 +68,7 @@ func TestAddDevice(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	dc := NewDeviceClient(params, MockEndpoint{})
+	dc := NewDeviceClient(params, mockCoreMetaDataEndpoint{})
 
 	receivedDeviceId, err := dc.Add(&d, context.Background())
 	if err != nil {
@@ -89,7 +89,7 @@ func TestNewDeviceClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	dc := NewDeviceClient(params, MockEndpoint{})
+	dc := NewDeviceClient(params, mockCoreMetaDataEndpoint{})
 
 	r, ok := dc.(*deviceRestClient)
 	if !ok {
@@ -104,10 +104,9 @@ func TestNewDeviceClientWithConsul(t *testing.T) {
 	}
 }
 
-type MockEndpoint struct {
-}
+type mockCoreMetaDataEndpoint struct{}
 
-func (e MockEndpoint) Monitor(params types.EndpointParams, ch chan string) {
+func (e mockCoreMetaDataEndpoint) Monitor(params types.EndpointParams, ch chan string) {
 	switch params.ServiceKey {
 	case clients.CoreMetaDataServiceKey:
 		url := fmt.Sprintf("http://%s:%v%s", "localhost", 48081, params.Path)
@@ -116,4 +115,8 @@ func (e MockEndpoint) Monitor(params types.EndpointParams, ch chan string) {
 	default:
 		ch <- ""
 	}
+}
+
+func (e mockCoreMetaDataEndpoint) Fetch(params types.EndpointParams) string {
+	return fmt.Sprintf("http://%s:%v%s", "localhost", 48081, params.Path)
 }

@@ -46,6 +46,9 @@ func NewGeneralClient(params types.EndpointParams, m clients.Endpointer) General
 
 func (gc *generalRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
+		//Fetch URL in real time for immediate use
+		gc.url = gc.endpoint.Fetch(params)
+		//Set up refresh interval to keep URL current
 		ch := make(chan string, 1)
 		go gc.endpoint.Monitor(params, ch)
 		go func(ch chan string) {

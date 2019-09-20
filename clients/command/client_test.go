@@ -135,6 +135,10 @@ func (e MockEndpoint) Monitor(params types.EndpointParams, ch chan string) {
 	}
 }
 
+func (e MockEndpoint) Fetch(params types.EndpointParams) string {
+	return fmt.Sprintf("http://%s:%v%s", "localhost", 48082, params.Path)
+}
+
 // testHttpServer instantiates a test HTTP Server to be used for conveniently verifying a client's invocation
 func testHttpServer(t *testing.T, matchingRequestMethod string, matchingRequestUri string) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
