@@ -31,7 +31,7 @@ func TestNewCommandClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	cc := NewCommandClient(params, MockEndpoint{})
+	cc := NewCommandClient(params, mockCoreMetaDataEndpoint{})
 
 	r, ok := cc.(*commandRestClient)
 	if !ok {

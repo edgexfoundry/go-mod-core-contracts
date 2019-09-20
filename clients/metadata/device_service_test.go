@@ -31,7 +31,7 @@ func TestNewDeviceServiceClientWithConsul(t *testing.T) {
 		Url:         deviceServiceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	dsc := NewDeviceServiceClient(params, MockEndpoint{})
+	dsc := NewDeviceServiceClient(params, mockCoreMetaDataEndpoint{})
 	r, ok := dsc.(*deviceServiceRestClient)
 	if !ok {
 		t.Error("dsc is not of expected type")
