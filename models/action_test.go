@@ -23,6 +23,7 @@ const TestExpectedvalue2 = "humidity"
 const TestActionPath = "test/path"
 const TestFooBar = "foobar"
 const TestEmptyJSON = "{}"
+
 var TestEmptyJSONBytes = []byte(TestEmptyJSON)
 
 var TestExpectedvalues = []string{TestExpectedvalue1, TestExpectedvalue2}

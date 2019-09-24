@@ -17,6 +17,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"regexp"
 )
 
@@ -80,15 +81,6 @@ func (v ValueDescriptor) MarshalJSON() ([]byte, error) {
 	if v.Description != "" {
 		test.Description = &v.Description
 	}
-	if v.Min != "" {
-		test.Min = &v.Min
-	}
-	if v.Max != "" {
-		test.Max = &v.Max
-	}
-	if v.Min != "" {
-		test.DefaultValue = &v.DefaultValue
-	}
 	if v.Type != "" {
 		test.Type = &v.Type
 	}
@@ -103,6 +95,16 @@ func (v ValueDescriptor) MarshalJSON() ([]byte, error) {
 	}
 	if v.FloatEncoding != "" {
 		test.FloatEncoding = &v.FloatEncoding
+	}
+
+	if !reflect.DeepEqual(v.Min, nil) {
+		test.Min = &v.Min
+	}
+	if !reflect.DeepEqual(v.Max, nil) {
+		test.Max = &v.Max
+	}
+	if !reflect.DeepEqual(v.DefaultValue, nil) {
+		test.DefaultValue = &v.DefaultValue
 	}
 
 	return json.Marshal(test)

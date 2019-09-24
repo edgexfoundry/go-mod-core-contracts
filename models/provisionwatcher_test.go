@@ -20,8 +20,11 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
+
+	"github.com/google/uuid"
 )
 
+var TestPWID = uuid.New().String()
 var TestPWName = "TestWatcher.NAME"
 var TestPWNameKey1 = "MAC"
 var TestPWNameKey2 = "HTTP"
@@ -36,7 +39,7 @@ var TestIdentifiers = map[string]string{
 var TestBlockIds = map[string][]string{
 	TestPWNameKey1: {TestPWVal1b, TestPWVal1c},
 }
-var TestProvisionWatcher = ProvisionWatcher{Timestamps: testTimestamps, Name: TestPWName, Identifiers: TestIdentifiers,
+var TestProvisionWatcher = ProvisionWatcher{Timestamps: testTimestamps, Id: TestPWID, Name: TestPWName, Identifiers: TestIdentifiers,
 	BlockingIdentifiers: TestBlockIds, Profile: TestProfile, Service: TestDeviceService, AdminState: "UNLOCKED"}
 
 var TestProvisionWatcherEmpty = ProvisionWatcher{}
@@ -77,7 +80,7 @@ func TestProvisionWatcher_String(t *testing.T) {
 			"{\"created\":" + strconv.FormatInt(TestProvisionWatcher.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(TestProvisionWatcher.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestProvisionWatcher.Origin, 10) +
-				",\"id\":\"\"" +
+				",\"id\":\"" + TestPWID + "\"" +
 				",\"name\":\"" + TestPWName + "\"" +
 				",\"identifiers\":" + fmt.Sprintf("%s", data) +
 				",\"blockingidentifiers\":" + fmt.Sprintf("%s", blockdata) +
