@@ -44,10 +44,10 @@ type ProtocolProperties map[string]string
 func (d Device) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject
-		Id             *string                        `json:"id,omitempty"`
-		Name           *string                        `json:"name,omitempty"`
-		AdminState     *AdminState                    `json:"adminState,omitempty"`
-		OperatingState *OperatingState                `json:"operatingState,omitempty"`
+		Id             string                        `json:"id,omitempty"`
+		Name           string                        `json:"name,omitempty"`
+		AdminState     AdminState                    `json:"adminState,omitempty"`
+		OperatingState OperatingState                `json:"operatingState,omitempty"`
 		Protocols      *map[string]ProtocolProperties `json:"protocols,omitempty"`
 		LastConnected  int64                          `json:"lastConnected,omitempty"`
 		LastReported   int64                          `json:"lastReported,omitempty"`
@@ -57,9 +57,11 @@ func (d Device) MarshalJSON() ([]byte, error) {
 		Profile        *DeviceProfile                 `json:"profile,omitempty"`
 		AutoEvents     []AutoEvent                    `json:"autoEvents,omitempty"`
 	}{
+		Id: d.Id,
+		Name: d.Name,
 		DescribedObject: d.DescribedObject,
-		AdminState:      &d.AdminState,
-		OperatingState:  &d.OperatingState,
+		AdminState:      d.AdminState,
+		OperatingState:  d.OperatingState,
 		Protocols:       &d.Protocols,
 		LastConnected:   d.LastConnected,
 		LastReported:    d.LastReported,
@@ -70,21 +72,7 @@ func (d Device) MarshalJSON() ([]byte, error) {
 		AutoEvents:      d.AutoEvents,
 	}
 
-	// Empty strings are null
-	if d.Id != "" {
-		test.Id = &d.Id
-	}
-	if d.Name != "" {
-		test.Name = &d.Name
-	}
-
 	// Make empty structs nil pointers so they aren't marshaled
-	if reflect.DeepEqual(d.AdminState, AdminState("")) {
-		test.AdminState = nil
-	}
-	if reflect.DeepEqual(d.OperatingState, OperatingState("")) {
-		test.OperatingState = nil
-	}
 	if len(d.Protocols) == 0 {
 		test.Protocols = nil
 	}
@@ -92,10 +80,10 @@ func (d Device) MarshalJSON() ([]byte, error) {
 		test.Location = nil
 	}
 	if reflect.DeepEqual(d.Service, DeviceService{}) {
-		test.OperatingState = nil
+		test.Service = nil
 	}
 	if reflect.DeepEqual(d.Profile, DeviceProfile{}) {
-		test.OperatingState = nil
+		test.Profile = nil
 	}
 
 	return json.Marshal(test)

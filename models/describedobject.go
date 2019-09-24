@@ -23,24 +23,7 @@ import (
 // eliminated and the Description property moved to the relevant types. 4 types currently use this.
 type DescribedObject struct {
 	Timestamps  `yaml:",inline"`
-	Description string `json:"description" yaml:"description,omitempty"` // Description. Capicé?
-}
-
-// MarshalJSON implements the Marshaler interface. Empty strings will be null.
-func (do DescribedObject) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Timestamps
-		Description string `json:"description,omitempty"`
-	}{
-		Timestamps: do.Timestamps,
-	}
-
-	// Make empty strings null
-	if do.Description != "" {
-		test.Description = do.Description
-	}
-
-	return json.Marshal(test)
+	Description string `json:"description,omitempty" yaml:"description,omitempty"` // Description. Capicé?
 }
 
 // String returns a JSON formatted string representation of this DescribedObject
