@@ -36,7 +36,7 @@ func TestCallbackAlert_MarshalJSON(t *testing.T) {
 	}{
 		{"successful marshal of callback", TestCallbackAlert, testCallbackAlertBytes, false},
 		{"successful marshal of no id callback", testNoIDCallbackAlert, testNoIDCallbackAlertBytes, false},
-		{"successful marshal of empty callback", TestEmptyCallbackAlert, nil, false},
+		{"successful marshal of empty callback", TestEmptyCallbackAlert, []byte("{}"), false},
 		{"unsuccessful marshal", make(chan int), nil, true},
 	}
 	for _, tt := range tests {

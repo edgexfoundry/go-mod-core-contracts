@@ -20,9 +20,9 @@ var TestOperationEmpty = Operation{}
 
 func TestOperation_String(t *testing.T) {
 	tests := []struct {
-		name   string
+		name      string
 		operation Operation
-		want   string
+		want      string
 	}{
 		{"empty interval", TestOperationEmpty, "{}"},
 	}

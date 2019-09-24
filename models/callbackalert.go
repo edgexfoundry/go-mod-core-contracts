@@ -16,6 +16,7 @@ package models
 
 import (
 	"encoding/json"
+	"reflect"
 )
 
 // CallbackAlert indicates an action to take when a callback fires.
@@ -27,14 +28,19 @@ type CallbackAlert struct {
 // Custom JSON marshaling to turn empty strings into null pointers
 func (ca CallbackAlert) MarshalJSON() ([]byte, error) {
 	test := struct {
-		ActionType ActionType `json:"type"`
-		Id         *string    `json:"id"`
+		ActionType *ActionType `json:"type,omitempty"`
+		Id         *string     `json:"id,omitempty"`
 	}{
-		ActionType: ca.ActionType,
+		ActionType: &ca.ActionType,
 	}
 
 	if ca.Id != "" {
 		test.Id = &ca.Id
+	}
+
+	// Make empty structs nil pointers so they aren't marshaled
+	if reflect.DeepEqual(ca.ActionType, ActionType("")) {
+		test.ActionType = nil
 	}
 
 	return json.Marshal(test)

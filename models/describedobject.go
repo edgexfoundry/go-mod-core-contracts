@@ -14,7 +14,9 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 // DescribedObject is a hold-over from the Java conversion and is supposed to represent inheritance whereby a type
 // with a Description property IS A DescribedObject. However since there is no inheritance in Go, this should be
@@ -24,9 +26,24 @@ type DescribedObject struct {
 	Description string `json:"description" yaml:"description,omitempty"` // Description. Capicé?
 }
 
-/*
- * String function for DescribedObject
- */
+// MarshalJSON implements the Marshaler interface. Empty strings will be null.
+func (do DescribedObject) MarshalJSON() ([]byte, error) {
+	test := struct {
+		Timestamps
+		Description *string `json:"description,omitempty"`
+	}{
+		Timestamps: do.Timestamps,
+	}
+
+	// Make empty strings null
+	if do.Description != "" {
+		test.Description = &do.Description
+	}
+
+	return json.Marshal(test)
+}
+
+// String returns a JSON formatted string representation of this DescribedObject
 func (o DescribedObject) String() string {
 	out, err := json.Marshal(o)
 	if err != nil {

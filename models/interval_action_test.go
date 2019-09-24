@@ -23,9 +23,9 @@ var testIntervalActionEmpty = IntervalAction{}
 
 func TestIntervalAction_String(t *testing.T) {
 	tests := []struct {
-		name   string
+		name           string
 		intervalAction IntervalAction
-		want   string
+		want           string
 	}{
 		{"empty interval", testIntervalActionEmpty, "{}"},
 	}

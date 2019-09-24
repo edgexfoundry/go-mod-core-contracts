@@ -17,6 +17,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 )
@@ -36,36 +37,46 @@ type CommandResponse struct {
 
 // MarshalJSON implements the Marshaler interface for custom marshaling to make empty strings null
 func (cr CommandResponse) MarshalJSON() ([]byte, error) {
-	res := struct {
-		Id             *string        `json:"id"`
-		Name           *string        `json:"name"`
-		AdminState     AdminState     `json:"adminState"`
-		OperatingState OperatingState `json:"operatingState"`
-		LastConnected  int64          `json:"lastConnected"`
-		LastReported   int64          `json:"lastReported"`
-		Labels         []string       `json:"labels"`
-		Location       interface{}    `json:"location"`
-		Commands       []Command      `json:"commands"`
+	test := struct {
+		Id             *string         `json:"id,omitempty"`
+		Name           *string         `json:"name,omitempty"`
+		AdminState     *AdminState     `json:"adminState,omitempty"`
+		OperatingState *OperatingState `json:"operatingState,omitempty"`
+		LastConnected  int64           `json:"lastConnected,omitempty"`
+		LastReported   int64           `json:"lastReported,omitempty"`
+		Labels         []string        `json:"labels,omitempty"`
+		Location       *interface{}    `json:"location,omitempty"`
+		Commands       []Command       `json:"commands,omitempty"`
 	}{
-		AdminState:     cr.AdminState,
-		OperatingState: cr.OperatingState,
+		AdminState:     &cr.AdminState,
+		OperatingState: &cr.OperatingState,
 		LastConnected:  cr.LastConnected,
 		LastReported:   cr.LastReported,
 		Labels:         cr.Labels,
-		Location:       cr.Location,
+		Location:       &cr.Location,
 		Commands:       cr.Commands,
 	}
 
-	if cr.Id != "" {
-		res.Id = &cr.Id
-	}
-
 	// Empty strings are null
+	if cr.Id != "" {
+		test.Id = &cr.Id
+	}
 	if cr.Name != "" {
-		res.Name = &cr.Name
+		test.Name = &cr.Name
 	}
 
-	return json.Marshal(res)
+	// Make empty structs nil pointers so they aren't marshaled
+	if reflect.DeepEqual(cr.AdminState, AdminState("")) {
+		test.AdminState = nil
+	}
+	if reflect.DeepEqual(cr.OperatingState, OperatingState("")) {
+		test.OperatingState = nil
+	}
+	if cr.Location == nil {
+		test.Location = nil
+	}
+
+	return json.Marshal(test)
 }
 
 /*

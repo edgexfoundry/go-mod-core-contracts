@@ -34,17 +34,13 @@ var TestDevice = Device{DescribedObject: TestDescribedObject, Name: TestDeviceNa
 var TestDeviceEmpty = Device{}
 
 func TestDevice_MarshalJSON(t *testing.T) {
-	marshaled := TestDevice.String()
-	testDeviceBytes := []byte(marshaled)
-
 	tests := []struct {
 		name    string
 		d       Device
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal", TestDevice, testDeviceBytes, false},
-		{"successful marshal, empty object", TestDeviceEmpty, nil, false},
+		{"successful marshal, empty object", TestDeviceEmpty, []byte("{}"), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -23,9 +23,9 @@ var testIntervalEmpty = Interval{}
 
 func TestInterval_String(t *testing.T) {
 	tests := []struct {
-		name   string
+		name     string
 		interval Interval
-		want   string
+		want     string
 	}{
 		{"empty interval", testIntervalEmpty, "{}"},
 	}
