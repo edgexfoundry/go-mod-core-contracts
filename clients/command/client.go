@@ -69,12 +69,12 @@ func (c *commandRestClient) init(params types.EndpointParams) {
 }
 
 func (cc *commandRestClient) Get(deviceId string, commandId string, ctx context.Context) (string, error) {
-	body, err := clients.GetRequest(cc.url+"/"+deviceId+"/command/"+commandId, ctx)
+	body, err := clients.GetRequest(cc.url+"/name/"+deviceId+"/command/"+commandId, ctx)
 	return string(body), err
 }
 
 func (cc *commandRestClient) Put(deviceId string, commandId string, body string, ctx context.Context) (string, error) {
-	return clients.PutRequest(cc.url+"/"+deviceId+"/command/"+commandId, []byte(body), ctx)
+	return clients.PutRequest(cc.url+"/name/"+deviceId+"/command/"+commandId, []byte(body), ctx)
 }
 
 func (cc *commandRestClient) GetDeviceCommandByNames(deviceName string, commandName string, ctx context.Context) (string, error) {

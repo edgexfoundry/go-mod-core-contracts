@@ -26,7 +26,7 @@ import (
 )
 
 func TestGetDeviceCommandById(t *testing.T) {
-	ts := testHttpServer(t, http.MethodGet, clients.ApiDeviceRoute+"/device1/command/command1")
+	ts := testHttpServer(t, http.MethodGet, clients.ApiDeviceRoute+"/name/device1/command/command1")
 
 	defer ts.Close()
 
@@ -50,7 +50,7 @@ func TestGetDeviceCommandById(t *testing.T) {
 }
 
 func TestPutDeviceCommandById(t *testing.T) {
-	ts := testHttpServer(t, http.MethodPut, clients.ApiDeviceRoute+"/device1/command/command1")
+	ts := testHttpServer(t, http.MethodPut, clients.ApiDeviceRoute+"/name/device1/command/command1")
 
 	defer ts.Close()
 
