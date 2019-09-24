@@ -25,6 +25,47 @@ type Action struct {
 	URL       string     `json:"url,omitempty,omitempty" yaml:"url,omitempty"`   // Url for requests from command service
 }
 
+// MarshalJSON implements the Marshaler interface. Empty strings will be null.
+func (a Action) MarshalJSON() ([]byte, error) {
+	test := struct {
+		Path      string    `json:"path,omitempty"`
+		Responses []Response `json:"responses,omitempty"`
+		URL       string    `json:"name,omitempty"`
+	}{
+		Path: a.Path,
+		Responses: a.Responses,
+		URL: a.URL,
+	}
+
+	return json.Marshal(test)
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the Action type
+func (a *Action) UnmarshalJSON(data []byte) error {
+	alias := new(struct {
+		Path      *string    `json:"path"`
+		Responses []Response `json:"responses"`
+		URL       *string    `json:"name"`
+	})
+
+	// Error with unmarshaling
+	if err := json.Unmarshal(data, alias); err != nil {
+		return err
+	}
+
+	// Check nil fields
+	if alias.Path != nil {
+		a.Path = *alias.Path
+	}
+	if alias.URL != nil {
+		a.URL = *alias.URL
+	}
+
+	a.Responses = alias.Responses
+
+	return nil
+}
+
 // String returns a JSON formatted string representation of the Action
 func (a Action) String() string {
 	out, err := json.Marshal(a)
