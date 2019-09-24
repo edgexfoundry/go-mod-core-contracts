@@ -46,8 +46,8 @@ func (dp DeviceProfile) MarshalJSON() ([]byte, error) {
 		DeviceCommands  []ProfileResource `json:"deviceCommands,omitempty"`
 		CoreCommands    []Command         `json:"coreCommands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 	}{
-		Labels:          dp.Labels,
 		DescribedObject: dp.DescribedObject,
+		Labels:          dp.Labels,
 	}
 
 	// Empty strings are null

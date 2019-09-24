@@ -30,22 +30,22 @@ type DescribedObject struct {
 func (do DescribedObject) MarshalJSON() ([]byte, error) {
 	test := struct {
 		Timestamps
-		Description *string `json:"description,omitempty"`
+		Description string `json:"description,omitempty"`
 	}{
 		Timestamps: do.Timestamps,
 	}
 
 	// Make empty strings null
 	if do.Description != "" {
-		test.Description = &do.Description
+		test.Description = do.Description
 	}
 
 	return json.Marshal(test)
 }
 
 // String returns a JSON formatted string representation of this DescribedObject
-func (o DescribedObject) String() string {
-	out, err := json.Marshal(o)
+func (do DescribedObject) String() string {
+	out, err := json.Marshal(do)
 	if err != nil {
 		return err.Error()
 	}
