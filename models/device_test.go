@@ -80,7 +80,11 @@ func TestDevice_String(t *testing.T) {
 				",\"profile\":" + TestDevice.Profile.String() +
 				",\"autoEvents\":[" + TestAutoEvent.String() + "]" +
 				"}"},
-		{"device to string, empty", TestDeviceEmpty, TestEmptyJSON},
+		{
+			"device to string, empty",
+			TestDeviceEmpty,
+			TestEmptyJSON,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

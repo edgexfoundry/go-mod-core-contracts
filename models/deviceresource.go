@@ -34,7 +34,7 @@ func (do DeviceResource) MarshalJSON() ([]byte, error) {
 		Description *string           `json:"description,omitempty"`
 		Name        *string           `json:"name,omitempty"`
 		Tag         *string           `json:"tag,omitempty"`
-		Properties  *ProfileProperty  `json:"properties"`
+		Properties  *ProfileProperty  `json:"properties,omitempty"`
 		Attributes  map[string]string `json:"attributes,omitempty"`
 	}{
 		Properties: &do.Properties,

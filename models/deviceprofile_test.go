@@ -31,16 +31,13 @@ var TestProfile = DeviceProfile{DescribedObject: TestDescribedObject, Name: Test
 
 func TestDeviceProfile_MarshalJSON(t *testing.T) {
 	var emptyDeviceProfile = DeviceProfile{}
-	var resultTestBytes = []byte(TestProfile.String())
-	var resultEmptyTestBytes = []byte(emptyDeviceProfile.String())
 	tests := []struct {
 		name    string
 		dp      DeviceProfile
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal", TestProfile, resultTestBytes, false},
-		{"successful empty marshal", emptyDeviceProfile, resultEmptyTestBytes, false},
+		{"successful empty marshal", emptyDeviceProfile, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -63,7 +60,8 @@ func TestDeviceProfile_String(t *testing.T) {
 		dp   DeviceProfile
 		want string
 	}{
-		{"device profile to string", TestProfile,
+		{"device profile to string",
+			TestProfile,
 			"{\"created\":" + strconv.FormatInt(TestDescribedObject.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(TestDescribedObject.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestDescribedObject.Origin, 10) +
@@ -75,7 +73,13 @@ func TestDeviceProfile_String(t *testing.T) {
 				",\"deviceResources\":[" + TestDeviceResource.String() + "]" +
 				",\"deviceCommands\":[" + TestProfileResource.String() + "]" +
 				",\"coreCommands\":[" + TestCommand.String() + "]" +
-				"}"},
+				"}",
+		},
+		{
+			"empty device profile",
+			DeviceProfile{},
+			TestEmptyJSON,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

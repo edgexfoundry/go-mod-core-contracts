@@ -26,16 +26,13 @@ var TestDeviceResource = DeviceResource{Description: TestDeviceResourceDescripti
 
 func TestDeviceResource_MarshalJSON(t *testing.T) {
 	var emptyDeviceResource = DeviceResource{}
-	var resultTestBytes = []byte(TestDeviceResource.String())
-	var resultEmptyTestBytes = []byte(emptyDeviceResource.String())
 	tests := []struct {
 		name    string
 		do      DeviceResource
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal", TestDeviceResource, resultTestBytes, false},
-		{"successful empty marshal", emptyDeviceResource, resultEmptyTestBytes, false},
+		{"successful empty marshal", emptyDeviceResource, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
