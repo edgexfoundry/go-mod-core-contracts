@@ -82,7 +82,7 @@ func TestAddressable_String(t *testing.T) {
 			"\",\"topic\":\"" + TestAddressable.Topic +
 			"\",\"baseURL\":\"" + TestAddressable.Protocol + "://" + TestAddressable.Address + ":" + strconv.Itoa(TestAddressable.Port) +
 			"\",\"url\":\"" + TestAddressable.Protocol + "://" + TestAddressable.Address + ":" + strconv.Itoa(TestAddressable.Port) + TestAddressable.Path + "\"}"},
-		{"empty", EmptyAddressable, "{}"},
+		{"empty", EmptyAddressable, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

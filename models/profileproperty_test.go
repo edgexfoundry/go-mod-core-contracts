@@ -34,7 +34,7 @@ func TestProfileProperty_String(t *testing.T) {
 			"{\"value\":" + TestPropertyValue.String() +
 				",\"units\":" + TestUnits.String() +
 				"}"},
-		{"profile property to string", TestProfilePropertyEmpty, "{}"},
+		{"profile property to string", TestProfilePropertyEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

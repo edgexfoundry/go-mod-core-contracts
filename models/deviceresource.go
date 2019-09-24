@@ -16,6 +16,7 @@ package models
 
 import (
 	"encoding/json"
+	"reflect"
 )
 
 // DeviceResource represents a value on a device that can be read or written
@@ -33,10 +34,10 @@ func (do DeviceResource) MarshalJSON() ([]byte, error) {
 		Description *string           `json:"description,omitempty"`
 		Name        *string           `json:"name,omitempty"`
 		Tag         *string           `json:"tag,omitempty"`
-		Properties  ProfileProperty   `json:"properties"`
+		Properties  *ProfileProperty  `json:"properties"`
 		Attributes  map[string]string `json:"attributes,omitempty"`
 	}{
-		Properties: do.Properties,
+		Properties: &do.Properties,
 	}
 
 	// Empty strings are null
@@ -53,6 +54,9 @@ func (do DeviceResource) MarshalJSON() ([]byte, error) {
 	// Empty maps are null
 	if len(do.Attributes) > 0 {
 		test.Attributes = do.Attributes
+	}
+	if reflect.DeepEqual(do.Properties, ProfileProperty{}) {
+		test.Properties = nil
 	}
 
 	return json.Marshal(test)

@@ -45,7 +45,7 @@ func TestValueDescriptor_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshal", TestValueDescriptor, resultTestVDBytes, false},
-		{"successful marshal, empty", TestValueDescriptorEmpty, nil, false},
+		{"successful marshal, empty", TestValueDescriptorEmpty, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -83,7 +83,7 @@ func TestValueDescriptor_String(t *testing.T) {
 				",\"mediaType\":\"" + TestValueDescriptor.MediaType + "\"" +
 				",\"floatEncoding\":\"" + TestVDFloatEncoding + "\"" +
 				"}"},
-		{"value descriptor to string, empty", TestValueDescriptorEmpty, "{}"},
+		{"value descriptor to string, empty", TestValueDescriptorEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

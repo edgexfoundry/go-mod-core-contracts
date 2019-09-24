@@ -85,7 +85,7 @@ func TestCommand_String(t *testing.T) {
 				",\"put\":" + TestPut.String() + "}",
 		},
 		{"command to string, empty", TestCommandEmpty,
-			"{}",
+			TestEmptyJSON,
 		},
 	}
 	for _, tt := range tests {

@@ -33,7 +33,7 @@ func TestDescribedObject_String(t *testing.T) {
 				",\"modified\":" + strconv.FormatInt(TestDescribedObject.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestDescribedObject.Origin, 10) +
 				",\"description\":\"" + TestDescription + "\"}"},
-		{"empty described object to string", TestEmptyDescribedObject, "{}"},
+		{"empty described object to string", TestEmptyDescribedObject, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

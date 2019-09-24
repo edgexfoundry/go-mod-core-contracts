@@ -32,7 +32,7 @@ func TestChannel_String(t *testing.T) {
 	}{
 		{"email channel to string", &TestEChannel, "{\"type\":\"EMAIL\",\"mailAddresses\":[\"jpwhite_mn@yahoo.com\",\"james_white2@dell.com\"]}"},
 		{"rest channel to string ", &TestRChannel, "{\"type\":\"REST\",\"url\":\"http://www.someendpoint.com/notifications\"}"},
-		{"empty channel to string", &TestEmptyChannel, "{}"},
+		{"empty channel to string", &TestEmptyChannel, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

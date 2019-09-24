@@ -27,7 +27,7 @@ func TestInterval_String(t *testing.T) {
 		interval Interval
 		want     string
 	}{
-		{"empty interval", testIntervalEmpty, "{}"},
+		{"empty interval", testIntervalEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

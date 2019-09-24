@@ -57,11 +57,19 @@ func TestDeviceResource_String(t *testing.T) {
 		do   DeviceResource
 		want string
 	}{
-		{"device object to string", TestDeviceResource,
+		{
+			"device object to string",
+			TestDeviceResource,
 			"{\"description\":\"" + TestDeviceResourceDescription + "\"" +
 				",\"name\":\"" + TestDeviceResourceName + "\"" +
 				",\"tag\":\"" + TestDeviceResourceTag + "\"" +
-				",\"properties\":" + TestProfileProperty.String() + "}"},
+				",\"properties\":" + TestProfileProperty.String() + "}",
+		},
+		{
+			"empty device to string",
+			DeviceResource{},
+			TestEmptyJSON,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -40,7 +40,7 @@ func TestDevice_MarshalJSON(t *testing.T) {
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal, empty object", TestDeviceEmpty, []byte("{}"), false},
+		{"successful marshal, empty object", TestDeviceEmpty, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -80,7 +80,7 @@ func TestDevice_String(t *testing.T) {
 				",\"profile\":" + TestDevice.Profile.String() +
 				",\"autoEvents\":[" + TestAutoEvent.String() + "]" +
 				"}"},
-		{"device to string, empty", TestDeviceEmpty, "{}"},
+		{"device to string, empty", TestDeviceEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

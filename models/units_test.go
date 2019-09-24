@@ -34,7 +34,7 @@ func TestUnits_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshalling", TestUnits, testUnitsBytes, false},
-		{"sucessful marshalling, empty", TestUnitsEmpty, nil, false},
+		{"sucessful marshalling, empty", TestUnitsEmpty, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -60,7 +60,7 @@ func TestUnits_String(t *testing.T) {
 			"{\"type\":\"" + TestUnitsType + "\"" +
 				",\"readWrite\":\"" + TestUnitsRW + "\"" +
 				",\"defaultValue\":\"" + TestUnitsDV + "\"}"},
-		{"units to string, empty", TestUnitsEmpty, "{}"},
+		{"units to string, empty", TestUnitsEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

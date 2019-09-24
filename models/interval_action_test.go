@@ -27,7 +27,7 @@ func TestIntervalAction_String(t *testing.T) {
 		intervalAction IntervalAction
 		want           string
 	}{
-		{"empty interval", testIntervalActionEmpty, "{}"},
+		{"empty interval", testIntervalActionEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -57,10 +57,10 @@ func TestIntervalActionValidation(t *testing.T) {
 		expectError bool
 	}{
 		{"valid interval action", valid, false},
-		{"valid interval action, empty", testIntervalActionEmpty, false},
 		{"invalid identifiers", invalidIdentifiers, true},
 		{"invalid target", invalidTarget, true},
 		{"invalid interval", invalidInterval, true},
+		{"interval action, empty", testIntervalActionEmpty, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

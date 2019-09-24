@@ -40,7 +40,7 @@ func TestResourceOperation_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshalling", TestResourceOperation, testResourceOperationBytes, false},
-		{"successful marshalling, empty", TestResourceOperationEmpty, nil, false},
+		{"successful marshalling, empty", TestResourceOperationEmpty, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -72,7 +72,7 @@ func TestResourceOperation_String(t *testing.T) {
 				",\"resource\":\"" + TestDeviceCommand + "\"" +
 				",\"deviceCommand\":\"" + TestDeviceCommand + "\"" +
 				",\"secondary\":" + fmt.Sprint(string(secondarySlice)) + "}"},
-		{"resource operation to string, empty", TestResourceOperationEmpty, "{}"},
+		{"resource operation to string, empty", TestResourceOperationEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

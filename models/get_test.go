@@ -31,7 +31,7 @@ func TestGet_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshalling", TestGet, testGetBytes, false},
-		{"successful marshalling, empty", TestGetEmpty, nil, false},
+		{"successful marshalling, empty", TestGetEmpty, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -54,7 +54,7 @@ func TestGet_String(t *testing.T) {
 		want string
 	}{
 		{"get to string", TestGet, TestGet.Action.String()},
-		{"get to string, empty", TestGetEmpty, "{}"},
+		{"get to string, empty", TestGetEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -24,7 +24,7 @@ func TestOperation_String(t *testing.T) {
 		operation Operation
 		want      string
 	}{
-		{"empty interval", TestOperationEmpty, "{}"},
+		{"empty interval", TestOperationEmpty, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

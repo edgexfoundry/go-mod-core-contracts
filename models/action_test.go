@@ -22,6 +22,8 @@ const TestExpectedvalue1 = "temperature"
 const TestExpectedvalue2 = "humidity"
 const TestActionPath = "test/path"
 const TestFooBar = "foobar"
+const TestEmptyJSON = "{}"
+var TestEmptyJSONBytes = []byte(TestEmptyJSON)
 
 var TestExpectedvalues = []string{TestExpectedvalue1, TestExpectedvalue2}
 var TestAction = Action{TestActionPath, []Response{{TestCode, TestDescription, TestExpectedvalues}}, ""}
@@ -34,7 +36,7 @@ func TestAction_String(t *testing.T) {
 		want   string
 	}{
 		{"full action", TestAction, "{\"path\":\"" + TestActionPath + "\",\"responses\":[{\"code\":\"" + TestCode + "\",\"description\":\"" + TestDescription + "\",\"expectedValues\":[\"" + TestExpectedvalue1 + "\",\"" + TestExpectedvalue2 + "\"]}]}"},
-		{"empty action", EmptyAction, "{}"},
+		{"empty action", EmptyAction, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
