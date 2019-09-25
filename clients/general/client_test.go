@@ -17,7 +17,6 @@ package general
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -33,11 +32,8 @@ const (
 type mockGeneralEndpoint struct {
 }
 
-func (e mockGeneralEndpoint) Monitor(params types.EndpointParams, ch chan string) {
-}
-
-func (e mockGeneralEndpoint) Fetch(params types.EndpointParams) string {
-	return fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
+func (e mockGeneralEndpoint) Monitor(params types.EndpointParams) chan string {
+	return make(chan string, 1)
 }
 
 func TestGetConfig(t *testing.T) {

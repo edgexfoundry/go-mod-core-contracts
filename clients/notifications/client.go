@@ -85,11 +85,6 @@ func NewNotificationsClient(params types.EndpointParams, m clients.Endpointer) N
 
 func (n *notificationsRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
-		//Fetch URL in real time for immediate use
-		n.url = n.endpoint.Fetch(params)
-		//Set up refresh interval to keep URL current
-		ch := make(chan string, 1)
-		go n.endpoint.Monitor(params, ch)
 		go func(ch chan string) {
 			for {
 				select {
@@ -97,7 +92,7 @@ func (n *notificationsRestClient) init(params types.EndpointParams) {
 					n.url = url
 				}
 			}
-		}(ch)
+		}(n.endpoint.Monitor(params))
 	} else {
 		n.url = params.Url
 	}

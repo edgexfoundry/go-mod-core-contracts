@@ -59,11 +59,6 @@ func NewIntervalActionClient(params types.EndpointParams, m clients.Endpointer) 
 
 func (s *intervalActionRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
-		//Fetch URL in real time for immediate use
-		s.url = s.endpoint.Fetch(params)
-		//Set up refresh interval to keep URL current
-		ch := make(chan string, 1)
-		go s.endpoint.Monitor(params, ch)
 		go func(ch chan string) {
 			for {
 				select {
@@ -71,7 +66,7 @@ func (s *intervalActionRestClient) init(params types.EndpointParams) {
 					s.url = url
 				}
 			}
-		}(ch)
+		}(s.endpoint.Monitor(params))
 	} else {
 		s.url = params.Url
 	}

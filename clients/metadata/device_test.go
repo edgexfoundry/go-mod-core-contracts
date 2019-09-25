@@ -106,17 +106,8 @@ func TestNewDeviceClientWithConsul(t *testing.T) {
 
 type mockCoreMetaDataEndpoint struct{}
 
-func (e mockCoreMetaDataEndpoint) Monitor(params types.EndpointParams, ch chan string) {
-	switch params.ServiceKey {
-	case clients.CoreMetaDataServiceKey:
-		url := fmt.Sprintf("http://%s:%v%s", "localhost", 48081, params.Path)
-		ch <- url
-		break
-	default:
-		ch <- ""
-	}
-}
-
-func (e mockCoreMetaDataEndpoint) Fetch(params types.EndpointParams) string {
-	return fmt.Sprintf("http://%s:%v%s", "localhost", 48081, params.Path)
+func (e mockCoreMetaDataEndpoint) Monitor(params types.EndpointParams) chan string {
+	ch := make(chan string, 1)
+	ch <- fmt.Sprintf("http://%s:%v%s", "localhost", 48081, params.Path)
+	return ch
 }

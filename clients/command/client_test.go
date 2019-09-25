@@ -16,7 +16,6 @@ package command
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -124,19 +123,8 @@ func TestPutDeviceCommandByNames(t *testing.T) {
 type MockEndpoint struct {
 }
 
-func (e MockEndpoint) Monitor(params types.EndpointParams, ch chan string) {
-	switch params.ServiceKey {
-	case clients.CoreCommandServiceKey:
-		url := fmt.Sprintf("http://%s:%v%s", "localhost", 48082, params.Path)
-		ch <- url
-		break
-	default:
-		ch <- ""
-	}
-}
-
-func (e MockEndpoint) Fetch(params types.EndpointParams) string {
-	return fmt.Sprintf("http://%s:%v%s", "localhost", 48082, params.Path)
+func (e MockEndpoint) Monitor(params types.EndpointParams) chan string {
+	return make(chan string, 1)
 }
 
 // testHttpServer instantiates a test HTTP Server to be used for conveniently verifying a client's invocation

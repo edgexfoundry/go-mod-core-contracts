@@ -57,11 +57,6 @@ func NewCommandClient(params types.EndpointParams, m clients.Endpointer) Command
 
 func (c *commandRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
-		//Fetch URL in real time for immediate use
-		c.url = c.endpoint.Fetch(params)
-		//Set up refresh interval to keep URL current
-		ch := make(chan string, 1)
-		go c.endpoint.Monitor(params, ch)
 		go func(ch chan string) {
 			for {
 				select {
@@ -69,7 +64,7 @@ func (c *commandRestClient) init(params types.EndpointParams) {
 					c.url = url
 				}
 			}
-		}(ch)
+		}(c.endpoint.Monitor(params))
 	} else {
 		c.url = params.Url
 	}
