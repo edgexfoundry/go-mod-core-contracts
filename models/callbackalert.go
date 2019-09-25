@@ -29,13 +29,10 @@ type CallbackAlert struct {
 func (ca CallbackAlert) MarshalJSON() ([]byte, error) {
 	test := struct {
 		ActionType *ActionType `json:"type,omitempty"`
-		Id         *string     `json:"id,omitempty"`
+		Id         string      `json:"id,omitempty"`
 	}{
 		ActionType: &ca.ActionType,
-	}
-
-	if ca.Id != "" {
-		test.Id = &ca.Id
+		Id:         ca.Id,
 	}
 
 	// Make empty structs nil pointers so they aren't marshaled

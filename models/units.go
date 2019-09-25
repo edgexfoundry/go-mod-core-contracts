@@ -25,20 +25,13 @@ type Units struct {
 // Custom marshaling to make empty strings null
 func (u Units) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Type         *string `json:"type,omitempty"`
-		ReadWrite    *string `json:"readWrite,omitempty"`
-		DefaultValue *string `json:"defaultValue,omitempty"`
-	}{}
-
-	// Empty strings are null
-	if u.Type != "" {
-		test.Type = &u.Type
-	}
-	if u.ReadWrite != "" {
-		test.ReadWrite = &u.ReadWrite
-	}
-	if u.DefaultValue != "" {
-		test.DefaultValue = &u.DefaultValue
+		Type         string `json:"type,omitempty"`
+		ReadWrite    string `json:"readWrite,omitempty"`
+		DefaultValue string `json:"defaultValue,omitempty"`
+	}{
+		Type:         u.Type,
+		ReadWrite:    u.ReadWrite,
+		DefaultValue: u.DefaultValue,
 	}
 
 	return json.Marshal(test)

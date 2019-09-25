@@ -32,26 +32,18 @@ type DeviceReport struct {
 func (dr DeviceReport) MarshalJSON() ([]byte, error) {
 	test := struct {
 		Timestamps
-		Id       string   `json:"id"`
-		Name     *string  `json:"name"`     // non-database identifier for a device report - must be unique
-		Device   *string  `json:"device"`   // associated device name - should be a valid and unique device name
-		Action   *string  `json:"action"`   // associated interval action name - should be a valid and unique interval action name
-		Expected []string `json:"expected"` // array of value descriptor names describing the types of data captured in the report
+		Id       string   `json:"id,omitempty"`
+		Name     string   `json:"name,omitempty"`     // non-database identifier for a device report - must be unique
+		Device   string   `json:"device,omitempty"`   // associated device name - should be a valid and unique device name
+		Action   string   `json:"action,omitempty"`   // associated interval action name - should be a valid and unique interval action name
+		Expected []string `json:"expected,omitempty"` // array of value descriptor names describing the types of data captured in the report
 	}{
 		Timestamps: dr.Timestamps,
 		Id:         dr.Id,
+		Name:       dr.Name,
+		Device:     dr.Device,
+		Action:     dr.Action,
 		Expected:   dr.Expected,
-	}
-
-	// Empty strings are null
-	if dr.Name != "" {
-		test.Name = &dr.Name
-	}
-	if dr.Device != "" {
-		test.Device = &dr.Device
-	}
-	if dr.Action != "" {
-		test.Action = &dr.Action
 	}
 
 	return json.Marshal(test)

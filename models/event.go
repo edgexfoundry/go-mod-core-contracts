@@ -47,31 +47,21 @@ func encodeAsCBOR(e Event) ([]byte, error) {
 // MarshalJSON implements the Marshaler interface in order to make empty strings null
 func (e Event) MarshalJSON() ([]byte, error) {
 	test := struct {
-		ID       *string   `json:"id,omitempty"`
+		ID       string    `json:"id,omitempty"`
 		Pushed   int64     `json:"pushed,omitempty"`
-		Device   *string   `json:"device,omitempty"`
+		Device   string    `json:"device,omitempty"`
 		Created  int64     `json:"created,omitempty"`
 		Modified int64     `json:"modified,omitempty"`
 		Origin   int64     `json:"origin,omitempty"`
 		Readings []Reading `json:"readings,omitempty"`
 	}{
+		ID:       e.ID,
 		Pushed:   e.Pushed,
+		Device:   e.Device,
 		Created:  e.Created,
 		Modified: e.Modified,
 		Origin:   e.Origin,
-	}
-
-	// Empty strings are null
-	if e.ID != "" {
-		test.ID = &e.ID
-	}
-	if e.Device != "" {
-		test.Device = &e.Device
-	}
-
-	// Empty arrays are null
-	if len(e.Readings) > 0 {
-		test.Readings = e.Readings
+		Readings: e.Readings,
 	}
 
 	return json.Marshal(test)

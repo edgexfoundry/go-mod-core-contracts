@@ -41,7 +41,7 @@ func TestPut_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Put.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("Put.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}

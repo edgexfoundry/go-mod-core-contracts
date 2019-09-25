@@ -44,55 +44,32 @@ type Addressable struct {
 func (a Addressable) MarshalJSON() ([]byte, error) {
 	aux := struct {
 		Timestamps
-		Id         *string `json:"id,omitempty"`
-		Name       *string `json:"name,omitempty"`
-		Protocol   *string `json:"protocol,omitempty"`    // Protocol for the address (HTTP/TCP)
-		HTTPMethod *string `json:"method,omitempty"`      // Method for connecting (i.e. POST)
-		Address    *string `json:"address,omitempty"`     // Address of the addressable
-		Port       int     `json:"port,Number,omitempty"` // Port for the address
-		Path       *string `json:"path,omitempty"`        // Path for callbacks
-		Publisher  *string `json:"publisher,omitempty"`   // For message bus protocols
-		User       *string `json:"user,omitempty"`        // User id for authentication
-		Password   *string `json:"password,omitempty"`    // Password of the user for authentication for the addressable
-		Topic      *string `json:"topic,omitempty"`       // Topic for message bus addressables
-		BaseURL    *string `json:"baseURL,omitempty"`
-		URL        *string `json:"url,omitempty"`
+		Id         string `json:"id,omitempty"`
+		Name       string `json:"name,omitempty"`
+		Protocol   string `json:"protocol,omitempty"`    // Protocol for the address (HTTP/TCP)
+		HTTPMethod string `json:"method,omitempty"`      // Method for connecting (i.e. POST)
+		Address    string `json:"address,omitempty"`     // Address of the addressable
+		Port       int    `json:"port,Number,omitempty"` // Port for the address
+		Path       string `json:"path,omitempty"`        // Path for callbacks
+		Publisher  string `json:"publisher,omitempty"`   // For message bus protocols
+		User       string `json:"user,omitempty"`        // User id for authentication
+		Password   string `json:"password,omitempty"`    // Password of the user for authentication for the addressable
+		Topic      string `json:"topic,omitempty"`       // Topic for message bus addressables
+		BaseURL    string `json:"baseURL,omitempty"`
+		URL        string `json:"url,omitempty"`
 	}{
 		Timestamps: a.Timestamps,
+		Id:         a.Id,
+		Name:       a.Name,
+		Protocol:   a.Protocol,
+		HTTPMethod: a.HTTPMethod,
+		Address:    a.Address,
 		Port:       a.Port,
-	}
-
-	if a.Id != "" {
-		aux.Id = &a.Id
-	}
-
-	// Only initialize the non-empty strings (empty are null)
-	if a.Name != "" {
-		aux.Name = &a.Name
-	}
-	if a.Protocol != "" {
-		aux.Protocol = &a.Protocol
-	}
-	if a.HTTPMethod != "" {
-		aux.HTTPMethod = &a.HTTPMethod
-	}
-	if a.Address != "" {
-		aux.Address = &a.Address
-	}
-	if a.Path != "" {
-		aux.Path = &a.Path
-	}
-	if a.Publisher != "" {
-		aux.Publisher = &a.Publisher
-	}
-	if a.User != "" {
-		aux.User = &a.User
-	}
-	if a.Password != "" {
-		aux.Password = &a.Password
-	}
-	if a.Topic != "" {
-		aux.Topic = &a.Topic
+		Path:       a.Path,
+		Publisher:  a.Publisher,
+		User:       a.User,
+		Password:   a.Password,
+		Topic:      a.Topic,
 	}
 
 	// Get the base URL
@@ -113,13 +90,13 @@ func (a Addressable) MarshalJSON() ([]byte, error) {
 			return []byte{}, err
 		}
 		s := baseUrlBuffer.String()
-		aux.BaseURL = &s
+		aux.BaseURL = s
 	}
 
 	// Get the URL
-	if aux.BaseURL != nil {
+	if aux.BaseURL != "" {
 		var urlBuffer bytes.Buffer
-		_, err := urlBuffer.WriteString(*aux.BaseURL)
+		_, err := urlBuffer.WriteString(aux.BaseURL)
 		if err != nil {
 			return []byte{}, err
 		}
@@ -135,7 +112,7 @@ func (a Addressable) MarshalJSON() ([]byte, error) {
 			return []byte{}, err
 		}
 		s := urlBuffer.String()
-		aux.URL = &s
+		aux.URL = s
 	}
 
 	return json.Marshal(aux)

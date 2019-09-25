@@ -20,8 +20,8 @@ import (
 )
 
 type NotifyUpdate struct {
-	Name        string `json:"name"`
-	Operation   string `json:"operation"`
+	Name        string `json:"name,omitempty"`
+	Operation   string `json:"operation,omitempty"`
 	isValidated bool   // internal member used for validation check
 }
 

@@ -17,7 +17,6 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 )
@@ -38,18 +37,20 @@ type CommandResponse struct {
 // MarshalJSON implements the Marshaler interface for custom marshaling to make empty strings null
 func (cr CommandResponse) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Id             *string         `json:"id,omitempty"`
-		Name           *string         `json:"name,omitempty"`
-		AdminState     *AdminState     `json:"adminState,omitempty"`
-		OperatingState *OperatingState `json:"operatingState,omitempty"`
-		LastConnected  int64           `json:"lastConnected,omitempty"`
-		LastReported   int64           `json:"lastReported,omitempty"`
-		Labels         []string        `json:"labels,omitempty"`
-		Location       *interface{}    `json:"location,omitempty"`
-		Commands       []Command       `json:"commands,omitempty"`
+		Id             string         `json:"id,omitempty"`
+		Name           string         `json:"name,omitempty"`
+		AdminState     AdminState     `json:"adminState,omitempty"`
+		OperatingState OperatingState `json:"operatingState,omitempty"`
+		LastConnected  int64          `json:"lastConnected,omitempty"`
+		LastReported   int64          `json:"lastReported,omitempty"`
+		Labels         []string       `json:"labels,omitempty"`
+		Location       *interface{}   `json:"location,omitempty"`
+		Commands       []Command      `json:"commands,omitempty"`
 	}{
-		AdminState:     &cr.AdminState,
-		OperatingState: &cr.OperatingState,
+		Id:             cr.Id,
+		Name:           cr.Name,
+		AdminState:     cr.AdminState,
+		OperatingState: cr.OperatingState,
 		LastConnected:  cr.LastConnected,
 		LastReported:   cr.LastReported,
 		Labels:         cr.Labels,
@@ -57,21 +58,6 @@ func (cr CommandResponse) MarshalJSON() ([]byte, error) {
 		Commands:       cr.Commands,
 	}
 
-	// Empty strings are null
-	if cr.Id != "" {
-		test.Id = &cr.Id
-	}
-	if cr.Name != "" {
-		test.Name = &cr.Name
-	}
-
-	// Make empty structs nil pointers so they aren't marshaled
-	if reflect.DeepEqual(cr.AdminState, AdminState("")) {
-		test.AdminState = nil
-	}
-	if reflect.DeepEqual(cr.OperatingState, OperatingState("")) {
-		test.OperatingState = nil
-	}
 	if cr.Location == nil {
 		test.Location = nil
 	}

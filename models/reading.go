@@ -42,35 +42,25 @@ type Reading struct {
 // Custom marshaling to make empty strings null
 func (r Reading) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Id          *string `json:"id,omitempty"`
-		Pushed      int64   `json:"pushed,omitempty"`  // When the data was pushed out of EdgeX (0 - not pushed yet)
-		Created     int64   `json:"created,omitempty"` // When the reading was created
-		Origin      int64   `json:"origin,omitempty"`
-		Modified    int64   `json:"modified,omitempty"`
-		Device      *string `json:"device,omitempty"`
-		Name        *string `json:"name,omitempty"`
-		Value       *string `json:"value,omitempty"`       // Device sensor data value
-		BinaryValue []byte  `json:"binaryValue,omitempty"` // Binary data payload
+		Id          string `json:"id,omitempty"`
+		Pushed      int64  `json:"pushed,omitempty"`  // When the data was pushed out of EdgeX (0 - not pushed yet)
+		Created     int64  `json:"created,omitempty"` // When the reading was created
+		Origin      int64  `json:"origin,omitempty"`
+		Modified    int64  `json:"modified,omitempty"`
+		Device      string `json:"device,omitempty"`
+		Name        string `json:"name,omitempty"`
+		Value       string `json:"value,omitempty"`       // Device sensor data value
+		BinaryValue []byte `json:"binaryValue,omitempty"` // Binary data payload
 	}{
+		Id:          r.Id,
 		Pushed:      r.Pushed,
 		Created:     r.Created,
 		Origin:      r.Origin,
 		Modified:    r.Modified,
+		Device:      r.Device,
+		Name:        r.Name,
+		Value:       r.Value,
 		BinaryValue: r.BinaryValue,
-	}
-
-	// Empty strings are null
-	if r.Id != "" {
-		test.Id = &r.Id
-	}
-	if r.Device != "" {
-		test.Device = &r.Device
-	}
-	if r.Name != "" {
-		test.Name = &r.Name
-	}
-	if r.Value != "" {
-		test.Value = &r.Value
 	}
 
 	return json.Marshal(test)

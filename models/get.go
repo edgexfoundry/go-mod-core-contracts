@@ -23,19 +23,9 @@ type Get struct {
 // Custom marshaling to make empty strings and arrays null
 func (g Get) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Path      *string    `json:"path,omitempty"`
-		Responses []Response `json:"responses,omitempty"`
-		URL       string     `json:"url,omitempty"`
-	}{URL: g.Action.URL}
-
-	// Empty strings are null
-	if g.Path != "" {
-		test.Path = &g.Path
-	}
-
-	// Empty arrays are null
-	if len(g.Responses) > 0 {
-		test.Responses = g.Responses
+		Action `json:",omitempty"`
+	}{
+		Action: g.Action,
 	}
 
 	return json.Marshal(test)

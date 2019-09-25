@@ -28,13 +28,13 @@ type Action struct {
 // MarshalJSON implements the Marshaler interface. Empty strings will be null.
 func (a Action) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Path      string    `json:"path,omitempty"`
+		Path      string     `json:"path,omitempty"`
 		Responses []Response `json:"responses,omitempty"`
-		URL       string    `json:"name,omitempty"`
+		URL       string     `json:"name,omitempty"`
 	}{
-		Path: a.Path,
+		Path:      a.Path,
 		Responses: a.Responses,
-		URL: a.URL,
+		URL:       a.URL,
 	}
 
 	return json.Marshal(test)

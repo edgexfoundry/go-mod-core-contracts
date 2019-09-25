@@ -40,32 +40,24 @@ type Subscription struct {
 func (s Subscription) MarshalJSON() ([]byte, error) {
 	test := struct {
 		Timestamps
-		ID                   *string                 `json:"id"`
-		Slug                 *string                 `json:"slug,omitempty"`
-		Receiver             *string                 `json:"receiver,omitempty"`
-		Description          *string                 `json:"description,omitempty"`
+		ID                   string                  `json:"id,omitempty"`
+		Slug                 string                  `json:"slug,omitempty"`
+		Receiver             string                  `json:"receiver,omitempty"`
+		Description          string                  `json:"description,omitempty"`
 		SubscribedCategories []NotificationsCategory `json:"subscribedCategories,omitempty"`
 		SubscribedLabels     []string                `json:"subscribedLabels,omitempty"`
 		Channels             []Channel               `json:"channels,omitempty"`
 	}{
 		Timestamps:           s.Timestamps,
+		ID:                   s.ID,
+		Slug:                 s.Slug,
+		Receiver:             s.Receiver,
+		Description:          s.Description,
 		SubscribedCategories: s.SubscribedCategories,
 		SubscribedLabels:     s.SubscribedLabels,
 		Channels:             s.Channels,
 	}
 
-	if s.ID != "" {
-		test.ID = &s.ID
-	}
-	if s.Slug != "" {
-		test.Slug = &s.Slug
-	}
-	if s.Receiver != "" {
-		test.Receiver = &s.Receiver
-	}
-	if s.Description != "" {
-		test.Description = &s.Description
-	}
 	return json.Marshal(test)
 }
 

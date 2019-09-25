@@ -44,10 +44,10 @@ type ProtocolProperties map[string]string
 func (d Device) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject
-		Id             string                        `json:"id,omitempty"`
-		Name           string                        `json:"name,omitempty"`
-		AdminState     AdminState                    `json:"adminState,omitempty"`
-		OperatingState OperatingState                `json:"operatingState,omitempty"`
+		Id             string                         `json:"id,omitempty"`
+		Name           string                         `json:"name,omitempty"`
+		AdminState     AdminState                     `json:"adminState,omitempty"`
+		OperatingState OperatingState                 `json:"operatingState,omitempty"`
 		Protocols      *map[string]ProtocolProperties `json:"protocols,omitempty"`
 		LastConnected  int64                          `json:"lastConnected,omitempty"`
 		LastReported   int64                          `json:"lastReported,omitempty"`
@@ -57,8 +57,8 @@ func (d Device) MarshalJSON() ([]byte, error) {
 		Profile        *DeviceProfile                 `json:"profile,omitempty"`
 		AutoEvents     []AutoEvent                    `json:"autoEvents,omitempty"`
 	}{
-		Id: d.Id,
-		Name: d.Name,
+		Id:              d.Id,
+		Name:            d.Name,
 		DescribedObject: d.DescribedObject,
 		AdminState:      d.AdminState,
 		OperatingState:  d.OperatingState,

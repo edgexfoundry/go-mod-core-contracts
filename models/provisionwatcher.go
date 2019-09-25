@@ -42,38 +42,32 @@ func (pw ProvisionWatcher) MarshalJSON() ([]byte, error) {
 		BlockingIdentifiers *map[string][]string `json:"blockingidentifiers,omitempty"` // set of key-values pairs that identify devices which will not be added despite matching on Identifiers
 		Profile             *DeviceProfile       `json:"profile,omitempty"`             // device profile that should be applied to the devices available at the identifier addresses
 		Service             *DeviceService       `json:"service,omitempty"`             // device service that new devices will be associated to
-		AdminState          *AdminState          `json:"adminState,omitempty"`          // administrative state for new devices - either unlocked or locked
+		AdminState          AdminState           `json:"adminState,omitempty"`          // administrative state for new devices - either unlocked or locked
 	}{
-		Timestamps: pw.Timestamps,
-		Profile:    &pw.Profile,
-		Service:    &pw.Service,
-		AdminState: &pw.AdminState,
-	}
-
-	// Empty strings are null
-	if pw.Id != "" {
-		test.Id = pw.Id
-	}
-	if pw.Name != "" {
-		test.Name = pw.Name
+		Timestamps:          pw.Timestamps,
+		Id:                  pw.Id,
+		Name:                pw.Name,
+		Identifiers:         &pw.Identifiers,
+		BlockingIdentifiers: &pw.BlockingIdentifiers,
+		Profile:             &pw.Profile,
+		Service:             &pw.Service,
+		AdminState:          pw.AdminState,
 	}
 
 	// Empty maps are null
-	if len(pw.Identifiers) > 0 {
-		test.Identifiers = &pw.Identifiers
+	if len(pw.Identifiers) == 0 {
+		test.Identifiers = nil
 	}
-	if len(pw.BlockingIdentifiers) > 0 {
-		test.BlockingIdentifiers = &pw.BlockingIdentifiers
+	if len(pw.BlockingIdentifiers) == 0 {
+		test.BlockingIdentifiers = nil
 	}
 
+	// Empty objects are nil
 	if reflect.DeepEqual(pw.Profile, DeviceProfile{}) {
 		test.Profile = nil
 	}
 	if reflect.DeepEqual(pw.Service, DeviceService{}) {
 		test.Service = nil
-	}
-	if reflect.DeepEqual(pw.AdminState, AdminState("")) {
-		test.AdminState = nil
 	}
 
 	return json.Marshal(test)

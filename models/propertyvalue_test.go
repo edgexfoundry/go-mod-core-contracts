@@ -57,7 +57,7 @@ func TestPropertyValue_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("PropertyValue.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("PropertyValue.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}

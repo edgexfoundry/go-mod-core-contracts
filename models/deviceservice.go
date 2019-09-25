@@ -38,17 +38,17 @@ type DeviceService struct {
 func (ds DeviceService) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject `json:",inline"`
-		Id              string        `json:"id,omitempty"`
-		Name            string        `json:"name,omitempty"`           // time in milliseconds that the device last provided any feedback or responded to any request
+		Id              string         `json:"id,omitempty"`
+		Name            string         `json:"name,omitempty"`           // time in milliseconds that the device last provided any feedback or responded to any request
 		LastConnected   int64          `json:"lastConnected,omitempty"`  // time in milliseconds that the device last reported data to the core
 		LastReported    int64          `json:"lastReported,omitempty"`   // operational state - either enabled or disabled
 		OperatingState  OperatingState `json:"operatingState,omitempty"` // operational state - ether enabled or disableddc
 		Labels          []string       `json:"labels,omitempty"`         // tags or other labels applied to the device service for search or other identification needs
-		Addressable     *Addressable    `json:"addressable,omitempty"`    // address (MQTT topic, HTTP address, serial bus, etc.) for reaching the service
+		Addressable     *Addressable   `json:"addressable,omitempty"`    // address (MQTT topic, HTTP address, serial bus, etc.) for reaching the service
 		AdminState      AdminState     `json:"adminState,omitempty"`     // Device Service Admin State
 	}{
-		Id: ds.Id,
-		Name: ds.Name,
+		Id:              ds.Id,
+		Name:            ds.Name,
 		DescribedObject: ds.DescribedObject,
 		LastConnected:   ds.LastConnected,
 		LastReported:    ds.LastReported,

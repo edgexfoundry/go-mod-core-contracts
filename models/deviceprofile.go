@@ -37,42 +37,24 @@ type DeviceProfile struct {
 func (dp DeviceProfile) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject
-		Id              *string           `json:"id,omitempty"`
-		Name            *string           `json:"name,omitempty"`         // Non-database identifier (must be unique)
-		Manufacturer    *string           `json:"manufacturer,omitempty"` // Manufacturer of the device
-		Model           *string           `json:"model,omitempty"`        // Model of the device
+		Id              string            `json:"id,omitempty"`
+		Name            string            `json:"name,omitempty"`         // Non-database identifier (must be unique)
+		Manufacturer    string            `json:"manufacturer,omitempty"` // Manufacturer of the device
+		Model           string            `json:"model,omitempty"`        // Model of the device
 		Labels          []string          `json:"labels,omitempty"`       // Labels used to search for groups of profiles
 		DeviceResources []DeviceResource  `json:"deviceResources,omitempty"`
 		DeviceCommands  []ProfileResource `json:"deviceCommands,omitempty"`
 		CoreCommands    []Command         `json:"coreCommands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 	}{
 		DescribedObject: dp.DescribedObject,
+		Id:              dp.Id,
+		Name:            dp.Name,
+		Manufacturer:    dp.Manufacturer,
+		Model:           dp.Model,
 		Labels:          dp.Labels,
-	}
-
-	// Empty strings are null
-	if dp.Id != "" {
-		test.Id = &dp.Id
-	}
-	if dp.Name != "" {
-		test.Name = &dp.Name
-	}
-	if dp.Manufacturer != "" {
-		test.Manufacturer = &dp.Manufacturer
-	}
-	if dp.Model != "" {
-		test.Model = &dp.Model
-	}
-
-	// Empty arrays are null
-	if len(dp.DeviceResources) > 0 {
-		test.DeviceResources = dp.DeviceResources
-	}
-	if len(dp.DeviceCommands) > 0 {
-		test.DeviceCommands = dp.DeviceCommands
-	}
-	if len(dp.CoreCommands) > 0 {
-		test.CoreCommands = dp.CoreCommands
+		DeviceResources: dp.DeviceResources,
+		DeviceCommands:  dp.DeviceCommands,
+		CoreCommands:    dp.CoreCommands,
 	}
 
 	return json.Marshal(test)

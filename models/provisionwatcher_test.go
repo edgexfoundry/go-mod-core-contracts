@@ -45,14 +45,13 @@ var TestProvisionWatcher = ProvisionWatcher{Timestamps: testTimestamps, Id: Test
 var TestProvisionWatcherEmpty = ProvisionWatcher{}
 
 func TestProvisionWatcher_MarshalJSON(t *testing.T) {
-	var testPWBytes = []byte(TestProvisionWatcher.String())
 	tests := []struct {
 		name    string
 		pw      ProvisionWatcher
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshalling", TestProvisionWatcher, testPWBytes, false},
+		{"successful marshalling of empty object", TestProvisionWatcherEmpty, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -62,7 +61,7 @@ func TestProvisionWatcher_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ProvisionWatcher.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("ProvisionWatcher.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}

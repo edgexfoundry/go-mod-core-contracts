@@ -32,14 +32,12 @@ var TestResourceOperation = ResourceOperation{Index: TestResourceIndex, Operatio
 var TestResourceOperationEmpty = ResourceOperation{}
 
 func TestResourceOperation_MarshalJSON(t *testing.T) {
-	var testResourceOperationBytes = []byte(TestResourceOperation.String())
 	tests := []struct {
 		name    string
 		ro      ResourceOperation
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshalling", TestResourceOperation, testResourceOperationBytes, false},
 		{"successful marshalling, empty", TestResourceOperationEmpty, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
@@ -50,7 +48,7 @@ func TestResourceOperation_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ResourceOperation.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("ResourceOperation.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}

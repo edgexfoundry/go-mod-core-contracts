@@ -49,7 +49,7 @@ func TestDeviceReport_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DeviceReport.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("DeviceReport.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
@@ -66,7 +66,6 @@ func TestDeviceReport_String(t *testing.T) {
 			"{\"created\":" + strconv.FormatInt(testTimestamps.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(testTimestamps.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(testTimestamps.Origin, 10) +
-				",\"id\":\"\"" +
 				",\"name\":\"" + TestReportName + "\"" +
 				",\"device\":\"" + TestDeviceName + "\"" +
 				",\"action\":\"" + TestIntervalaction + "\"" +

@@ -35,19 +35,13 @@ type Response struct {
 // Custom marshalling to make empty strings null
 func (r Response) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Code           *string  `json:"code,omitempty"`
-		Description    *string  `json:"description,omitempty"`
+		Code           string   `json:"code,omitempty"`
+		Description    string   `json:"description,omitempty"`
 		ExpectedValues []string `json:"expectedValues,omitempty"`
 	}{
+		Code:           r.Code,
+		Description:    r.Description,
 		ExpectedValues: r.ExpectedValues,
-	}
-
-	// Empty strings are null
-	if r.Code != "" {
-		test.Code = &r.Code
-	}
-	if r.Description != "" {
-		test.Description = &r.Description
 	}
 
 	return json.Marshal(test)
@@ -56,8 +50,8 @@ func (r Response) MarshalJSON() ([]byte, error) {
 /*
  * To String function for Response Struct
  */
-func (a Response) String() string {
-	out, err := json.Marshal(a)
+func (r Response) String() string {
+	out, err := json.Marshal(r)
 	if err != nil {
 		return err.Error()
 	}

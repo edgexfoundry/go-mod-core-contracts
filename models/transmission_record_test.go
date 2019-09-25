@@ -50,7 +50,7 @@ func TestTransmissionRecord_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("TransmissionRecord.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("TransmissionRecord.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}

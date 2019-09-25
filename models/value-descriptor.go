@@ -49,62 +49,47 @@ type ValueDescriptor struct {
 // Custom marshaling to make empty strings null
 func (v ValueDescriptor) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Id            *string      `json:"id,omitempty"`
+		Id            string       `json:"id,omitempty"`
 		Created       int64        `json:"created,omitempty"`
-		Description   *string      `json:"description,omitempty"`
+		Description   string       `json:"description,omitempty"`
 		Modified      int64        `json:"modified,omitempty"`
 		Origin        int64        `json:"origin,omitempty"`
-		Name          *string      `json:"name,omitempty"`
+		Name          string       `json:"name,omitempty"`
 		Min           *interface{} `json:"min,omitempty"`
 		Max           *interface{} `json:"max,omitempty"`
 		DefaultValue  *interface{} `json:"defaultValue,omitempty"`
-		Type          *string      `json:"type,omitempty"`
-		UomLabel      *string      `json:"uomLabel,omitempty"`
-		Formatting    *string      `json:"formatting,omitempty"`
+		Type          string       `json:"type,omitempty"`
+		UomLabel      string       `json:"uomLabel,omitempty"`
+		Formatting    string       `json:"formatting,omitempty"`
 		Labels        []string     `json:"labels,omitempty"`
-		MediaType     *string      `json:"mediaType,omitempty"`
-		FloatEncoding *string      `json:"floatEncoding,omitempty"`
+		MediaType     string       `json:"mediaType,omitempty"`
+		FloatEncoding string       `json:"floatEncoding,omitempty"`
 	}{
-		Created:  v.Created,
-		Modified: v.Modified,
-		Origin:   v.Origin,
-		Labels:   v.Labels,
+		Id:            v.Id,
+		Created:       v.Created,
+		Description:   v.Description,
+		Modified:      v.Modified,
+		Origin:        v.Origin,
+		Name:          v.Name,
+		Min:           &v.Min,
+		Max:           &v.Max,
+		DefaultValue:  &v.DefaultValue,
+		Type:          v.Type,
+		UomLabel:      v.UomLabel,
+		Formatting:    v.Formatting,
+		Labels:        v.Labels,
+		MediaType:     v.MediaType,
+		FloatEncoding: v.FloatEncoding,
 	}
 
-	// Empty strings are null
-	if v.Id != "" {
-		test.Id = &v.Id
+	if reflect.DeepEqual(v.Min, nil) {
+		test.Min = nil
 	}
-	if v.Name != "" {
-		test.Name = &v.Name
+	if reflect.DeepEqual(v.Max, nil) {
+		test.Max = nil
 	}
-	if v.Description != "" {
-		test.Description = &v.Description
-	}
-	if v.Type != "" {
-		test.Type = &v.Type
-	}
-	if v.UomLabel != "" {
-		test.UomLabel = &v.UomLabel
-	}
-	if v.Formatting != "" {
-		test.Formatting = &v.Formatting
-	}
-	if v.MediaType != "" {
-		test.MediaType = &v.MediaType
-	}
-	if v.FloatEncoding != "" {
-		test.FloatEncoding = &v.FloatEncoding
-	}
-
-	if !reflect.DeepEqual(v.Min, nil) {
-		test.Min = &v.Min
-	}
-	if !reflect.DeepEqual(v.Max, nil) {
-		test.Max = &v.Max
-	}
-	if !reflect.DeepEqual(v.DefaultValue, nil) {
-		test.DefaultValue = &v.DefaultValue
+	if reflect.DeepEqual(v.DefaultValue, nil) {
+		test.DefaultValue = nil
 	}
 
 	return json.Marshal(test)

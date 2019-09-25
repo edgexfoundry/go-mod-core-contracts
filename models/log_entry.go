@@ -37,32 +37,19 @@ type LogEntry struct {
 	isValidated   bool          // internal member used for validation check
 }
 
-func (l LogEntry) MarshalJSON() ([]byte, error) {
+func (le LogEntry) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Level         *string       `json:"logLevel,omitempty"`
+		Level         string        `json:"logLevel,omitempty"`
 		Args          []interface{} `json:"args,omitempty"`
-		OriginService *string       `json:"originService,omitempty"`
-		Message       *string       `json:"message,omitempty"`
+		OriginService string        `json:"originService,omitempty"`
+		Message       string        `json:"message,omitempty"`
 		Created       int64         `json:"created,omitempty"`
 	}{
-		Created: l.Created,
-	}
-
-	// Empty strings are null
-	if l.Level != "" {
-		test.Level = &l.Level
-	}
-
-	if l.OriginService != "" {
-		test.OriginService = &l.OriginService
-	}
-
-	if l.Message != "" {
-		test.Message = &l.Message
-	}
-
-	if len(l.Args) > 0 {
-		test.Args = l.Args
+		Level:         le.Level,
+		Args:          le.Args,
+		OriginService: le.OriginService,
+		Message:       le.Message,
+		Created:       le.Created,
 	}
 
 	return json.Marshal(test)

@@ -25,16 +25,13 @@ var TestTransmission = Transmission{Timestamps: testTimestamps, Notification: Te
 	Channel: Channel{Type: ChannelType(Email), MailAddresses: []string{"jpwhite_mn@yahoo.com", "james_white2@dell.com"}}, Status: TransmissionStatus(Sent), ResendCount: 0, Records: []TransmissionRecord{TestSentTransRecord}}
 
 func TestTransmission_MarshalJSON(t *testing.T) {
-	var emptyBytes = []byte(TestEmptyTransmission.String())
-	var tranBytes = []byte(TestTransmission.String())
 	tests := []struct {
 		name    string
 		trans   *Transmission
 		want    []byte
 		wantErr bool
 	}{
-		{"test empty transmission", &TestEmptyTransmission, emptyBytes, false},
-		{"test transmission", &TestTransmission, tranBytes, false},
+		{"test empty transmission", &TestEmptyTransmission, TestEmptyJSONBytes, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -44,7 +41,7 @@ func TestTransmission_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Transmission.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("Transmission.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
@@ -56,8 +53,8 @@ func TestTransmission_String(t *testing.T) {
 		trans *Transmission
 		want  string
 	}{
-		{"test string of empty transmission", &TestEmptyTransmission, "{\"id\":null,\"notification\":{\"id\":null},\"channel\":{},\"resendcount\":0}"},
-		{"test string of transmission", &TestTransmission, "{\"created\":123,\"modified\":123,\"origin\":123,\"id\":null,\"notification\":{\"created\":123,\"modified\":123,\"id\":\"" + TestNotificationID + "\",\"slug\":\"test slug\",\"sender\":\"test sender\",\"category\":\"SECURITY\",\"severity\":\"CRITICAL\",\"content\":\"test content\",\"description\":\"test description\",\"status\":\"NEW\",\"labels\":[\"label1\",\"labe2\"],\"contenttype\":\"text/plain\"},\"receiver\":\"test receiver\",\"channel\":{\"type\":\"EMAIL\",\"mailAddresses\":[\"jpwhite_mn@yahoo.com\",\"james_white2@dell.com\"]},\"status\":\"SENT\",\"resendcount\":0,\"records\":[{\"status\":\"SENT\",\"response\":\"ok\",\"sent\":123}]}"},
+		{"test string of empty transmission", &TestEmptyTransmission, TestEmptyJSON},
+		{"test string of transmission", &TestTransmission, "{\"created\":123,\"modified\":123,\"origin\":123,\"notification\":{\"created\":123,\"modified\":123,\"id\":\"" + TestNotificationID + "\",\"slug\":\"test slug\",\"sender\":\"test sender\",\"category\":\"SECURITY\",\"severity\":\"CRITICAL\",\"content\":\"test content\",\"description\":\"test description\",\"status\":\"NEW\",\"labels\":[\"label1\",\"labe2\"],\"contenttype\":\"text/plain\"},\"receiver\":\"test receiver\",\"channel\":{\"type\":\"EMAIL\",\"mailAddresses\":[\"jpwhite_mn@yahoo.com\",\"james_white2@dell.com\"]},\"status\":\"SENT\",\"resendcount\":0,\"records\":[{\"status\":\"SENT\",\"response\":\"ok\",\"sent\":123}]}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
