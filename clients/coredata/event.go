@@ -80,11 +80,6 @@ func NewEventClient(params types.EndpointParams, m clients.Endpointer) EventClie
 
 func (e *eventRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
-		//Fetch URL in real time for immediate use
-		e.url = e.endpoint.Fetch(params)
-		//Set up refresh interval to keep URL current
-		ch := make(chan string, 1)
-		go e.endpoint.Monitor(params, ch)
 		go func(ch chan string) {
 			for {
 				select {
@@ -92,7 +87,7 @@ func (e *eventRestClient) init(params types.EndpointParams) {
 					e.url = url
 				}
 			}
-		}(ch)
+		}(e.endpoint.Monitor(params))
 	} else {
 		e.url = params.Url
 	}

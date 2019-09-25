@@ -238,17 +238,8 @@ func TestMarshalEvent(t *testing.T) {
 
 type mockCoreDataEndpoint struct{}
 
-func (e mockCoreDataEndpoint) Monitor(params types.EndpointParams, ch chan string) {
-	switch params.ServiceKey {
-	case clients.CoreDataServiceKey:
-		url := fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
-		ch <- url
-		break
-	default:
-		ch <- ""
-	}
-}
-
-func (e mockCoreDataEndpoint) Fetch(params types.EndpointParams) string {
-	return fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
+func (e mockCoreDataEndpoint) Monitor(params types.EndpointParams) chan string {
+	ch := make(chan string, 1)
+	ch <- fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
+	return ch
 }

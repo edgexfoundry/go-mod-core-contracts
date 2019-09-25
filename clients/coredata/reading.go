@@ -70,11 +70,6 @@ func NewReadingClient(params types.EndpointParams, m clients.Endpointer) Reading
 
 func (r *readingRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
-		//Fetch URL in real time for immediate use
-		r.url = r.endpoint.Fetch(params)
-		//Set up refresh interval to keep URL current
-		ch := make(chan string, 1)
-		go r.endpoint.Monitor(params, ch)
 		go func(ch chan string) {
 			for {
 				select {
@@ -82,7 +77,7 @@ func (r *readingRestClient) init(params types.EndpointParams) {
 					r.url = url
 				}
 			}
-		}(ch)
+		}(r.endpoint.Monitor(params))
 	} else {
 		r.url = params.Url
 	}

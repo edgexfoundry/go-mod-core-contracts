@@ -9,7 +9,6 @@ package notifications
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -119,20 +118,8 @@ func TestReceiveNotification(t *testing.T) {
 	nc.SendNotification(notification, context.Background())
 }
 
-type mockNotificationEndpoint struct {
-}
+type mockNotificationEndpoint struct{}
 
-func (e mockNotificationEndpoint) Monitor(params types.EndpointParams, ch chan string) {
-	switch params.ServiceKey {
-	case clients.CoreMetaDataServiceKey:
-		url := params.Url
-		ch <- url
-		break
-	default:
-		ch <- ""
-	}
-}
-
-func (e mockNotificationEndpoint) Fetch(params types.EndpointParams) string {
-	return fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
+func (e mockNotificationEndpoint) Monitor(params types.EndpointParams) chan string {
+	return make(chan string, 1)
 }

@@ -63,11 +63,6 @@ func NewDeviceProfileClient(params types.EndpointParams, m clients.Endpointer) D
 
 func (d *deviceProfileRestClient) init(params types.EndpointParams) {
 	if params.UseRegistry {
-		//Fetch URL in real time for immediate use
-		d.url = d.endpoint.Fetch(params)
-		//Set up refresh interval to keep URL current
-		ch := make(chan string, 1)
-		go d.endpoint.Monitor(params, ch)
 		go func(ch chan string) {
 			for {
 				select {
@@ -75,7 +70,7 @@ func (d *deviceProfileRestClient) init(params types.EndpointParams) {
 					d.url = url
 				}
 			}
-		}(ch)
+		}(d.endpoint.Monitor(params))
 	} else {
 		d.url = params.Url
 	}
