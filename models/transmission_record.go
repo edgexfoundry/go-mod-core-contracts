@@ -20,26 +20,9 @@ import (
 )
 
 type TransmissionRecord struct {
-	Status   TransmissionStatus `json:"status"`
-	Response string             `json:"response"`
-	Sent     int64              `json:"sent"`
-}
-
-// Custom marshaling to make empty strings null
-func (t TransmissionRecord) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Status   TransmissionStatus `json:"status"`
-		Response *string            `json:"response"`
-		Sent     int64              `json:"sent"`
-	}{
-		Status: t.Status,
-		Sent:   t.Sent,
-	}
-	// Empty strings are null
-	if t.Response != "" {
-		test.Response = &t.Response
-	}
-	return json.Marshal(test)
+	Status   TransmissionStatus `json:"status,omitempty"`
+	Response string             `json:"response,omitempty"`
+	Sent     int64              `json:"sent,omitempty"`
 }
 
 /*

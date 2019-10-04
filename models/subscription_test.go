@@ -16,7 +16,6 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -24,29 +23,6 @@ var TestEmptySubscription = Subscription{}
 var TestSubscription = Subscription{Timestamps: testTimestamps, Slug: "test slug", Receiver: "test receiver", Description: "test description",
 	SubscribedCategories: []NotificationsCategory{NotificationsCategory(Swhealth)}, SubscribedLabels: []string{"test label"},
 	Channels: []Channel{TestEChannel, TestRChannel}}
-
-func TestSubscription_MarshalJSON(t *testing.T) {
-	tests := []struct {
-		name    string
-		sub     *Subscription
-		want    []byte
-		wantErr bool
-	}{
-		{"test empty subscription", &TestEmptySubscription, TestEmptyJSONBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.sub.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Subscription.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Subscription.MarshalJSON() = %v, want %v", string(got), string(tt.want))
-			}
-		})
-	}
-}
 
 func TestSubscription_String(t *testing.T) {
 	tests := []struct {

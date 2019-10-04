@@ -27,38 +27,13 @@ import (
  */
 type Subscription struct {
 	Timestamps
-	ID                   string                  `json:"id"`
+	ID                   string                  `json:"id,omitempty"`
 	Slug                 string                  `json:"slug,omitempty"`
 	Receiver             string                  `json:"receiver,omitempty"`
 	Description          string                  `json:"description,omitempty"`
 	SubscribedCategories []NotificationsCategory `json:"subscribedCategories,omitempty"`
 	SubscribedLabels     []string                `json:"subscribedLabels,omitempty"`
 	Channels             []Channel               `json:"channels,omitempty"`
-}
-
-// Custom marshaling to make empty strings null
-func (s Subscription) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Timestamps
-		ID                   string                  `json:"id,omitempty"`
-		Slug                 string                  `json:"slug,omitempty"`
-		Receiver             string                  `json:"receiver,omitempty"`
-		Description          string                  `json:"description,omitempty"`
-		SubscribedCategories []NotificationsCategory `json:"subscribedCategories,omitempty"`
-		SubscribedLabels     []string                `json:"subscribedLabels,omitempty"`
-		Channels             []Channel               `json:"channels,omitempty"`
-	}{
-		Timestamps:           s.Timestamps,
-		ID:                   s.ID,
-		Slug:                 s.Slug,
-		Receiver:             s.Receiver,
-		Description:          s.Description,
-		SubscribedCategories: s.SubscribedCategories,
-		SubscribedLabels:     s.SubscribedLabels,
-		Channels:             s.Channels,
-	}
-
-	return json.Marshal(test)
 }
 
 /*

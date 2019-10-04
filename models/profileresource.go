@@ -17,24 +17,9 @@ package models
 import "encoding/json"
 
 type ProfileResource struct {
-	Name string              `json:"name" yaml:"name,omitempty"`
-	Get  []ResourceOperation `json:"get" yaml:"get,omitempty"`
-	Set  []ResourceOperation `json:"set" yaml:"set,omitempty"`
-}
-
-// Custom marshaling to make empty strings null
-func (pr ProfileResource) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Name string              `json:"name,omitempty"`
-		Get  []ResourceOperation `json:"get,omitempty"`
-		Set  []ResourceOperation `json:"set,omitempty"`
-	}{
-		Name: pr.Name,
-		Get:  pr.Get,
-		Set:  pr.Set,
-	}
-
-	return json.Marshal(test)
+	Name string              `json:"name,omitempty" yaml:"name,omitempty"`
+	Get  []ResourceOperation `json:"get,omitempty" yaml:"get,omitempty"`
+	Set  []ResourceOperation `json:"set,omitempty" yaml:"set,omitempty"`
 }
 
 /*

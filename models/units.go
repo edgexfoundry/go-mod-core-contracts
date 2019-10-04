@@ -17,24 +17,9 @@ package models
 import "encoding/json"
 
 type Units struct {
-	Type         string `json:"type" yaml:"type,omitempty"`
-	ReadWrite    string `json:"readWrite" yaml:"readWrite,omitempty"`
-	DefaultValue string `json:"defaultValue" yaml:"defaultValue,omitempty"`
-}
-
-// Custom marshaling to make empty strings null
-func (u Units) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Type         string `json:"type,omitempty"`
-		ReadWrite    string `json:"readWrite,omitempty"`
-		DefaultValue string `json:"defaultValue,omitempty"`
-	}{
-		Type:         u.Type,
-		ReadWrite:    u.ReadWrite,
-		DefaultValue: u.DefaultValue,
-	}
-
-	return json.Marshal(test)
+	Type         string `json:"type,omitempty" yaml:"type,omitempty"`
+	ReadWrite    string `json:"readWrite,omitempty" yaml:"readWrite,omitempty"`
+	DefaultValue string `json:"defaultValue,omitempty" yaml:"defaultValue,omitempty"`
 }
 
 /*

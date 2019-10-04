@@ -17,18 +17,7 @@ package models
 import "encoding/json"
 
 type Get struct {
-	Action `yaml:",inline"`
-}
-
-// Custom marshaling to make empty strings and arrays null
-func (g Get) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Action `json:",omitempty"`
-	}{
-		Action: g.Action,
-	}
-
-	return json.Marshal(test)
+	Action `json:",omitempty" yaml:",inline"`
 }
 
 /*

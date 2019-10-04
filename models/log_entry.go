@@ -29,30 +29,12 @@ const (
 )
 
 type LogEntry struct {
-	Level         string        `bson:"logLevel" json:"logLevel"`
-	Args          []interface{} `bson:"args" json:"args"`
-	OriginService string        `bson:"originService" json:"originService"`
-	Message       string        `bson:"message" json:"message"`
-	Created       int64         `bson:"created" json:"created"`
+	Level         string        `bson:"logLevel,omitempty" json:"logLevel"`
+	Args          []interface{} `bson:"args,omitempty" json:"args"`
+	OriginService string        `bson:"originService,omitempty" json:"originService"`
+	Message       string        `bson:"message,omitempty" json:"message"`
+	Created       int64         `bson:"created,omitempty" json:"created"`
 	isValidated   bool          // internal member used for validation check
-}
-
-func (le LogEntry) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Level         string        `json:"logLevel,omitempty"`
-		Args          []interface{} `json:"args,omitempty"`
-		OriginService string        `json:"originService,omitempty"`
-		Message       string        `json:"message,omitempty"`
-		Created       int64         `json:"created,omitempty"`
-	}{
-		Level:         le.Level,
-		Args:          le.Args,
-		OriginService: le.OriginService,
-		Message:       le.Message,
-		Created:       le.Created,
-	}
-
-	return json.Marshal(test)
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the LogEntry type

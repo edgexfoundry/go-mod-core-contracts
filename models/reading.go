@@ -39,33 +39,6 @@ type Reading struct {
 	isValidated bool   // internal member used for validation check
 }
 
-// Custom marshaling to make empty strings null
-func (r Reading) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Id          string `json:"id,omitempty"`
-		Pushed      int64  `json:"pushed,omitempty"`  // When the data was pushed out of EdgeX (0 - not pushed yet)
-		Created     int64  `json:"created,omitempty"` // When the reading was created
-		Origin      int64  `json:"origin,omitempty"`
-		Modified    int64  `json:"modified,omitempty"`
-		Device      string `json:"device,omitempty"`
-		Name        string `json:"name,omitempty"`
-		Value       string `json:"value,omitempty"`       // Device sensor data value
-		BinaryValue []byte `json:"binaryValue,omitempty"` // Binary data payload
-	}{
-		Id:          r.Id,
-		Pushed:      r.Pushed,
-		Created:     r.Created,
-		Origin:      r.Origin,
-		Modified:    r.Modified,
-		Device:      r.Device,
-		Name:        r.Name,
-		Value:       r.Value,
-		BinaryValue: r.BinaryValue,
-	}
-
-	return json.Marshal(test)
-}
-
 // UnmarshalJSON implements the Unmarshaler interface for the Reading type
 func (r *Reading) UnmarshalJSON(data []byte) error {
 	var err error

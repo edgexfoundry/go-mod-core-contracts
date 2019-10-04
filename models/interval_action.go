@@ -41,48 +41,6 @@ type IntervalAction struct {
 	isValidated bool   // internal member used for validation check
 }
 
-func (ia IntervalAction) MarshalJSON() ([]byte, error) {
-	test := struct {
-		ID         string `json:"id,omitempty"`
-		Created    int64  `json:"created,omitempty"`
-		Modified   int64  `json:"modified,omitempty"`
-		Origin     int64  `json:"origin,omitempty"`
-		Name       string `json:"name,omitempty"`
-		Interval   string `json:"interval,omitempty"`
-		Parameters string `json:"parameters,omitempty"`
-		Target     string `json:"target,omitempty"`
-		Protocol   string `json:"protocol,omitempty"`
-		HTTPMethod string `json:"httpMethod,omitempty"`
-		Address    string `json:"address,omitempty"`
-		Port       int    `json:"port,omitempty"`
-		Path       string `json:"path,omitempty"`
-		Publisher  string `json:"publisher,omitempty"`
-		User       string `json:"user,omitempty"`
-		Password   string `json:"password,omitempty"`
-		Topic      string `json:"topic,omitempty"`
-	}{
-		ID:         ia.ID,
-		Created:    ia.Created,
-		Modified:   ia.Modified,
-		Origin:     ia.Origin,
-		Name:       ia.Name,
-		Interval:   ia.Interval,
-		Parameters: ia.Parameters,
-		Target:     ia.Target,
-		Protocol:   ia.Protocol,
-		HTTPMethod: ia.HTTPMethod,
-		Address:    ia.Address,
-		Port:       ia.Port,
-		Path:       ia.Path,
-		Publisher:  ia.Publisher,
-		User:       ia.User,
-		Password:   ia.Password,
-		Topic:      ia.Topic,
-	}
-
-	return json.Marshal(test)
-}
-
 // UnmarshalJSON implements the Unmarshaler interface for the IntervalAction type
 func (ia *IntervalAction) UnmarshalJSON(data []byte) error {
 	var err error

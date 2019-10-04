@@ -15,39 +15,11 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
 var TestResponse = Response{Code: TestCode, Description: TestDescription, ExpectedValues: TestExpectedvalues}
 var TestResponseEmpty = Response{}
-
-func TestResponse_MarshalJSON(t *testing.T) {
-	var resultTestBytes = []byte(TestResponse.String())
-	var resultEmptyTestBytes = []byte(TestResponseEmpty.String())
-
-	tests := []struct {
-		name    string
-		r       Response
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestResponse, resultTestBytes, false},
-		{"successful empty marshal", TestResponseEmpty, resultEmptyTestBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.r.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Response.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Response.MarshalJSON() = %v, want %v", string(got), string(tt.want))
-			}
-		})
-	}
-}
 
 func TestResponse_String(t *testing.T) {
 	tests := []struct {
