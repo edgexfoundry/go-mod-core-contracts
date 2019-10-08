@@ -36,16 +36,13 @@ var TestAddressable = Addressable{Timestamps: testTimestamps, Name: testAddrName
 var EmptyAddressable = Addressable{}
 
 func TestAddressable_MarshalJSON(t *testing.T) {
-	var resultTestBytes = []byte(TestAddressable.String())
-	var resultEmptyBytes = []byte(EmptyAddressable.String())
 	tests := []struct {
 		name    string
 		a       Addressable
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal", TestAddressable, resultTestBytes, false},
-		{"successful empty marshal", EmptyAddressable, resultEmptyBytes, false},
+		{"successful empty marshal", EmptyAddressable, []byte(TestEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -55,7 +52,7 @@ func TestAddressable_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Addressable.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("Addressable.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
@@ -82,7 +79,7 @@ func TestAddressable_String(t *testing.T) {
 			"\",\"topic\":\"" + TestAddressable.Topic +
 			"\",\"baseURL\":\"" + TestAddressable.Protocol + "://" + TestAddressable.Address + ":" + strconv.Itoa(TestAddressable.Port) +
 			"\",\"url\":\"" + TestAddressable.Protocol + "://" + TestAddressable.Address + ":" + strconv.Itoa(TestAddressable.Port) + TestAddressable.Path + "\"}"},
-		{"empty", EmptyAddressable, "{}"},
+		{"empty", EmptyAddressable, TestEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
