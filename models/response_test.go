@@ -19,7 +19,7 @@ import (
 	"testing"
 )
 
-var TestResponse = Response{Code: TestCode, Description: TestDescription, ExpectedValues: TestExpectedvalues}
+var TestResponse = Response{Code: testCode, Description: testDescription, ExpectedValues: TestExpectedvalues}
 
 func TestResponse_MarshalJSON(t *testing.T) {
 	var emptyResponse = Response{}
@@ -56,9 +56,9 @@ func TestResponse_String(t *testing.T) {
 		want string
 	}{
 		{"resonse to string", TestResponse,
-			"{\"code\":\"" + TestCode + "\"" +
-				",\"description\":\"" + TestDescription + "\"" +
-				",\"expectedValues\":[\"" + TestExpectedvalue1 + "\",\"" + TestExpectedvalue2 + "\"]}"},
+			"{\"code\":\"" + testCode + "\"" +
+				",\"description\":\"" + testDescription + "\"" +
+				",\"expectedValues\":[\"" + testExpectedvalue1 + "\",\"" + testExpectedvalue2 + "\"]}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -79,10 +79,10 @@ func TestResponse_Equals(t *testing.T) {
 		args args
 		want bool
 	}{
-		{"responses equal", TestResponse, args{Response{Code: TestCode, Description: TestDescription, ExpectedValues: TestExpectedvalues}}, true},
-		{"responses not equal", TestResponse, args{Response{Code: "foobar", Description: TestDescription, ExpectedValues: TestExpectedvalues}}, false},
-		{"responses not equal", TestResponse, args{Response{Code: TestCode, Description: "foobar", ExpectedValues: TestExpectedvalues}}, false},
-		{"responses not equal", TestResponse, args{Response{Code: TestCode, Description: TestDescription, ExpectedValues: []string{"foo", "bar"}}}, false},
+		{"responses equal", TestResponse, args{Response{Code: testCode, Description: testDescription, ExpectedValues: TestExpectedvalues}}, true},
+		{"responses not equal", TestResponse, args{Response{Code: "foobar", Description: testDescription, ExpectedValues: TestExpectedvalues}}, false},
+		{"responses not equal", TestResponse, args{Response{Code: testCode, Description: "foobar", ExpectedValues: TestExpectedvalues}}, false},
+		{"responses not equal", TestResponse, args{Response{Code: testCode, Description: testDescription, ExpectedValues: []string{"foo", "bar"}}}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -69,7 +69,7 @@ func TestDevice_String(t *testing.T) {
 			"{\"created\":" + strconv.FormatInt(TestDevice.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(TestDevice.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestDevice.Origin, 10) +
-				",\"description\":\"" + TestDescription + "\"" +
+				",\"description\":\"" + testDescription + "\"" +
 				",\"name\":\"" + TestDevice.Name + "\"" +
 				",\"adminState\":\"UNLOCKED\",\"operatingState\":\"ENABLED\"" +
 				",\"protocols\":{\"modbus-ip\":{\"host\":\"localhost\",\"port\":\"1234\",\"unitID\":\"1\"}," +

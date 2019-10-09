@@ -22,16 +22,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 )
 
-const testAddrName = "TEST_ADDR.NAME"
-const testProtocol = "HTTP"
-const testMethod = "Get"
-const testAddress = "localhost"
-const testPort = 48089
-const testPublisher = "TEST_PUB"
-const testUser = "edgexer"
-const testPassword = "password"
-const testTopic = "device_topic"
-
 var TestAddressable = Addressable{Timestamps: testTimestamps, Name: testAddrName, Protocol: testProtocol, HTTPMethod: testMethod, Address: testAddress, Port: testPort, Path: clients.ApiDeviceRoute, Publisher: testPublisher, User: testUser, Password: testPassword, Topic: testTopic}
 var EmptyAddressable = Addressable{}
 
@@ -42,7 +32,7 @@ func TestAddressable_MarshalJSON(t *testing.T) {
 		want    []byte
 		wantErr bool
 	}{
-		{"successful empty marshal", EmptyAddressable, []byte(TestEmptyJSON), false},
+		{"successful empty marshal", EmptyAddressable, []byte(testEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -79,7 +69,7 @@ func TestAddressable_String(t *testing.T) {
 			"\",\"topic\":\"" + TestAddressable.Topic +
 			"\",\"baseURL\":\"" + TestAddressable.Protocol + "://" + TestAddressable.Address + ":" + strconv.Itoa(TestAddressable.Port) +
 			"\",\"url\":\"" + TestAddressable.Protocol + "://" + TestAddressable.Address + ":" + strconv.Itoa(TestAddressable.Port) + TestAddressable.Path + "\"}"},
-		{"empty", EmptyAddressable, TestEmptyJSON},
+		{"empty", EmptyAddressable, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
