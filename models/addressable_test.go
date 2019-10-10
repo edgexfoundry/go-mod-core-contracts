@@ -22,6 +22,18 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 )
 
+const (
+	testAddrName  = "TEST_ADDR.NAME"
+	testProtocol  = "http"
+	testMethod    = "Get"
+	testAddress   = "localhost"
+	testPort      = 48089
+	testPublisher = "TEST_PUB"
+	testUser      = "edgexer"
+	testPassword  = "password"
+	testTopic     = "device_topic"
+)
+
 var TestAddressable = Addressable{Timestamps: testTimestamps, Name: testAddrName, Protocol: testProtocol, HTTPMethod: testMethod, Address: testAddress, Port: testPort, Path: clients.ApiDeviceRoute, Publisher: testPublisher, User: testUser, Password: testPassword, Topic: testTopic}
 var EmptyAddressable = Addressable{}
 

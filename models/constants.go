@@ -25,15 +25,4 @@ const (
 	testExpectedvalue1 = "temperature"
 	testExpectedvalue2 = "humidity"
 	testActionPath     = "test/path"
-
-	// addressable
-	testAddrName  = "TEST_ADDR.NAME"
-	testProtocol  = "http"
-	testMethod    = "Get"
-	testAddress   = "localhost"
-	testPort      = 48089
-	testPublisher = "TEST_PUB"
-	testUser      = "edgexer"
-	testPassword  = "password"
-	testTopic     = "device_topic"
 )
