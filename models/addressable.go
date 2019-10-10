@@ -15,7 +15,6 @@
 package models
 
 import (
-	"bytes"
 	"encoding/json"
 	"strconv"
 	"strings"
@@ -24,118 +23,43 @@ import (
 // Addressable holds information indicating how to contact a specific endpoint
 type Addressable struct {
 	Timestamps
-	Id          string `json:"id"`          // ID is a unique identifier for the Addressable, such as a UUID
-	Name        string `json:"name"`        // Name is a unique name given to the Addressable
-	Protocol    string `json:"protocol"`    // Protocol for the address (HTTP/TCP)
-	HTTPMethod  string `json:"method"`      // Method for connecting (i.e. POST)
-	Address     string `json:"address"`     // Address of the addressable
-	Port        int    `json:"port,Number"` // Port for the address
-	Path        string `json:"path"`        // Path for callbacks
-	Publisher   string `json:"publisher"`   // For message bus protocols
-	User        string `json:"user"`        // User id for authentication
-	Password    string `json:"password"`    // Password of the user for authentication for the addressable
-	Topic       string `json:"topic"`       // Topic for message bus addressables
+	Id          string `json:"id,omitempty"`          // ID is a unique identifier for the Addressable, such as a UUID
+	Name        string `json:"name,omitempty"`        // Name is a unique name given to the Addressable
+	Protocol    string `json:"protocol,omitempty"`    // Protocol for the address (HTTP/TCP)
+	HTTPMethod  string `json:"method,omitempty"`      // Method for connecting (i.e. POST)
+	Address     string `json:"address,omitempty"`     // Address of the addressable
+	Port        int    `json:"port,omitempty,Number"` // Port for the address
+	Path        string `json:"path,omitempty"`        // Path for callbacks
+	Publisher   string `json:"publisher,omitempty"`   // For message bus protocols
+	User        string `json:"user,omitempty"`        // User id for authentication
+	Password    string `json:"password,omitempty"`    // Password of the user for authentication for the addressable
+	Topic       string `json:"topic,omitempty"`       // Topic for message bus addressables
 	isValidated bool   // internal member used for validation check
 }
 
-// Custom marshaling for JSON
-// Create the URL and Base URL
-// Treat the strings as pointers so they can be null in JSON
+type addressableAlias Addressable
+
+// MarshalJSON implements the Marshaler interface for the Addressable type
+// Use custom logic to create the URL and Base URL
 func (a Addressable) MarshalJSON() ([]byte, error) {
 	aux := struct {
-		Timestamps
-		Id         *string `json:"id,omitempty"`
-		Name       *string `json:"name,omitempty"`
-		Protocol   *string `json:"protocol,omitempty"`    // Protocol for the address (HTTP/TCP)
-		HTTPMethod *string `json:"method,omitempty"`      // Method for connecting (i.e. POST)
-		Address    *string `json:"address,omitempty"`     // Address of the addressable
-		Port       int     `json:"port,Number,omitempty"` // Port for the address
-		Path       *string `json:"path,omitempty"`        // Path for callbacks
-		Publisher  *string `json:"publisher,omitempty"`   // For message bus protocols
-		User       *string `json:"user,omitempty"`        // User id for authentication
-		Password   *string `json:"password,omitempty"`    // Password of the user for authentication for the addressable
-		Topic      *string `json:"topic,omitempty"`       // Topic for message bus addressables
-		BaseURL    *string `json:"baseURL,omitempty"`
-		URL        *string `json:"url,omitempty"`
+		addressableAlias
+		BaseURL string `json:"baseURL,omitempty"`
+		URL     string `json:"url,omitempty"`
 	}{
-		Timestamps: a.Timestamps,
-		Port:       a.Port,
+		addressableAlias: addressableAlias(a),
 	}
 
-	if a.Id != "" {
-		aux.Id = &a.Id
-	}
-
-	// Only initialize the non-empty strings (empty are null)
-	if a.Name != "" {
-		aux.Name = &a.Name
-	}
-	if a.Protocol != "" {
-		aux.Protocol = &a.Protocol
-	}
-	if a.HTTPMethod != "" {
-		aux.HTTPMethod = &a.HTTPMethod
-	}
-	if a.Address != "" {
-		aux.Address = &a.Address
-	}
-	if a.Path != "" {
-		aux.Path = &a.Path
-	}
-	if a.Publisher != "" {
-		aux.Publisher = &a.Publisher
-	}
-	if a.User != "" {
-		aux.User = &a.User
-	}
-	if a.Password != "" {
-		aux.Password = &a.Password
-	}
-	if a.Topic != "" {
-		aux.Topic = &a.Topic
-	}
-
-	// Get the base URL
 	if a.Protocol != "" && a.Address != "" {
-		var baseUrlBuffer bytes.Buffer
-		_, err := baseUrlBuffer.WriteString(a.Protocol)
-		if err != nil {
-			return []byte{}, err
-		}
-		baseUrlBuffer.WriteString("://")
-		_, err = baseUrlBuffer.WriteString(a.Address)
-		if err != nil {
-			return []byte{}, err
-		}
-		baseUrlBuffer.WriteString(":")
-		_, err = baseUrlBuffer.WriteString(strconv.Itoa(a.Port))
-		if err != nil {
-			return []byte{}, err
-		}
-		s := baseUrlBuffer.String()
-		aux.BaseURL = &s
-	}
+		// Get the base URL
+		aux.BaseURL = a.GetBaseURL()
 
-	// Get the URL
-	if aux.BaseURL != nil {
-		var urlBuffer bytes.Buffer
-		_, err := urlBuffer.WriteString(*aux.BaseURL)
-		if err != nil {
-			return []byte{}, err
-		}
+		// Get the URL
+		aux.URL = aux.BaseURL
 		if a.Publisher == "" && a.Topic != "" {
-			_, err = urlBuffer.WriteString(a.Topic)
-			if err != nil {
-				return []byte{}, err
-			}
-			urlBuffer.WriteString("/")
+			aux.URL += a.Topic + "/"
 		}
-		_, err = urlBuffer.WriteString(a.Path)
-		if err != nil {
-			return []byte{}, err
-		}
-		s := urlBuffer.String()
-		aux.URL = &s
+		aux.URL += a.Path
 	}
 
 	return json.Marshal(aux)
@@ -144,38 +68,12 @@ func (a Addressable) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON implements the Unmarshaler interface for the Addressable type
 func (a *Addressable) UnmarshalJSON(data []byte) error {
 	var err error
-	type Alias struct {
-		Timestamps `json:",inline"`
-		Id         string `json:"id"`
-		Name       string `json:"name"`
-		Protocol   string `json:"protocol"`
-		HTTPMethod string `json:"method"`
-		Address    string `json:"address"`
-		Port       int    `json:"port,Number"`
-		Path       string `json:"path"`
-		Publisher  string `json:"publisher"`
-		User       string `json:"user"`
-		Password   string `json:"password"`
-		Topic      string `json:"topic"`
-	}
-	alias := Alias{}
-	// Error with unmarshaling
+	var alias addressableAlias
 	if err = json.Unmarshal(data, &alias); err != nil {
 		return err
 	}
 
-	a.Timestamps = alias.Timestamps
-	a.Id = alias.Id
-	a.Name = alias.Name
-	a.Protocol = alias.Protocol
-	a.HTTPMethod = alias.HTTPMethod
-	a.Address = alias.Address
-	a.Port = alias.Port
-	a.Path = alias.Path
-	a.Publisher = alias.Publisher
-	a.User = alias.User
-	a.Password = alias.Password
-	a.Topic = alias.Topic
+	*a = Addressable(alias)
 	a.isValidated, err = a.Validate()
 
 	return err
@@ -192,9 +90,7 @@ func (a Addressable) Validate() (bool, error) {
 	return a.isValidated, nil
 }
 
-/*
- * String() function for formatting
- */
+// String returns a JSON encoded string representation of the addressable.
 func (a Addressable) String() string {
 	out, err := json.Marshal(a)
 	if err != nil {
@@ -212,7 +108,7 @@ func (a Addressable) GetBaseURL() string {
 	return baseUrl
 }
 
-// GetCallbackURL() returns the callback url for the addressable if all relevant tokens have values.
+// GetCallbackURL returns the callback url for the addressable if all relevant tokens have values.
 // If any token is missing, string will be empty. Tokens include protocol, address, port and path.
 func (a Addressable) GetCallbackURL() string {
 	url := ""

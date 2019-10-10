@@ -19,7 +19,7 @@ import (
 	"testing"
 )
 
-var TestDescribedObject = DescribedObject{Timestamps: testTimestamps, Description: TestDescription}
+var TestDescribedObject = DescribedObject{Timestamps: testTimestamps, Description: testDescription}
 
 func TestDescribedObject_String(t *testing.T) {
 	tests := []struct {
@@ -31,7 +31,7 @@ func TestDescribedObject_String(t *testing.T) {
 			"{\"created\":" + strconv.FormatInt(TestDescribedObject.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(TestDescribedObject.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestDescribedObject.Origin, 10) +
-				",\"description\":\"" + TestDescription + "\"}"},
+				",\"description\":\"" + testDescription + "\"}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

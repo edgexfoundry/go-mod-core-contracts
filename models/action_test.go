@@ -16,15 +16,8 @@ package models
 
 import "testing"
 
-const TestCode = "200"
-const TestDescription = "ok"
-const TestExpectedvalue1 = "temperature"
-const TestExpectedvalue2 = "humidity"
-const TestActionPath = "test/path"
-const TestEmptyJSON = "{}"
-
-var TestExpectedvalues = []string{TestExpectedvalue1, TestExpectedvalue2}
-var TestAction = Action{TestActionPath, []Response{{TestCode, TestDescription, TestExpectedvalues}}, ""}
+var TestExpectedvalues = []string{testExpectedvalue1, testExpectedvalue2}
+var TestAction = Action{testActionPath, []Response{{testCode, testDescription, TestExpectedvalues}}, ""}
 var EmptyAction = Action{}
 
 func TestAction_String(t *testing.T) {
@@ -33,8 +26,8 @@ func TestAction_String(t *testing.T) {
 		action Action
 		want   string
 	}{
-		{"full action", TestAction, "{\"path\":\"" + TestActionPath + "\",\"responses\":[{\"code\":\"" + TestCode + "\",\"description\":\"" + TestDescription + "\",\"expectedValues\":[\"" + TestExpectedvalue1 + "\",\"" + TestExpectedvalue2 + "\"]}]}"},
-		{"empty action", EmptyAction, TestEmptyJSON},
+		{"full action", TestAction, "{\"path\":\"" + testActionPath + "\",\"responses\":[{\"code\":\"" + testCode + "\",\"description\":\"" + testDescription + "\",\"expectedValues\":[\"" + testExpectedvalue1 + "\",\"" + testExpectedvalue2 + "\"]}]}"},
+		{"empty action", EmptyAction, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

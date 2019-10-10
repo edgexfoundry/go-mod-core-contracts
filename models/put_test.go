@@ -52,12 +52,12 @@ func TestPut_String(t *testing.T) {
 		want string
 	}{
 		{"put to string", TestPut,
-			"{\"path\":\"" + TestActionPath +
-				"\",\"responses\":[{\"code\":\"" + TestCode +
-				"\",\"description\":\"" + TestDescription +
-				"\",\"expectedValues\":[\"" + TestExpectedvalue1 +
-				"\",\"" + TestExpectedvalue2 +
-				"\"]}],\"parameterNames\":[\"" + TestExpectedvalue1 + "\",\"" + TestExpectedvalue2 + "\"]}"},
+			"{\"path\":\"" + testActionPath +
+				"\",\"responses\":[{\"code\":\"" + testCode +
+				"\",\"description\":\"" + testDescription +
+				"\",\"expectedValues\":[\"" + testExpectedvalue1 +
+				"\",\"" + testExpectedvalue2 +
+				"\"]}],\"parameterNames\":[\"" + testExpectedvalue1 + "\",\"" + testExpectedvalue2 + "\"]}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

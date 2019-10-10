@@ -22,30 +22,29 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 )
 
-const testAddrName = "TEST_ADDR.NAME"
-const testProtocol = "HTTP"
-const testMethod = "Get"
-const testAddress = "localhost"
-const testPort = 48089
-const testPublisher = "TEST_PUB"
-const testUser = "edgexer"
-const testPassword = "password"
-const testTopic = "device_topic"
+const (
+	testAddrName  = "TEST_ADDR.NAME"
+	testProtocol  = "http"
+	testMethod    = "Get"
+	testAddress   = "localhost"
+	testPort      = 48089
+	testPublisher = "TEST_PUB"
+	testUser      = "edgexer"
+	testPassword  = "password"
+	testTopic     = "device_topic"
+)
 
 var TestAddressable = Addressable{Timestamps: testTimestamps, Name: testAddrName, Protocol: testProtocol, HTTPMethod: testMethod, Address: testAddress, Port: testPort, Path: clients.ApiDeviceRoute, Publisher: testPublisher, User: testUser, Password: testPassword, Topic: testTopic}
 var EmptyAddressable = Addressable{}
 
 func TestAddressable_MarshalJSON(t *testing.T) {
-	var resultTestBytes = []byte(TestAddressable.String())
-	var resultEmptyBytes = []byte(EmptyAddressable.String())
 	tests := []struct {
 		name    string
 		a       Addressable
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal", TestAddressable, resultTestBytes, false},
-		{"successful empty marshal", EmptyAddressable, resultEmptyBytes, false},
+		{"successful empty marshal", EmptyAddressable, []byte(testEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -55,7 +54,7 @@ func TestAddressable_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Addressable.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("Addressable.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
@@ -82,7 +81,7 @@ func TestAddressable_String(t *testing.T) {
 			"\",\"topic\":\"" + TestAddressable.Topic +
 			"\",\"baseURL\":\"" + TestAddressable.Protocol + "://" + TestAddressable.Address + ":" + strconv.Itoa(TestAddressable.Port) +
 			"\",\"url\":\"" + TestAddressable.Protocol + "://" + TestAddressable.Address + ":" + strconv.Itoa(TestAddressable.Port) + TestAddressable.Path + "\"}"},
-		{"empty", EmptyAddressable, "{}"},
+		{"empty", EmptyAddressable, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

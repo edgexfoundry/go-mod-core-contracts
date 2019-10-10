@@ -97,7 +97,7 @@ func TestDeviceService_String(t *testing.T) {
 			"{\"created\":" + strconv.FormatInt(TestDeviceService.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(TestDeviceService.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestDeviceService.Origin, 10) +
-				",\"description\":\"" + TestDescription + "\"" +
+				",\"description\":\"" + testDescription + "\"" +
 				",\"id\":null,\"name\":\"" + TestServiceName + "\"" +
 				",\"lastConnected\":" + strconv.FormatInt(TestLastConnected, 10) +
 				",\"lastReported\":" + strconv.FormatInt(TestLastReported, 10) +
