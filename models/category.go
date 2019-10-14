@@ -45,6 +45,14 @@ func (as *NotificationsCategory) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (nc NotificationsCategory) Validate() (bool, error) {
+	_, err := map[string]NotificationsCategory{"SECURITY": Security, "HW_HEALTH": Hwhealth, "SW_HEALTH": Swhealth}[string(nc)]
+	if !err {
+		return false, NewErrContractInvalid(fmt.Sprintf("invalid NotificationsCategory %q", nc))
+	}
+	return true, nil
+}
+
 // IsNotificationsCategory allows external code to verify whether the supplied string is a valid NotificationsCategory value
 func IsNotificationsCategory(as string) bool {
 	_, err := map[string]NotificationsCategory{"SECURITY": Security, "HW_HEALTH": Hwhealth, "SW_HEALTH": Swhealth}[as]

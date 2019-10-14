@@ -28,9 +28,11 @@ func TestNotificationsCategory_UnmarshalJSON(t *testing.T) {
 		args    []byte
 		wantErr bool
 	}{
-		{"Test marshal of sw health", &swHealth, []byte("\"SW_HEALTH\""), false},
-		{"Test marshal of hw health", &hwHealth, []byte("\"HW_HEALTH\""), false},
-		{"Test marshal of security", &security, []byte("\"SECURITY\""), false},
+		{"Test unmarshal of sw health", &swHealth, []byte("\"SW_HEALTH\""), false},
+		{"Test unmarshal of hw health", &hwHealth, []byte("\"HW_HEALTH\""), false},
+		{"Test unmarshal of security", &security, []byte("\"SECURITY\""), false},
+		{"Test unmarshal of not supported", &security, []byte("\"TEST\""), true},
+		{"Test unmarshal of invalid", &security, []byte(`{"name":what?}`), true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -60,6 +62,29 @@ func TestIsNotificationsCategory(t *testing.T) {
 			if got := IsNotificationsCategory(tt.arg); got != tt.want {
 				t.Errorf("IsNotificationsCategory() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+func TestNotificationsCategory_Validate(t *testing.T) {
+	var swHealthCategory = NotificationsCategory(Swhealth)
+	var hwhealthCategory = NotificationsCategory(Hwhealth)
+	var securityCategory = NotificationsCategory(Security)
+	var invalid = NotificationsCategory("foo")
+
+	tests := []struct {
+		name        string
+		ct          NotificationsCategory
+		expectError bool
+	}{
+		{"valid swhealth category", swHealthCategory, false},
+		{"valid hwhealth category", hwhealthCategory, false},
+		{"valid security category", securityCategory, false},
+		{"invalid notification category", invalid, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.ct.Validate()
+			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}
 }
