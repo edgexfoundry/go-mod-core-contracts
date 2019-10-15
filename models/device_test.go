@@ -33,16 +33,13 @@ var TestDevice = Device{DescribedObject: TestDescribedObject, Name: TestDeviceNa
 	Labels: TestLabels, Location: TestLocation, Service: TestDeviceService, Profile: TestProfile, AutoEvents: newAutoEvent()}
 
 func TestDevice_MarshalJSON(t *testing.T) {
-	marshaled := TestDevice.String()
-	testDeviceBytes := []byte(marshaled)
-
 	tests := []struct {
 		name    string
 		d       Device
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal", TestDevice, testDeviceBytes, false},
+		{"successful empty marshal", Device{}, []byte(testEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -52,7 +49,7 @@ func TestDevice_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Device.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("Device.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
