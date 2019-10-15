@@ -15,39 +15,11 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
 var TestResponse = Response{Code: testCode, Description: testDescription, ExpectedValues: TestExpectedvalues}
-
-func TestResponse_MarshalJSON(t *testing.T) {
-	var emptyResponse = Response{}
-	var resultTestBytes = []byte(TestResponse.String())
-	var resultEmptyTestBytes = []byte(emptyResponse.String())
-
-	tests := []struct {
-		name    string
-		r       Response
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestResponse, resultTestBytes, false},
-		{"successful empty marshal", emptyResponse, resultEmptyTestBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.r.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Response.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Response.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+var TestResponseEmpty = Response{}
 
 func TestResponse_String(t *testing.T) {
 	tests := []struct {
@@ -55,10 +27,11 @@ func TestResponse_String(t *testing.T) {
 		a    Response
 		want string
 	}{
-		{"resonse to string", TestResponse,
+		{"response to string", TestResponse,
 			"{\"code\":\"" + testCode + "\"" +
 				",\"description\":\"" + testDescription + "\"" +
 				",\"expectedValues\":[\"" + testExpectedvalue1 + "\",\"" + testExpectedvalue2 + "\"]}"},
+		{"response to string, empty", TestResponseEmpty, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

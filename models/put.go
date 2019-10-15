@@ -23,32 +23,7 @@ import "encoding/json"
  */
 type Put struct {
 	Action         `yaml:",inline"`
-	ParameterNames []string `json:"parameterNames" yaml:"parameterNames,omitempty"`
-}
-
-// Custom marshaling to make empty strings null
-func (p Put) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Path           *string    `json:"path,omitempty"`
-		Responses      []Response `json:"responses,omitempty"`
-		ParameterNames []string   `json:"parameterNames,omitempty"`
-		URL            string     `json:"url,omitempty"`
-	}{URL: p.Action.URL}
-
-	// Empty strings are null
-	if p.Path != "" {
-		test.Path = &p.Path
-	}
-
-	// Empty arrays are null
-	if len(p.Responses) > 0 {
-		test.Responses = p.Responses
-	}
-	if len(p.ParameterNames) > 0 {
-		test.ParameterNames = p.ParameterNames
-	}
-
-	return json.Marshal(test)
+	ParameterNames []string `json:"parameterNames,omitempty" yaml:"parameterNames,omitempty"`
 }
 
 /*
