@@ -29,16 +29,16 @@ var TestDeviceCommand = "test device command"
 var TestSecondary = []string{"test secondary"}
 var TestMappings = make(map[string]string)
 var TestResourceOperation = ResourceOperation{Index: TestResourceIndex, Operation: TestOperation, DeviceResource: TestRODeviceResource, Parameter: TestParameter, DeviceCommand: TestDeviceCommand, Secondary: TestSecondary, Mappings: TestMappings}
+var TestResourceOperationEmpty = ResourceOperation{}
 
 func TestResourceOperation_MarshalJSON(t *testing.T) {
-	var testResourceOperationBytes = []byte(TestResourceOperation.String())
 	tests := []struct {
 		name    string
 		ro      ResourceOperation
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshalling", TestResourceOperation, testResourceOperationBytes, false},
+		{"successful marshalling, empty", TestResourceOperationEmpty, []byte(testEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -48,7 +48,7 @@ func TestResourceOperation_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ResourceOperation.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("ResourceOperation.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
@@ -70,6 +70,7 @@ func TestResourceOperation_String(t *testing.T) {
 				",\"resource\":\"" + TestDeviceCommand + "\"" +
 				",\"deviceCommand\":\"" + TestDeviceCommand + "\"" +
 				",\"secondary\":" + fmt.Sprint(string(secondarySlice)) + "}"},
+		{"resource operation to string, empty", TestResourceOperationEmpty, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

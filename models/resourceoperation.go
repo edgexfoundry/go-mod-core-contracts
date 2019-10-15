@@ -32,43 +32,46 @@ type ResourceOperation struct {
 // Custom marshaling to make empty strings null
 func (ro ResourceOperation) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Index          *string           `json:"index,omitempty"`
-		Operation      *string           `json:"operation,omitempty"`
-		Object         *string           `json:"object,omitempty"`
-		DeviceResource *string           `json:"deviceResource,omitempty"`
-		Parameter      *string           `json:"parameter,omitempty"`
-		Resource       *string           `json:"resource,omitempty"`
-		DeviceCommand  *string           `json:"deviceCommand,omitempty"`
-		Secondary      []string          `json:"secondary,omitempty"`
-		Mappings       map[string]string `json:"mappings,omitempty"`
+		Index          string             `json:"index,omitempty"`
+		Operation      string             `json:"operation,omitempty"`
+		Object         string             `json:"object,omitempty"`
+		DeviceResource string             `json:"deviceResource,omitempty"`
+		Parameter      string             `json:"parameter,omitempty"`
+		Resource       string             `json:"resource,omitempty"`
+		DeviceCommand  string             `json:"deviceCommand,omitempty"`
+		Secondary      []string           `json:"secondary,omitempty"`
+		Mappings       *map[string]string `json:"mappings,omitempty"`
 	}{
-		Secondary: ro.Secondary,
-		Mappings:  ro.Mappings,
+		Index:          ro.Index,
+		Operation:      ro.Operation,
+		Object:         ro.Object,
+		DeviceResource: ro.DeviceResource,
+		Parameter:      ro.Parameter,
+		Resource:       ro.Resource,
+		DeviceCommand:  ro.DeviceCommand,
+		Secondary:      ro.Secondary,
+		Mappings:       &ro.Mappings,
 	}
 
-	// Empty strings are null
-	if ro.Index != "" {
-		test.Index = &ro.Index
+	// Empty maps are nil
+	if len(ro.Mappings) == 0 {
+		test.Mappings = nil
 	}
-	if ro.Operation != "" {
-		test.Operation = &ro.Operation
-	}
+
 	if ro.DeviceResource != "" {
-		test.DeviceResource = &ro.DeviceResource
-		test.Object = &ro.DeviceResource
+		test.DeviceResource = ro.DeviceResource
+		test.Object = ro.DeviceResource
 	} else if ro.Object != "" {
-		test.Object = &ro.Object
-		test.DeviceResource = &ro.Object
+		test.Object = ro.Object
+		test.DeviceResource = ro.Object
 	}
-	if ro.Parameter != "" {
-		test.Parameter = &ro.Parameter
-	}
+
 	if ro.DeviceCommand != "" {
-		test.DeviceCommand = &ro.DeviceCommand
-		test.Resource = &ro.DeviceCommand
+		test.DeviceCommand = ro.DeviceCommand
+		test.Resource = ro.DeviceCommand
 	} else if ro.Resource != "" {
-		test.Resource = &ro.Resource
-		test.DeviceCommand = &ro.Resource
+		test.Resource = ro.Resource
+		test.DeviceCommand = ro.Resource
 	}
 
 	return json.Marshal(test)
