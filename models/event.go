@@ -21,13 +21,13 @@ import (
 
 // Event represents a single measurable event read from a device
 type Event struct {
-	ID          string    `json:"id" codec:"id,omitempty"`             // ID uniquely identifies an event, for example a UUID
-	Pushed      int64     `json:"pushed" codec:"pushed,omitempty"`     // Pushed is a timestamp indicating when the event was exported. If unexported, the value is zero.
-	Device      string    `json:"device" codec:"device,omitempty"`     // Device identifies the source of the event, can be a device name or id. Usually the device name.
-	Created     int64     `json:"created" codec:"created,omitempty"`   // Created is a timestamp indicating when the event was created.
-	Modified    int64     `json:"modified" codec:"modified,omitempty"` // Modified is a timestamp indicating when the event was last modified.
-	Origin      int64     `json:"origin" codec:"origin,omitempty"`     // Origin is a timestamp that can communicate the time of the original reading, prior to event creation
-	Readings    []Reading `json:"readings" codec:"readings,omitempty"` // Readings will contain zero to many entries for the associated readings of a given event.
+	ID          string    `json:"id,omitempty" codec:"id,omitempty"`             // ID uniquely identifies an event, for example a UUID
+	Pushed      int64     `json:"pushed,omitempty" codec:"pushed,omitempty"`     // Pushed is a timestamp indicating when the event was exported. If unexported, the value is zero.
+	Device      string    `json:"device,omitempty" codec:"device,omitempty"`     // Device identifies the source of the event, can be a device name or id. Usually the device name.
+	Created     int64     `json:"created,omitempty" codec:"created,omitempty"`   // Created is a timestamp indicating when the event was created.
+	Modified    int64     `json:"modified,omitempty" codec:"modified,omitempty"` // Modified is a timestamp indicating when the event was last modified.
+	Origin      int64     `json:"origin,omitempty" codec:"origin,omitempty"`     // Origin is a timestamp that can communicate the time of the original reading, prior to event creation
+	Readings    []Reading `json:"readings,omitempty" codec:"readings,omitempty"` // Readings will contain zero to many entries for the associated readings of a given event.
 	isValidated bool      // internal member used for validation check
 }
 
@@ -42,39 +42,6 @@ func encodeAsCBOR(e Event) ([]byte, error) {
 	}
 
 	return byteBuffer, nil
-}
-
-// MarshalJSON implements the Marshaler interface in order to make empty strings null
-func (e Event) MarshalJSON() ([]byte, error) {
-	test := struct {
-		ID       *string   `json:"id,omitempty"`
-		Pushed   int64     `json:"pushed,omitempty"`
-		Device   *string   `json:"device,omitempty"`
-		Created  int64     `json:"created,omitempty"`
-		Modified int64     `json:"modified,omitempty"`
-		Origin   int64     `json:"origin,omitempty"`
-		Readings []Reading `json:"readings,omitempty"`
-	}{
-		Pushed:   e.Pushed,
-		Created:  e.Created,
-		Modified: e.Modified,
-		Origin:   e.Origin,
-	}
-
-	// Empty strings are null
-	if e.ID != "" {
-		test.ID = &e.ID
-	}
-	if e.Device != "" {
-		test.Device = &e.Device
-	}
-
-	// Empty arrays are null
-	if len(e.Readings) > 0 {
-		test.Readings = e.Readings
-	}
-
-	return json.Marshal(test)
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the Event type
