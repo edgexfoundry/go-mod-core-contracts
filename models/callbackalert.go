@@ -30,7 +30,7 @@ func (ca CallbackAlert) MarshalJSON() ([]byte, error) {
 		Id         string     `json:"id,omitempty"`
 	}{
 		ActionType: ca.ActionType,
-		Id: ca.Id,
+		Id:         ca.Id,
 	}
 
 	return json.Marshal(test)

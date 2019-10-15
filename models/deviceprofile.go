@@ -49,22 +49,12 @@ func (dp DeviceProfile) MarshalJSON() ([]byte, error) {
 		Id:              dp.Id,
 		Name:            dp.Name,
 		Manufacturer:    dp.Manufacturer,
+		Labels:          dp.Labels,
+		DeviceResources: dp.DeviceResources,
+		DeviceCommands:  dp.DeviceCommands,
+		CoreCommands:    dp.CoreCommands,
 		Model:           dp.Model,
 		DescribedObject: dp.DescribedObject,
-	}
-
-	// Empty arrays are null
-	if len(dp.Labels) > 0 {
-		test.Labels = dp.Labels
-	}
-	if len(dp.DeviceResources) > 0 {
-		test.DeviceResources = dp.DeviceResources
-	}
-	if len(dp.DeviceCommands) > 0 {
-		test.DeviceCommands = dp.DeviceCommands
-	}
-	if len(dp.CoreCommands) > 0 {
-		test.CoreCommands = dp.CoreCommands
 	}
 
 	return json.Marshal(test)
