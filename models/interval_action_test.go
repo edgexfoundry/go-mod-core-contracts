@@ -19,6 +19,25 @@ import "testing"
 var testIntervalAction = IntervalAction{Name: "Test Interval Action", Interval: "Test Interval", Target: "edgex-core-data",
 	Address: "localhost", Port: 48080, Protocol: "http", HTTPMethod: "DELETE", Path: "/api/v1/event/removeold/age/604800000"}
 
+var testIntervalActionEmpty = IntervalAction{}
+
+func TestIntervalAction_String(t *testing.T) {
+	tests := []struct {
+		name           string
+		intervalAction IntervalAction
+		want           string
+	}{
+		{"empty interval", testIntervalActionEmpty, testEmptyJSON},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.intervalAction.String(); got != tt.want {
+				t.Errorf("IntervalAction.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestIntervalActionValidation(t *testing.T) {
 	valid := testIntervalAction
 
@@ -41,6 +60,7 @@ func TestIntervalActionValidation(t *testing.T) {
 		{"invalid identifiers", invalidIdentifiers, true},
 		{"invalid target", invalidTarget, true},
 		{"invalid interval", invalidInterval, true},
+		{"interval action, empty", testIntervalActionEmpty, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

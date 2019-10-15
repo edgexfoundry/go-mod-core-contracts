@@ -17,6 +17,7 @@ package models
 
 import (
 	"encoding/json"
+	"reflect"
 )
 
 type Notification struct {
@@ -36,43 +37,35 @@ type Notification struct {
 
 func (n Notification) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Timestamps
-		ID          *string               `json:"id"`
-		Slug        *string               `json:"slug,omitempty"`
-		Sender      *string               `json:"sender,omitempty"`
+		*Timestamps `json:",omitempty"`
+		ID          string                `json:"id,omitempty"`
+		Slug        string                `json:"slug,omitempty"`
+		Sender      string                `json:"sender,omitempty"`
 		Category    NotificationsCategory `json:"category,omitempty"`
 		Severity    NotificationsSeverity `json:"severity,omitempty"`
-		Content     *string               `json:"content,omitempty"`
-		Description *string               `json:"description,omitempty"`
+		Content     string                `json:"content,omitempty"`
+		Description string                `json:"description,omitempty"`
 		Status      NotificationsStatus   `json:"status,omitempty"`
 		Labels      []string              `json:"labels,omitempty"`
-		ContentType *string               `json:"contenttype,omitempty"`
+		ContentType string                `json:"contenttype,omitempty"`
 	}{
-		Timestamps: n.Timestamps,
-		Category:   n.Category,
-		Severity:   n.Severity,
-		Status:     n.Status,
-		Labels:     n.Labels,
+		Timestamps:  &n.Timestamps,
+		ID:          n.ID,
+		Slug:        n.Slug,
+		Sender:      n.Sender,
+		Category:    n.Category,
+		Severity:    n.Severity,
+		Content:     n.Content,
+		Description: n.Description,
+		Status:      n.Status,
+		Labels:      n.Labels,
+		ContentType: n.ContentType,
 	}
 
-	if n.ID != "" {
-		test.ID = &n.ID
+	if reflect.DeepEqual(n.Timestamps, Timestamps{}) {
+		test.Timestamps = nil
 	}
-	if n.Slug != "" {
-		test.Slug = &n.Slug
-	}
-	if n.Sender != "" {
-		test.Sender = &n.Sender
-	}
-	if n.Content != "" {
-		test.Content = &n.Content
-	}
-	if n.Description != "" {
-		test.Description = &n.Description
-	}
-	if n.ContentType != "" {
-		test.ContentType = &n.ContentType
-	}
+
 	return json.Marshal(test)
 }
 
