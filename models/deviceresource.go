@@ -16,6 +16,7 @@ package models
 
 import (
 	"encoding/json"
+	"reflect"
 )
 
 // DeviceResource represents a value on a device that can be read or written
@@ -30,29 +31,24 @@ type DeviceResource struct {
 // MarshalJSON implements the Marshaler interface in order to make empty strings null
 func (do DeviceResource) MarshalJSON() ([]byte, error) {
 	test := struct {
-		Description *string           `json:"description,omitempty"`
-		Name        *string           `json:"name,omitempty"`
-		Tag         *string           `json:"tag,omitempty"`
-		Properties  ProfileProperty   `json:"properties"`
-		Attributes  map[string]string `json:"attributes,omitempty"`
+		Description string             `json:"description,omitempty"`
+		Name        string             `json:"name,omitempty"`
+		Tag         string             `json:"tag,omitempty"`
+		Properties  *ProfileProperty   `json:"properties,omitempty"`
+		Attributes  *map[string]string `json:"attributes,omitempty"`
 	}{
-		Properties: do.Properties,
-	}
-
-	// Empty strings are null
-	if do.Description != "" {
-		test.Description = &do.Description
-	}
-	if do.Name != "" {
-		test.Name = &do.Name
-	}
-	if do.Tag != "" {
-		test.Tag = &do.Tag
+		Description: do.Description,
+		Name:        do.Name,
+		Tag:         do.Tag,
+		Properties:  &do.Properties,
 	}
 
 	// Empty maps are null
 	if len(do.Attributes) > 0 {
-		test.Attributes = do.Attributes
+		test.Attributes = &do.Attributes
+	}
+	if reflect.DeepEqual(do.Properties, ProfileProperty{}) {
+		test.Properties = nil
 	}
 
 	return json.Marshal(test)
