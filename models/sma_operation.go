@@ -53,9 +53,7 @@ func (o *Operation) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-/*
- * To String function for Operation struct
- */
+// String returns a JSON encoded string representation of the model
 func (o Operation) String() string {
 	out, err := json.Marshal(o)
 	if err != nil {

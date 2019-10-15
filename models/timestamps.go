@@ -24,11 +24,9 @@ type Timestamps struct {
 	Origin   int64 `json:"origin,omitempty" yaml:"origin,omitempty"`
 }
 
-/*
- * String function for representing a device
- */
-func (o *Timestamps) String() string {
-	out, err := json.Marshal(o)
+// String returns a JSON encoded string representation of the model
+func (ts *Timestamps) String() string {
+	out, err := json.Marshal(ts)
 	if err != nil {
 		return err.Error()
 	}
@@ -38,8 +36,8 @@ func (o *Timestamps) String() string {
 /*
  * Compare the Created of two objects to determine given is newer
  */
-func (ba *Timestamps) compareTo(i Timestamps) int {
-	if i.Created > ba.Created {
+func (ts *Timestamps) compareTo(i Timestamps) int {
+	if i.Created > ts.Created {
 		return 1
 	}
 	return -1

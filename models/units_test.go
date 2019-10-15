@@ -15,7 +15,6 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -23,30 +22,6 @@ var TestUnitsType = "String"
 var TestUnitsRW = "R"
 var TestUnitsDV = "Degrees Fahrenheit"
 var TestUnits = Units{Type: TestUnitsType, ReadWrite: TestUnitsRW, DefaultValue: TestUnitsDV}
-
-func TestUnits_MarshalJSON(t *testing.T) {
-	var testUnitsBytes = []byte(TestUnits.String())
-	tests := []struct {
-		name    string
-		u       Units
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshalling", TestUnits, testUnitsBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.u.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Units.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Units.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestUnits_String(t *testing.T) {
 	tests := []struct {
@@ -58,6 +33,7 @@ func TestUnits_String(t *testing.T) {
 			"{\"type\":\"" + TestUnitsType + "\"" +
 				",\"readWrite\":\"" + TestUnitsRW + "\"" +
 				",\"defaultValue\":\"" + TestUnitsDV + "\"}"},
+		{"units to string, empty", Units{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

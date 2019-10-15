@@ -17,6 +17,7 @@ package models
 
 import (
 	"encoding/json"
+	"reflect"
 )
 
 type Transmission struct {
@@ -31,33 +32,42 @@ type Transmission struct {
 	isValidated  bool
 }
 
-// Custom marshaling to make empty strings null
+// Marshal returns a JSON encoded byte array representation of the model
 func (t Transmission) MarshalJSON() ([]byte, error) {
-	test := struct {
+	alias := struct {
 		Timestamps
-		ID           *string              `json:"id"`
-		Notification Notification         `json:"notification,omitempty"`
-		Receiver     *string              `json:"receiver,omitempty"`
-		Channel      Channel              `json:"channel,omitempty"`
+		ID           string               `json:"id,omitempty"`
+		Notification *Notification        `json:"notification,omitempty"`
+		Receiver     string               `json:"receiver,omitempty"`
+		Channel      *Channel             `json:"channel,omitempty"`
 		Status       TransmissionStatus   `json:"status,omitempty"`
-		ResendCount  int                  `json:"resendcount"`
+		ResendCount  *int                 `json:"resendcount,omitempty"`
 		Records      []TransmissionRecord `json:"records,omitempty"`
 	}{
 		Timestamps:   t.Timestamps,
-		Notification: t.Notification,
-		Channel:      t.Channel,
+		ID:           t.ID,
+		Notification: &t.Notification,
+		Receiver:     t.Receiver,
+		Channel:      &t.Channel,
 		Status:       t.Status,
-		ResendCount:  t.ResendCount,
+		ResendCount:  &t.ResendCount,
 		Records:      t.Records,
 	}
-	// Empty strings are null
-	if t.ID != "" {
-		test.ID = &t.ID
+
+	// if we don't use omitempty, then an empty object always has a ResendCount included
+	// if we do use omitempty, then a ResendCount of 0 is not included in the object when it should be
+	if reflect.DeepEqual(t, Transmission{}) {
+		alias.ResendCount = nil
 	}
-	if t.Receiver != "" {
-		test.Receiver = &t.Receiver
+	// do not marshal empty member objects
+	if reflect.DeepEqual(t.Notification, Notification{}) {
+		alias.Notification = nil
 	}
-	return json.Marshal(test)
+	if reflect.DeepEqual(t.Channel, Channel{}) {
+		alias.Channel = nil
+	}
+
+	return json.Marshal(alias)
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the Transmission type
@@ -78,7 +88,6 @@ func (t *Transmission) UnmarshalJSON(data []byte) error {
 	if err = json.Unmarshal(data, &a); err != nil {
 		return err
 	}
-
 	// Nillable fields
 	if a.ID != nil {
 		t.ID = *a.ID
@@ -128,9 +137,7 @@ func (t Transmission) Validate() (bool, error) {
 	return t.isValidated, nil
 }
 
-/*
- * To String function for Transmission Struct
- */
+// String returns a JSON encoded string representation of the model
 func (t Transmission) String() string {
 	out, err := json.Marshal(t)
 	if err != nil {

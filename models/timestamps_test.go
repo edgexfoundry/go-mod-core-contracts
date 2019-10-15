@@ -25,7 +25,7 @@ func TestTimestamps_String(t *testing.T) {
 		timestamps *Timestamps
 		want       string
 	}{
-		{"empty timestamps", &emptyTimestamps, "{}"},
+		{"empty timestamps", &emptyTimestamps, testEmptyJSON},
 		{"populated timestamps", &testTimestamps, "{\"created\":123,\"modified\":123,\"origin\":123}"},
 	}
 	for _, tt := range tests {
