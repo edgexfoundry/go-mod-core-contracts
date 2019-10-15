@@ -14,16 +14,37 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"reflect"
+)
 
 type ProfileProperty struct {
 	Value PropertyValue `json:"value"`
 	Units Units         `json:"units"`
 }
 
-/*
- * To String function for DeviceService
- */
+// MarshalJSON implements the Marshaler interface
+func (pp ProfileProperty) MarshalJSON() ([]byte, error) {
+	test := struct {
+		Value *PropertyValue `json:"value,omitempty"`
+		Units *Units         `json:"units,omitempty"`
+	}{
+		Value: &pp.Value,
+		Units: &pp.Units,
+	}
+
+	if reflect.DeepEqual(pp.Value, PropertyValue{}) {
+		test.Value = nil
+	}
+	if reflect.DeepEqual(pp.Units, Units{}) {
+		test.Units = nil
+	}
+
+	return json.Marshal(test)
+}
+
+// String returns a JSON encoded string representation of this ProfileProperty
 func (pp ProfileProperty) String() string {
 	out, err := json.Marshal(pp)
 	if err != nil {
