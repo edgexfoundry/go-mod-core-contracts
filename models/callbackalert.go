@@ -24,18 +24,6 @@ type CallbackAlert struct {
 	Id         string     `json:"id,omitempty"`
 }
 
-func (ca CallbackAlert) MarshalJSON() ([]byte, error) {
-	test := struct {
-		ActionType ActionType `json:"type,omitempty"`
-		Id         string     `json:"id,omitempty"`
-	}{
-		ActionType: ca.ActionType,
-		Id:         ca.Id,
-	}
-
-	return json.Marshal(test)
-}
-
 /*
  * String function for representing a CallbackAlert
  */
