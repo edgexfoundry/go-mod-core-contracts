@@ -33,23 +33,16 @@ type Command struct {
 func (c Command) MarshalJSON() ([]byte, error) {
 	test := struct {
 		Timestamps
-		Id   *string `json:"id,omitempty"`
-		Name *string `json:"name,omitempty"` // Command name (unique on the profile)
-		Get  *Get    `json:"get,omitempty"`  // Get Command
-		Put  *Put    `json:"put,omitempty"`  // Put Command
+		Id   string `json:"id,omitempty"`
+		Name string `json:"name,omitempty"` // Command name (unique on the profile)
+		Get  *Get   `json:"get,omitempty"`  // Get Command
+		Put  *Put   `json:"put,omitempty"`  // Put Command
 	}{
 		Timestamps: c.Timestamps,
+		Id:         c.Id,
+		Name:       c.Name,
 		Get:        &c.Get,
 		Put:        &c.Put,
-	}
-
-	if c.Id != "" {
-		test.Id = &c.Id
-	}
-
-	// Make empty strings null
-	if c.Name != "" {
-		test.Name = &c.Name
 	}
 
 	// Make empty structs nil pointers so they aren't marshaled

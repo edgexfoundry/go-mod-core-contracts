@@ -16,6 +16,7 @@ package models
 
 import (
 	"encoding/json"
+	"reflect"
 )
 
 // DeviceService represents a service that is responsible for proxying connectivity between a set of devices and the
@@ -37,31 +38,28 @@ type DeviceService struct {
 func (ds DeviceService) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject `json:",inline"`
-		Id              *string        `json:"id"`
-		Name            *string        `json:"name"`           // time in milliseconds that the device last provided any feedback or responded to any request
-		LastConnected   int64          `json:"lastConnected"`  // time in milliseconds that the device last reported data to the core
-		LastReported    int64          `json:"lastReported"`   // operational state - either enabled or disabled
-		OperatingState  OperatingState `json:"operatingState"` // operational state - ether enabled or disableddc
-		Labels          []string       `json:"labels"`         // tags or other labels applied to the device service for search or other identification needs
-		Addressable     Addressable    `json:"addressable"`    // address (MQTT topic, HTTP address, serial bus, etc.) for reaching the service
-		AdminState      AdminState     `json:"adminState"`     // Device Service Admin State
+		Id              string         `json:"id,omitempty"`
+		Name            string         `json:"name,omitempty"`           // time in milliseconds that the device last provided any feedback or responded to any request
+		LastConnected   int64          `json:"lastConnected,omitempty"`  // time in milliseconds that the device last reported data to the core
+		LastReported    int64          `json:"lastReported,omitempty"`   // operational state - either enabled or disabled
+		OperatingState  OperatingState `json:"operatingState,omitempty"` // operational state - ether enabled or disableddc
+		Labels          []string       `json:"labels,omitempty"`         // tags or other labels applied to the device service for search or other identification needs
+		Addressable     *Addressable   `json:"addressable,omitempty"`    // address (MQTT topic, HTTP address, serial bus, etc.) for reaching the service
+		AdminState      AdminState     `json:"adminState,omitempty"`     // Device Service Admin State
 	}{
 		DescribedObject: ds.DescribedObject,
+		Id:              ds.Id,
+		Name:            ds.Name,
 		LastConnected:   ds.LastConnected,
 		LastReported:    ds.LastReported,
 		OperatingState:  ds.OperatingState,
 		Labels:          ds.Labels,
-		Addressable:     ds.Addressable,
+		Addressable:     &ds.Addressable,
 		AdminState:      ds.AdminState,
 	}
 
-	if ds.Id != "" {
-		test.Id = &ds.Id
-	}
-
-	// Empty strings are null
-	if ds.Name != "" {
-		test.Name = &ds.Name
+	if reflect.DeepEqual(*test.Addressable, Addressable{}) {
+		test.Addressable = nil
 	}
 
 	return json.Marshal(test)

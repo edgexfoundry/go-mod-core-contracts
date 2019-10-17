@@ -21,12 +21,10 @@ import "encoding/json"
 // eliminated and the Description property moved to the relevant types. 4 types currently use this.
 type DescribedObject struct {
 	Timestamps  `yaml:",inline"`
-	Description string `json:"description" yaml:"description,omitempty"` // Description. Capicé?
+	Description string `json:"description,omitempty" yaml:"description,omitempty"` // Description. Capicé?
 }
 
-/*
- * String function for DescribedObject
- */
+// String returns a JSON formatted string representation of this DescribedObject
 func (o DescribedObject) String() string {
 	out, err := json.Marshal(o)
 	if err != nil {

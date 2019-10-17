@@ -47,7 +47,7 @@ func TestCommand_MarshalJSON(t *testing.T) {
 
 			want := []byte(tt.c.String())
 			if !reflect.DeepEqual(got, want) {
-				t.Errorf("Command.MarshalJSON() = %v, want %v", got, want)
+				t.Errorf("Command.MarshalJSON() = %v, want %v", string(got), string(want))
 			}
 		})
 	}

@@ -16,6 +16,7 @@ package models
 
 import (
 	"encoding/json"
+	"reflect"
 )
 
 // Device represents a registered device participating within the EdgeX Foundry ecosystem
@@ -43,8 +44,8 @@ type ProtocolProperties map[string]string
 func (d Device) MarshalJSON() ([]byte, error) {
 	test := struct {
 		DescribedObject
-		Id             *string                       `json:"id,omitempty"`
-		Name           *string                       `json:"name,omitempty"`
+		Id             string                        `json:"id,omitempty"`
+		Name           string                        `json:"name,omitempty"`
 		AdminState     AdminState                    `json:"adminState,omitempty"`
 		OperatingState OperatingState                `json:"operatingState,omitempty"`
 		Protocols      map[string]ProtocolProperties `json:"protocols,omitempty"`
@@ -52,10 +53,12 @@ func (d Device) MarshalJSON() ([]byte, error) {
 		LastReported   int64                         `json:"lastReported,omitempty"`
 		Labels         []string                      `json:"labels,omitempty"`
 		Location       interface{}                   `json:"location,omitempty"`
-		Service        DeviceService                 `json:"service,omitempty"`
-		Profile        DeviceProfile                 `json:"profile,omitempty"`
+		Service        *DeviceService                `json:"service,omitempty"`
+		Profile        *DeviceProfile                `json:"profile,omitempty"`
 		AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty"`
 	}{
+		Id:              d.Id,
+		Name:            d.Name,
 		DescribedObject: d.DescribedObject,
 		AdminState:      d.AdminState,
 		OperatingState:  d.OperatingState,
@@ -64,18 +67,17 @@ func (d Device) MarshalJSON() ([]byte, error) {
 		LastReported:    d.LastReported,
 		Labels:          d.Labels,
 		Location:        d.Location,
-		Service:         d.Service,
-		Profile:         d.Profile,
+		Service:         &d.Service,
+		Profile:         &d.Profile,
 		AutoEvents:      d.AutoEvents,
 	}
 
-	if d.Id != "" {
-		test.Id = &d.Id
+	if reflect.DeepEqual(*test.Service, DeviceService{}) {
+		test.Service = nil
 	}
 
-	// Empty strings are null
-	if d.Name != "" {
-		test.Name = &d.Name
+	if reflect.DeepEqual(*test.Profile, DeviceProfile{}) {
+		test.Profile = nil
 	}
 
 	return json.Marshal(test)
@@ -86,8 +88,8 @@ func (d *Device) UnmarshalJSON(data []byte) error {
 	var err error
 	type Alias struct {
 		DescribedObject `json:",inline"`
-		Id              *string                       `json:"id"`
-		Name            *string                       `json:"name"`
+		Id              string                        `json:"id"`
+		Name            string                        `json:"name"`
 		AdminState      AdminState                    `json:"adminState"`
 		OperatingState  OperatingState                `json:"operatingState"`
 		Protocols       map[string]ProtocolProperties `json:"protocols"`
@@ -105,13 +107,8 @@ func (d *Device) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	// Check nil fields
-	if a.Id != nil {
-		d.Id = *a.Id
-	}
-	if a.Name != nil {
-		d.Name = *a.Name
-	}
+	d.Id = a.Id
+	d.Name = a.Name
 	d.DescribedObject = a.DescribedObject
 	d.AdminState = a.AdminState
 	d.OperatingState = a.OperatingState

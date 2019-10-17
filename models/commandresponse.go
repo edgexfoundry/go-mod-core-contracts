@@ -23,49 +23,15 @@ import (
 
 // CommandResponse identifies a specific device along with its supported commands.
 type CommandResponse struct {
-	Id             string         `json:"id"`             // Id uniquely identifies the CommandResponse, UUID for example.
-	Name           string         `json:"name"`           // Unique name for identifying a device
-	AdminState     AdminState     `json:"adminState"`     // Admin state (locked/unlocked)
-	OperatingState OperatingState `json:"operatingState"` // Operating state (enabled/disabled)
-	LastConnected  int64          `json:"lastConnected"`  // Time (milliseconds) that the device last provided any feedback or responded to any request
-	LastReported   int64          `json:"lastReported"`   // Time (milliseconds) that the device reported data to the core microservice
-	Labels         []string       `json:"labels"`         // Other labels applied to the device to help with searching
-	Location       interface{}    `json:"location"`       // Device service specific location (interface{} is an empty interface so it can be anything)
-	Commands       []Command      `json:"commands"`       // Associated Device Profile - Describes the device
-}
-
-// MarshalJSON implements the Marshaler interface for custom marshaling to make empty strings null
-func (cr CommandResponse) MarshalJSON() ([]byte, error) {
-	res := struct {
-		Id             *string        `json:"id"`
-		Name           *string        `json:"name"`
-		AdminState     AdminState     `json:"adminState"`
-		OperatingState OperatingState `json:"operatingState"`
-		LastConnected  int64          `json:"lastConnected"`
-		LastReported   int64          `json:"lastReported"`
-		Labels         []string       `json:"labels"`
-		Location       interface{}    `json:"location"`
-		Commands       []Command      `json:"commands"`
-	}{
-		AdminState:     cr.AdminState,
-		OperatingState: cr.OperatingState,
-		LastConnected:  cr.LastConnected,
-		LastReported:   cr.LastReported,
-		Labels:         cr.Labels,
-		Location:       cr.Location,
-		Commands:       cr.Commands,
-	}
-
-	if cr.Id != "" {
-		res.Id = &cr.Id
-	}
-
-	// Empty strings are null
-	if cr.Name != "" {
-		res.Name = &cr.Name
-	}
-
-	return json.Marshal(res)
+	Id             string         `json:"id,omitempty"`             // Id uniquely identifies the CommandResponse, UUID for example.
+	Name           string         `json:"name,omitempty"`           // Unique name for identifying a device
+	AdminState     AdminState     `json:"adminState,omitempty"`     // Admin state (locked/unlocked)
+	OperatingState OperatingState `json:"operatingState,omitempty"` // Operating state (enabled/disabled)
+	LastConnected  int64          `json:"lastConnected,omitempty"`  // Time (milliseconds) that the device last provided any feedback or responded to any request
+	LastReported   int64          `json:"lastReported,omitempty"`   // Time (milliseconds) that the device reported data to the core microservice
+	Labels         []string       `json:"labels,omitempty"`         // Other labels applied to the device to help with searching
+	Location       interface{}    `json:"location,omitempty"`       // Device service specific location (interface{} is an empty interface so it can be anything)
+	Commands       []Command      `json:"commands,omitempty"`       // Associated Device Profile - Describes the device
 }
 
 /*
