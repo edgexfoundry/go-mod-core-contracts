@@ -20,21 +20,14 @@ import (
 	"strings"
 )
 
-/*
- * Response for a Get or Put request to a service
- *
- *
- * Response Struct
- */
+// Response for a Get or Put request to a service
 type Response struct {
 	Code           string   `json:"code,omitempty" yaml:"code,omitempty"`
 	Description    string   `json:"description,omitempty" yaml:"description,omitempty"`
 	ExpectedValues []string `json:"expectedValues,omitempty" yaml:"expectedValues,omitempty"`
 }
 
-/*
- * To String function for Response Struct
- */
+// String returns a JSON encoded string representation of the model
 func (r Response) String() string {
 	out, err := json.Marshal(r)
 	if err != nil {

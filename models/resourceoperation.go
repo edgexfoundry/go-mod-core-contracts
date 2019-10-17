@@ -29,7 +29,7 @@ type ResourceOperation struct {
 	isValidated    bool              // internal member used for validation check
 }
 
-// Custom marshaling to make empty strings null
+// MarshalJSON returns a JSON encoded byte representation of the model and performs custom autofill
 func (ro ResourceOperation) MarshalJSON() ([]byte, error) {
 	test := struct {
 		Index          string             `json:"index,omitempty"`
@@ -144,9 +144,7 @@ func (ro ResourceOperation) Validate() (bool, error) {
 	return ro.isValidated, nil
 }
 
-/*
- * To String function for ResourceOperation
- */
+// String returns a JSON encoded string representation of the model
 func (ro ResourceOperation) String() string {
 	out, err := json.Marshal(ro)
 	if err != nil {
