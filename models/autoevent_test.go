@@ -24,8 +24,6 @@ var TestAutoEvent = AutoEvent{Resource: "TestDevice", Frequency: "300ms", OnChan
 
 func TestAutoEvent_MarshalJSON(t *testing.T) {
 	empty := AutoEvent{}
-	resultTestBytes := []byte(TestAutoEvent.String())
-	resultEmptyTestBytes := []byte(empty.String())
 
 	tests := []struct {
 		name    string
@@ -33,8 +31,7 @@ func TestAutoEvent_MarshalJSON(t *testing.T) {
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal", TestAutoEvent, resultTestBytes, false},
-		{"successful empty marshal", empty, resultEmptyTestBytes, false},
+		{"successful empty marshal", empty, []byte(testEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -44,7 +41,7 @@ func TestAutoEvent_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DeviceService.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("DeviceService.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}

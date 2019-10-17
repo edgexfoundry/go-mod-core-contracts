@@ -28,7 +28,6 @@ var TestDeviceService = DeviceService{DescribedObject: TestDescribedObject, Name
 func TestDeviceService_MarshalJSON(t *testing.T) {
 	var emptyDeviceService = DeviceService{}
 	var resultTestBytes = []byte(TestDeviceService.String())
-	var resultEmptyTestBytes = []byte(emptyDeviceService.String())
 
 	tests := []struct {
 		name    string
@@ -37,7 +36,7 @@ func TestDeviceService_MarshalJSON(t *testing.T) {
 		wantErr bool
 	}{
 		{"successful marshal", TestDeviceService, resultTestBytes, false},
-		{"successful empty marshal", emptyDeviceService, resultEmptyTestBytes, false},
+		{"successful empty marshal", emptyDeviceService, []byte(testEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -98,7 +97,7 @@ func TestDeviceService_String(t *testing.T) {
 				",\"modified\":" + strconv.FormatInt(TestDeviceService.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestDeviceService.Origin, 10) +
 				",\"description\":\"" + testDescription + "\"" +
-				",\"id\":null,\"name\":\"" + TestServiceName + "\"" +
+				",\"name\":\"" + TestServiceName + "\"" +
 				",\"lastConnected\":" + strconv.FormatInt(TestLastConnected, 10) +
 				",\"lastReported\":" + strconv.FormatInt(TestLastReported, 10) +
 				",\"operatingState\":\"ENABLED\"" +
