@@ -15,34 +15,33 @@
 package models
 
 import (
+	"encoding/json"
 	"reflect"
 	"testing"
 )
 
 var TestCallbackAlert = CallbackAlert{"DEVICE", "1234"}
+var TestEmptyCallbackAlert = CallbackAlert{}
 
 func TestCallbackAlert_MarshalJSON(t *testing.T) {
-	var testNoIDCallbackAlert = CallbackAlert{"DEVICE", ""}
-	var testCallbackAlertBytes = []byte(TestCallbackAlert.String())
-	var testNoIDCallbackAlertBytes = []byte(testNoIDCallbackAlert.String())
 	tests := []struct {
 		name    string
-		ca      CallbackAlert
+		ca      interface{}
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal of callback", TestCallbackAlert, testCallbackAlertBytes, false},
-		{"successful marshal of no id callback", testNoIDCallbackAlert, testNoIDCallbackAlertBytes, false},
+		{"successful marshal of empty callback", TestEmptyCallbackAlert, []byte(testEmptyJSON), false},
+		{"unsuccessful marshal", make(chan int), nil, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.ca.MarshalJSON()
+			got, err := json.Marshal(tt.ca)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CallbackAlert.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CallbackAlert.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("CallbackAlert.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
@@ -54,7 +53,8 @@ func TestCallbackAlert_String(t *testing.T) {
 		ca   CallbackAlert
 		want string
 	}{
-		{"callback alert to string", TestCallbackAlert, "{\"type\":\"DEVICE\",\"id\":\"1234\"}"},
+		{"successful callback alert to string", TestCallbackAlert, "{\"type\":\"DEVICE\",\"id\":\"1234\"}"},
+		{"successful empty callback alert to string", TestEmptyCallbackAlert, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

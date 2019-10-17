@@ -22,60 +22,15 @@ import (
 // there can be multiple matching devices within a given system.
 type DeviceProfile struct {
 	DescribedObject `yaml:",inline"`
-	Id              string            `json:"id" yaml:"id,omitempty"`
-	Name            string            `json:"name" yaml:"name,omitempty"`                 // Non-database identifier (must be unique)
-	Manufacturer    string            `json:"manufacturer" yaml:"manufacturer,omitempty"` // Manufacturer of the device
-	Model           string            `json:"model" yaml:"model,omitempty"`               // Model of the device
-	Labels          []string          `json:"labels" yaml:"labels,flow,omitempty"`        // Labels used to search for groups of profiles
-	DeviceResources []DeviceResource  `json:"deviceResources" yaml:"deviceResources,omitempty"`
-	DeviceCommands  []ProfileResource `json:"deviceCommands" yaml:"deviceCommands,omitempty"`
-	CoreCommands    []Command         `json:"coreCommands" yaml:"coreCommands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
+	Id              string            `json:"id,omitempty" yaml:"id,omitempty"`
+	Name            string            `json:"name,omitempty" yaml:"name,omitempty"`                 // Non-database identifier (must be unique)
+	Manufacturer    string            `json:"manufacturer,omitempty" yaml:"manufacturer,omitempty"` // Manufacturer of the device
+	Model           string            `json:"model,omitempty" yaml:"model,omitempty"`               // Model of the device
+	Labels          []string          `json:"labels,omitempty" yaml:"labels,flow,omitempty"`        // Labels used to search for groups of profiles
+	DeviceResources []DeviceResource  `json:"deviceResources,omitempty" yaml:"deviceResources,omitempty"`
+	DeviceCommands  []ProfileResource `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty"`
+	CoreCommands    []Command         `json:"coreCommands,omitempty" yaml:"coreCommands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
 	isValidated     bool              // internal member used for validation check
-}
-
-// MarshalJSON implements the Marshaler interface so that empty strings and arrays are null
-func (dp DeviceProfile) MarshalJSON() ([]byte, error) {
-	test := struct {
-		DescribedObject
-		Id              *string           `json:"id,omitempty"`
-		Name            *string           `json:"name,omitempty"`         // Non-database identifier (must be unique)
-		Manufacturer    *string           `json:"manufacturer,omitempty"` // Manufacturer of the device
-		Model           *string           `json:"model,omitempty"`        // Model of the device
-		Labels          []string          `json:"labels,omitempty"`       // Labels used to search for groups of profiles
-		DeviceResources []DeviceResource  `json:"deviceResources,omitempty"`
-		DeviceCommands  []ProfileResource `json:"deviceCommands,omitempty"`
-		CoreCommands    []Command         `json:"coreCommands,omitempty"` // List of commands to Get/Put information for devices associated with this profile
-	}{
-		Labels:          dp.Labels,
-		DescribedObject: dp.DescribedObject,
-	}
-
-	// Empty strings are null
-	if dp.Id != "" {
-		test.Id = &dp.Id
-	}
-	if dp.Name != "" {
-		test.Name = &dp.Name
-	}
-	if dp.Manufacturer != "" {
-		test.Manufacturer = &dp.Manufacturer
-	}
-	if dp.Model != "" {
-		test.Model = &dp.Model
-	}
-
-	// Empty arrays are null
-	if len(dp.DeviceResources) > 0 {
-		test.DeviceResources = dp.DeviceResources
-	}
-	if len(dp.DeviceCommands) > 0 {
-		test.DeviceCommands = dp.DeviceCommands
-	}
-	if len(dp.CoreCommands) > 0 {
-		test.CoreCommands = dp.CoreCommands
-	}
-
-	return json.Marshal(test)
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the DeviceProfile type

@@ -17,7 +17,6 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"strconv"
 	"testing"
 )
@@ -28,33 +27,6 @@ var TestModel = "Test Model"
 var TestProfileLabels = []string{"labe1", "label2"}
 var TestProfileDescription = "Test Description"
 var TestProfile = DeviceProfile{DescribedObject: TestDescribedObject, Name: TestProfileName, Manufacturer: TestManufacturer, Model: TestModel, Labels: TestProfileLabels, DeviceResources: []DeviceResource{TestDeviceResource}, DeviceCommands: []ProfileResource{TestProfileResource}, CoreCommands: []Command{TestCommand}}
-
-func TestDeviceProfile_MarshalJSON(t *testing.T) {
-	var emptyDeviceProfile = DeviceProfile{}
-	var resultTestBytes = []byte(TestProfile.String())
-	var resultEmptyTestBytes = []byte(emptyDeviceProfile.String())
-	tests := []struct {
-		name    string
-		dp      DeviceProfile
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestProfile, resultTestBytes, false},
-		{"successful empty marshal", emptyDeviceProfile, resultEmptyTestBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.dp.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("DeviceProfile.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DeviceProfile.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestDeviceProfile_String(t *testing.T) {
 	var labelSlice, _ = json.Marshal(TestProfileLabels)

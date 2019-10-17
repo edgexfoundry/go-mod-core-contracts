@@ -20,24 +20,8 @@ import (
 
 // CallbackAlert indicates an action to take when a callback fires.
 type CallbackAlert struct {
-	ActionType ActionType `json:"type"`
-	Id         string     `json:"id"`
-}
-
-// Custom JSON marshaling to turn empty strings into null pointers
-func (ca CallbackAlert) MarshalJSON() ([]byte, error) {
-	test := struct {
-		ActionType ActionType `json:"type"`
-		Id         *string    `json:"id"`
-	}{
-		ActionType: ca.ActionType,
-	}
-
-	if ca.Id != "" {
-		test.Id = &ca.Id
-	}
-
-	return json.Marshal(test)
+	ActionType ActionType `json:"type,omitempty"`
+	Id         string     `json:"id,omitempty"`
 }
 
 /*
