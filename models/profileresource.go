@@ -22,9 +22,7 @@ type ProfileResource struct {
 	Set  []ResourceOperation `json:"set,omitempty" yaml:"set,omitempty"`
 }
 
-/*
- * To String function for Profile Resource
- */
+// String returns a JSON encoded string representation of the model
 func (pr ProfileResource) String() string {
 	out, err := json.Marshal(pr)
 	if err != nil {

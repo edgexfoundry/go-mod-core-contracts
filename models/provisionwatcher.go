@@ -32,7 +32,7 @@ type ProvisionWatcher struct {
 	isValidated         bool                ``                           // internal member used for validation check
 }
 
-// Custom marshaling to make empty strings null
+// MarshalJSON returns a JSON encoded byte representation of the model
 func (pw ProvisionWatcher) MarshalJSON() ([]byte, error) {
 	test := struct {
 		Timestamps
@@ -125,9 +125,7 @@ func (pw ProvisionWatcher) Validate() (bool, error) {
 	return pw.isValidated, nil
 }
 
-/*
- * To String function for ProvisionWatcher
- */
+// String returns a JSON encoded string representation of the model
 func (pw ProvisionWatcher) String() string {
 	out, err := json.Marshal(pw)
 	if err != nil {

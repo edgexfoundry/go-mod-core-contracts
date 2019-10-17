@@ -16,19 +16,13 @@ package models
 
 import "encoding/json"
 
-/*
- * This file is the model for Put commands in EdgeX
- *
- * Put Struct
- */
+// Put models a put command in EdgeX
 type Put struct {
 	Action         `yaml:",inline"`
 	ParameterNames []string `json:"parameterNames,omitempty" yaml:"parameterNames,omitempty"`
 }
 
-/*
- * To String function for Put struct
- */
+// String returns a JSON encoded string representation of the model
 func (p Put) String() string {
 	out, err := json.Marshal(p)
 	if err != nil {

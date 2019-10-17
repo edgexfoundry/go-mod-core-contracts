@@ -48,6 +48,7 @@ func TestReading_String(t *testing.T) {
 				",\"value\":\"" + TestValue + "\"" +
 				",\"binaryValue\":" + fmt.Sprint(string(binarySlice)) +
 				"}"},
+		{"empty reading to string", Reading{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

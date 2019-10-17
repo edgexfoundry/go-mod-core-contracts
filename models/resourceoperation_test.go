@@ -42,7 +42,7 @@ func TestResourceOperation_MarshalJSON(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.ro.MarshalJSON()
+			got, err := json.Marshal(tt.ro)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ResourceOperation.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -120,7 +120,7 @@ func TestResourceOperation_FieldsAutoPopulation_MarshalJSON(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			jsonBytes, err := tt.ro.MarshalJSON()
+			jsonBytes, err := json.Marshal(tt.ro)
 			if err != nil {
 				t.Errorf("ResourceOperation.MarshalJSON() error = %v", err)
 			}

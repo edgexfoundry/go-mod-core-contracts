@@ -43,9 +43,7 @@ type PropertyValue struct {
 	MediaType     string `json:"mediaType,omitempty"`
 }
 
-/*
- * To String function for DeviceService
- */
+// String returns a JSON encoded string representation of the model
 func (pv PropertyValue) String() string {
 	out, err := json.Marshal(pv)
 	if err != nil {
