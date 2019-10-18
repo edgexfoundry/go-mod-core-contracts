@@ -20,44 +20,16 @@ import (
 	"strings"
 )
 
-/*
- * Response for a Get or Put request to a service
- *
- *
- * Response Struct
- */
+// Response for a Get or Put request to a service
 type Response struct {
-	Code           string   `json:"code" yaml:"code,omitempty"`
-	Description    string   `json:"description" yaml:"description,omitempty"`
-	ExpectedValues []string `json:"expectedValues" yaml:"expectedValues,omitempty"`
+	Code           string   `json:"code,omitempty" yaml:"code,omitempty"`
+	Description    string   `json:"description,omitempty" yaml:"description,omitempty"`
+	ExpectedValues []string `json:"expectedValues,omitempty" yaml:"expectedValues,omitempty"`
 }
 
-// Custom marshalling to make empty strings null
-func (r Response) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Code           *string  `json:"code,omitempty"`
-		Description    *string  `json:"description,omitempty"`
-		ExpectedValues []string `json:"expectedValues,omitempty"`
-	}{
-		ExpectedValues: r.ExpectedValues,
-	}
-
-	// Empty strings are null
-	if r.Code != "" {
-		test.Code = &r.Code
-	}
-	if r.Description != "" {
-		test.Description = &r.Description
-	}
-
-	return json.Marshal(test)
-}
-
-/*
- * To String function for Response Struct
- */
-func (a Response) String() string {
-	out, err := json.Marshal(a)
+// String returns a JSON encoded string representation of the model
+func (r Response) String() string {
+	out, err := json.Marshal(r)
 	if err != nil {
 		return err.Error()
 	}
