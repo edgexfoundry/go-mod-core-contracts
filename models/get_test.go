@@ -15,35 +15,10 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
 var TestGet = Get{Action: TestAction}
-
-func TestGet_MarshalJSON(t *testing.T) {
-	var testGetBytes = []byte(TestGet.String())
-	tests := []struct {
-		name    string
-		g       Get
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshalling", TestGet, testGetBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.g.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Get.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Get.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestGet_String(t *testing.T) {
 	tests := []struct {
@@ -52,6 +27,7 @@ func TestGet_String(t *testing.T) {
 		want string
 	}{
 		{"get to string", TestGet, TestGet.Action.String()},
+		{"get to string, empty", Get{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
