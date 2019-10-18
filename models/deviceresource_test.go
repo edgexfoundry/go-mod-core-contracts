@@ -26,16 +26,13 @@ var TestDeviceResource = DeviceResource{Description: TestDeviceResourceDescripti
 
 func TestDeviceResource_MarshalJSON(t *testing.T) {
 	var emptyDeviceResource = DeviceResource{}
-	var resultTestBytes = []byte(TestDeviceResource.String())
-	var resultEmptyTestBytes = []byte(emptyDeviceResource.String())
 	tests := []struct {
 		name    string
 		do      DeviceResource
 		want    []byte
 		wantErr bool
 	}{
-		{"successful marshal", TestDeviceResource, resultTestBytes, false},
-		{"successful empty marshal", emptyDeviceResource, resultEmptyTestBytes, false},
+		{"successful empty marshal", emptyDeviceResource, []byte(testEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -45,7 +42,7 @@ func TestDeviceResource_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DeviceResource.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("DeviceResource.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
@@ -57,11 +54,19 @@ func TestDeviceResource_String(t *testing.T) {
 		do   DeviceResource
 		want string
 	}{
-		{"device object to string", TestDeviceResource,
+		{
+			"device object to string",
+			TestDeviceResource,
 			"{\"description\":\"" + TestDeviceResourceDescription + "\"" +
 				",\"name\":\"" + TestDeviceResourceName + "\"" +
 				",\"tag\":\"" + TestDeviceResourceTag + "\"" +
-				",\"properties\":" + TestProfileProperty.String() + "}"},
+				",\"properties\":" + TestProfileProperty.String() + "}",
+		},
+		{
+			"empty device to string",
+			DeviceResource{},
+			testEmptyJSON,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
