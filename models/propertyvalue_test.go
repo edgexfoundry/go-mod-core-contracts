@@ -15,7 +15,6 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -34,34 +33,6 @@ var TestPVAssertion = "0"
 var TestPVPrecision = "1"
 var TestPVFloatEncoding = Base64Encoding
 var TestPropertyValue = PropertyValue{Type: TestPVType, ReadWrite: TestPVReadWrite, Minimum: TestPVMinimum, Maximum: TestPVMaximum, DefaultValue: TestPVDefaultValue, Size: TestPVSize, Mask: TestPVMask, Shift: TestPVShift, Scale: TestPVScale, Offset: TestPVOffset, Base: TestPVBase, Assertion: TestPVAssertion, Precision: TestPVPrecision, FloatEncoding: TestPVFloatEncoding, MediaType: TestMediaType}
-
-func TestPropertyValue_MarshalJSON(t *testing.T) {
-	var emptyPropertyValue = PropertyValue{}
-	var resultTestBytes = []byte(TestPropertyValue.String())
-	var emptyTestBytes = []byte(emptyPropertyValue.String())
-
-	tests := []struct {
-		name    string
-		pv      PropertyValue
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestPropertyValue, resultTestBytes, false},
-		{"successful empty marshal", emptyPropertyValue, emptyTestBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.pv.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("PropertyValue.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("PropertyValue.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestPropertyValue_String(t *testing.T) {
 	tests := []struct {
@@ -86,6 +57,7 @@ func TestPropertyValue_String(t *testing.T) {
 				",\"floatEncoding\":\"" + TestPVFloatEncoding + "\"" +
 				",\"mediaType\":" + "\"" + TestMediaType + "\"" +
 				"}"},
+		{"property value to string, empty", PropertyValue{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

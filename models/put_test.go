@@ -15,35 +15,11 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
 var TestPut = Put{Action: TestAction, ParameterNames: TestExpectedvalues}
-
-func TestPut_MarshalJSON(t *testing.T) {
-	var testPutBytes = []byte(TestPut.String())
-	tests := []struct {
-		name    string
-		p       Put
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshalling", TestPut, testPutBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.p.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Put.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Put.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+var TestPutEmpty = Put{}
 
 func TestPut_String(t *testing.T) {
 	tests := []struct {
@@ -58,6 +34,7 @@ func TestPut_String(t *testing.T) {
 				"\",\"expectedValues\":[\"" + testExpectedvalue1 +
 				"\",\"" + testExpectedvalue2 +
 				"\"]}],\"parameterNames\":[\"" + testExpectedvalue1 + "\",\"" + testExpectedvalue2 + "\"]}"},
+		{"put to string, empty", TestPutEmpty, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

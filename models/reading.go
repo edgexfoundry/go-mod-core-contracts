@@ -18,62 +18,18 @@ import (
 	"encoding/json"
 )
 
-/*
- * This file is for the Reading model in EdgeX
- * Holds data that was gathered from a device
- *
- *
- * Struct for the Reading object in EdgeX
- */
-
+// Reading contains data that was gathered from a device.
 type Reading struct {
-	Id          string `json:"id" codec:"id,omitempty"`
-	Pushed      int64  `json:"pushed" codec:"pushed,omitempty"`   // When the data was pushed out of EdgeX (0 - not pushed yet)
-	Created     int64  `json:"created" codec:"created,omitempty"` // When the reading was created
-	Origin      int64  `json:"origin" codec:"origin,omitempty"`
-	Modified    int64  `json:"modified" codec:"modified,omitempty"`
-	Device      string `json:"device" codec:"device,omitempty"`
-	Name        string `json:"name" codec:"name,omitempty"`
-	Value       string `json:"value"  codec:"value,omitempty"`            // Device sensor data value
-	BinaryValue []byte `json:"binaryValue" codec:"binaryValue,omitempty"` // Binary data payload
+	Id          string `json:"id,omitempty" codec:"id,omitempty"`
+	Pushed      int64  `json:"pushed,omitempty" codec:"pushed,omitempty"`   // When the data was pushed out of EdgeX (0 - not pushed yet)
+	Created     int64  `json:"created,omitempty" codec:"created,omitempty"` // When the reading was created
+	Origin      int64  `json:"origin,omitempty" codec:"origin,omitempty"`
+	Modified    int64  `json:"modified,omitempty" codec:"modified,omitempty"`
+	Device      string `json:"device,omitempty" codec:"device,omitempty"`
+	Name        string `json:"name,omitempty" codec:"name,omitempty"`
+	Value       string `json:"value,omitempty"  codec:"value,omitempty"`            // Device sensor data value
+	BinaryValue []byte `json:"binaryValue,omitempty" codec:"binaryValue,omitempty"` // Binary data payload
 	isValidated bool   // internal member used for validation check
-}
-
-// Custom marshaling to make empty strings null
-func (r Reading) MarshalJSON() ([]byte, error) {
-	test := struct {
-		Id          *string `json:"id,omitempty"`
-		Pushed      int64   `json:"pushed,omitempty"`  // When the data was pushed out of EdgeX (0 - not pushed yet)
-		Created     int64   `json:"created,omitempty"` // When the reading was created
-		Origin      int64   `json:"origin,omitempty"`
-		Modified    int64   `json:"modified,omitempty"`
-		Device      *string `json:"device,omitempty"`
-		Name        *string `json:"name,omitempty"`
-		Value       *string `json:"value,omitempty"`       // Device sensor data value
-		BinaryValue []byte  `json:"binaryValue,omitempty"` // Binary data payload
-	}{
-		Pushed:      r.Pushed,
-		Created:     r.Created,
-		Origin:      r.Origin,
-		Modified:    r.Modified,
-		BinaryValue: r.BinaryValue,
-	}
-
-	// Empty strings are null
-	if r.Id != "" {
-		test.Id = &r.Id
-	}
-	if r.Device != "" {
-		test.Device = &r.Device
-	}
-	if r.Name != "" {
-		test.Name = &r.Name
-	}
-	if r.Value != "" {
-		test.Value = &r.Value
-	}
-
-	return json.Marshal(test)
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the Reading type
@@ -133,9 +89,7 @@ func (r Reading) Validate() (bool, error) {
 	return true, nil
 }
 
-/*
- * To String function for Reading Struct
- */
+// String returns a JSON encoded string representation of the model
 func (r Reading) String() string {
 	out, err := json.Marshal(r)
 	if err != nil {
