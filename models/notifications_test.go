@@ -27,16 +27,13 @@ var TestNotification = Notification{Timestamps: Timestamps{Created: 123, Modifie
 	Severity: NotificationsSeverity("CRITICAL"), Slug: "test slug", Status: NotificationsStatus("NEW"), ContentType: "text/plain"}
 
 func TestNotification_MarshalJSON(t *testing.T) {
-	var testEmptyNotifBytes = []byte(TestEmptyNotification.String())
-	var testNotifBytes = []byte(TestNotification.String())
 	tests := []struct {
 		name         string
 		notification *Notification
 		want         []byte
 		wantErr      bool
 	}{
-		{"test marshal of empty notification", &TestEmptyNotification, testEmptyNotifBytes, false},
-		{"test marshal of notification", &TestNotification, testNotifBytes, false},
+		{"test marshal of empty notification", &TestEmptyNotification, []byte(testEmptyJSON), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -59,7 +56,7 @@ func TestNotification_MarshalJSON(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Notification.MarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("Notification.MarshalJSON() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}
@@ -71,7 +68,7 @@ func TestNotification_String(t *testing.T) {
 		notification *Notification
 		want         string
 	}{
-		{"test empty notification to string", &TestEmptyNotification, "{\"id\":null}"},
+		{"test empty notification to string", &TestEmptyNotification, testEmptyJSON},
 		{"test notification to string", &TestNotification, "{\"created\":123,\"modified\":123,\"id\":\"" + TestNotificationID + "\",\"slug\":\"test slug\",\"sender\":\"test sender\",\"category\":\"SECURITY\",\"severity\":\"CRITICAL\",\"content\":\"test content\",\"description\":\"test description\",\"status\":\"NEW\",\"labels\":[\"label1\",\"labe2\"],\"contenttype\":\"text/plain\"}"},
 	}
 	for _, tt := range tests {

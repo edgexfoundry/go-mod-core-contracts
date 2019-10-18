@@ -19,6 +19,25 @@ import "testing"
 var testInterval = Interval{Name: "Test Interval", Timestamps: testTimestamps, Start: "20180101T000000",
 	End: "20200101T000000", Frequency: "P1D"}
 
+var testIntervalEmpty = Interval{}
+
+func TestInterval_String(t *testing.T) {
+	tests := []struct {
+		name     string
+		interval Interval
+		want     string
+	}{
+		{"empty interval", testIntervalEmpty, testEmptyJSON},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.interval.String(); got != tt.want {
+				t.Errorf("Interval.String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestIntervalValidation(t *testing.T) {
 	valid := testInterval
 
