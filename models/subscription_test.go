@@ -16,7 +16,6 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -25,41 +24,14 @@ var TestSubscription = Subscription{Timestamps: testTimestamps, Slug: "test slug
 	SubscribedCategories: []NotificationsCategory{NotificationsCategory(Swhealth)}, SubscribedLabels: []string{"test label"},
 	Channels: []Channel{TestEChannel, TestRChannel}}
 
-func TestSubscription_MarshalJSON(t *testing.T) {
-	var testEmptyBytes = []byte(TestEmptySubscription.String())
-	var testSubBytes = []byte(TestSubscription.String())
-
-	tests := []struct {
-		name    string
-		sub     *Subscription
-		want    []byte
-		wantErr bool
-	}{
-		{"test empty subscription", &TestEmptySubscription, testEmptyBytes, false},
-		{"test subscription", &TestSubscription, testSubBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.sub.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Subscription.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Subscription.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestSubscription_String(t *testing.T) {
 	tests := []struct {
 		name string
 		sub  *Subscription
 		want string
 	}{
-		{"test string empty subscription", &TestEmptySubscription, "{\"id\":null}"},
-		{"test subscription", &TestSubscription, "{\"created\":123,\"modified\":123,\"origin\":123,\"id\":null,\"slug\":\"test slug\",\"receiver\":\"test receiver\",\"description\":\"test description\",\"subscribedCategories\":[\"SW_HEALTH\"],\"subscribedLabels\":[\"test label\"],\"channels\":[{\"type\":\"EMAIL\",\"mailAddresses\":[\"jpwhite_mn@yahoo.com\",\"james_white2@dell.com\"]},{\"type\":\"REST\",\"url\":\"http://www.someendpoint.com/notifications\"}]}"},
+		{"test string empty subscription", &TestEmptySubscription, testEmptyJSON},
+		{"test subscription", &TestSubscription, "{\"created\":123,\"modified\":123,\"origin\":123,\"slug\":\"test slug\",\"receiver\":\"test receiver\",\"description\":\"test description\",\"subscribedCategories\":[\"SW_HEALTH\"],\"subscribedLabels\":[\"test label\"],\"channels\":[{\"type\":\"EMAIL\",\"mailAddresses\":[\"jpwhite_mn@yahoo.com\",\"james_white2@dell.com\"]},{\"type\":\"REST\",\"url\":\"http://www.someendpoint.com/notifications\"}]}"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

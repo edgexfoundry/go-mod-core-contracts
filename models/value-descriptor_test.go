@@ -17,7 +17,6 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"strconv"
 	"strings"
 	"testing"
@@ -34,30 +33,6 @@ var TestFormatting = "%d"
 var TestVDLabels = []string{"temp", "room temp"}
 var TestVDFloatEncoding = ENotation
 var TestValueDescriptor = ValueDescriptor{Created: 123, Modified: 123, Origin: 123, Name: TestVDName, Description: TestVDDescription, Min: TestMin, Max: TestMax, DefaultValue: TestDefaultValue, Formatting: TestFormatting, Labels: TestVDLabels, UomLabel: TestUoMLabel, MediaType: TestMediaType, FloatEncoding: TestVDFloatEncoding}
-
-func TestValueDescriptor_MarshalJSON(t *testing.T) {
-	var resultTestVDBytes = []byte(TestValueDescriptor.String())
-	tests := []struct {
-		name    string
-		v       ValueDescriptor
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestValueDescriptor, resultTestVDBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.v.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ValueDescriptor.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ValueDescriptor.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestValueDescriptor_String(t *testing.T) {
 	var labelSlice, _ = json.Marshal(TestValueDescriptor.Labels)
@@ -81,6 +56,7 @@ func TestValueDescriptor_String(t *testing.T) {
 				",\"mediaType\":\"" + TestValueDescriptor.MediaType + "\"" +
 				",\"floatEncoding\":\"" + TestVDFloatEncoding + "\"" +
 				"}"},
+		{"value descriptor to string, empty", ValueDescriptor{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
