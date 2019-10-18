@@ -19,7 +19,6 @@ import (
 )
 
 var TestGet = Get{Action: TestAction}
-var TestGetEmpty = Get{}
 
 func TestGet_String(t *testing.T) {
 	tests := []struct {
@@ -28,7 +27,7 @@ func TestGet_String(t *testing.T) {
 		want string
 	}{
 		{"get to string", TestGet, TestGet.Action.String()},
-		{"get to string, empty", TestGetEmpty, testEmptyJSON},
+		{"get to string, empty", Get{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

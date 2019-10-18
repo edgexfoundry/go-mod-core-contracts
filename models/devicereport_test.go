@@ -42,6 +42,7 @@ func TestDeviceReport_String(t *testing.T) {
 				",\"action\":\"" + TestIntervalaction + "\"" +
 				",\"expected\":" + fmt.Sprint(string(expectedlSlice)) +
 				"}"},
+		{"device report to string, empty", DeviceReport{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -38,6 +38,7 @@ func TestEvent_String(t *testing.T) {
 				",\"origin\":" + strconv.FormatInt(TestEvent.Origin, 10) +
 				",\"readings\":[" + TestReading.String() + "]" +
 				"}"},
+		{"event to string, empty", Event{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
