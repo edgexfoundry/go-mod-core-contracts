@@ -24,34 +24,6 @@ import (
 
 var TestEvent = Event{Pushed: 123, Created: 123, Device: TestDeviceName, Origin: 123, Modified: 123, Readings: []Reading{TestReading}}
 
-func TestEvent_MarshalJSON(t *testing.T) {
-	var emptyEvent = Event{}
-	var resultTestBytes = []byte(TestEvent.String())
-	var resultEmptyTestBytes = []byte(emptyEvent.String())
-
-	tests := []struct {
-		name    string
-		e       Event
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestEvent, resultTestBytes, false},
-		{"successful empty marshal", emptyEvent, resultEmptyTestBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.e.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Event.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Event.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestEvent_String(t *testing.T) {
 	tests := []struct {
 		name string
@@ -66,6 +38,7 @@ func TestEvent_String(t *testing.T) {
 				",\"origin\":" + strconv.FormatInt(TestEvent.Origin, 10) +
 				",\"readings\":[" + TestReading.String() + "]" +
 				"}"},
+		{"event to string, empty", Event{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

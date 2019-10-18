@@ -17,7 +17,6 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"strconv"
 	"testing"
 )
@@ -26,34 +25,6 @@ var TestIntervalaction = "Test Interval Action"
 var TestReportName = "Test Report.NAME"
 var TestReportExpected = []string{"vD1", "vD2"}
 var TestDeviceReport = DeviceReport{Timestamps: testTimestamps, Name: TestReportName, Device: TestDeviceName, Action: TestIntervalaction, Expected: TestReportExpected}
-
-func TestDeviceReport_MarshalJSON(t *testing.T) {
-	var emptyDeviceReport = DeviceReport{}
-	var resultTestBytes = []byte(TestDeviceReport.String())
-	var resultEmptyTestBytes = []byte(emptyDeviceReport.String())
-
-	tests := []struct {
-		name    string
-		dp      DeviceReport
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestDeviceReport, resultTestBytes, false},
-		{"successful empty marshal", emptyDeviceReport, resultEmptyTestBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.dp.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("DeviceReport.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DeviceReport.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestDeviceReport_String(t *testing.T) {
 	var expectedlSlice, _ = json.Marshal(TestReportExpected)
@@ -66,12 +37,12 @@ func TestDeviceReport_String(t *testing.T) {
 			"{\"created\":" + strconv.FormatInt(testTimestamps.Created, 10) +
 				",\"modified\":" + strconv.FormatInt(testTimestamps.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(testTimestamps.Origin, 10) +
-				",\"id\":\"\"" +
 				",\"name\":\"" + TestReportName + "\"" +
 				",\"device\":\"" + TestDeviceName + "\"" +
 				",\"action\":\"" + TestIntervalaction + "\"" +
 				",\"expected\":" + fmt.Sprint(string(expectedlSlice)) +
 				"}"},
+		{"device report to string, empty", DeviceReport{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
