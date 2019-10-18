@@ -59,7 +59,6 @@ func (ro ResourceOperation) MarshalJSON() ([]byte, error) {
 	}
 
 	if ro.DeviceResource != "" {
-		test.DeviceResource = ro.DeviceResource
 		test.Object = ro.DeviceResource
 	} else if ro.Object != "" {
 		test.Object = ro.Object
@@ -67,10 +66,8 @@ func (ro ResourceOperation) MarshalJSON() ([]byte, error) {
 	}
 
 	if ro.DeviceCommand != "" {
-		test.DeviceCommand = ro.DeviceCommand
 		test.Resource = ro.DeviceCommand
 	} else if ro.Resource != "" {
-		test.Resource = ro.Resource
 		test.DeviceCommand = ro.Resource
 	}
 

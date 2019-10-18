@@ -57,6 +57,7 @@ func TestPropertyValue_String(t *testing.T) {
 				",\"floatEncoding\":\"" + TestPVFloatEncoding + "\"" +
 				",\"mediaType\":" + "\"" + TestMediaType + "\"" +
 				"}"},
+		{"property value to string, empty", PropertyValue{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -31,6 +31,7 @@ func TestProfileResource_String(t *testing.T) {
 			"{\"name\":\"" + TestProfileResourceName + "\"" +
 				",\"get\":[" + TestResourceOperation.String() +
 				"],\"set\":[" + TestResourceOperation.String() + "]}"},
+		{"profile resource to string, empty", ProfileResource{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
