@@ -15,39 +15,11 @@
 package models
 
 import (
-	"reflect"
 	"testing"
 )
 
 var TestProfileResourceName = "test profile resource name"
 var TestProfileResource = ProfileResource{Name: TestProfileResourceName, Get: []ResourceOperation{TestResourceOperation}, Set: []ResourceOperation{TestResourceOperation}}
-
-func TestProfileResource_MarshalJSON(t *testing.T) {
-	var emptyProfileResource = ProfileResource{}
-	var resultTestBytes = []byte(TestProfileResource.String())
-	var emptyTestBytes = []byte(emptyProfileResource.String())
-	tests := []struct {
-		name    string
-		pr      ProfileResource
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestProfileResource, resultTestBytes, false},
-		{"successful empty marshal", emptyProfileResource, emptyTestBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.pr.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ProfileResource.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ProfileResource.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestProfileResource_String(t *testing.T) {
 	tests := []struct {
@@ -59,6 +31,7 @@ func TestProfileResource_String(t *testing.T) {
 			"{\"name\":\"" + TestProfileResourceName + "\"" +
 				",\"get\":[" + TestResourceOperation.String() +
 				"],\"set\":[" + TestResourceOperation.String() + "]}"},
+		{"profile resource to string, empty", ProfileResource{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

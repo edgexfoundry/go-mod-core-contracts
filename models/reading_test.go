@@ -30,34 +30,6 @@ var TestValue = "45"
 var TestBinaryValue = []byte{0xbf}
 var TestReading = Reading{Id: TestId, Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: TestDeviceName, Name: TestValueDescriptorName, Value: TestValue, BinaryValue: TestBinaryValue}
 
-func TestReading_MarshalJSON(t *testing.T) {
-	var emptyReading = Reading{}
-	var resultTestBytes = []byte(TestReading.String())
-	var resultEmptyTestBytes = []byte(emptyReading.String())
-
-	tests := []struct {
-		name    string
-		r       Reading
-		want    []byte
-		wantErr bool
-	}{
-		{"successful marshal", TestReading, resultTestBytes, false},
-		{"successful empty marshal", emptyReading, resultEmptyTestBytes, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.r.MarshalJSON()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Reading.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Reading.MarshalJSON() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestReading_String(t *testing.T) {
 	var binarySlice, _ = json.Marshal(TestReading.BinaryValue)
 	tests := []struct {
@@ -76,6 +48,7 @@ func TestReading_String(t *testing.T) {
 				",\"value\":\"" + TestValue + "\"" +
 				",\"binaryValue\":" + fmt.Sprint(string(binarySlice)) +
 				"}"},
+		{"empty reading to string", Reading{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
