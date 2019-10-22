@@ -26,17 +26,15 @@ import (
  * Operation struct
  */
 type Operation struct {
-	Action     string   `json:"action,omitempty"`
-	Services   []string `json:"services,omitempty"`
-	Parameters []string `json:"parameters,omitempty"`
+	Action   string   `bson:"action" json:"action,omitempty"`
+	Services []string `bson:"services,omitempty" json:"services,omitempty"`
 }
 
 //Implements unmarshaling of JSON string to Operation type instance
 func (o *Operation) UnmarshalJSON(data []byte) error {
 	test := struct {
-		Action     *string  `json:"action"`
-		Services   []string `json:"services"`
-		Parameters []string `json:"parameters,omitempty"`
+		Action   *string  `json:"action"`
+		Services []string `json:"services"`
 	}{}
 
 	//Verify that incoming string will unmarshal successfully
@@ -48,8 +46,11 @@ func (o *Operation) UnmarshalJSON(data []byte) error {
 	if test.Action != nil {
 		o.Action = *test.Action
 	}
-	o.Services = test.Services
-	o.Parameters = test.Parameters
+
+	o.Services = []string{}
+	if len(test.Services) > 0 {
+		o.Services = test.Services
+	}
 	return nil
 }
 
