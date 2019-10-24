@@ -71,8 +71,7 @@ func NewClient(owningServiceName string, isRemote bool, logTarget string, logLev
 		logLevel = models.InfoLog
 	}
 
-	lc := new(edgeXLogger)
-	lc.initLogger(owningServiceName, isRemote, logTarget, logLevel)
+	lc := newClient(owningServiceName, isRemote, logTarget, logLevel)
 
 	if logTarget == "" {
 		lc.Error("logTarget cannot be blank, using stdout only")
@@ -87,8 +86,42 @@ func NewClientStdOut(owningServiceName string, isRemote bool, logLevel string) L
 		logLevel = models.InfoLog
 	}
 
-	lc := new(edgeXLogger)
-	lc.initLogger(owningServiceName, isRemote, "", logLevel)
+	lc := newClient(owningServiceName, isRemote, "", logLevel)
+
+	return lc
+}
+
+// newClient is the implementation of the logic required for the factory functions
+func newClient(owningServiceName string, isRemote bool, logTarget string, logLevel string) edgeXLogger {
+	// Set up logging client
+	lc := edgeXLogger{
+		owningServiceName: owningServiceName,
+		remoteEnabled:     isRemote,
+		logTarget:         logTarget,
+		logLevel:          &logLevel,
+	}
+
+	if !lc.remoteEnabled && logTarget != "" { // file based logging
+		verifyLogDirectory(lc.logTarget)
+
+		w, err := newFileWriter(lc.logTarget)
+		if err != nil {
+			stdlog.Fatal(err.Error())
+		}
+		lc.rootLogger = log.NewLogfmtLogger(io.MultiWriter(os.Stdout, log.NewSyncWriter(w)))
+	} else { // HTTP logging OR invalid log target
+		lc.rootLogger = log.NewLogfmtLogger(os.Stdout)
+	}
+
+	lc.rootLogger = log.WithPrefix(lc.rootLogger, "ts", log.DefaultTimestampUTC,
+		"app", owningServiceName, "source", log.Caller(5))
+
+	// Set up the loggers
+	lc.levelLoggers = map[string]log.Logger{}
+
+	for _, logLevel := range logLevels() {
+		lc.levelLoggers[logLevel] = log.WithPrefix(lc.rootLogger, "level", logLevel)
+	}
 
 	return lc
 }
@@ -128,35 +161,6 @@ func newFileWriter(logTarget string) (io.Writer, error) {
 	fileWriter := fileWriter{fileName: logTarget}
 
 	return &fileWriter, nil
-}
-
-func (lc *edgeXLogger) initLogger(owningServiceName string, isRemote bool, logTarget, logLevel string) {
-	lc.owningServiceName = owningServiceName
-	lc.remoteEnabled = isRemote
-	lc.logTarget = logTarget
-	lc.logLevel = &logLevel
-
-	if !lc.remoteEnabled && logTarget != "" { // file based logging
-		verifyLogDirectory(lc.logTarget)
-
-		w, err := newFileWriter(lc.logTarget)
-		if err != nil {
-			stdlog.Fatal(err.Error())
-		}
-		lc.rootLogger = log.NewLogfmtLogger(io.MultiWriter(os.Stdout, log.NewSyncWriter(w)))
-	} else { // HTTP logging OR invalid log target
-		lc.rootLogger = log.NewLogfmtLogger(os.Stdout)
-	}
-
-	lc.rootLogger = log.WithPrefix(lc.rootLogger, "ts", log.DefaultTimestampUTC,
-		"app", owningServiceName, "source", log.Caller(5))
-
-	// Set up the loggers
-	lc.levelLoggers = map[string]log.Logger{}
-
-	for _, logLevel := range logLevels() {
-		lc.levelLoggers[logLevel] = log.WithPrefix(lc.rootLogger, "level", logLevel)
-	}
 }
 
 func (lc edgeXLogger) log(logLevel string, msg string, args ...interface{}) {
