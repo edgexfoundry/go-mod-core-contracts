@@ -67,10 +67,6 @@ type fileWriter struct {
 
 // NewClient creates an instance of LoggingClient
 func NewClient(owningServiceName string, isRemote bool, logTarget string, logLevel string) LoggingClient {
-	if !IsValidLogLevel(logLevel) {
-		logLevel = models.InfoLog
-	}
-
 	lc := newClient(owningServiceName, isRemote, logTarget, logLevel)
 
 	if logTarget == "" {
@@ -82,17 +78,15 @@ func NewClient(owningServiceName string, isRemote bool, logTarget string, logLev
 
 // NewClientStdOut creates an instance of LoggingClient that expects to log to stdout and does not check logTarget
 func NewClientStdOut(owningServiceName string, isRemote bool, logLevel string) LoggingClient {
-	if !IsValidLogLevel(logLevel) {
-		logLevel = models.InfoLog
-	}
-
-	lc := newClient(owningServiceName, isRemote, "", logLevel)
-
-	return lc
+	return newClient(owningServiceName, isRemote, "", logLevel)
 }
 
 // newClient is the implementation of the logic required for the factory functions
 func newClient(owningServiceName string, isRemote bool, logTarget string, logLevel string) edgeXLogger {
+	if !IsValidLogLevel(logLevel) {
+		logLevel = models.InfoLog
+	}
+
 	// Set up logging client
 	lc := edgeXLogger{
 		owningServiceName: owningServiceName,
