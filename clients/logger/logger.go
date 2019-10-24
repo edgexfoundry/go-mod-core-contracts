@@ -67,6 +67,17 @@ type fileWriter struct {
 
 // NewClient creates an instance of LoggingClient
 func NewClient(owningServiceName string, isRemote bool, logTarget string, logLevel string) LoggingClient {
+	lc := NewClientStdOut(owningServiceName, isRemote, logTarget, logLevel)
+
+	if logTarget == "" {
+		lc.Error("logTarget cannot be blank, using stdout only")
+	}
+
+	return lc
+}
+
+// NewClientStdOut creates an instance of LoggingClient that expects to log to stdout and does not check logTarget
+func NewClientStdOut(owningServiceName string, isRemote bool, logTarget string, logLevel string) LoggingClient {
 	if !IsValidLogLevel(logLevel) {
 		logLevel = models.InfoLog
 	}
@@ -99,10 +110,6 @@ func NewClient(owningServiceName string, isRemote bool, logTarget string, logLev
 
 	for _, logLevel := range logLevels() {
 		lc.levelLoggers[logLevel] = log.WithPrefix(lc.rootLogger, "level", logLevel)
-	}
-
-	if logTarget == "" {
-		lc.Error("logTarget cannot be blank, using stdout only")
 	}
 
 	return lc
