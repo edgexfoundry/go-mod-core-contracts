@@ -54,17 +54,21 @@ const (
 
 // Constants related to how services identify themselves in the Service Registry
 const (
-	ServiceKeyPrefix                = "edgex-"
-	ConfigSeedServiceKey            = "edgex-config-seed"
-	CoreCommandServiceKey           = "edgex-core-command"
-	CoreDataServiceKey              = "edgex-core-data"
-	CoreMetaDataServiceKey          = "edgex-core-metadata"
-	ExportClientServiceKey          = "edgex-export-client"
-	ExportDistroServiceKey          = "edgex-export-distro"
-	SupportLoggingServiceKey        = "edgex-support-logging"
-	SupportNotificationsServiceKey  = "edgex-support-notifications"
-	SystemManagementAgentServiceKey = "edgex-sys-mgmt-agent"
-	SupportSchedulerServiceKey      = "edgex-support-scheduler"
+	ServiceKeyPrefix                    = "edgex-"
+	ConfigSeedServiceKey                = "edgex-config-seed"
+	CoreCommandServiceKey               = "edgex-core-command"
+	CoreDataServiceKey                  = "edgex-core-data"
+	CoreMetaDataServiceKey              = "edgex-core-metadata"
+	ExportClientServiceKey              = "edgex-export-client"
+	ExportDistroServiceKey              = "edgex-export-distro"
+	SupportLoggingServiceKey            = "edgex-support-logging"
+	SupportNotificationsServiceKey      = "edgex-support-notifications"
+	SystemManagementAgentServiceKey     = "edgex-sys-mgmt-agent"
+	SupportSchedulerServiceKey          = "edgex-support-scheduler"
+	SecuritySecretStoreSetupServiceKey  = "edgex-security-secretstore-setup"
+	SecuritySecretsSetupServiceKey      = "edgex-security-secrets-setup"
+	SecurityProxySetupServiceKey        = "edgex-security-proxy-setup"
+	SecurityFileTokenProviderServiceKey = "edgex-security-file-token-provider"
 )
 
 // Constants related to the possible content types supported by the APIs
