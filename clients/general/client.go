@@ -45,6 +45,8 @@ func NewGeneralClient(params types.EndpointParams, m clients.Endpointer) General
 }
 
 func (gc *generalRestClient) init(params types.EndpointParams) {
+	gc.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -54,8 +56,6 @@ func (gc *generalRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(gc.endpoint.Monitor(params))
-	} else {
-		gc.url = params.Url
 	}
 }
 

@@ -79,6 +79,8 @@ func NewEventClient(params types.EndpointParams, m clients.Endpointer) EventClie
 }
 
 func (e *eventRestClient) init(params types.EndpointParams) {
+	e.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -88,8 +90,6 @@ func (e *eventRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(e.endpoint.Monitor(params))
-	} else {
-		e.url = params.Url
 	}
 }
 

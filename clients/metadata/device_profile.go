@@ -62,6 +62,8 @@ func NewDeviceProfileClient(params types.EndpointParams, m clients.Endpointer) D
 }
 
 func (d *deviceProfileRestClient) init(params types.EndpointParams) {
+	d.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -71,8 +73,6 @@ func (d *deviceProfileRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(d.endpoint.Monitor(params))
-	} else {
-		d.url = params.Url
 	}
 }
 

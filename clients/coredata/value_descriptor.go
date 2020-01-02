@@ -66,6 +66,8 @@ func NewValueDescriptorClient(params types.EndpointParams, m clients.Endpointer)
 }
 
 func (d *valueDescriptorRestClient) init(params types.EndpointParams) {
+	d.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -75,8 +77,6 @@ func (d *valueDescriptorRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(d.endpoint.Monitor(params))
-	} else {
-		d.url = params.Url
 	}
 }
 

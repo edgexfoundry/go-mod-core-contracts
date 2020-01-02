@@ -56,6 +56,8 @@ func NewCommandClient(params types.EndpointParams, m clients.Endpointer) Command
 }
 
 func (c *commandRestClient) init(params types.EndpointParams) {
+	c.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -65,8 +67,6 @@ func (c *commandRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(c.endpoint.Monitor(params))
-	} else {
-		c.url = params.Url
 	}
 }
 

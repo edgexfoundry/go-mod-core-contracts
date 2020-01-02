@@ -58,6 +58,8 @@ func NewIntervalActionClient(params types.EndpointParams, m clients.Endpointer) 
 }
 
 func (s *intervalActionRestClient) init(params types.EndpointParams) {
+	s.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -67,8 +69,6 @@ func (s *intervalActionRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(s.endpoint.Monitor(params))
-	} else {
-		s.url = params.Url
 	}
 }
 

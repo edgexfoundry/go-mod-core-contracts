@@ -84,6 +84,8 @@ func NewNotificationsClient(params types.EndpointParams, m clients.Endpointer) N
 }
 
 func (n *notificationsRestClient) init(params types.EndpointParams) {
+	n.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -93,8 +95,6 @@ func (n *notificationsRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(n.endpoint.Monitor(params))
-	} else {
-		n.url = params.Url
 	}
 }
 

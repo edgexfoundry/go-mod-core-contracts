@@ -56,6 +56,8 @@ func NewAddressableClient(params types.EndpointParams, m clients.Endpointer) Add
 }
 
 func (a *addressableRestClient) init(params types.EndpointParams) {
+	a.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -65,8 +67,6 @@ func (a *addressableRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(a.endpoint.Monitor(params))
-	} else {
-		a.url = params.Url
 	}
 }
 

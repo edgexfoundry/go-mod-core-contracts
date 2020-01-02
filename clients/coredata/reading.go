@@ -69,6 +69,8 @@ func NewReadingClient(params types.EndpointParams, m clients.Endpointer) Reading
 }
 
 func (r *readingRestClient) init(params types.EndpointParams) {
+	r.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -78,8 +80,6 @@ func (r *readingRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(r.endpoint.Monitor(params))
-	} else {
-		r.url = params.Url
 	}
 }
 

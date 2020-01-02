@@ -64,6 +64,8 @@ func NewProvisionWatcherClient(params types.EndpointParams, m clients.Endpointer
 }
 
 func (pw *provisionWatcherRestClient) init(params types.EndpointParams) {
+	pw.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -73,8 +75,6 @@ func (pw *provisionWatcherRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(pw.endpoint.Monitor(params))
-	} else {
-		pw.url = params.Url
 	}
 }
 

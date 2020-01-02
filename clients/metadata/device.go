@@ -86,6 +86,8 @@ func NewDeviceClient(params types.EndpointParams, m clients.Endpointer) DeviceCl
 }
 
 func (d *deviceRestClient) init(params types.EndpointParams) {
+	d.url = params.Url
+
 	if params.UseRegistry {
 		go func(ch chan string) {
 			for {
@@ -95,8 +97,6 @@ func (d *deviceRestClient) init(params types.EndpointParams) {
 				}
 			}
 		}(d.endpoint.Monitor(params))
-	} else {
-		d.url = params.Url
 	}
 }
 
