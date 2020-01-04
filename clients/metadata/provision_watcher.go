@@ -20,6 +20,7 @@ import (
 	"net/url"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
@@ -53,11 +54,11 @@ type ProvisionWatcherClient interface {
 
 type provisionWatcherRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // NewProvisionWatcherClient creates an instance of ProvisionWatcherClient
-func NewProvisionWatcherClient(params types.EndpointParams, m clients.Endpointer) ProvisionWatcherClient {
+func NewProvisionWatcherClient(params types.EndpointParams, m interfaces.Endpointer) ProvisionWatcherClient {
 	pw := provisionWatcherRestClient{endpoint: m}
 	pw.init(params)
 	return &pw

@@ -14,14 +14,62 @@
 
 package clients
 
-import "github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+import (
+	"errors"
+	"time"
 
-//Endpointer is the interface for types that need to implement or simulate integration
-//with a service discovery provider.
-type Endpointer interface {
-	//Monitor is responsible for looking up information about the service endpoint corresponding
-	//to the params.ServiceKey property. The name "Monitor" implies that this lookup will be done
-	//at a regular interval. Information about the service from the discovery provider should be
-	//used to construct a URL which will then be pushed to the returned channel.
-	Monitor(params types.EndpointParams) chan string
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+)
+
+type EndpointerClient struct {
+	url         string
+	initialized bool
+	endpoint    interfaces.Endpointer
+}
+
+var notYetInitialized = errors.New("client not yet initialized")
+
+// NewEndpointerClient returns a pointer to a EndpointerClient.
+// A pointer is used so that when using configuration from a registry, the URL can be updated asynchronously.
+func NewEndpointerClient(params types.EndpointParams, m interfaces.Endpointer) *EndpointerClient {
+	d := EndpointerClient{initialized: false, endpoint: m}
+	d.init(params)
+
+	return &d
+}
+
+// URL calls URL for timeout seconds. If a value is loaded in that time, it returns it.
+// Otherwise, it returns an error.
+func (e *EndpointerClient) URL(timeout int) (string, error) {
+	timer := time.After(time.Duration(timeout) * time.Second)
+	ticker := time.Tick(500 * time.Millisecond)
+	for {
+		select {
+		case <-timer:
+			return "", notYetInitialized
+		case <-ticker:
+			if e.initialized && len(e.url) != 0 {
+				return e.url, nil
+			}
+			// do not handle uninitialized case here, we need to keep trying
+		}
+	}
+}
+
+func (e *EndpointerClient) init(params types.EndpointParams) {
+	if params.UseRegistry {
+		go func(ch chan string) {
+			for {
+				select {
+				case url := <-ch:
+					e.url = url
+					e.initialized = true
+				}
+			}
+		}(e.endpoint.Monitor(params))
+	} else {
+		e.url = params.Url
+		e.initialized = true
+	}
 }

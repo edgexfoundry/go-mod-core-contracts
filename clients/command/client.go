@@ -21,6 +21,7 @@ import (
 	"context"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
@@ -38,11 +39,11 @@ type CommandClient interface {
 
 type commandRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // NewCommandClient creates an instance of CommandClient
-func NewCommandClient(params types.EndpointParams, m clients.Endpointer) CommandClient {
+func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) CommandClient {
 	c := commandRestClient{endpoint: m}
 	c.init(params)
 	return &c

@@ -23,6 +23,7 @@ import (
 	"net/url"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
@@ -45,11 +46,11 @@ type AddressableClient interface {
 
 type addressableRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // NewAddressableClient creates an instance of AddressableClient
-func NewAddressableClient(params types.EndpointParams, m clients.Endpointer) AddressableClient {
+func NewAddressableClient(params types.EndpointParams, m interfaces.Endpointer) AddressableClient {
 	a := addressableRestClient{endpoint: m}
 	a.init(params)
 	return &a

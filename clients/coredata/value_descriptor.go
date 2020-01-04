@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
@@ -56,10 +57,10 @@ type ValueDescriptorClient interface {
 
 type valueDescriptorRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
-func NewValueDescriptorClient(params types.EndpointParams, m clients.Endpointer) ValueDescriptorClient {
+func NewValueDescriptorClient(params types.EndpointParams, m interfaces.Endpointer) ValueDescriptorClient {
 	v := valueDescriptorRestClient{endpoint: m}
 	v.init(params)
 	return &v

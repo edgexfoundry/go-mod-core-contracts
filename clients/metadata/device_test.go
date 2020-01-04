@@ -20,7 +20,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
@@ -96,11 +95,12 @@ func TestNewDeviceClientWithConsul(t *testing.T) {
 		t.Error("dc is not of expected type")
 	}
 
-	time.Sleep(25 * time.Millisecond)
-	if len(r.url) == 0 {
+	url, err := r.endpointer.URL(10)
+
+	if err != nil {
 		t.Error("url was not initialized")
-	} else if r.url != deviceUrl {
-		t.Errorf("unexpected url value %s", r.url)
+	} else if url != deviceUrl {
+		t.Errorf("unexpected url value %s", url)
 	}
 }
 

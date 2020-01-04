@@ -20,6 +20,7 @@ import (
 	"net/url"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
@@ -51,11 +52,11 @@ type DeviceProfileClient interface {
 
 type deviceProfileRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // Return an instance of DeviceProfileClient
-func NewDeviceProfileClient(params types.EndpointParams, m clients.Endpointer) DeviceProfileClient {
+func NewDeviceProfileClient(params types.EndpointParams, m interfaces.Endpointer) DeviceProfileClient {
 	d := deviceProfileRestClient{endpoint: m}
 	d.init(params)
 	return &d

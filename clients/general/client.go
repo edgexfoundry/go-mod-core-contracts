@@ -22,6 +22,7 @@ import (
 	"context"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
@@ -34,11 +35,11 @@ type GeneralClient interface {
 
 type generalRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // NewGeneralClient creates an instance of GeneralClient
-func NewGeneralClient(params types.EndpointParams, m clients.Endpointer) GeneralClient {
+func NewGeneralClient(params types.EndpointParams, m interfaces.Endpointer) GeneralClient {
 	gc := generalRestClient{endpoint: m}
 	gc.init(params)
 	return &gc

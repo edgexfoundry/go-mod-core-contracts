@@ -17,10 +17,12 @@ package scheduler
 import (
 	"context"
 	"encoding/json"
+	"net/url"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
-	"net/url"
 )
 
 /*
@@ -47,11 +49,11 @@ type IntervalActionClient interface {
 
 type intervalActionRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // NewIntervalActionClient creates an instance of IntervalActionClient
-func NewIntervalActionClient(params types.EndpointParams, m clients.Endpointer) IntervalActionClient {
+func NewIntervalActionClient(params types.EndpointParams, m interfaces.Endpointer) IntervalActionClient {
 	s := intervalActionRestClient{endpoint: m}
 	s.init(params)
 	return &s

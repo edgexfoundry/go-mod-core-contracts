@@ -20,6 +20,7 @@ import (
 	"strconv"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
@@ -41,11 +42,11 @@ type DeviceServiceClient interface {
 
 type deviceServiceRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // NewDeviceServiceClient creates an instance of DeviceServiceClient
-func NewDeviceServiceClient(params types.EndpointParams, m clients.Endpointer) DeviceServiceClient {
+func NewDeviceServiceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceServiceClient {
 	s := deviceServiceRestClient{endpoint: m}
 	s.init(params)
 	return &s

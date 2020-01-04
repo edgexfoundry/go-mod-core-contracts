@@ -21,6 +21,7 @@ import (
 	"context"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
@@ -58,7 +59,7 @@ type NotificationsClient interface {
 // Type struct for REST-specific implementation of the NotificationsClient interface
 type notificationsRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // Notification defines the structure of data being sent.
@@ -77,7 +78,7 @@ type Notification struct {
 }
 
 // NewNotificationsClient creates an instance of NotificationsClient
-func NewNotificationsClient(params types.EndpointParams, m clients.Endpointer) NotificationsClient {
+func NewNotificationsClient(params types.EndpointParams, m interfaces.Endpointer) NotificationsClient {
 	n := notificationsRestClient{endpoint: m}
 	n.init(params)
 	return &n
