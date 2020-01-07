@@ -12,7 +12,7 @@
  * the License.
  *******************************************************************************/
 
-package common
+package client
 
 import (
 	"errors"
@@ -22,59 +22,47 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-type Client struct {
+type Consul struct {
 	url         string
 	timeout     int
 	initialized bool
-	endpoint    interfaces.Endpointer
 }
 
 var notYetInitialized = errors.New("client not yet initialized")
 
-// NewClient returns a pointer to a Client.
+// newConsul returns a pointer to a Consul.
 // A pointer is used so that when using configuration from a registry, the URL can be updated asynchronously.
-func NewClient(params types.EndpointParams, m interfaces.Endpointer, timeout int) *Client {
-	d := Client{
+func newConsul(params types.EndpointParams, m interfaces.Endpointer, timeout int) *Consul {
+	e := Consul{
 		timeout:     timeout,
 		initialized: false,
-		endpoint:    m,
 	}
-	d.init(params)
-
-	return &d
+	go func(ch chan string) {
+		for {
+			select {
+			case url := <-ch:
+				e.url = url
+				e.initialized = true
+			}
+		}
+	}(m.Monitor(params))
+	return &e
 }
 
 // URL calls URL for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
-func (e *Client) URL() (string, error) {
-	timer := time.After(time.Duration(e.timeout) * time.Second)
+func (c *Consul) URL() (string, error) {
+	timer := time.After(time.Duration(c.timeout) * time.Second)
 	ticker := time.Tick(500 * time.Millisecond)
 	for {
 		select {
 		case <-timer:
 			return "", notYetInitialized
 		case <-ticker:
-			if e.initialized && len(e.url) != 0 {
-				return e.url, nil
+			if c.initialized && len(c.url) != 0 {
+				return c.url, nil
 			}
 			// do not handle uninitialized case here, we need to keep trying
 		}
-	}
-}
-
-func (e *Client) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					e.url = url
-					e.initialized = true
-				}
-			}
-		}(e.endpoint.Monitor(params))
-	} else {
-		e.url = params.Url
-		e.initialized = true
 	}
 }
