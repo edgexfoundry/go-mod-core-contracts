@@ -81,7 +81,7 @@ type deviceRestClient struct {
 
 // NewDeviceClient creates an instance of DeviceClient
 func NewDeviceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceClient {
-	return &deviceRestClient{client: common.NewClient(params, m)}
+	return &deviceRestClient{client: common.NewClient(params, m, 10)}
 }
 
 // Helper method to request and decode a device
@@ -109,7 +109,7 @@ func (d *deviceRestClient) requestDeviceSlice(url string, ctx context.Context) (
 }
 
 func (d *deviceRestClient) CheckForDevice(token string, ctx context.Context) (models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return models.Device{}, err
 	}
@@ -118,7 +118,7 @@ func (d *deviceRestClient) CheckForDevice(token string, ctx context.Context) (mo
 }
 
 func (d *deviceRestClient) Device(id string, ctx context.Context) (models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return models.Device{}, err
 	}
@@ -127,7 +127,7 @@ func (d *deviceRestClient) Device(id string, ctx context.Context) (models.Device
 }
 
 func (d *deviceRestClient) Devices(ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func (d *deviceRestClient) Devices(ctx context.Context) ([]models.Device, error)
 }
 
 func (d *deviceRestClient) DeviceForName(name string, ctx context.Context) (models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return models.Device{}, err
 	}
@@ -145,7 +145,7 @@ func (d *deviceRestClient) DeviceForName(name string, ctx context.Context) (mode
 }
 
 func (d *deviceRestClient) DevicesByLabel(label string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +154,7 @@ func (d *deviceRestClient) DevicesByLabel(label string, ctx context.Context) ([]
 }
 
 func (d *deviceRestClient) DevicesForService(serviceId string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +163,7 @@ func (d *deviceRestClient) DevicesForService(serviceId string, ctx context.Conte
 }
 
 func (d *deviceRestClient) DevicesForServiceByName(serviceName string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +172,7 @@ func (d *deviceRestClient) DevicesForServiceByName(serviceName string, ctx conte
 }
 
 func (d *deviceRestClient) DevicesForProfile(profileId string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return nil, err
 	}
@@ -181,7 +181,7 @@ func (d *deviceRestClient) DevicesForProfile(profileId string, ctx context.Conte
 }
 
 func (d *deviceRestClient) DevicesForProfileByName(profileName string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +190,7 @@ func (d *deviceRestClient) DevicesForProfileByName(profileName string, ctx conte
 }
 
 func (d *deviceRestClient) Add(dev *models.Device, ctx context.Context) (string, error) {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return "", err
 	}
@@ -199,7 +199,7 @@ func (d *deviceRestClient) Add(dev *models.Device, ctx context.Context) (string,
 }
 
 func (d *deviceRestClient) Update(dev models.Device, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -208,7 +208,7 @@ func (d *deviceRestClient) Update(dev models.Device, ctx context.Context) error 
 }
 
 func (d *deviceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -218,7 +218,7 @@ func (d *deviceRestClient) UpdateLastConnected(id string, time int64, ctx contex
 }
 
 func (d *deviceRestClient) UpdateLastConnectedByName(name string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -229,7 +229,7 @@ func (d *deviceRestClient) UpdateLastConnectedByName(name string, time int64, ct
 }
 
 func (d *deviceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -239,7 +239,7 @@ func (d *deviceRestClient) UpdateLastReported(id string, time int64, ctx context
 }
 
 func (d *deviceRestClient) UpdateLastReportedByName(name string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -250,7 +250,7 @@ func (d *deviceRestClient) UpdateLastReportedByName(name string, time int64, ctx
 }
 
 func (d *deviceRestClient) UpdateOpState(id string, opState string, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -260,7 +260,7 @@ func (d *deviceRestClient) UpdateOpState(id string, opState string, ctx context.
 }
 
 func (d *deviceRestClient) UpdateOpStateByName(name string, opState string, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -270,7 +270,7 @@ func (d *deviceRestClient) UpdateOpStateByName(name string, opState string, ctx 
 }
 
 func (d *deviceRestClient) UpdateAdminState(id string, adminState string, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -280,7 +280,7 @@ func (d *deviceRestClient) UpdateAdminState(id string, adminState string, ctx co
 }
 
 func (d *deviceRestClient) UpdateAdminStateByName(name string, adminState string, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -290,7 +290,7 @@ func (d *deviceRestClient) UpdateAdminStateByName(name string, adminState string
 }
 
 func (d *deviceRestClient) Delete(id string, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}
@@ -299,7 +299,7 @@ func (d *deviceRestClient) Delete(id string, ctx context.Context) error {
 }
 
 func (d *deviceRestClient) DeleteByName(name string, ctx context.Context) error {
-	deviceURL, err := d.client.URL(10)
+	deviceURL, err := d.client.URL()
 	if err != nil {
 		return err
 	}

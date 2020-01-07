@@ -24,6 +24,7 @@ import (
 
 type Client struct {
 	url         string
+	timeout     int
 	initialized bool
 	endpoint    interfaces.Endpointer
 }
@@ -32,8 +33,12 @@ var notYetInitialized = errors.New("client not yet initialized")
 
 // NewClient returns a pointer to a Client.
 // A pointer is used so that when using configuration from a registry, the URL can be updated asynchronously.
-func NewClient(params types.EndpointParams, m interfaces.Endpointer) *Client {
-	d := Client{initialized: false, endpoint: m}
+func NewClient(params types.EndpointParams, m interfaces.Endpointer, timeout int) *Client {
+	d := Client{
+		timeout:     timeout,
+		initialized: false,
+		endpoint:    m,
+	}
 	d.init(params)
 
 	return &d
@@ -41,8 +46,8 @@ func NewClient(params types.EndpointParams, m interfaces.Endpointer) *Client {
 
 // URL calls URL for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
-func (e *Client) URL(timeout int) (string, error) {
-	timer := time.After(time.Duration(timeout) * time.Second)
+func (e *Client) URL() (string, error) {
+	timer := time.After(time.Duration(e.timeout) * time.Second)
 	ticker := time.Tick(500 * time.Millisecond)
 	for {
 		select {
