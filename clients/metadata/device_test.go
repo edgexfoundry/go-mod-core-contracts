@@ -95,7 +95,7 @@ func TestNewDeviceClientWithConsul(t *testing.T) {
 		t.Error("dc is not of expected type")
 	}
 
-	url, err := r.client.URL()
+	url, err := r.client.URLPrefix()
 
 	if err != nil {
 		t.Error("url was not initialized")

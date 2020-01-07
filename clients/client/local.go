@@ -29,6 +29,6 @@ func newLocal(params types.EndpointParams) *Client {
 	}
 }
 
-func (c *Client) URL() (string, error) {
+func (c *Client) URLPrefix() (string, error) {
 	return c.url, nil
 }

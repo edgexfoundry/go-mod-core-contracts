@@ -31,7 +31,7 @@ type Consul struct {
 var notYetInitialized = errors.New("client not yet initialized")
 
 // newConsul returns a pointer to a Consul.
-// A pointer is used so that when using configuration from a registry, the URL can be updated asynchronously.
+// A pointer is used so that when using configuration from a registry, the URLPrefix can be updated asynchronously.
 func newConsul(params types.EndpointParams, m interfaces.Endpointer, timeout int) *Consul {
 	e := Consul{
 		timeout:     timeout,
@@ -49,9 +49,13 @@ func newConsul(params types.EndpointParams, m interfaces.Endpointer, timeout int
 	return &e
 }
 
-// URL calls URL for timeout seconds. If a value is loaded in that time, it returns it.
+// URLPrefix waits for URL to be updated for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
-func (c *Consul) URL() (string, error) {
+func (c *Consul) URLPrefix() (string, error) {
+	if c.initialized {
+		return c.url, nil
+	}
+
 	timer := time.After(time.Duration(c.timeout) * time.Second)
 	ticker := time.Tick(500 * time.Millisecond)
 	for {

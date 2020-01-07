@@ -85,8 +85,13 @@ func NewDeviceClient(params types.EndpointParams, m interfaces.Endpointer) Devic
 }
 
 // Helper method to request and decode a device
-func (d *deviceRestClient) requestDevice(url string, ctx context.Context) (models.Device, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (d *deviceRestClient) requestDevice(urlSuffix string, ctx context.Context) (models.Device, error) {
+	urlPrefix, err := d.client.URLPrefix()
+	if err != nil {
+		return models.Device{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.Device{}, err
 	}
@@ -97,8 +102,13 @@ func (d *deviceRestClient) requestDevice(url string, ctx context.Context) (model
 }
 
 // Helper method to request and decode a device slice
-func (d *deviceRestClient) requestDeviceSlice(url string, ctx context.Context) ([]models.Device, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (d *deviceRestClient) requestDeviceSlice(urlSuffix string, ctx context.Context) ([]models.Device, error) {
+	urlPrefix, err := d.client.URLPrefix()
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return []models.Device{}, err
 	}
@@ -109,88 +119,43 @@ func (d *deviceRestClient) requestDeviceSlice(url string, ctx context.Context) (
 }
 
 func (d *deviceRestClient) CheckForDevice(token string, ctx context.Context) (models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return models.Device{}, err
-	}
-
-	return d.requestDevice(deviceURL+"/check/"+token, ctx)
+	return d.requestDevice("/check/"+token, ctx)
 }
 
 func (d *deviceRestClient) Device(id string, ctx context.Context) (models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return models.Device{}, err
-	}
-
-	return d.requestDevice(deviceURL+"/"+id, ctx)
+	return d.requestDevice("/"+id, ctx)
 }
 
 func (d *deviceRestClient) Devices(ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return nil, err
-	}
-
-	return d.requestDeviceSlice(deviceURL, ctx)
+	return d.requestDeviceSlice("", ctx)
 }
 
 func (d *deviceRestClient) DeviceForName(name string, ctx context.Context) (models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return models.Device{}, err
-	}
-
-	return d.requestDevice(deviceURL+"/name/"+url.QueryEscape(name), ctx)
+	return d.requestDevice("/name/"+url.QueryEscape(name), ctx)
 }
 
 func (d *deviceRestClient) DevicesByLabel(label string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return nil, err
-	}
-
-	return d.requestDeviceSlice(deviceURL+"/label/"+url.QueryEscape(label), ctx)
+	return d.requestDeviceSlice("/label/"+url.QueryEscape(label), ctx)
 }
 
 func (d *deviceRestClient) DevicesForService(serviceId string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return nil, err
-	}
-
-	return d.requestDeviceSlice(deviceURL+"/service/"+serviceId, ctx)
+	return d.requestDeviceSlice("/service/"+serviceId, ctx)
 }
 
 func (d *deviceRestClient) DevicesForServiceByName(serviceName string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return nil, err
-	}
-
-	return d.requestDeviceSlice(deviceURL+"/servicename/"+url.QueryEscape(serviceName), ctx)
+	return d.requestDeviceSlice("/servicename/"+url.QueryEscape(serviceName), ctx)
 }
 
 func (d *deviceRestClient) DevicesForProfile(profileId string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return nil, err
-	}
-
-	return d.requestDeviceSlice(deviceURL+"/profile/"+profileId, ctx)
+	return d.requestDeviceSlice("/profile/"+profileId, ctx)
 }
 
 func (d *deviceRestClient) DevicesForProfileByName(profileName string, ctx context.Context) ([]models.Device, error) {
-	deviceURL, err := d.client.URL()
-	if err != nil {
-		return nil, err
-	}
-
-	return d.requestDeviceSlice(deviceURL+"/profilename/"+url.QueryEscape(profileName), ctx)
+	return d.requestDeviceSlice("/profilename/"+url.QueryEscape(profileName), ctx)
 }
 
 func (d *deviceRestClient) Add(dev *models.Device, ctx context.Context) (string, error) {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return "", err
 	}
@@ -199,7 +164,7 @@ func (d *deviceRestClient) Add(dev *models.Device, ctx context.Context) (string,
 }
 
 func (d *deviceRestClient) Update(dev models.Device, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -208,7 +173,7 @@ func (d *deviceRestClient) Update(dev models.Device, ctx context.Context) error 
 }
 
 func (d *deviceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -218,7 +183,7 @@ func (d *deviceRestClient) UpdateLastConnected(id string, time int64, ctx contex
 }
 
 func (d *deviceRestClient) UpdateLastConnectedByName(name string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -229,7 +194,7 @@ func (d *deviceRestClient) UpdateLastConnectedByName(name string, time int64, ct
 }
 
 func (d *deviceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -239,7 +204,7 @@ func (d *deviceRestClient) UpdateLastReported(id string, time int64, ctx context
 }
 
 func (d *deviceRestClient) UpdateLastReportedByName(name string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -250,7 +215,7 @@ func (d *deviceRestClient) UpdateLastReportedByName(name string, time int64, ctx
 }
 
 func (d *deviceRestClient) UpdateOpState(id string, opState string, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -260,7 +225,7 @@ func (d *deviceRestClient) UpdateOpState(id string, opState string, ctx context.
 }
 
 func (d *deviceRestClient) UpdateOpStateByName(name string, opState string, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -270,7 +235,7 @@ func (d *deviceRestClient) UpdateOpStateByName(name string, opState string, ctx 
 }
 
 func (d *deviceRestClient) UpdateAdminState(id string, adminState string, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -280,7 +245,7 @@ func (d *deviceRestClient) UpdateAdminState(id string, adminState string, ctx co
 }
 
 func (d *deviceRestClient) UpdateAdminStateByName(name string, adminState string, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -290,7 +255,7 @@ func (d *deviceRestClient) UpdateAdminStateByName(name string, adminState string
 }
 
 func (d *deviceRestClient) Delete(id string, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}
@@ -299,7 +264,7 @@ func (d *deviceRestClient) Delete(id string, ctx context.Context) error {
 }
 
 func (d *deviceRestClient) DeleteByName(name string, ctx context.Context) error {
-	deviceURL, err := d.client.URL()
+	deviceURL, err := d.client.URLPrefix()
 	if err != nil {
 		return err
 	}

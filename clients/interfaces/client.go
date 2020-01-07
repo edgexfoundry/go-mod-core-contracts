@@ -15,5 +15,5 @@
 package interfaces
 
 type Client interface {
-	URL() (string, error)
+	URLPrefix() (string, error)
 }
