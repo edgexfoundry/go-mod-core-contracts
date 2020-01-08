@@ -19,7 +19,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func Factory(params types.EndpointParams, m interfaces.Endpointer) interfaces.Client {
+func Factory(params types.EndpointParams, m interfaces.Endpointer) interfaces.ClientBuilder {
 	if params.UseRegistry {
 		return newConsul(params, m, 10)
 	}

@@ -76,7 +76,7 @@ type DeviceClient interface {
 }
 
 type deviceRestClient struct {
-	client interfaces.Client
+	client interfaces.ClientBuilder
 }
 
 // NewDeviceClient creates an instance of DeviceClient
