@@ -12,7 +12,7 @@
  * the License.
  *******************************************************************************/
 
-package client
+package rest
 
 import (
 	"errors"
@@ -22,21 +22,20 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-type Consul struct {
+type consulClient struct {
 	url         string
 	timeout     int
 	initialized bool
 }
 
-var notYetInitialized = errors.New("client not yet initialized")
-
-// newConsul returns a pointer to a Consul.
+// newConsulClient returns a pointer to a consulClient.
 // A pointer is used so that when using configuration from a registry, the URLPrefix can be updated asynchronously.
-func newConsul(params types.EndpointParams, m interfaces.Endpointer, timeout int) *Consul {
-	e := Consul{
+func newConsulClient(params types.EndpointParams, m interfaces.Endpointer, timeout int) *consulClient {
+	e := consulClient{
 		timeout:     timeout,
 		initialized: false,
 	}
+
 	go func(ch chan string) {
 		for {
 			select {
@@ -46,12 +45,13 @@ func newConsul(params types.EndpointParams, m interfaces.Endpointer, timeout int
 			}
 		}
 	}(m.Monitor(params))
+
 	return &e
 }
 
 // URLPrefix waits for URL to be updated for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
-func (c *Consul) URLPrefix() (string, error) {
+func (c *consulClient) URLPrefix() (string, error) {
 	if c.initialized {
 		return c.url, nil
 	}
@@ -61,7 +61,7 @@ func (c *Consul) URLPrefix() (string, error) {
 	for {
 		select {
 		case <-timer:
-			return "", notYetInitialized
+			return "", errors.New("client not yet initialized")
 		case <-ticker:
 			if c.initialized && len(c.url) != 0 {
 				return c.url, nil

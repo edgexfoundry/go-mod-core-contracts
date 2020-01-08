@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Dell Inc.
+ * Copyright 2020 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,23 +12,19 @@
  * the License.
  *******************************************************************************/
 
-package client
+// rest provides concrete implementation types that implement the RestClientBuilder interface.
+// These types should all, in some way or another, provide some mechanism to fill in REST service data at runtime.
+package rest
 
 import (
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-type Client struct {
-	url string
-}
-
-// newLocal returns a pointer to a Client.
-func newLocal(params types.EndpointParams) *Client {
-	return &Client{
-		url: params.Url,
+// ClientFactory provides the correct concrete implementation of the RestClientBuilder given the params provided.
+func ClientFactory(params types.EndpointParams, m interfaces.Endpointer) interfaces.RestClientBuilder {
+	if params.UseRegistry {
+		return newConsulClient(params, m, 10)
 	}
-}
-
-func (c *Client) URLPrefix() (string, error) {
-	return c.url, nil
+	return newLocalClient(params)
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2020 Dell Inc.
+ * Copyright 2019 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,15 +12,24 @@
  * the License.
  *******************************************************************************/
 
-package interfaces
+package rest
 
-// ClientBuilder is the interface for types that need to define some way to retrieve state information about services.
-// This information can be anything that must be determined at runtime, whether it is unknown or simply not yet known.
-type ClientBuilder interface {
-	// URLPrefix returns the URL base path (or root) of a service.
-	// This is the common root of all REST calls to the service,
-	// and is defined on a per service (rather than per endpoint) basis.
-	// URLPrefix returns the root URL for REST calls to the service if it was able to retrieve that URL;
-	// it returns an error otherwise.
-	URLPrefix() (string, error)
+import (
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+)
+
+type localClient struct {
+	url string
+}
+
+// newLocalClient returns a pointer to a localClient.
+func newLocalClient(params types.EndpointParams) *localClient {
+	return &localClient{
+		url: params.Url,
+	}
+}
+
+// URLPrefix always returns the URL statically defined on object creation.
+func (c *localClient) URLPrefix() (string, error) {
+	return c.url, nil
 }

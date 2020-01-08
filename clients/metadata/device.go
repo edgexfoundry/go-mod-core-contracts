@@ -17,7 +17,7 @@ package metadata
 import (
 	"context"
 	"encoding/json"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/client"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"net/url"
 	"strconv"
@@ -76,12 +76,12 @@ type DeviceClient interface {
 }
 
 type deviceRestClient struct {
-	client interfaces.ClientBuilder
+	client interfaces.RestClientBuilder
 }
 
 // NewDeviceClient creates an instance of DeviceClient
 func NewDeviceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceClient {
-	return &deviceRestClient{client: client.Factory(params, m)}
+	return &deviceRestClient{client: rest.ClientFactory(params, m)}
 }
 
 // Helper method to request and decode a device
