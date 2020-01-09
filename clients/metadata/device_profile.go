@@ -21,14 +21,12 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-/*
-DeviceProfileClient defines the interface for interactions with the DeviceProfile endpoint on the EdgeX Foundry
-core-metadata service.
-*/
+// DeviceProfileClient defines the interface for interactions with the DeviceProfile endpoint on metadata.
 type DeviceProfileClient interface {
 	// Add a new device profile
 	Add(dp *models.DeviceProfile, ctx context.Context) (string, error)
@@ -51,35 +49,26 @@ type DeviceProfileClient interface {
 }
 
 type deviceProfileRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	client interfaces.RestClientBuilder
 }
 
 // Return an instance of DeviceProfileClient
 func NewDeviceProfileClient(params types.EndpointParams, m interfaces.Endpointer) DeviceProfileClient {
-	d := deviceProfileRestClient{endpoint: m}
-	d.init(params)
+	d := deviceProfileRestClient{client: rest.ClientFactory(params, m)}
 	return &d
 }
 
-func (d *deviceProfileRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					d.url = url
-				}
-			}
-		}(d.endpoint.Monitor(params))
-	} else {
-		d.url = params.Url
-	}
-}
-
 // Helper method to request and decode a device profile
-func (dpc *deviceProfileRestClient) requestDeviceProfile(url string, ctx context.Context) (models.DeviceProfile, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (dpc *deviceProfileRestClient) requestDeviceProfile(
+	urlSuffix string,
+	ctx context.Context) (models.DeviceProfile, error) {
+
+	urlPrefix, err := dpc.client.URLPrefix()
+	if err != nil {
+		return models.DeviceProfile{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.DeviceProfile{}, err
 	}
@@ -90,8 +79,11 @@ func (dpc *deviceProfileRestClient) requestDeviceProfile(url string, ctx context
 }
 
 // Helper method to request and decode a device profile slice
-func (dpc *deviceProfileRestClient) requestDeviceProfileSlice(url string, ctx context.Context) ([]models.DeviceProfile, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (dpc *deviceProfileRestClient) requestDeviceProfileSlice(
+	urlSuffix string,
+	ctx context.Context) ([]models.DeviceProfile, error) {
+
+	data, err := clients.GetRequest(urlSuffix, ctx)
 	if err != nil {
 		return []models.DeviceProfile{}, err
 	}
@@ -102,39 +94,69 @@ func (dpc *deviceProfileRestClient) requestDeviceProfileSlice(url string, ctx co
 }
 
 func (dpc *deviceProfileRestClient) Add(dp *models.DeviceProfile, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest(dpc.url, dp, ctx)
+	serviceURL, err := dpc.client.URLPrefix()
+	if err != nil {
+		return "", err
+	}
+
+	return clients.PostJsonRequest(serviceURL, dp, ctx)
 }
 
 func (dpc *deviceProfileRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest(dpc.url+"/id/"+id, ctx)
+	serviceURL, err := dpc.client.URLPrefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(serviceURL+"/id/"+id, ctx)
 }
 
 func (dpc *deviceProfileRestClient) DeleteByName(name string, ctx context.Context) error {
-	return clients.DeleteRequest(dpc.url+"/name/"+url.QueryEscape(name), ctx)
+	serviceURL, err := dpc.client.URLPrefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(serviceURL+"/name/"+url.QueryEscape(name), ctx)
 }
 
 func (dpc *deviceProfileRestClient) DeviceProfile(id string, ctx context.Context) (models.DeviceProfile, error) {
-	return dpc.requestDeviceProfile(dpc.url+"/"+id, ctx)
+	return dpc.requestDeviceProfile("/"+id, ctx)
 }
 
 func (dpc *deviceProfileRestClient) DeviceProfiles(ctx context.Context) ([]models.DeviceProfile, error) {
-	return dpc.requestDeviceProfileSlice(dpc.url, ctx)
+	return dpc.requestDeviceProfileSlice("", ctx)
 }
 
 func (dpc *deviceProfileRestClient) DeviceProfileForName(name string, ctx context.Context) (models.DeviceProfile, error) {
-	return dpc.requestDeviceProfile(dpc.url+"/name/"+name, ctx)
+	return dpc.requestDeviceProfile("/name/"+name, ctx)
 }
 
 func (dpc *deviceProfileRestClient) Update(dp models.DeviceProfile, ctx context.Context) error {
-	return clients.UpdateRequest(dpc.url, dp, ctx)
+	serviceURL, err := dpc.client.URLPrefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.UpdateRequest(serviceURL, dp, ctx)
 }
 
 func (dpc *deviceProfileRestClient) Upload(yamlString string, ctx context.Context) (string, error) {
+	serviceURL, err := dpc.client.URLPrefix()
+	if err != nil {
+		return "", err
+	}
+
 	ctx = context.WithValue(ctx, clients.ContentType, clients.ContentTypeYAML)
 
-	return clients.PostRequest(dpc.url+"/upload", []byte(yamlString), ctx)
+	return clients.PostRequest(serviceURL+"/upload", []byte(yamlString), ctx)
 }
 
 func (dpc *deviceProfileRestClient) UploadFile(yamlFilePath string, ctx context.Context) (string, error) {
-	return clients.UploadFileRequest(dpc.url+"/uploadfile", yamlFilePath, ctx)
+	serviceURL, err := dpc.client.URLPrefix()
+	if err != nil {
+		return "", err
+	}
+
+	return clients.UploadFileRequest(serviceURL+"/uploadfile", yamlFilePath, ctx)
 }

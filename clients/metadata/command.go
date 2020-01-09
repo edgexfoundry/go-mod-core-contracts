@@ -20,13 +20,12 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-/*
-CommandClient defines the interface for interactions with the Command endpoint on the EdgeX Foundry core-metadata service.
-*/
+// CommandClient defines the interface for interactions with the Command endpoint on core-metadata.
 type CommandClient interface {
 	// Add a new command
 	Add(com *models.Command, ctx context.Context) (string, error)
@@ -45,35 +44,23 @@ type CommandClient interface {
 }
 
 type commandRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	client interfaces.RestClientBuilder
 }
 
 // NewCommandClient creates an instance of CommandClient
 func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) CommandClient {
-	c := commandRestClient{endpoint: m}
-	c.init(params)
+	c := commandRestClient{client: rest.ClientFactory(params, m)}
 	return &c
 }
 
-func (c *commandRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					c.url = url
-				}
-			}
-		}(c.endpoint.Monitor(params))
-	} else {
-		c.url = params.Url
-	}
-}
-
 // Helper method to request and decode a command
-func (c *commandRestClient) requestCommand(url string, ctx context.Context) (models.Command, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (c *commandRestClient) requestCommand(urlSuffix string, ctx context.Context) (models.Command, error) {
+	urlPrefix, err := c.client.URLPrefix()
+	if err != nil {
+		return models.Command{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.Command{}, err
 	}
@@ -84,8 +71,13 @@ func (c *commandRestClient) requestCommand(url string, ctx context.Context) (mod
 }
 
 // Helper method to request and decode a command slice
-func (c *commandRestClient) requestCommandSlice(url string, ctx context.Context) ([]models.Command, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (c *commandRestClient) requestCommandSlice(urlSuffix string, ctx context.Context) ([]models.Command, error) {
+	urlPrefix, err := c.client.URLPrefix()
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return []models.Command{}, err
 	}
@@ -96,29 +88,44 @@ func (c *commandRestClient) requestCommandSlice(url string, ctx context.Context)
 }
 
 func (c *commandRestClient) Command(id string, ctx context.Context) (models.Command, error) {
-	return c.requestCommand(c.url+"/"+id, ctx)
+	return c.requestCommand("/"+id, ctx)
 }
 
 func (c *commandRestClient) Commands(ctx context.Context) ([]models.Command, error) {
-	return c.requestCommandSlice(c.url, ctx)
+	return c.requestCommandSlice("", ctx)
 }
 
 func (c *commandRestClient) CommandsForName(name string, ctx context.Context) ([]models.Command, error) {
-	return c.requestCommandSlice(c.url+"/name/"+name, ctx)
+	return c.requestCommandSlice("/name/"+name, ctx)
 }
 
 func (c *commandRestClient) CommandsForDeviceId(id string, ctx context.Context) ([]models.Command, error) {
-	return c.requestCommandSlice(c.url+"/device/"+id, ctx)
+	return c.requestCommandSlice("/device/"+id, ctx)
 }
 
 func (c *commandRestClient) Add(com *models.Command, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest(c.url, com, ctx)
+	serviceURL, err := c.client.URLPrefix()
+	if err != nil {
+		return "", err
+	}
+
+	return clients.PostJsonRequest(serviceURL, com, ctx)
 }
 
 func (c *commandRestClient) Update(com models.Command, ctx context.Context) error {
-	return clients.UpdateRequest(c.url, com, ctx)
+	serviceURL, err := c.client.URLPrefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.UpdateRequest(serviceURL, com, ctx)
 }
 
 func (c *commandRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest(c.url+"/id/"+id, ctx)
+	serviceURL, err := c.client.URLPrefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(serviceURL+"/id/"+id, ctx)
 }

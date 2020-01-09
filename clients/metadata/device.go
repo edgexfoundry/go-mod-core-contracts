@@ -27,9 +27,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-/*
-DeviceClient defines the interface for interactions with the Device endpoint on the EdgeX Foundry core-metadata service.
-*/
+// DeviceClient defines the interface for interactions with the Device endpoint on core-metadata.
 type DeviceClient interface {
 	// Add creates a new device
 	Add(dev *models.Device, ctx context.Context) (string, error)
