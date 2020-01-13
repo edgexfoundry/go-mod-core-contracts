@@ -20,9 +20,9 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func TestNewLocalClient(t *testing.T){
+func TestNewLocalClient(t *testing.T) {
 	expectedURL := "http://brandonforster.com"
-	actualClient:= newLocalClient(types.EndpointParams{Url: expectedURL})
+	actualClient := newLocalClient(types.EndpointParams{Url: expectedURL})
 
 	if actualClient.url != expectedURL {
 		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualClient.url)
@@ -31,9 +31,13 @@ func TestNewLocalClient(t *testing.T){
 
 func TestLocalClient_URLPrefix(t *testing.T) {
 	expectedURL := "http://brandonforster.com"
-	client:= newLocalClient(types.EndpointParams{Url: expectedURL})
+	client := newLocalClient(types.EndpointParams{Url: expectedURL})
 
-	actualURL := client.url
+	actualURL, err := client.URLPrefix()
+
+	if err != nil {
+		t.Fatalf("unexpected error %s", err.Error())
+	}
 
 	if actualURL != expectedURL {
 		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)

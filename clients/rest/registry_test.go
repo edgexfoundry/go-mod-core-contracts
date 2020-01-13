@@ -13,3 +13,70 @@
  *******************************************************************************/
 
 package rest
+
+import (
+	"fmt"
+	"testing"
+	"time"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+)
+
+func TestRegistryClient_URLPrefix(t *testing.T) {
+	expectedURL := "http://brandonforster.com"
+	client := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
+
+	actualURL, err := client.URLPrefix()
+
+	if err != nil {
+		t.Fatalf("unexpected error %s", err.Error())
+	}
+
+	if actualURL != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
+	}
+}
+
+func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
+	expectedURL := "http://brandonforster.com"
+	client := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
+	client.initialized = true
+	client.url = expectedURL
+
+	actualURL, err := client.URLPrefix()
+
+	if err != nil {
+		t.Fatalf("unexpected error %s", err.Error())
+	}
+
+	if actualURL != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
+	}
+}
+
+func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
+	client := newRegistryClient(types.EndpointParams{}, mockTimeoutEndpoint{}, 1)
+
+	actualURL, err := client.URLPrefix()
+
+	if err == nil || actualURL != "" {
+		t.Fatal("expected error")
+	}
+
+	if err != TimeoutError {
+		t.Fatalf("expected error %s, found error %s", TimeoutError.Error(), err.Error())
+	}
+}
+
+type mockTimeoutEndpoint struct{}
+
+func (e mockTimeoutEndpoint) Monitor(_ types.EndpointParams) chan string {
+	ch := make(chan string, 1)
+
+	go func() {
+		time.Sleep(15 * time.Second)
+		ch <- fmt.Sprint("http://brandonforster.com")
+	}()
+
+	return ch
+}

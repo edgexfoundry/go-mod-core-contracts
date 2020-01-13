@@ -15,13 +15,14 @@
 package rest
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func TestClientFactoryLocal(t *testing.T){
-	actualClient := ClientFactory(types.EndpointParams{UseRegistry:false}, nil)
+func TestClientFactoryLocal(t *testing.T) {
+	actualClient := ClientFactory(types.EndpointParams{UseRegistry: false}, nil)
 	_, isLocalClient := actualClient.(*localClient)
 
 	if !isLocalClient {
@@ -29,8 +30,8 @@ func TestClientFactoryLocal(t *testing.T){
 	}
 }
 
-func TestClientFactoryRegistry(t *testing.T){
-	actualClient := ClientFactory(types.EndpointParams{UseRegistry:true}, mockEndpoint{})
+func TestClientFactoryRegistry(t *testing.T) {
+	actualClient := ClientFactory(types.EndpointParams{UseRegistry: true}, mockEndpoint{})
 	_, isRegistryClient := actualClient.(*registryClient)
 
 	if !isRegistryClient {
@@ -41,5 +42,7 @@ func TestClientFactoryRegistry(t *testing.T){
 type mockEndpoint struct{}
 
 func (e mockEndpoint) Monitor(_ types.EndpointParams) chan string {
-	return make(chan string, 1)
+	ch := make(chan string, 1)
+	ch <- fmt.Sprint("http://brandonforster.com")
+	return ch
 }
