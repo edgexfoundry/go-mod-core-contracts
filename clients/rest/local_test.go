@@ -13,3 +13,29 @@
  *******************************************************************************/
 
 package rest
+
+import (
+	"testing"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+)
+
+func TestNewLocalClient(t *testing.T){
+	expectedURL := "http://brandonforster.com"
+	actualClient:= newLocalClient(types.EndpointParams{Url: expectedURL})
+
+	if actualClient.url != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualClient.url)
+	}
+}
+
+func TestLocalClient_URLPrefix(t *testing.T) {
+	expectedURL := "http://brandonforster.com"
+	client:= newLocalClient(types.EndpointParams{Url: expectedURL})
+
+	actualURL := client.url
+
+	if actualURL != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
+	}
+}
