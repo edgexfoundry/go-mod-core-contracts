@@ -12,15 +12,4 @@
  * the License.
  *******************************************************************************/
 
-package interfaces
-
-// RestClientBuilder is the interface for types that need to define some way to retrieve state information about services.
-// This information can be anything that must be determined at runtime, whether it is unknown or simply not yet known.
-type RestClientBuilder interface {
-	// URLPrefix returns the URL base path (or root) of a service.
-	// This is the common root of all REST calls to the service,
-	// and is defined on a per service (rather than per endpoint) basis.
-	// URLPrefix returns the root URL for REST calls to the service if it was able to retrieve that URL;
-	// it returns an error otherwise.
-	URLPrefix() (string, error)
-}
+package rest

@@ -22,6 +22,6 @@ type Endpointer interface {
 	// Monitor is responsible for looking up information about the service endpoint corresponding
 	// to the params.ServiceKey property. The name "Monitor" implies that this lookup will be done
 	// at a regular interval. Information about the service from the discovery provider should be
-	// used to construct a URL which will then be pushed to the returned channel.
+	// used to construct a ClientURL which will then be pushed to the returned channel.
 	Monitor(params types.EndpointParams) chan string
 }

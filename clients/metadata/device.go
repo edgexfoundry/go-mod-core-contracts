@@ -17,10 +17,11 @@ package metadata
 import (
 	"context"
 	"encoding/json"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"net/url"
 	"strconv"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
@@ -76,7 +77,7 @@ type DeviceClient interface {
 }
 
 type deviceRestClient struct {
-	client interfaces.RestClientBuilder
+	client interfaces.ClientURL
 }
 
 // NewDeviceClient creates an instance of DeviceClient

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Dell Inc.
+ * Copyright 2020 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,22 +15,31 @@
 package rest
 
 import (
+	"testing"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-// localClient defines a ClientURL implementation that returns the struct field for the URL.
-type localClient struct {
-	url string
-}
+func TestClientFactoryLocal(t *testing.T){
+	actualClient := ClientFactory(types.EndpointParams{UseRegistry:false}, nil)
+	_, isLocalClient := actualClient.(*localClient)
 
-// newLocalClient returns a pointer to a localClient.
-func newLocalClient(params types.EndpointParams) *localClient {
-	return &localClient{
-		url: params.Url,
+	if !isLocalClient {
+		t.Fatalf("expected type %T, found %T", localClient{}, actualClient)
 	}
 }
 
-// URLPrefix always returns the URL statically defined on object creation.
-func (c *localClient) URLPrefix() (string, error) {
-	return c.url, nil
+func TestClientFactoryRegistry(t *testing.T){
+	actualClient := ClientFactory(types.EndpointParams{UseRegistry:true}, mockEndpoint{})
+	_, isRegistryClient := actualClient.(*registryClient)
+
+	if !isRegistryClient {
+		t.Fatalf("expected type %T, found %T", registryClient{}, actualClient)
+	}
+}
+
+type mockEndpoint struct{}
+
+func (e mockEndpoint) Monitor(_ types.EndpointParams) chan string {
+	return make(chan string, 1)
 }

@@ -12,7 +12,7 @@
  * the License.
  *******************************************************************************/
 
-// rest provides concrete implementation types that implement the RestClientBuilder interface.
+// rest provides concrete implementation types that implement the ClientURL interface.
 // These types should all, in some way or another, provide some mechanism to fill in REST service data at runtime.
 package rest
 
@@ -21,10 +21,10 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-// ClientFactory provides the correct concrete implementation of the RestClientBuilder given the params provided.
-func ClientFactory(params types.EndpointParams, m interfaces.Endpointer) interfaces.RestClientBuilder {
+// ClientFactory provides the correct concrete implementation of the ClientURL given the params provided.
+func ClientFactory(params types.EndpointParams, m interfaces.Endpointer) interfaces.ClientURL {
 	if params.UseRegistry {
-		return newConsulClient(params, m, 10)
+		return newRegistryClient(params, m, 10)
 	}
 	return newLocalClient(params)
 }
