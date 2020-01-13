@@ -96,3 +96,4 @@ func (e mockTimeoutEndpoint) Monitor(_ types.EndpointParams) chan string {
 
 	return ch
 }
+}
