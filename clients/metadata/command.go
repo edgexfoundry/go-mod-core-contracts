@@ -44,7 +44,7 @@ type CommandClient interface {
 }
 
 type commandRestClient struct {
-	client interfaces.RestClientBuilder
+	client interfaces.ClientURL
 }
 
 // NewCommandClient creates an instance of CommandClient

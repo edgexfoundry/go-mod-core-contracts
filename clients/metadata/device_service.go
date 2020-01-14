@@ -39,7 +39,7 @@ type DeviceServiceClient interface {
 }
 
 type deviceServiceRestClient struct {
-	client interfaces.RestClientBuilder
+	client interfaces.ClientURL
 }
 
 // NewDeviceServiceClient creates an instance of DeviceServiceClient

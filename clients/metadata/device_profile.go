@@ -49,7 +49,7 @@ type DeviceProfileClient interface {
 }
 
 type deviceProfileRestClient struct {
-	client interfaces.RestClientBuilder
+	client interfaces.ClientURL
 }
 
 // Return an instance of DeviceProfileClient

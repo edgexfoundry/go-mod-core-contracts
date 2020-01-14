@@ -51,7 +51,7 @@ type ProvisionWatcherClient interface {
 }
 
 type provisionWatcherRestClient struct {
-	client interfaces.RestClientBuilder
+	client interfaces.ClientURL
 }
 
 // NewProvisionWatcherClient creates an instance of ProvisionWatcherClient

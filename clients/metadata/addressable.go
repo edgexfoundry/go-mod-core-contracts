@@ -42,7 +42,7 @@ type AddressableClient interface {
 }
 
 type addressableRestClient struct {
-	client interfaces.RestClientBuilder
+	client interfaces.ClientURL
 }
 
 // NewAddressableClient creates an instance of AddressableClient
