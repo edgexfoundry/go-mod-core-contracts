@@ -26,9 +26,9 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-// Test adding a device using the device client
+// Test adding a device using the device urlClient
 
-// Test adding a device using the device client
+// Test adding a device using the device urlClient
 func TestAddDevice(t *testing.T) {
 
 	d := models.Device{
@@ -95,7 +95,7 @@ func TestNewDeviceClientWithConsul(t *testing.T) {
 		t.Error("dc is not of expected type")
 	}
 
-	url, err := r.client.URLPrefix()
+	url, err := r.urlClient.Prefix()
 
 	if err != nil {
 		t.Error("url was not initialized")

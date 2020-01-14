@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2020 Dell Inc.
+ * Copyright 2019 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,34 +12,25 @@
  * the License.
  *******************************************************************************/
 
-package rest
+package urlclient
 
 import (
-	"testing"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func TestNewLocalClient(t *testing.T) {
-	expectedURL := "http://brandonforster.com"
-	actualClient := newLocalClient(types.EndpointParams{Url: expectedURL})
+// localClient defines a ClientURL implementation that returns the struct field for the URL.
+type localClient struct {
+	url string
+}
 
-	if actualClient.url != expectedURL {
-		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualClient.url)
+// newLocalClient returns a pointer to a localClient.
+func newLocalClient(params types.EndpointParams) *localClient {
+	return &localClient{
+		url: params.Url,
 	}
 }
 
-func TestLocalClient_URLPrefix(t *testing.T) {
-	expectedURL := "http://brandonforster.com"
-	client := newLocalClient(types.EndpointParams{Url: expectedURL})
-
-	actualURL, err := client.URLPrefix()
-
-	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
-	}
-
-	if actualURL != expectedURL {
-		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
-	}
+// Prefix always returns the URL statically defined on object creation.
+func (c *localClient) Prefix() (string, error) {
+	return c.url, nil
 }

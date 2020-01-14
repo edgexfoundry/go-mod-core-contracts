@@ -12,21 +12,37 @@
  * the License.
  *******************************************************************************/
 
-package rest
+package urlclient
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 	"time"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
+func TestNewRegistryClient(t *testing.T) {
+	actualClient := newRegistryClient(types.EndpointParams{UseRegistry: true}, mockEndpoint{}, 100)
+
+	if actualClient == nil {
+		t.Fatal("nil returned from newRegistryClient")
+	}
+
+	expectedType := reflect.TypeOf(&registryClient{})
+	clientType := reflect.TypeOf(actualClient)
+
+	if clientType != expectedType {
+		t.Fatalf("expected type %T, found %T", expectedType, actualClient)
+	}
+}
+
 func TestRegistryClient_URLPrefix(t *testing.T) {
-	expectedURL := "http://brandonforster.com"
+	expectedURL := "http://domain.com"
 	client := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
 
-	actualURL, err := client.URLPrefix()
+	actualURL, err := client.Prefix()
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -38,12 +54,12 @@ func TestRegistryClient_URLPrefix(t *testing.T) {
 }
 
 func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
-	expectedURL := "http://brandonforster.com"
+	expectedURL := "http://domain.com"
 	client := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
 	client.initialized = true
 	client.url = expectedURL
 
-	actualURL, err := client.URLPrefix()
+	actualURL, err := client.Prefix()
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -57,7 +73,7 @@ func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
 func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
 	client := newRegistryClient(types.EndpointParams{}, mockTimeoutEndpoint{}, 1)
 
-	actualURL, err := client.URLPrefix()
+	actualURL, err := client.Prefix()
 
 	if err == nil || actualURL != "" {
 		t.Fatal("expected error")
@@ -75,7 +91,7 @@ func (e mockTimeoutEndpoint) Monitor(_ types.EndpointParams) chan string {
 
 	go func() {
 		time.Sleep(15 * time.Second)
-		ch <- fmt.Sprint("http://brandonforster.com")
+		ch <- fmt.Sprint("http://domain.com")
 	}()
 
 	return ch

@@ -12,37 +12,41 @@
  * the License.
  *******************************************************************************/
 
-package rest
+package urlclient
 
 import (
-	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func TestClientFactoryLocal(t *testing.T) {
-	actualClient := ClientFactory(types.EndpointParams{UseRegistry: false}, nil)
-	_, isLocalClient := actualClient.(*localClient)
+func TestNewLocalClient(t *testing.T) {
+	actualClient := newLocalClient(types.EndpointParams{UseRegistry: false})
 
-	if !isLocalClient {
-		t.Fatalf("expected type %T, found %T", localClient{}, actualClient)
+	if actualClient == nil {
+		t.Fatal("nil returned from newLocalClient")
+	}
+
+	expectedType := reflect.TypeOf(&localClient{})
+	clientType := reflect.TypeOf(actualClient)
+
+	if clientType != expectedType {
+		t.Fatalf("expected type %T, found %T", expectedType, actualClient)
 	}
 }
 
-func TestClientFactoryRegistry(t *testing.T) {
-	actualClient := ClientFactory(types.EndpointParams{UseRegistry: true}, mockEndpoint{})
-	_, isRegistryClient := actualClient.(*registryClient)
+func TestLocalClient_URLPrefix(t *testing.T) {
+	expectedURL := "http://domain.com"
+	client := newLocalClient(types.EndpointParams{Url: expectedURL})
 
-	if !isRegistryClient {
-		t.Fatalf("expected type %T, found %T", registryClient{}, actualClient)
+	actualURL, err := client.Prefix()
+
+	if err != nil {
+		t.Fatalf("unexpected error %s", err.Error())
 	}
-}
 
-type mockEndpoint struct{}
-
-func (e mockEndpoint) Monitor(_ types.EndpointParams) chan string {
-	ch := make(chan string, 1)
-	ch <- fmt.Sprint("http://brandonforster.com")
-	return ch
+	if actualURL != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
+	}
 }

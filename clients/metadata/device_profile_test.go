@@ -50,7 +50,7 @@ func TestNewDeviceProfileClientWithConsul(t *testing.T) {
 	}
 }
 
-// Test updating a device profile using the device profile client
+// Test updating a device profile using the device profile urlClient
 func TestUpdateDeviceProfile(t *testing.T) {
 	p := models.DeviceProfile{
 		Id:   "1234",

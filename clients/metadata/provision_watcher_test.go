@@ -27,7 +27,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-// Test adding a provision watcher using the client
+// Test adding a provision watcher using the urlClient
 func TestAddProvisionWatcher(t *testing.T) {
 	se := models.ProvisionWatcher{
 		Id:             "1234",

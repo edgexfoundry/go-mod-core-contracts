@@ -12,19 +12,37 @@
  * the License.
  *******************************************************************************/
 
-// rest provides concrete implementation types that implement the ClientURL interface.
-// These types should all, in some way or another, provide some mechanism to fill in REST service data at runtime.
-package rest
+package urlclient
 
 import (
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"fmt"
+	"testing"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-// ClientFactory provides the correct concrete implementation of the ClientURL given the params provided.
-func ClientFactory(params types.EndpointParams, m interfaces.Endpointer) interfaces.ClientURL {
-	if params.UseRegistry {
-		return newRegistryClient(params, m, 10)
+func TestClientFactoryLocal(t *testing.T) {
+	actualClient := New(types.EndpointParams{UseRegistry: false}, mockEndpoint{})
+	_, isLocalClient := actualClient.(*localClient)
+
+	if !isLocalClient {
+		t.Fatalf("expected type %T, found %T", localClient{}, actualClient)
 	}
-	return newLocalClient(params)
+}
+
+func TestClientFactoryRegistry(t *testing.T) {
+	actualClient := New(types.EndpointParams{UseRegistry: true}, mockEndpoint{})
+	_, isRegistryClient := actualClient.(*registryClient)
+
+	if !isRegistryClient {
+		t.Fatalf("expected type %T, found %T", registryClient{}, actualClient)
+	}
+}
+
+type mockEndpoint struct{}
+
+func (e mockEndpoint) Monitor(_ types.EndpointParams) chan string {
+	ch := make(chan string, 1)
+	ch <- fmt.Sprint("http://domain.com")
+	return ch
 }

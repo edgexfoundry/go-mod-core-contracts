@@ -52,7 +52,7 @@ func TestNewAddressableClientWithConsul(t *testing.T) {
 	}
 }
 
-// Test adding an addressable using the client
+// Test adding an addressable using the urlClient
 func TestAddAddressable(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),
@@ -98,7 +98,7 @@ func TestAddAddressable(t *testing.T) {
 	}
 }
 
-// Test get an addressable using the client
+// Test get an addressable using the urlClient
 func TestGetAddressable(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),
@@ -143,7 +143,7 @@ func TestGetAddressable(t *testing.T) {
 	}
 }
 
-// Test get an addressable using the client
+// Test get an addressable using the urlClient
 func TestGetAddressableForName(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),
@@ -188,7 +188,7 @@ func TestGetAddressableForName(t *testing.T) {
 	}
 }
 
-// Test updating an addressable using the client
+// Test updating an addressable using the urlClient
 func TestUpdateAddressable(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),
@@ -226,7 +226,7 @@ func TestUpdateAddressable(t *testing.T) {
 	}
 }
 
-// Test deleting an addressable using the client
+// Test deleting an addressable using the urlClient
 func TestDeleteAddressable(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),

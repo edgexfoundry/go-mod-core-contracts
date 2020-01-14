@@ -20,11 +20,10 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -77,17 +76,17 @@ type DeviceClient interface {
 }
 
 type deviceRestClient struct {
-	client interfaces.ClientURL
+	urlClient interfaces.URLClient
 }
 
 // NewDeviceClient creates an instance of DeviceClient
 func NewDeviceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceClient {
-	return &deviceRestClient{client: rest.ClientFactory(params, m)}
+	return &deviceRestClient{urlClient: urlclient.New(params, m)}
 }
 
 // Helper method to request and decode a device
 func (d *deviceRestClient) requestDevice(urlSuffix string, ctx context.Context) (models.Device, error) {
-	urlPrefix, err := d.client.URLPrefix()
+	urlPrefix, err := d.urlClient.Prefix()
 	if err != nil {
 		return models.Device{}, err
 	}
@@ -104,7 +103,7 @@ func (d *deviceRestClient) requestDevice(urlSuffix string, ctx context.Context) 
 
 // Helper method to request and decode a device slice
 func (d *deviceRestClient) requestDeviceSlice(urlSuffix string, ctx context.Context) ([]models.Device, error) {
-	urlPrefix, err := d.client.URLPrefix()
+	urlPrefix, err := d.urlClient.Prefix()
 	if err != nil {
 		return nil, err
 	}
@@ -156,7 +155,7 @@ func (d *deviceRestClient) DevicesForProfileByName(profileName string, ctx conte
 }
 
 func (d *deviceRestClient) Add(dev *models.Device, ctx context.Context) (string, error) {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
@@ -165,7 +164,7 @@ func (d *deviceRestClient) Add(dev *models.Device, ctx context.Context) (string,
 }
 
 func (d *deviceRestClient) Update(dev models.Device, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -174,7 +173,7 @@ func (d *deviceRestClient) Update(dev models.Device, ctx context.Context) error 
 }
 
 func (d *deviceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -184,7 +183,7 @@ func (d *deviceRestClient) UpdateLastConnected(id string, time int64, ctx contex
 }
 
 func (d *deviceRestClient) UpdateLastConnectedByName(name string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -195,7 +194,7 @@ func (d *deviceRestClient) UpdateLastConnectedByName(name string, time int64, ct
 }
 
 func (d *deviceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -205,7 +204,7 @@ func (d *deviceRestClient) UpdateLastReported(id string, time int64, ctx context
 }
 
 func (d *deviceRestClient) UpdateLastReportedByName(name string, time int64, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -216,7 +215,7 @@ func (d *deviceRestClient) UpdateLastReportedByName(name string, time int64, ctx
 }
 
 func (d *deviceRestClient) UpdateOpState(id string, opState string, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -226,7 +225,7 @@ func (d *deviceRestClient) UpdateOpState(id string, opState string, ctx context.
 }
 
 func (d *deviceRestClient) UpdateOpStateByName(name string, opState string, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -236,7 +235,7 @@ func (d *deviceRestClient) UpdateOpStateByName(name string, opState string, ctx 
 }
 
 func (d *deviceRestClient) UpdateAdminState(id string, adminState string, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -246,7 +245,7 @@ func (d *deviceRestClient) UpdateAdminState(id string, adminState string, ctx co
 }
 
 func (d *deviceRestClient) UpdateAdminStateByName(name string, adminState string, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -256,7 +255,7 @@ func (d *deviceRestClient) UpdateAdminStateByName(name string, adminState string
 }
 
 func (d *deviceRestClient) Delete(id string, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -265,7 +264,7 @@ func (d *deviceRestClient) Delete(id string, ctx context.Context) error {
 }
 
 func (d *deviceRestClient) DeleteByName(name string, ctx context.Context) error {
-	deviceURL, err := d.client.URLPrefix()
+	deviceURL, err := d.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
