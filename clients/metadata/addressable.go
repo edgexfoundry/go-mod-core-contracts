@@ -22,8 +22,8 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -42,18 +42,18 @@ type AddressableClient interface {
 }
 
 type addressableRestClient struct {
-	client interfaces.ClientURL
+	urlClient interfaces.URLClient
 }
 
 // NewAddressableClient creates an instance of AddressableClient
 func NewAddressableClient(params types.EndpointParams, m interfaces.Endpointer) AddressableClient {
-	a := addressableRestClient{client: rest.ClientFactory(params, m)}
+	a := addressableRestClient{urlClient: urlclient.New(params, m)}
 	return &a
 }
 
 // Helper method to request and decode an addressable
 func (a *addressableRestClient) requestAddressable(urlSuffix string, ctx context.Context) (models.Addressable, error) {
-	urlPrefix, err := a.client.URLPrefix()
+	urlPrefix, err := a.urlClient.Prefix()
 	if err != nil {
 		return models.Addressable{}, err
 	}
@@ -69,7 +69,7 @@ func (a *addressableRestClient) requestAddressable(urlSuffix string, ctx context
 }
 
 func (a *addressableRestClient) Add(addr *models.Addressable, ctx context.Context) (string, error) {
-	serviceURL, err := a.client.URLPrefix()
+	serviceURL, err := a.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
@@ -86,7 +86,7 @@ func (a *addressableRestClient) AddressableForName(name string, ctx context.Cont
 }
 
 func (a *addressableRestClient) Update(addr models.Addressable, ctx context.Context) error {
-	serviceURL, err := a.client.URLPrefix()
+	serviceURL, err := a.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ func (a *addressableRestClient) Update(addr models.Addressable, ctx context.Cont
 }
 
 func (a *addressableRestClient) Delete(id string, ctx context.Context) error {
-	serviceURL, err := a.client.URLPrefix()
+	serviceURL, err := a.urlClient.Prefix()
 	if err != nil {
 		return err
 	}

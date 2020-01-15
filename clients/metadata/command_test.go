@@ -37,7 +37,7 @@ func TestNewCommandClientWithConsul(t *testing.T) {
 		t.Error("cc is not of expected type")
 	}
 
-	url, err := r.client.URLPrefix()
+	url, err := r.urlClient.Prefix()
 
 	if err != nil {
 		t.Error("url was not initialized")

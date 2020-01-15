@@ -91,7 +91,7 @@ func TestNewProvisionWatcherClientWithConsul(t *testing.T) {
 		t.Error("sc is not of expected type")
 	}
 
-	url, err := r.client.URLPrefix()
+	url, err := r.urlClient.Prefix()
 
 	if err != nil {
 		t.Error("url was not initialized")

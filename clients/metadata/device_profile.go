@@ -21,8 +21,8 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -49,12 +49,12 @@ type DeviceProfileClient interface {
 }
 
 type deviceProfileRestClient struct {
-	client interfaces.ClientURL
+	urlClient interfaces.URLClient
 }
 
 // Return an instance of DeviceProfileClient
 func NewDeviceProfileClient(params types.EndpointParams, m interfaces.Endpointer) DeviceProfileClient {
-	d := deviceProfileRestClient{client: rest.ClientFactory(params, m)}
+	d := deviceProfileRestClient{urlClient: urlclient.New(params, m)}
 	return &d
 }
 
@@ -63,7 +63,7 @@ func (dpc *deviceProfileRestClient) requestDeviceProfile(
 	urlSuffix string,
 	ctx context.Context) (models.DeviceProfile, error) {
 
-	urlPrefix, err := dpc.client.URLPrefix()
+	urlPrefix, err := dpc.urlClient.Prefix()
 	if err != nil {
 		return models.DeviceProfile{}, err
 	}
@@ -94,7 +94,7 @@ func (dpc *deviceProfileRestClient) requestDeviceProfileSlice(
 }
 
 func (dpc *deviceProfileRestClient) Add(dp *models.DeviceProfile, ctx context.Context) (string, error) {
-	serviceURL, err := dpc.client.URLPrefix()
+	serviceURL, err := dpc.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
@@ -103,7 +103,7 @@ func (dpc *deviceProfileRestClient) Add(dp *models.DeviceProfile, ctx context.Co
 }
 
 func (dpc *deviceProfileRestClient) Delete(id string, ctx context.Context) error {
-	serviceURL, err := dpc.client.URLPrefix()
+	serviceURL, err := dpc.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -112,7 +112,7 @@ func (dpc *deviceProfileRestClient) Delete(id string, ctx context.Context) error
 }
 
 func (dpc *deviceProfileRestClient) DeleteByName(name string, ctx context.Context) error {
-	serviceURL, err := dpc.client.URLPrefix()
+	serviceURL, err := dpc.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -133,7 +133,7 @@ func (dpc *deviceProfileRestClient) DeviceProfileForName(name string, ctx contex
 }
 
 func (dpc *deviceProfileRestClient) Update(dp models.DeviceProfile, ctx context.Context) error {
-	serviceURL, err := dpc.client.URLPrefix()
+	serviceURL, err := dpc.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -142,7 +142,7 @@ func (dpc *deviceProfileRestClient) Update(dp models.DeviceProfile, ctx context.
 }
 
 func (dpc *deviceProfileRestClient) Upload(yamlString string, ctx context.Context) (string, error) {
-	serviceURL, err := dpc.client.URLPrefix()
+	serviceURL, err := dpc.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
@@ -153,7 +153,7 @@ func (dpc *deviceProfileRestClient) Upload(yamlString string, ctx context.Contex
 }
 
 func (dpc *deviceProfileRestClient) UploadFile(yamlFilePath string, ctx context.Context) (string, error) {
-	serviceURL, err := dpc.client.URLPrefix()
+	serviceURL, err := dpc.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}

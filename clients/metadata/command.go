@@ -20,8 +20,8 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -44,18 +44,18 @@ type CommandClient interface {
 }
 
 type commandRestClient struct {
-	client interfaces.ClientURL
+	urlClient interfaces.URLClient
 }
 
 // NewCommandClient creates an instance of CommandClient
 func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) CommandClient {
-	c := commandRestClient{client: rest.ClientFactory(params, m)}
+	c := commandRestClient{urlClient: urlclient.New(params, m)}
 	return &c
 }
 
 // Helper method to request and decode a command
 func (c *commandRestClient) requestCommand(urlSuffix string, ctx context.Context) (models.Command, error) {
-	urlPrefix, err := c.client.URLPrefix()
+	urlPrefix, err := c.urlClient.Prefix()
 	if err != nil {
 		return models.Command{}, err
 	}
@@ -72,7 +72,7 @@ func (c *commandRestClient) requestCommand(urlSuffix string, ctx context.Context
 
 // Helper method to request and decode a command slice
 func (c *commandRestClient) requestCommandSlice(urlSuffix string, ctx context.Context) ([]models.Command, error) {
-	urlPrefix, err := c.client.URLPrefix()
+	urlPrefix, err := c.urlClient.Prefix()
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func (c *commandRestClient) CommandsForDeviceId(id string, ctx context.Context) 
 }
 
 func (c *commandRestClient) Add(com *models.Command, ctx context.Context) (string, error) {
-	serviceURL, err := c.client.URLPrefix()
+	serviceURL, err := c.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
@@ -113,7 +113,7 @@ func (c *commandRestClient) Add(com *models.Command, ctx context.Context) (strin
 }
 
 func (c *commandRestClient) Update(com models.Command, ctx context.Context) error {
-	serviceURL, err := c.client.URLPrefix()
+	serviceURL, err := c.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -122,7 +122,7 @@ func (c *commandRestClient) Update(com models.Command, ctx context.Context) erro
 }
 
 func (c *commandRestClient) Delete(id string, ctx context.Context) error {
-	serviceURL, err := c.client.URLPrefix()
+	serviceURL, err := c.urlClient.Prefix()
 	if err != nil {
 		return err
 	}

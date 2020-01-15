@@ -21,8 +21,8 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -39,17 +39,17 @@ type DeviceServiceClient interface {
 }
 
 type deviceServiceRestClient struct {
-	client interfaces.ClientURL
+	urlClient interfaces.URLClient
 }
 
 // NewDeviceServiceClient creates an instance of DeviceServiceClient
 func NewDeviceServiceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceServiceClient {
-	s := deviceServiceRestClient{client: rest.ClientFactory(params, m)}
+	s := deviceServiceRestClient{urlClient: urlclient.New(params, m)}
 	return &s
 }
 
 func (dsc *deviceServiceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
-	serviceURL, err := dsc.client.URLPrefix()
+	serviceURL, err := dsc.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func (dsc *deviceServiceRestClient) UpdateLastConnected(id string, time int64, c
 }
 
 func (dsc *deviceServiceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
-	serviceURL, err := dsc.client.URLPrefix()
+	serviceURL, err := dsc.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func (dsc *deviceServiceRestClient) UpdateLastReported(id string, time int64, ct
 }
 
 func (dsc *deviceServiceRestClient) Add(ds *models.DeviceService, ctx context.Context) (string, error) {
-	serviceURL, err := dsc.client.URLPrefix()
+	serviceURL, err := dsc.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
@@ -81,7 +81,7 @@ func (dsc *deviceServiceRestClient) DeviceServiceForName(
 	name string,
 	ctx context.Context) (models.DeviceService, error) {
 
-	urlPrefix, err := dsc.client.URLPrefix()
+	urlPrefix, err := dsc.urlClient.Prefix()
 	if err != nil {
 		return models.DeviceService{}, err
 	}

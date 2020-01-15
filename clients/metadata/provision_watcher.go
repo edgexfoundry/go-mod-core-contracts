@@ -21,8 +21,8 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/rest"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -51,12 +51,12 @@ type ProvisionWatcherClient interface {
 }
 
 type provisionWatcherRestClient struct {
-	client interfaces.ClientURL
+	urlClient interfaces.URLClient
 }
 
 // NewProvisionWatcherClient creates an instance of ProvisionWatcherClient
 func NewProvisionWatcherClient(params types.EndpointParams, m interfaces.Endpointer) ProvisionWatcherClient {
-	pw := provisionWatcherRestClient{client: rest.ClientFactory(params, m)}
+	pw := provisionWatcherRestClient{urlClient: urlclient.New(params, m)}
 	return &pw
 }
 
@@ -65,7 +65,7 @@ func (pwc *provisionWatcherRestClient) requestProvisionWatcher(
 	urlSuffix string,
 	ctx context.Context) (models.ProvisionWatcher, error) {
 
-	urlPrefix, err := pwc.client.URLPrefix()
+	urlPrefix, err := pwc.urlClient.Prefix()
 	if err != nil {
 		return models.ProvisionWatcher{}, err
 	}
@@ -85,7 +85,7 @@ func (pwc *provisionWatcherRestClient) requestProvisionWatcherSlice(
 	urlSuffix string,
 	ctx context.Context) ([]models.ProvisionWatcher, error) {
 
-	urlPrefix, err := pwc.client.URLPrefix()
+	urlPrefix, err := pwc.urlClient.Prefix()
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +129,7 @@ func (pwc *provisionWatcherRestClient) ProvisionWatchersForProfileByName(profile
 }
 
 func (pwc *provisionWatcherRestClient) Add(dev *models.ProvisionWatcher, ctx context.Context) (string, error) {
-	serviceURL, err := pwc.client.URLPrefix()
+	serviceURL, err := pwc.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
@@ -138,7 +138,7 @@ func (pwc *provisionWatcherRestClient) Add(dev *models.ProvisionWatcher, ctx con
 }
 
 func (pwc *provisionWatcherRestClient) Update(dev models.ProvisionWatcher, ctx context.Context) error {
-	serviceURL, err := pwc.client.URLPrefix()
+	serviceURL, err := pwc.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
@@ -147,7 +147,7 @@ func (pwc *provisionWatcherRestClient) Update(dev models.ProvisionWatcher, ctx c
 }
 
 func (pwc *provisionWatcherRestClient) Delete(id string, ctx context.Context) error {
-	serviceURL, err := pwc.client.URLPrefix()
+	serviceURL, err := pwc.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
