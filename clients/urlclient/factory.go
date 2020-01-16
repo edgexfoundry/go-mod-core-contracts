@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Dell Inc.
+ * Copyright 2020 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,36 +12,19 @@
  * the License.
  *******************************************************************************/
 
-package metadata
+// urlclient provides concrete implementation types that implement the URLClient interface.
+// These types should all, in some way or another, provide some mechanism to fill in service data at runtime.
+package urlclient
 
 import (
-	"testing"
-
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func TestNewCommandClientWithConsul(t *testing.T) {
-	deviceUrl := "http://localhost:48081" + clients.ApiCommandRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiCommandRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
-
-	cc := NewCommandClient(params, mockCoreMetaDataEndpoint{})
-
-	r, ok := cc.(*commandRestClient)
-	if !ok {
-		t.Error("cc is not of expected type")
+// New provides the correct concrete implementation of the URLClient given the params provided.
+func New(params types.EndpointParams, m interfaces.Endpointer) interfaces.URLClient {
+	if params.UseRegistry {
+		return newRegistryClient(params, m, 10)
 	}
-
-	url, err := r.urlClient.Prefix()
-
-	if err != nil {
-		t.Error("url was not initialized")
-	} else if url != deviceUrl {
-		t.Errorf("unexpected url value %s", url)
-	}
+	return newLocalClient(params)
 }

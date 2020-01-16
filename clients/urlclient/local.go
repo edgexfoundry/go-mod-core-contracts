@@ -12,36 +12,25 @@
  * the License.
  *******************************************************************************/
 
-package metadata
+package urlclient
 
 import (
-	"testing"
-
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func TestNewCommandClientWithConsul(t *testing.T) {
-	deviceUrl := "http://localhost:48081" + clients.ApiCommandRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiCommandRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
+// localClient defines a ClientURL implementation that returns the struct field for the URL.
+type localClient struct {
+	url string
+}
 
-	cc := NewCommandClient(params, mockCoreMetaDataEndpoint{})
-
-	r, ok := cc.(*commandRestClient)
-	if !ok {
-		t.Error("cc is not of expected type")
+// newLocalClient returns a pointer to a localClient.
+func newLocalClient(params types.EndpointParams) *localClient {
+	return &localClient{
+		url: params.Url,
 	}
+}
 
-	url, err := r.urlClient.Prefix()
-
-	if err != nil {
-		t.Error("url was not initialized")
-	} else if url != deviceUrl {
-		t.Errorf("unexpected url value %s", url)
-	}
+// Prefix always returns the URL statically defined on object creation.
+func (c *localClient) Prefix() (string, error) {
+	return c.url, nil
 }

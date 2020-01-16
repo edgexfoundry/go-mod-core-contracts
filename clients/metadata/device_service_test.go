@@ -16,7 +16,6 @@ package metadata
 
 import (
 	"testing"
-	"time"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
@@ -37,10 +36,11 @@ func TestNewDeviceServiceClientWithConsul(t *testing.T) {
 		t.Error("dsc is not of expected type")
 	}
 
-	time.Sleep(25 * time.Millisecond)
-	if len(r.url) == 0 {
+	url, err := r.urlClient.Prefix()
+
+	if err != nil {
 		t.Error("url was not initialized")
-	} else if r.url != deviceServiceUrl {
-		t.Errorf("unexpected url value %s", r.url)
+	} else if url != deviceServiceUrl {
+		t.Errorf("unexpected url value %s", url)
 	}
 }

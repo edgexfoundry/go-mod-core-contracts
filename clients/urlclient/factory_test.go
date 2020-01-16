@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Dell Inc.
+ * Copyright 2020 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,36 +12,37 @@
  * the License.
  *******************************************************************************/
 
-package metadata
+package urlclient
 
 import (
+	"fmt"
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func TestNewCommandClientWithConsul(t *testing.T) {
-	deviceUrl := "http://localhost:48081" + clients.ApiCommandRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiCommandRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
+func TestClientFactoryLocal(t *testing.T) {
+	actualClient := New(types.EndpointParams{UseRegistry: false}, mockEndpoint{})
+	_, isLocalClient := actualClient.(*localClient)
 
-	cc := NewCommandClient(params, mockCoreMetaDataEndpoint{})
-
-	r, ok := cc.(*commandRestClient)
-	if !ok {
-		t.Error("cc is not of expected type")
+	if !isLocalClient {
+		t.Fatalf("expected type %T, found %T", localClient{}, actualClient)
 	}
+}
 
-	url, err := r.urlClient.Prefix()
+func TestClientFactoryRegistry(t *testing.T) {
+	actualClient := New(types.EndpointParams{UseRegistry: true}, mockEndpoint{})
+	_, isRegistryClient := actualClient.(*registryClient)
 
-	if err != nil {
-		t.Error("url was not initialized")
-	} else if url != deviceUrl {
-		t.Errorf("unexpected url value %s", url)
+	if !isRegistryClient {
+		t.Fatalf("expected type %T, found %T", registryClient{}, actualClient)
 	}
+}
+
+type mockEndpoint struct{}
+
+func (e mockEndpoint) Monitor(_ types.EndpointParams) chan string {
+	ch := make(chan string, 1)
+	ch <- fmt.Sprint("http://domain.com")
+	return ch
 }

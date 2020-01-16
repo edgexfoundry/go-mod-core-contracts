@@ -25,7 +25,32 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-// Test updating a device profile using the device profile client
+func TestNewDeviceProfileClientWithConsul(t *testing.T) {
+	deviceUrl := "http://localhost:48081" + clients.ApiCommandRoute
+	params := types.EndpointParams{
+		ServiceKey:  clients.CoreMetaDataServiceKey,
+		Path:        clients.ApiCommandRoute,
+		UseRegistry: true,
+		Url:         deviceUrl,
+		Interval:    clients.ClientMonitorDefault}
+
+	dpc := NewDeviceProfileClient(params, mockCoreMetaDataEndpoint{})
+
+	r, ok := dpc.(*deviceProfileRestClient)
+	if !ok {
+		t.Error("cc is not of expected type")
+	}
+
+	url, err := r.urlClient.Prefix()
+
+	if err != nil {
+		t.Error("url was not initialized")
+	} else if url != deviceUrl {
+		t.Errorf("unexpected url value %s", url)
+	}
+}
+
+// Test updating a device profile using the device profile urlClient
 func TestUpdateDeviceProfile(t *testing.T) {
 	p := models.DeviceProfile{
 		Id:   "1234",

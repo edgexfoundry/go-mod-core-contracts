@@ -24,6 +24,7 @@ import (
 	"strconv"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
@@ -58,11 +59,11 @@ type ReadingClient interface {
 
 type readingRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // NewReadingClient creates an instance of a ReadingClient
-func NewReadingClient(params types.EndpointParams, m clients.Endpointer) ReadingClient {
+func NewReadingClient(params types.EndpointParams, m interfaces.Endpointer) ReadingClient {
 	r := readingRestClient{endpoint: m}
 	r.init(params)
 	return &r

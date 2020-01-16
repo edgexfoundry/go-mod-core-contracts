@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Dell Inc.
+ * Copyright 2020 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,16 +12,15 @@
  * the License.
  *******************************************************************************/
 
-package clients
+package interfaces
 
-import "github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-
-//Endpointer is the interface for types that need to implement or simulate integration
-//with a service discovery provider.
-type Endpointer interface {
-	//Monitor is responsible for looking up information about the service endpoint corresponding
-	//to the params.ServiceKey property. The name "Monitor" implies that this lookup will be done
-	//at a regular interval. Information about the service from the discovery provider should be
-	//used to construct a URL which will then be pushed to the returned channel.
-	Monitor(params types.EndpointParams) chan string
+// URLClient is the interface for types that need to define some way to retrieve URLClient information about services.
+// This information can be anything that must be determined at runtime, whether it is unknown or simply not yet known.
+type URLClient interface {
+	// Prefix returns the URLClient base path (or root) of a service.
+	// This is the common root of all REST calls to the service,
+	// and is defined on a per service (rather than per endpoint) basis.
+	// Prefix returns the root URLClient for REST calls to the service if it was able to retrieve that URLClient;
+	// it returns an error otherwise.
+	Prefix() (string, error)
 }

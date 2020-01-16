@@ -27,6 +27,7 @@ import (
 	"strconv"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
@@ -68,11 +69,11 @@ type EventClient interface {
 
 type eventRestClient struct {
 	url      string
-	endpoint clients.Endpointer
+	endpoint interfaces.Endpointer
 }
 
 // NewEventClient creates an instance of EventClient
-func NewEventClient(params types.EndpointParams, m clients.Endpointer) EventClient {
+func NewEventClient(params types.EndpointParams, m interfaces.Endpointer) EventClient {
 	e := eventRestClient{endpoint: m}
 	e.init(params)
 	return &e

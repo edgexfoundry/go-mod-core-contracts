@@ -20,12 +20,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
-	"github.com/google/uuid"
 )
 
 func TestNewAddressableClientWithConsul(t *testing.T) {
@@ -44,15 +44,16 @@ func TestNewAddressableClientWithConsul(t *testing.T) {
 		t.Error("sc is not of expected type")
 	}
 
-	time.Sleep(25 * time.Millisecond)
-	if len(r.url) == 0 {
+	url, err := r.urlClient.Prefix()
+
+	if err != nil {
 		t.Error("url was not initialized")
-	} else if r.url != addressableURL {
-		t.Errorf("unexpected url value %s", r.url)
+	} else if url != addressableURL {
+		t.Errorf("unexpected url value %s", url)
 	}
 }
 
-// Test adding an addressable using the client
+// Test adding an addressable using the urlClient
 func TestAddAddressable(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),
@@ -98,7 +99,7 @@ func TestAddAddressable(t *testing.T) {
 	}
 }
 
-// Test get an addressable using the client
+// Test get an addressable using the urlClient
 func TestGetAddressable(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),
@@ -143,7 +144,7 @@ func TestGetAddressable(t *testing.T) {
 	}
 }
 
-// Test get an addressable using the client
+// Test get an addressable using the urlClient
 func TestGetAddressableForName(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),
@@ -188,7 +189,7 @@ func TestGetAddressableForName(t *testing.T) {
 	}
 }
 
-// Test updating an addressable using the client
+// Test updating an addressable using the urlClient
 func TestUpdateAddressable(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),
@@ -226,7 +227,7 @@ func TestUpdateAddressable(t *testing.T) {
 	}
 }
 
-// Test deleting an addressable using the client
+// Test deleting an addressable using the urlClient
 func TestDeleteAddressable(t *testing.T) {
 	addressable := models.Addressable{
 		Id:   uuid.New().String(),

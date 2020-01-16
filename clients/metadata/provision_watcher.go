@@ -20,14 +20,13 @@ import (
 	"net/url"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-/*
-ProvisionWatcherClient defines the interface for interactions with the ProvisionWatcher endpoint on the EdgeX Foundry
-core-metadata service.
-*/
+// ProvisionWatcherClient defines the interface for interactions with the ProvisionWatcher endpoint on metadata.
 type ProvisionWatcherClient interface {
 	// Add a new provision watcher
 	Add(dev *models.ProvisionWatcher, ctx context.Context) (string, error)
@@ -52,35 +51,26 @@ type ProvisionWatcherClient interface {
 }
 
 type provisionWatcherRestClient struct {
-	url      string
-	endpoint clients.Endpointer
+	urlClient interfaces.URLClient
 }
 
 // NewProvisionWatcherClient creates an instance of ProvisionWatcherClient
-func NewProvisionWatcherClient(params types.EndpointParams, m clients.Endpointer) ProvisionWatcherClient {
-	pw := provisionWatcherRestClient{endpoint: m}
-	pw.init(params)
+func NewProvisionWatcherClient(params types.EndpointParams, m interfaces.Endpointer) ProvisionWatcherClient {
+	pw := provisionWatcherRestClient{urlClient: urlclient.New(params, m)}
 	return &pw
 }
 
-func (pw *provisionWatcherRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					pw.url = url
-				}
-			}
-		}(pw.endpoint.Monitor(params))
-	} else {
-		pw.url = params.Url
-	}
-}
-
 // Helper method to request and decode a provision watcher
-func (pw *provisionWatcherRestClient) requestProvisionWatcher(url string, ctx context.Context) (models.ProvisionWatcher, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (pwc *provisionWatcherRestClient) requestProvisionWatcher(
+	urlSuffix string,
+	ctx context.Context) (models.ProvisionWatcher, error) {
+
+	urlPrefix, err := pwc.urlClient.Prefix()
+	if err != nil {
+		return models.ProvisionWatcher{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.ProvisionWatcher{}, err
 	}
@@ -91,8 +81,16 @@ func (pw *provisionWatcherRestClient) requestProvisionWatcher(url string, ctx co
 }
 
 // Helper method to request and decode a provision watcher slice
-func (pw *provisionWatcherRestClient) requestProvisionWatcherSlice(url string, ctx context.Context) ([]models.ProvisionWatcher, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (pwc *provisionWatcherRestClient) requestProvisionWatcherSlice(
+	urlSuffix string,
+	ctx context.Context) ([]models.ProvisionWatcher, error) {
+
+	urlPrefix, err := pwc.urlClient.Prefix()
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return []models.ProvisionWatcher{}, err
 	}
@@ -102,42 +100,57 @@ func (pw *provisionWatcherRestClient) requestProvisionWatcherSlice(url string, c
 	return pwSlice, err
 }
 
-func (pw *provisionWatcherRestClient) ProvisionWatcher(id string, ctx context.Context) (models.ProvisionWatcher, error) {
-	return pw.requestProvisionWatcher(pw.url+"/"+id, ctx)
+func (pwc *provisionWatcherRestClient) ProvisionWatcher(id string, ctx context.Context) (models.ProvisionWatcher, error) {
+	return pwc.requestProvisionWatcher("/"+id, ctx)
 }
 
-func (pw *provisionWatcherRestClient) ProvisionWatchers(ctx context.Context) ([]models.ProvisionWatcher, error) {
-	return pw.requestProvisionWatcherSlice(pw.url, ctx)
+func (pwc *provisionWatcherRestClient) ProvisionWatchers(ctx context.Context) ([]models.ProvisionWatcher, error) {
+	return pwc.requestProvisionWatcherSlice("", ctx)
 }
 
-func (pw *provisionWatcherRestClient) ProvisionWatcherForName(name string, ctx context.Context) (models.ProvisionWatcher, error) {
-	return pw.requestProvisionWatcher(pw.url+"/name/"+url.QueryEscape(name), ctx)
+func (pwc *provisionWatcherRestClient) ProvisionWatcherForName(name string, ctx context.Context) (models.ProvisionWatcher, error) {
+	return pwc.requestProvisionWatcher("/name/"+url.QueryEscape(name), ctx)
 }
 
-func (pw *provisionWatcherRestClient) ProvisionWatchersForService(serviceId string, ctx context.Context) ([]models.ProvisionWatcher, error) {
-	return pw.requestProvisionWatcherSlice(pw.url+"/service/"+serviceId, ctx)
+func (pwc *provisionWatcherRestClient) ProvisionWatchersForService(serviceId string, ctx context.Context) ([]models.ProvisionWatcher, error) {
+	return pwc.requestProvisionWatcherSlice("/service/"+serviceId, ctx)
 }
 
-func (pw *provisionWatcherRestClient) ProvisionWatchersForServiceByName(serviceName string, ctx context.Context) ([]models.ProvisionWatcher, error) {
-	return pw.requestProvisionWatcherSlice(pw.url+"/servicename/"+url.QueryEscape(serviceName), ctx)
+func (pwc *provisionWatcherRestClient) ProvisionWatchersForServiceByName(serviceName string, ctx context.Context) ([]models.ProvisionWatcher, error) {
+	return pwc.requestProvisionWatcherSlice("/servicename/"+url.QueryEscape(serviceName), ctx)
 }
 
-func (pw *provisionWatcherRestClient) ProvisionWatchersForProfile(profileId string, ctx context.Context) ([]models.ProvisionWatcher, error) {
-	return pw.requestProvisionWatcherSlice(pw.url+"/profile/"+profileId, ctx)
+func (pwc *provisionWatcherRestClient) ProvisionWatchersForProfile(profileId string, ctx context.Context) ([]models.ProvisionWatcher, error) {
+	return pwc.requestProvisionWatcherSlice("/profile/"+profileId, ctx)
 }
 
-func (pw *provisionWatcherRestClient) ProvisionWatchersForProfileByName(profileName string, ctx context.Context) ([]models.ProvisionWatcher, error) {
-	return pw.requestProvisionWatcherSlice(pw.url+"/profilename/"+url.QueryEscape(profileName), ctx)
+func (pwc *provisionWatcherRestClient) ProvisionWatchersForProfileByName(profileName string, ctx context.Context) ([]models.ProvisionWatcher, error) {
+	return pwc.requestProvisionWatcherSlice("/profilename/"+url.QueryEscape(profileName), ctx)
 }
 
-func (pw *provisionWatcherRestClient) Add(dev *models.ProvisionWatcher, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest(pw.url, dev, ctx)
+func (pwc *provisionWatcherRestClient) Add(dev *models.ProvisionWatcher, ctx context.Context) (string, error) {
+	serviceURL, err := pwc.urlClient.Prefix()
+	if err != nil {
+		return "", err
+	}
+
+	return clients.PostJsonRequest(serviceURL, dev, ctx)
 }
 
-func (pw *provisionWatcherRestClient) Update(dev models.ProvisionWatcher, ctx context.Context) error {
-	return clients.UpdateRequest(pw.url, dev, ctx)
+func (pwc *provisionWatcherRestClient) Update(dev models.ProvisionWatcher, ctx context.Context) error {
+	serviceURL, err := pwc.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.UpdateRequest(serviceURL, dev, ctx)
 }
 
-func (pw *provisionWatcherRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest(pw.url+"/id/"+id, ctx)
+func (pwc *provisionWatcherRestClient) Delete(id string, ctx context.Context) error {
+	serviceURL, err := pwc.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(serviceURL+"/id/"+id, ctx)
 }

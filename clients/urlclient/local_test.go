@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Dell Inc.
+ * Copyright 2020 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,36 +12,41 @@
  * the License.
  *******************************************************************************/
 
-package metadata
+package urlclient
 
 import (
+	"reflect"
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
-func TestNewCommandClientWithConsul(t *testing.T) {
-	deviceUrl := "http://localhost:48081" + clients.ApiCommandRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiCommandRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
+func TestNewLocalClient(t *testing.T) {
+	actualClient := newLocalClient(types.EndpointParams{UseRegistry: false})
 
-	cc := NewCommandClient(params, mockCoreMetaDataEndpoint{})
-
-	r, ok := cc.(*commandRestClient)
-	if !ok {
-		t.Error("cc is not of expected type")
+	if actualClient == nil {
+		t.Fatal("nil returned from newLocalClient")
 	}
 
-	url, err := r.urlClient.Prefix()
+	expectedType := reflect.TypeOf(&localClient{})
+	clientType := reflect.TypeOf(actualClient)
+
+	if clientType != expectedType {
+		t.Fatalf("expected type %T, found %T", expectedType, actualClient)
+	}
+}
+
+func TestLocalClient_URLPrefix(t *testing.T) {
+	expectedURL := "http://domain.com"
+	client := newLocalClient(types.EndpointParams{Url: expectedURL})
+
+	actualURL, err := client.Prefix()
 
 	if err != nil {
-		t.Error("url was not initialized")
-	} else if url != deviceUrl {
-		t.Errorf("unexpected url value %s", url)
+		t.Fatalf("unexpected error %s", err.Error())
+	}
+
+	if actualURL != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
 	}
 }
