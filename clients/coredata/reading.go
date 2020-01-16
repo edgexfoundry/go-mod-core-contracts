@@ -26,10 +26,11 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-// ReadingClient defines the interface for interactions with the Reading endpoint on the EdgeX Foundry core-data service.
+// ReadingClient defines the interface for interactions with the Reading endpoint on core-data.
 type ReadingClient interface {
 	// Readings returns a list of all readings
 	Readings(ctx context.Context) ([]models.Reading, error)
@@ -58,35 +59,22 @@ type ReadingClient interface {
 }
 
 type readingRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	urlClient interfaces.URLClient
 }
 
 // NewReadingClient creates an instance of a ReadingClient
 func NewReadingClient(params types.EndpointParams, m interfaces.Endpointer) ReadingClient {
-	r := readingRestClient{endpoint: m}
-	r.init(params)
-	return &r
-}
-
-func (r *readingRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					r.url = url
-				}
-			}
-		}(r.endpoint.Monitor(params))
-	} else {
-		r.url = params.Url
-	}
+	return &readingRestClient{urlClient: urlclient.New(params, m)}
 }
 
 // Helper method to request and decode a reading slice
-func (r *readingRestClient) requestReadingSlice(url string, ctx context.Context) ([]models.Reading, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (r *readingRestClient) requestReadingSlice(urlSuffix string, ctx context.Context) ([]models.Reading, error) {
+	urlPrefix, err := r.urlClient.Prefix()
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return []models.Reading{}, err
 	}
@@ -97,8 +85,13 @@ func (r *readingRestClient) requestReadingSlice(url string, ctx context.Context)
 }
 
 // Helper method to request and decode a reading
-func (r *readingRestClient) requestReading(url string, ctx context.Context) (models.Reading, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (r *readingRestClient) requestReading(urlSuffix string, ctx context.Context) (models.Reading, error) {
+	urlPrefix, err := r.urlClient.Prefix()
+	if err != nil {
+		return models.Reading{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.Reading{}, err
 	}
@@ -109,49 +102,87 @@ func (r *readingRestClient) requestReading(url string, ctx context.Context) (mod
 }
 
 func (r *readingRestClient) Readings(ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url, ctx)
+	return r.requestReadingSlice("", ctx)
 }
 
 func (r *readingRestClient) Reading(id string, ctx context.Context) (models.Reading, error) {
-	return r.requestReading(r.url+"/"+id, ctx)
+	return r.requestReading("/"+id, ctx)
 }
 
 func (r *readingRestClient) ReadingCount(ctx context.Context) (int, error) {
-	return clients.CountRequest(r.url+"/count", ctx)
+	urlPrefix, err := r.urlClient.Prefix()
+	if err != nil {
+		return 0, err
+	}
+
+	return clients.CountRequest(urlPrefix+"/count", ctx)
 }
 
-func (r *readingRestClient) ReadingsForDevice(deviceId string, limit int, ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url+"/device/"+url.QueryEscape(deviceId)+"/"+strconv.Itoa(limit), ctx)
+func (r *readingRestClient) ReadingsForDevice(
+	deviceId string,
+	limit int,
+	ctx context.Context) ([]models.Reading, error) {
+
+	return r.requestReadingSlice("/device/"+url.QueryEscape(deviceId)+"/"+strconv.Itoa(limit), ctx)
 }
 
-func (r *readingRestClient) ReadingsForNameAndDevice(name string, deviceId string, limit int, ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url+"/name/"+url.QueryEscape(name)+"/device/"+url.QueryEscape(deviceId)+"/"+strconv.Itoa(limit), ctx)
+func (r *readingRestClient) ReadingsForNameAndDevice(
+	name string,
+	deviceId string,
+	limit int,
+	ctx context.Context) ([]models.Reading, error) {
+
+	return r.requestReadingSlice(
+		"/name/"+url.QueryEscape(name)+"/device/"+url.QueryEscape(deviceId)+"/"+strconv.Itoa(limit), ctx)
 }
 
 func (r *readingRestClient) ReadingsForName(name string, limit int, ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url+"/name/"+url.QueryEscape(name)+"/"+strconv.Itoa(limit), ctx)
+	return r.requestReadingSlice("/name/"+url.QueryEscape(name)+"/"+strconv.Itoa(limit), ctx)
 }
 
-func (r *readingRestClient) ReadingsForUOMLabel(uomLabel string, limit int, ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url+"/uomlabel/"+url.QueryEscape(uomLabel)+"/"+strconv.Itoa(limit), ctx)
+func (r *readingRestClient) ReadingsForUOMLabel(
+	uomLabel string,
+	limit int,
+	ctx context.Context) ([]models.Reading, error) {
+
+	return r.requestReadingSlice("/uomlabel/"+url.QueryEscape(uomLabel)+"/"+strconv.Itoa(limit), ctx)
 }
 
 func (r *readingRestClient) ReadingsForLabel(label string, limit int, ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url+"/label/"+url.QueryEscape(label)+"/"+strconv.Itoa(limit), ctx)
+	return r.requestReadingSlice("/label/"+url.QueryEscape(label)+"/"+strconv.Itoa(limit), ctx)
 }
 
-func (r *readingRestClient) ReadingsForType(readingType string, limit int, ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url+"/type/"+url.QueryEscape(readingType)+"/"+strconv.Itoa(limit), ctx)
+func (r *readingRestClient) ReadingsForType(
+	readingType string,
+	limit int,
+	ctx context.Context) ([]models.Reading, error) {
+
+	return r.requestReadingSlice("/type/"+url.QueryEscape(readingType)+"/"+strconv.Itoa(limit), ctx)
 }
 
-func (r *readingRestClient) ReadingsForInterval(start int, end int, limit int, ctx context.Context) ([]models.Reading, error) {
-	return r.requestReadingSlice(r.url+"/"+strconv.Itoa(start)+"/"+strconv.Itoa(end)+"/"+strconv.Itoa(limit), ctx)
+func (r *readingRestClient) ReadingsForInterval(
+	start int,
+	end int,
+	limit int,
+	ctx context.Context) ([]models.Reading, error) {
+
+	return r.requestReadingSlice("/"+strconv.Itoa(start)+"/"+strconv.Itoa(end)+"/"+strconv.Itoa(limit), ctx)
 }
 
 func (r *readingRestClient) Add(reading *models.Reading, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest(r.url, reading, ctx)
+	urlPrefix, err := r.urlClient.Prefix()
+	if err != nil {
+		return "", err
+	}
+
+	return clients.PostJsonRequest(urlPrefix, reading, ctx)
 }
 
 func (r *readingRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest(r.url+"/id/"+id, ctx)
+	urlPrefix, err := r.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
 }
