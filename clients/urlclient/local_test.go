@@ -15,7 +15,6 @@
 package urlclient
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
@@ -27,20 +26,13 @@ func TestNewLocalClient(t *testing.T) {
 	if actualClient == nil {
 		t.Fatal("nil returned from newLocalClient")
 	}
-
-	expectedType := reflect.TypeOf(&localClient{})
-	clientType := reflect.TypeOf(actualClient)
-
-	if clientType != expectedType {
-		t.Fatalf("expected type %T, found %T", expectedType, actualClient)
-	}
 }
 
 func TestLocalClient_URLPrefix(t *testing.T) {
 	expectedURL := "http://domain.com"
-	client := newLocalClient(types.EndpointParams{Url: expectedURL})
+	urlClient := newLocalClient(types.EndpointParams{Url: expectedURL})
 
-	actualURL, err := client.Prefix()
+	actualURL, err := urlClient.Prefix()
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())

@@ -16,7 +16,6 @@ package urlclient
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 	"time"
 
@@ -29,20 +28,13 @@ func TestNewRegistryClient(t *testing.T) {
 	if actualClient == nil {
 		t.Fatal("nil returned from newRegistryClient")
 	}
-
-	expectedType := reflect.TypeOf(&registryClient{})
-	clientType := reflect.TypeOf(actualClient)
-
-	if clientType != expectedType {
-		t.Fatalf("expected type %T, found %T", expectedType, actualClient)
-	}
 }
 
 func TestRegistryClient_URLPrefix(t *testing.T) {
 	expectedURL := "http://domain.com"
-	client := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
+	urlClient := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
 
-	actualURL, err := client.Prefix()
+	actualURL, err := urlClient.Prefix()
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -55,11 +47,11 @@ func TestRegistryClient_URLPrefix(t *testing.T) {
 
 func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
 	expectedURL := "http://domain.com"
-	client := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
-	client.initialized = true
-	client.url = expectedURL
+	urlClient := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
+	urlClient.initialized = true
+	urlClient.url = expectedURL
 
-	actualURL, err := client.Prefix()
+	actualURL, err := urlClient.Prefix()
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -71,9 +63,9 @@ func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
 }
 
 func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
-	client := newRegistryClient(types.EndpointParams{}, mockTimeoutEndpoint{}, 1)
+	urlClient := newRegistryClient(types.EndpointParams{}, mockTimeoutEndpoint{}, 1)
 
-	actualURL, err := client.Prefix()
+	actualURL, err := urlClient.Prefix()
 
 	if err == nil || actualURL != "" {
 		t.Fatal("expected error")
