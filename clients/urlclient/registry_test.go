@@ -48,10 +48,14 @@ func TestRegistryClient_URLPrefix(t *testing.T) {
 func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
 	expectedURL := "http://domain.com"
 	urlClient := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
-	urlClient.initialized = true
-	urlClient.url = expectedURL
 
+	// set up prerequisite condition
 	actualURL, err := urlClient.Prefix()
+	if err != nil {
+		t.Fatalf("unexpected error in precondition %s", err.Error())
+	}
+
+	actualURL, err = urlClient.Prefix()
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())

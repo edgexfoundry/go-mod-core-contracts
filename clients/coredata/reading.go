@@ -133,7 +133,13 @@ func (r *readingRestClient) ReadingsForNameAndDevice(
 	ctx context.Context) ([]models.Reading, error) {
 
 	return r.requestReadingSlice(
-		"/name/"+url.QueryEscape(name)+"/device/"+url.QueryEscape(deviceId)+"/"+strconv.Itoa(limit), ctx)
+		"/name/"+
+			url.QueryEscape(name)+
+			"/device/"+
+			url.QueryEscape(deviceId)+
+			"/"+strconv.Itoa(limit),
+		ctx,
+	)
 }
 
 func (r *readingRestClient) ReadingsForName(name string, limit int, ctx context.Context) ([]models.Reading, error) {

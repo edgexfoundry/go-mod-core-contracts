@@ -24,11 +24,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ugorji/go/codec"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
+
+	"github.com/ugorji/go/codec"
 )
 
 const (

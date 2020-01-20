@@ -79,17 +79,21 @@ func NewEventClient(params types.EndpointParams, m interfaces.Endpointer) EventC
 func (e *eventRestClient) requestEventSlice(urlSuffix string, ctx context.Context) ([]models.Event, error) {
 	urlPrefix, err := e.urlClient.Prefix()
 	if err != nil {
-		return nil, err
+		return []models.Event{}, err
 	}
 
 	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
-		return nil, err
+		return []models.Event{}, err
 	}
 
 	eSlice := make([]models.Event, 0)
 	err = json.Unmarshal(data, &eSlice)
-	return eSlice, err
+	if err != nil {
+		return []models.Event{}, err
+	}
+
+	return eSlice, nil
 }
 
 // Helper method to request and decode an event
@@ -150,7 +154,13 @@ func (e *eventRestClient) EventsForDeviceAndValueDescriptor(
 	ctx context.Context) ([]models.Event, error) {
 
 	return e.requestEventSlice(
-		"/device/"+url.QueryEscape(deviceId)+"/valuedescriptor/"+url.QueryEscape(vd)+"/"+strconv.Itoa(limit), ctx)
+		"/device/"+
+			url.QueryEscape(deviceId)+
+			"/valuedescriptor/"+
+			url.QueryEscape(vd)+
+			"/"+strconv.Itoa(limit),
+		ctx,
+	)
 }
 
 func (e *eventRestClient) Add(event *models.Event, ctx context.Context) (string, error) {
