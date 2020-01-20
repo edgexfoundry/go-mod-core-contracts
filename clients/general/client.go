@@ -13,9 +13,7 @@
  * the License.
  *******************************************************************************/
 
-/*
-Package general provides a client for calling operational endpoints that are present on all service APIs.
-*/
+// general provides a client for calling operational endpoints that are present on all service APIs.
 package general
 
 import (
@@ -24,6 +22,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 type GeneralClient interface {
@@ -34,38 +33,30 @@ type GeneralClient interface {
 }
 
 type generalRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	urlClient interfaces.URLClient
 }
 
 // NewGeneralClient creates an instance of GeneralClient
 func NewGeneralClient(params types.EndpointParams, m interfaces.Endpointer) GeneralClient {
-	gc := generalRestClient{endpoint: m}
-	gc.init(params)
-	return &gc
-}
-
-func (gc *generalRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					gc.url = url
-				}
-			}
-		}(gc.endpoint.Monitor(params))
-	} else {
-		gc.url = params.Url
-	}
+	return &generalRestClient{urlClient: urlclient.New(params, m)}
 }
 
 func (gc *generalRestClient) FetchConfiguration(ctx context.Context) (string, error) {
-	body, err := clients.GetRequest(gc.url+clients.ApiConfigRoute, ctx)
+	url, err := gc.urlClient.Prefix()
+	if err != nil {
+		return "", err
+	}
+
+	body, err := clients.GetRequest(url+clients.ApiConfigRoute, ctx)
 	return string(body), err
 }
 
 func (gc *generalRestClient) FetchMetrics(ctx context.Context) (string, error) {
-	body, err := clients.GetRequest(gc.url+clients.ApiMetricsRoute, ctx)
+	url, err := gc.urlClient.Prefix()
+	if err != nil {
+		return "", err
+	}
+
+	body, err := clients.GetRequest(url+clients.ApiMetricsRoute, ctx)
 	return string(body), err
 }
