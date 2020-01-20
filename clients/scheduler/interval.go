@@ -12,9 +12,7 @@
  * the License.
  *******************************************************************************/
 
-/*
-Package scheduler provides clients used for integration with the support-scheduler service.
-*/
+// scheduler provides clients used for integration with the support-scheduler service.
 package scheduler
 
 import (
@@ -25,12 +23,11 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-/*
-IntervalClient defines the interface for interactions with the Interval endpoint on the EdgeX Foundry support-scheduler service.
-*/
+// IntervalClient defines the interface for interactions with the Interval endpoint on support-scheduler.
 type IntervalClient interface {
 	// Add a new scheduling interval
 	Add(dev *models.Interval, ctx context.Context) (string, error)
@@ -49,84 +46,100 @@ type IntervalClient interface {
 }
 
 type intervalRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	urlClient interfaces.URLClient
 }
 
 // NewIntervalClient creates an instance of IntervalClient
 func NewIntervalClient(params types.EndpointParams, m interfaces.Endpointer) IntervalClient {
-	s := intervalRestClient{endpoint: m}
-	s.init(params)
-	return &s
+	return &intervalRestClient{urlClient: urlclient.New(params, m)}
 }
 
-func (s *intervalRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					s.url = url
-				}
-			}
-		}(s.endpoint.Monitor(params))
-	} else {
-		s.url = params.Url
+func (ic *intervalRestClient) Add(interval *models.Interval, ctx context.Context) (string, error) {
+	url, err := ic.urlClient.Prefix()
+	if err != nil {
+		return "", err
 	}
+
+	return clients.PostJsonRequest(url, interval, ctx)
 }
 
-func (s *intervalRestClient) Add(interval *models.Interval, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest(s.url, interval, ctx)
+func (ic *intervalRestClient) Delete(id string, ctx context.Context) error {
+	urlPrefix, err := ic.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
 }
 
-func (s *intervalRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest(s.url+"/id/"+id, ctx)
+func (ic *intervalRestClient) DeleteByName(name string, ctx context.Context) error {
+	urlPrefix, err := ic.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/name/"+url.QueryEscape(name), ctx)
 }
 
-func (s *intervalRestClient) DeleteByName(name string, ctx context.Context) error {
-	return clients.DeleteRequest(s.url+"/name/"+url.QueryEscape(name), ctx)
+func (ic *intervalRestClient) Interval(id string, ctx context.Context) (models.Interval, error) {
+	return ic.requestInterval("/"+id, ctx)
 }
 
-func (s *intervalRestClient) Interval(id string, ctx context.Context) (models.Interval, error) {
-	return s.requestInterval(s.url+"/"+id, ctx)
+func (ic *intervalRestClient) IntervalForName(name string, ctx context.Context) (models.Interval, error) {
+	return ic.requestInterval("/name/"+url.QueryEscape(name), ctx)
 }
 
-func (s *intervalRestClient) IntervalForName(name string, ctx context.Context) (models.Interval, error) {
-	return s.requestInterval(s.url+"/name/"+url.QueryEscape(name), ctx)
+func (ic *intervalRestClient) Intervals(ctx context.Context) ([]models.Interval, error) {
+	return ic.requestIntervalSlice("", ctx)
 }
 
-func (s *intervalRestClient) Intervals(ctx context.Context) ([]models.Interval, error) {
-	return s.requestIntervalSlice(s.url, ctx)
-}
+func (ic *intervalRestClient) Update(interval models.Interval, ctx context.Context) error {
+	url, err := ic.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
 
-func (s *intervalRestClient) Update(interval models.Interval, ctx context.Context) error {
-	return clients.UpdateRequest(s.url, interval, ctx)
+	return clients.UpdateRequest(url, interval, ctx)
 }
-
-//
-// Helper functions
-//
 
 // helper request and decode an interval
-func (s *intervalRestClient) requestInterval(url string, ctx context.Context) (models.Interval, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (ic *intervalRestClient) requestInterval(urlSuffix string, ctx context.Context) (models.Interval, error) {
+	urlPrefix, err := ic.urlClient.Prefix()
+	if err != nil {
+		return models.Interval{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.Interval{}, err
 	}
 
 	interval := models.Interval{}
 	err = json.Unmarshal(data, &interval)
-	return interval, err
+	if err != nil {
+		return models.Interval{}, err
+	}
+
+	return interval, nil
 }
 
 // helper returns a slice of intervals
-func (s *intervalRestClient) requestIntervalSlice(url string, ctx context.Context) ([]models.Interval, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (ic *intervalRestClient) requestIntervalSlice(urlSuffix string, ctx context.Context) ([]models.Interval, error) {
+	urlPrefix, err := ic.urlClient.Prefix()
+	if err != nil {
+		return []models.Interval{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return []models.Interval{}, err
 	}
 
 	sSlice := make([]models.Interval, 0)
 	err = json.Unmarshal(data, &sSlice)
-	return sSlice, err
+	if err != nil {
+		return []models.Interval{}, err
+	}
+
+	return sSlice, nil
 }
