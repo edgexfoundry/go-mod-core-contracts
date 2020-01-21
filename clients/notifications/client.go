@@ -79,11 +79,11 @@ func NewNotificationsClient(params types.EndpointParams, m interfaces.Endpointer
 }
 
 func (nc *notificationsRestClient) SendNotification(n Notification, ctx context.Context) error {
-	url, err := nc.urlClient.Prefix()
+	urlPrefix, err := nc.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
 
-	_, err = clients.PostJsonRequest(url, n, ctx)
+	_, err = clients.PostJsonRequest(urlPrefix, n, ctx)
 	return err
 }
