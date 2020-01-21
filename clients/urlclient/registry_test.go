@@ -84,7 +84,7 @@ func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
 	}
 }
 
-type mockEndpoint struct{
+type mockEndpoint struct {
 	ch chan string
 }
 
