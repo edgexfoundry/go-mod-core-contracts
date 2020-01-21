@@ -55,12 +55,12 @@ func NewIntervalClient(params types.EndpointParams, m interfaces.Endpointer) Int
 }
 
 func (ic *intervalRestClient) Add(interval *models.Interval, ctx context.Context) (string, error) {
-	url, err := ic.urlClient.Prefix()
+	urlPrefix, err := ic.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
 
-	return clients.PostJsonRequest(url, interval, ctx)
+	return clients.PostJsonRequest(urlPrefix, interval, ctx)
 }
 
 func (ic *intervalRestClient) Delete(id string, ctx context.Context) error {
@@ -94,12 +94,12 @@ func (ic *intervalRestClient) Intervals(ctx context.Context) ([]models.Interval,
 }
 
 func (ic *intervalRestClient) Update(interval models.Interval, ctx context.Context) error {
-	url, err := ic.urlClient.Prefix()
+	urlPrefix, err := ic.urlClient.Prefix()
 	if err != nil {
 		return err
 	}
 
-	return clients.UpdateRequest(url, interval, ctx)
+	return clients.UpdateRequest(urlPrefix, interval, ctx)
 }
 
 // helper request and decode an interval
