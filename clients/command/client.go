@@ -86,10 +86,10 @@ func (cc *commandRestClient) PutDeviceCommandByNames(
 	body string,
 	ctx context.Context) (string, error) {
 
-	url, err := cc.urlClient.Prefix()
+	urlPrefix, err := cc.urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
 
-	return clients.PutRequest(url+"/name/"+deviceName+"/command/"+commandName, []byte(body), ctx)
+	return clients.PutRequest(urlPrefix+"/name/"+deviceName+"/command/"+commandName, []byte(body), ctx)
 }
