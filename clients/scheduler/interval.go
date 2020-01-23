@@ -55,30 +55,15 @@ func NewIntervalClient(params types.EndpointParams, m interfaces.Endpointer) Int
 }
 
 func (ic *intervalRestClient) Add(interval *models.Interval, ctx context.Context) (string, error) {
-	urlPrefix, err := ic.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostJsonRequest(urlPrefix, interval, ctx)
+	return clients.PostJsonRequest("", interval, ctx, ic.urlClient)
 }
 
 func (ic *intervalRestClient) Delete(id string, ctx context.Context) error {
-	urlPrefix, err := ic.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
+	return clients.DeleteRequest("/id/"+id, ctx, ic.urlClient)
 }
 
 func (ic *intervalRestClient) DeleteByName(name string, ctx context.Context) error {
-	urlPrefix, err := ic.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/name/"+url.QueryEscape(name), ctx)
+	return clients.DeleteRequest("/name/"+url.QueryEscape(name), ctx, ic.urlClient)
 }
 
 func (ic *intervalRestClient) Interval(id string, ctx context.Context) (models.Interval, error) {
@@ -94,22 +79,12 @@ func (ic *intervalRestClient) Intervals(ctx context.Context) ([]models.Interval,
 }
 
 func (ic *intervalRestClient) Update(interval models.Interval, ctx context.Context) error {
-	urlPrefix, err := ic.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.UpdateRequest(urlPrefix, interval, ctx)
+	return clients.UpdateRequest("", interval, ctx, ic.urlClient)
 }
 
 // helper request and decode an interval
 func (ic *intervalRestClient) requestInterval(urlSuffix string, ctx context.Context) (models.Interval, error) {
-	urlPrefix, err := ic.urlClient.Prefix()
-	if err != nil {
-		return models.Interval{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, ic.urlClient)
 	if err != nil {
 		return models.Interval{}, err
 	}
@@ -125,12 +100,7 @@ func (ic *intervalRestClient) requestInterval(urlSuffix string, ctx context.Cont
 
 // helper returns a slice of intervals
 func (ic *intervalRestClient) requestIntervalSlice(urlSuffix string, ctx context.Context) ([]models.Interval, error) {
-	urlPrefix, err := ic.urlClient.Prefix()
-	if err != nil {
-		return []models.Interval{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, ic.urlClient)
 	if err != nil {
 		return []models.Interval{}, err
 	}

@@ -49,18 +49,12 @@ type commandRestClient struct {
 
 // NewCommandClient creates an instance of CommandClient
 func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) CommandClient {
-	c := commandRestClient{urlClient: urlclient.New(params, m)}
-	return &c
+	return &commandRestClient{urlClient: urlclient.New(params, m)}
 }
 
 // Helper method to request and decode a command
 func (c *commandRestClient) requestCommand(urlSuffix string, ctx context.Context) (models.Command, error) {
-	urlPrefix, err := c.urlClient.Prefix()
-	if err != nil {
-		return models.Command{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, c.urlClient)
 	if err != nil {
 		return models.Command{}, err
 	}
@@ -72,12 +66,7 @@ func (c *commandRestClient) requestCommand(urlSuffix string, ctx context.Context
 
 // Helper method to request and decode a command slice
 func (c *commandRestClient) requestCommandSlice(urlSuffix string, ctx context.Context) ([]models.Command, error) {
-	urlPrefix, err := c.urlClient.Prefix()
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, c.urlClient)
 	if err != nil {
 		return []models.Command{}, err
 	}
@@ -104,28 +93,13 @@ func (c *commandRestClient) CommandsForDeviceId(id string, ctx context.Context) 
 }
 
 func (c *commandRestClient) Add(com *models.Command, ctx context.Context) (string, error) {
-	serviceURL, err := c.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostJsonRequest(serviceURL, com, ctx)
+	return clients.PostJsonRequest("", com, ctx, c.urlClient)
 }
 
 func (c *commandRestClient) Update(com models.Command, ctx context.Context) error {
-	serviceURL, err := c.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.UpdateRequest(serviceURL, com, ctx)
+	return clients.UpdateRequest("", com, ctx, c.urlClient)
 }
 
 func (c *commandRestClient) Delete(id string, ctx context.Context) error {
-	serviceURL, err := c.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(serviceURL+"/id/"+id, ctx)
+	return clients.DeleteRequest("/id/"+id, ctx, c.urlClient)
 }

@@ -69,12 +69,7 @@ func NewReadingClient(params types.EndpointParams, m interfaces.Endpointer) Read
 
 // Helper method to request and decode a reading slice
 func (r *readingRestClient) requestReadingSlice(urlSuffix string, ctx context.Context) ([]models.Reading, error) {
-	urlPrefix, err := r.urlClient.Prefix()
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, r.urlClient)
 	if err != nil {
 		return []models.Reading{}, err
 	}
@@ -86,12 +81,7 @@ func (r *readingRestClient) requestReadingSlice(urlSuffix string, ctx context.Co
 
 // Helper method to request and decode a reading
 func (r *readingRestClient) requestReading(urlSuffix string, ctx context.Context) (models.Reading, error) {
-	urlPrefix, err := r.urlClient.Prefix()
-	if err != nil {
-		return models.Reading{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, r.urlClient)
 	if err != nil {
 		return models.Reading{}, err
 	}
@@ -110,12 +100,7 @@ func (r *readingRestClient) Reading(id string, ctx context.Context) (models.Read
 }
 
 func (r *readingRestClient) ReadingCount(ctx context.Context) (int, error) {
-	urlPrefix, err := r.urlClient.Prefix()
-	if err != nil {
-		return 0, err
-	}
-
-	return clients.CountRequest(urlPrefix+"/count", ctx)
+	return clients.CountRequest("/count", ctx, r.urlClient)
 }
 
 func (r *readingRestClient) ReadingsForDevice(
@@ -176,19 +161,9 @@ func (r *readingRestClient) ReadingsForInterval(
 }
 
 func (r *readingRestClient) Add(reading *models.Reading, ctx context.Context) (string, error) {
-	urlPrefix, err := r.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostJsonRequest(urlPrefix, reading, ctx)
+	return clients.PostJsonRequest("", reading, ctx, r.urlClient)
 }
 
 func (r *readingRestClient) Delete(id string, ctx context.Context) error {
-	urlPrefix, err := r.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
+	return clients.DeleteRequest("/id/"+id, ctx, r.urlClient)
 }

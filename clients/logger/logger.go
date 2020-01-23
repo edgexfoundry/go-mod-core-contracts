@@ -31,7 +31,9 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
+
 	"github.com/go-kit/kit/log"
 )
 
@@ -249,8 +251,15 @@ func (lc edgeXLogger) buildLogEntry(logLevel string, msg string, args ...interfa
 
 // Send the log as an http request
 func (lc edgeXLogger) sendLog(logEntry models.LogEntry) {
+	// create a new URL client with an empty URL to fulfil the PostJsonRequest contract while relying wholly on
+	// logTarget for the actual endpoint data
+	emptyURLClient := urlclient.New(types.EndpointParams{
+		UseRegistry: false,
+		Url:         "",
+	}, nil)
+
 	go func() {
-		_, err := clients.PostJsonRequest(lc.logTarget, logEntry, context.Background())
+		_, err := clients.PostJsonRequest(lc.logTarget, logEntry, context.Background(), emptyURLClient)
 		if err != nil {
 			fmt.Println(err.Error())
 		}

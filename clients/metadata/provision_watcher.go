@@ -56,8 +56,7 @@ type provisionWatcherRestClient struct {
 
 // NewProvisionWatcherClient creates an instance of ProvisionWatcherClient
 func NewProvisionWatcherClient(params types.EndpointParams, m interfaces.Endpointer) ProvisionWatcherClient {
-	pw := provisionWatcherRestClient{urlClient: urlclient.New(params, m)}
-	return &pw
+	return &provisionWatcherRestClient{urlClient: urlclient.New(params, m)}
 }
 
 // Helper method to request and decode a provision watcher
@@ -65,12 +64,7 @@ func (pwc *provisionWatcherRestClient) requestProvisionWatcher(
 	urlSuffix string,
 	ctx context.Context) (models.ProvisionWatcher, error) {
 
-	urlPrefix, err := pwc.urlClient.Prefix()
-	if err != nil {
-		return models.ProvisionWatcher{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, pwc.urlClient)
 	if err != nil {
 		return models.ProvisionWatcher{}, err
 	}
@@ -85,12 +79,7 @@ func (pwc *provisionWatcherRestClient) requestProvisionWatcherSlice(
 	urlSuffix string,
 	ctx context.Context) ([]models.ProvisionWatcher, error) {
 
-	urlPrefix, err := pwc.urlClient.Prefix()
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, pwc.urlClient)
 	if err != nil {
 		return []models.ProvisionWatcher{}, err
 	}
@@ -129,28 +118,13 @@ func (pwc *provisionWatcherRestClient) ProvisionWatchersForProfileByName(profile
 }
 
 func (pwc *provisionWatcherRestClient) Add(dev *models.ProvisionWatcher, ctx context.Context) (string, error) {
-	serviceURL, err := pwc.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostJsonRequest(serviceURL, dev, ctx)
+	return clients.PostJsonRequest("", dev, ctx, pwc.urlClient)
 }
 
 func (pwc *provisionWatcherRestClient) Update(dev models.ProvisionWatcher, ctx context.Context) error {
-	serviceURL, err := pwc.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.UpdateRequest(serviceURL, dev, ctx)
+	return clients.UpdateRequest("", dev, ctx, pwc.urlClient)
 }
 
 func (pwc *provisionWatcherRestClient) Delete(id string, ctx context.Context) error {
-	serviceURL, err := pwc.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(serviceURL+"/id/"+id, ctx)
+	return clients.DeleteRequest("/id/"+id, ctx, pwc.urlClient)
 }

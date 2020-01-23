@@ -48,22 +48,12 @@ func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) Comm
 }
 
 func (cc *commandRestClient) Get(deviceId string, commandId string, ctx context.Context) (string, error) {
-	url, err := cc.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	body, err := clients.GetRequest(url+"/"+deviceId+"/command/"+commandId, ctx)
+	body, err := clients.GetRequest("/"+deviceId+"/command/"+commandId, ctx, cc.urlClient)
 	return string(body), err
 }
 
 func (cc *commandRestClient) Put(deviceId string, commandId string, body string, ctx context.Context) (string, error) {
-	url, err := cc.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PutRequest(url+"/"+deviceId+"/command/"+commandId, []byte(body), ctx)
+	return clients.PutRequest("/"+deviceId+"/command/"+commandId, []byte(body), ctx, cc.urlClient)
 }
 
 func (cc *commandRestClient) GetDeviceCommandByNames(
@@ -71,13 +61,12 @@ func (cc *commandRestClient) GetDeviceCommandByNames(
 	commandName string,
 	ctx context.Context) (string, error) {
 
-	url, err := cc.urlClient.Prefix()
+	body, err := clients.GetRequest("/name/"+deviceName+"/command/"+commandName, ctx, cc.urlClient)
 	if err != nil {
 		return "", err
 	}
 
-	body, err := clients.GetRequest(url+"/name/"+deviceName+"/command/"+commandName, ctx)
-	return string(body), err
+	return string(body), nil
 }
 
 func (cc *commandRestClient) PutDeviceCommandByNames(
@@ -86,10 +75,5 @@ func (cc *commandRestClient) PutDeviceCommandByNames(
 	body string,
 	ctx context.Context) (string, error) {
 
-	urlPrefix, err := cc.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PutRequest(urlPrefix+"/name/"+deviceName+"/command/"+commandName, []byte(body), ctx)
+	return clients.PutRequest("/name/"+deviceName+"/command/"+commandName, []byte(body), ctx, cc.urlClient)
 }

@@ -69,12 +69,7 @@ func (v *valueDescriptorRestClient) requestValueDescriptorSlice(
 	urlSuffix string,
 	ctx context.Context) ([]models.ValueDescriptor, error) {
 
-	urlPrefix, err := v.urlClient.Prefix()
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, v.urlClient)
 	if err != nil {
 		return []models.ValueDescriptor{}, err
 	}
@@ -89,12 +84,7 @@ func (v *valueDescriptorRestClient) requestValueDescriptor(
 	urlSuffix string,
 	ctx context.Context) (models.ValueDescriptor, error) {
 
-	urlPrefix, err := v.urlClient.Prefix()
-	if err != nil {
-		return models.ValueDescriptor{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, v.urlClient)
 	if err != nil {
 		return models.ValueDescriptor{}, err
 	}
@@ -161,7 +151,15 @@ func (v *valueDescriptorRestClient) ValueDescriptorsUsage(names []string, ctx co
 	q := u.Query()
 	q.Add("names", strings.Join(names, ","))
 	u.RawQuery = q.Encode()
-	data, err := clients.GetRequest(u.String(), ctx)
+
+	// create a new URL client with an empty URL to fulfil the GetRequest contract while relying wholly on
+	// our parsed URL for the actual endpoint data
+	emptyURLClient := urlclient.New(types.EndpointParams{
+		UseRegistry: false,
+		Url:         "",
+	}, nil)
+
+	data, err := clients.GetRequest(u.String(), ctx, emptyURLClient)
 	if err != nil {
 		return nil, err
 	}
@@ -175,39 +173,19 @@ func (v *valueDescriptorRestClient) ValueDescriptorsUsage(names []string, ctx co
 }
 
 func (v *valueDescriptorRestClient) Add(vdr *models.ValueDescriptor, ctx context.Context) (string, error) {
-	urlPrefix, err := v.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostJsonRequest(urlPrefix, vdr, ctx)
+	return clients.PostJsonRequest("", vdr, ctx, v.urlClient)
 }
 
 func (v *valueDescriptorRestClient) Update(vdr *models.ValueDescriptor, ctx context.Context) error {
-	urlPrefix, err := v.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.UpdateRequest(urlPrefix, vdr, ctx)
+	return clients.UpdateRequest("", vdr, ctx, v.urlClient)
 }
 
 func (v *valueDescriptorRestClient) Delete(id string, ctx context.Context) error {
-	urlPrefix, err := v.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
+	return clients.DeleteRequest("/id/"+id, ctx, v.urlClient)
 }
 
 func (v *valueDescriptorRestClient) DeleteByName(name string, ctx context.Context) error {
-	urlPrefix, err := v.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/name/"+name, ctx)
+	return clients.DeleteRequest("/name/"+name, ctx, v.urlClient)
 }
 
 // flattenValueDescriptorUsage puts all key and values into one map.
