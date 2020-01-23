@@ -22,12 +22,11 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-/*
-IntervalActionClient defines the interface for interactions with the IntervalAction endpoint on the EdgeX Foundry support-scheduler service.
-*/
+// IntervalActionClient defines the interface for interactions with the IntervalAction endpoint on support-scheduler.
 type IntervalActionClient interface {
 	// Add a new schedule interval action
 	Add(dev *models.IntervalAction, ctx context.Context) (string, error)
@@ -48,84 +47,110 @@ type IntervalActionClient interface {
 }
 
 type intervalActionRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	urlClient interfaces.URLClient
 }
 
 // NewIntervalActionClient creates an instance of IntervalActionClient
 func NewIntervalActionClient(params types.EndpointParams, m interfaces.Endpointer) IntervalActionClient {
-	s := intervalActionRestClient{endpoint: m}
-	s.init(params)
-	return &s
-}
-
-func (s *intervalActionRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					s.url = url
-				}
-			}
-		}(s.endpoint.Monitor(params))
-	} else {
-		s.url = params.Url
-	}
+	return &intervalActionRestClient{urlClient: urlclient.New(params, m)}
 }
 
 // Helper method to request and decode an interval action
-func (s *intervalActionRestClient) requestIntervalAction(url string, ctx context.Context) (models.IntervalAction, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (iac *intervalActionRestClient) requestIntervalAction(
+	urlSuffix string,
+	ctx context.Context) (models.IntervalAction, error) {
+
+	urlPrefix, err := iac.urlClient.Prefix()
+	if err != nil {
+		return models.IntervalAction{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.IntervalAction{}, err
 	}
 
 	ia := models.IntervalAction{}
 	err = json.Unmarshal(data, &ia)
-	return ia, err
+	if err != nil {
+		return models.IntervalAction{}, err
+	}
+
+	return ia, nil
 }
 
 // Helper method to request and decode an interval action slice
-func (s *intervalActionRestClient) requestIntervalActionSlice(url string, ctx context.Context) ([]models.IntervalAction, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (iac *intervalActionRestClient) requestIntervalActionSlice(
+	urlSuffix string,
+	ctx context.Context) ([]models.IntervalAction, error) {
+
+	urlPrefix, err := iac.urlClient.Prefix()
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return []models.IntervalAction{}, err
 	}
 
 	iaSlice := make([]models.IntervalAction, 0)
 	err = json.Unmarshal(data, &iaSlice)
-	return iaSlice, err
+	if err != nil {
+		return []models.IntervalAction{}, err
+	}
+
+	return iaSlice, nil
 }
 
-func (s *intervalActionRestClient) Add(ia *models.IntervalAction, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest(s.url, ia, ctx)
+func (iac *intervalActionRestClient) Add(ia *models.IntervalAction, ctx context.Context) (string, error) {
+	url, err := iac.urlClient.Prefix()
+	if err != nil {
+		return "", err
+	}
+
+	return clients.PostJsonRequest(url, ia, ctx)
 }
 
-func (s *intervalActionRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest(s.url+"/id/"+id, ctx)
+func (iac *intervalActionRestClient) Delete(id string, ctx context.Context) error {
+	urlPrefix, err := iac.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
 }
 
-func (s *intervalActionRestClient) DeleteByName(name string, ctx context.Context) error {
-	return clients.DeleteRequest(s.url+"/name/"+url.QueryEscape(name), ctx)
+func (iac *intervalActionRestClient) DeleteByName(name string, ctx context.Context) error {
+	urlPrefix, err := iac.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/name/"+url.QueryEscape(name), ctx)
 }
 
-func (s *intervalActionRestClient) IntervalAction(id string, ctx context.Context) (models.IntervalAction, error) {
-	return s.requestIntervalAction(s.url+"/"+id, ctx)
+func (iac *intervalActionRestClient) IntervalAction(id string, ctx context.Context) (models.IntervalAction, error) {
+	return iac.requestIntervalAction("/"+id, ctx)
 }
 
-func (s *intervalActionRestClient) IntervalActionForName(name string, ctx context.Context) (models.IntervalAction, error) {
-	return s.requestIntervalAction(s.url+"/name/"+url.QueryEscape(name), ctx)
+func (iac *intervalActionRestClient) IntervalActionForName(name string, ctx context.Context) (models.IntervalAction, error) {
+	return iac.requestIntervalAction("/name/"+url.QueryEscape(name), ctx)
 }
 
-func (s *intervalActionRestClient) IntervalActions(ctx context.Context) ([]models.IntervalAction, error) {
-	return s.requestIntervalActionSlice(s.url, ctx)
+func (iac *intervalActionRestClient) IntervalActions(ctx context.Context) ([]models.IntervalAction, error) {
+	return iac.requestIntervalActionSlice("", ctx)
 }
 
-func (s *intervalActionRestClient) IntervalActionsForTargetByName(name string, ctx context.Context) ([]models.IntervalAction, error) {
-	return s.requestIntervalActionSlice(s.url+"/target/"+url.QueryEscape(name), ctx)
+func (iac *intervalActionRestClient) IntervalActionsForTargetByName(name string, ctx context.Context) ([]models.IntervalAction, error) {
+	return iac.requestIntervalActionSlice("/target/"+url.QueryEscape(name), ctx)
 }
 
-func (s *intervalActionRestClient) Update(ia models.IntervalAction, ctx context.Context) error {
-	return clients.UpdateRequest(s.url, ia, ctx)
+func (iac *intervalActionRestClient) Update(ia models.IntervalAction, ctx context.Context) error {
+	url, err := iac.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.UpdateRequest(url, ia, ctx)
 }

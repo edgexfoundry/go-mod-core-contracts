@@ -15,9 +15,7 @@
  *
  *******************************************************************************/
 
-/*
-Package coredata provides clients used for integration with the core-data service.
-*/
+// coredata provides clients used for integration with the core-data service.
 package coredata
 
 import (
@@ -29,6 +27,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -50,7 +49,7 @@ type EventClient interface {
 	EventsForDeviceAndValueDescriptor(deviceId string, vd string, limit int, ctx context.Context) ([]models.Event, error)
 	// Add will post a new event
 	Add(event *models.Event, ctx context.Context) (string, error)
-	//AddBytes posts a new event using an array of bytes, supporting encoding of the event by the caller.
+	// AddBytes posts a new event using an array of bytes, supporting encoding of the event by the caller.
 	AddBytes(event []byte, ctx context.Context) (string, error)
 	// DeleteForDevice will delete events by the specified device name
 	DeleteForDevice(id string, ctx context.Context) error
@@ -68,47 +67,43 @@ type EventClient interface {
 }
 
 type eventRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	urlClient interfaces.URLClient
 }
 
 // NewEventClient creates an instance of EventClient
 func NewEventClient(params types.EndpointParams, m interfaces.Endpointer) EventClient {
-	e := eventRestClient{endpoint: m}
-	e.init(params)
-	return &e
-}
-
-func (e *eventRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					e.url = url
-				}
-			}
-		}(e.endpoint.Monitor(params))
-	} else {
-		e.url = params.Url
-	}
+	return &eventRestClient{urlClient: urlclient.New(params, m)}
 }
 
 // Helper method to request and decode an event slice
-func (e *eventRestClient) requestEventSlice(url string, ctx context.Context) ([]models.Event, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (e *eventRestClient) requestEventSlice(urlSuffix string, ctx context.Context) ([]models.Event, error) {
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return []models.Event{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return []models.Event{}, err
 	}
 
 	eSlice := make([]models.Event, 0)
 	err = json.Unmarshal(data, &eSlice)
-	return eSlice, err
+	if err != nil {
+		return []models.Event{}, err
+	}
+
+	return eSlice, nil
 }
 
 // Helper method to request and decode an event
-func (e *eventRestClient) requestEvent(url string, ctx context.Context) (models.Event, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (e *eventRestClient) requestEvent(urlSuffix string, ctx context.Context) (models.Event, error) {
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return models.Event{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.Event{}, err
 	}
@@ -119,65 +114,123 @@ func (e *eventRestClient) requestEvent(url string, ctx context.Context) (models.
 }
 
 func (e *eventRestClient) Events(ctx context.Context) ([]models.Event, error) {
-	return e.requestEventSlice(e.url, ctx)
+	return e.requestEventSlice("", ctx)
 }
 
 func (e *eventRestClient) Event(id string, ctx context.Context) (models.Event, error) {
-	return e.requestEvent(e.url+"/"+id, ctx)
+	return e.requestEvent("/"+id, ctx)
 }
 
 func (e *eventRestClient) EventCount(ctx context.Context) (int, error) {
-	return clients.CountRequest(e.url+"/count", ctx)
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return 0, err
+	}
+
+	return clients.CountRequest(urlPrefix+"/count", ctx)
 }
 
 func (e *eventRestClient) EventCountForDevice(deviceId string, ctx context.Context) (int, error) {
-	return clients.CountRequest(e.url+"/count/"+url.QueryEscape(deviceId), ctx)
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return 0, err
+	}
+
+	return clients.CountRequest(urlPrefix+"/count/"+url.QueryEscape(deviceId), ctx)
 }
 
 func (e *eventRestClient) EventsForDevice(deviceId string, limit int, ctx context.Context) ([]models.Event, error) {
-	return e.requestEventSlice(e.url+"/device/"+url.QueryEscape(deviceId)+"/"+strconv.Itoa(limit), ctx)
+	return e.requestEventSlice("/device/"+url.QueryEscape(deviceId)+"/"+strconv.Itoa(limit), ctx)
 }
 
 func (e *eventRestClient) EventsForInterval(start int, end int, limit int, ctx context.Context) ([]models.Event, error) {
-	return e.requestEventSlice(e.url+"/"+strconv.Itoa(start)+"/"+strconv.Itoa(end)+"/"+strconv.Itoa(limit), ctx)
+	return e.requestEventSlice("/"+strconv.Itoa(start)+"/"+strconv.Itoa(end)+"/"+strconv.Itoa(limit), ctx)
 }
 
-func (e *eventRestClient) EventsForDeviceAndValueDescriptor(deviceId string, vd string, limit int, ctx context.Context) ([]models.Event, error) {
-	return e.requestEventSlice(e.url+"/device/"+url.QueryEscape(deviceId)+"/valuedescriptor/"+url.QueryEscape(vd)+"/"+strconv.Itoa(limit), ctx)
+func (e *eventRestClient) EventsForDeviceAndValueDescriptor(
+	deviceId string,
+	vd string,
+	limit int,
+	ctx context.Context) ([]models.Event, error) {
+
+	return e.requestEventSlice(
+		"/device/"+
+			url.QueryEscape(deviceId)+
+			"/valuedescriptor/"+
+			url.QueryEscape(vd)+
+			"/"+strconv.Itoa(limit),
+		ctx,
+	)
 }
 
 func (e *eventRestClient) Add(event *models.Event, ctx context.Context) (string, error) {
 	content := clients.FromContext(clients.ContentType, ctx)
+
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return "", err
+	}
+
 	if content == clients.ContentTypeCBOR {
-		return clients.PostRequest(e.url, event.CBOR(), ctx)
+		return clients.PostRequest(urlPrefix, event.CBOR(), ctx)
 	} else {
-		return clients.PostJsonRequest(e.url, event, ctx)
+		return clients.PostJsonRequest(urlPrefix, event, ctx)
 	}
 }
 
 func (e *eventRestClient) AddBytes(event []byte, ctx context.Context) (string, error) {
-	return clients.PostRequest(e.url, event, ctx)
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return "", err
+	}
+
+	return clients.PostRequest(urlPrefix, event, ctx)
 }
 
 func (e *eventRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest(e.url+"/id/"+id, ctx)
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
 }
 
 func (e *eventRestClient) DeleteForDevice(deviceId string, ctx context.Context) error {
-	return clients.DeleteRequest(e.url+"/device/"+url.QueryEscape(deviceId), ctx)
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/device/"+url.QueryEscape(deviceId), ctx)
 }
 
 func (e *eventRestClient) DeleteOld(age int, ctx context.Context) error {
-	return clients.DeleteRequest(e.url+"/removeold/age/"+strconv.Itoa(age), ctx)
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/removeold/age/"+strconv.Itoa(age), ctx)
 }
 
 func (e *eventRestClient) MarkPushed(id string, ctx context.Context) error {
-	_, err := clients.PutRequest(e.url+"/id/"+id, nil, ctx)
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	_, err = clients.PutRequest(urlPrefix+"/id/"+id, nil, ctx)
 	return err
 }
 
 func (e *eventRestClient) MarkPushedByChecksum(checksum string, ctx context.Context) error {
-	_, err := clients.PutRequest(e.url+"/checksum/"+checksum, nil, ctx)
+	urlPrefix, err := e.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	_, err = clients.PutRequest(urlPrefix+"/checksum/"+checksum, nil, ctx)
 	return err
 }
 

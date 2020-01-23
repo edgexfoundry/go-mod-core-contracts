@@ -16,9 +16,7 @@ package urlclient
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
-	"time"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
@@ -29,20 +27,15 @@ func TestNewRegistryClient(t *testing.T) {
 	if actualClient == nil {
 		t.Fatal("nil returned from newRegistryClient")
 	}
-
-	expectedType := reflect.TypeOf(&registryClient{})
-	clientType := reflect.TypeOf(actualClient)
-
-	if clientType != expectedType {
-		t.Fatalf("expected type %T, found %T", expectedType, actualClient)
-	}
 }
 
 func TestRegistryClient_URLPrefix(t *testing.T) {
 	expectedURL := "http://domain.com"
-	client := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
+	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
+	urlClient := newRegistryClient(types.EndpointParams{}, testEndpoint, 100)
+	testEndpoint.SendToChannel()
 
-	actualURL, err := client.Prefix()
+	actualURL, err := urlClient.Prefix()
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -55,11 +48,18 @@ func TestRegistryClient_URLPrefix(t *testing.T) {
 
 func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
 	expectedURL := "http://domain.com"
-	client := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 100)
-	client.initialized = true
-	client.url = expectedURL
+	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
+	urlClient := newRegistryClient(types.EndpointParams{}, testEndpoint, 100)
+	testEndpoint.SendToChannel()
 
-	actualURL, err := client.Prefix()
+	// set up prerequisite condition, call Prefix once to set initialized to true
+	actualURL, err := urlClient.Prefix()
+	if err != nil {
+		t.Fatalf("unexpected error in precondition %s", err.Error())
+	}
+
+	// call Prefix again without sending another message on the channel
+	actualURL, err = urlClient.Prefix()
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -71,9 +71,9 @@ func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
 }
 
 func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
-	client := newRegistryClient(types.EndpointParams{}, mockTimeoutEndpoint{}, 1)
+	urlClient := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 1)
 
-	actualURL, err := client.Prefix()
+	actualURL, err := urlClient.Prefix()
 
 	if err == nil || actualURL != "" {
 		t.Fatal("expected error")
@@ -84,15 +84,14 @@ func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
 	}
 }
 
-type mockTimeoutEndpoint struct{}
+type mockEndpoint struct {
+	ch chan string
+}
 
-func (e mockTimeoutEndpoint) Monitor(_ types.EndpointParams) chan string {
-	ch := make(chan string, 1)
+func (e mockEndpoint) Monitor(_ types.EndpointParams) chan string {
+	return e.ch
+}
 
-	go func() {
-		time.Sleep(15 * time.Second)
-		ch <- fmt.Sprint("http://domain.com")
-	}()
-
-	return ch
+func (e mockEndpoint) SendToChannel() {
+	e.ch <- fmt.Sprint("http://domain.com")
 }

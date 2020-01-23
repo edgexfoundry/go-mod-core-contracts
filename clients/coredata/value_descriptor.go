@@ -23,10 +23,11 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
-// ValueDescriptorClient defines the interface for interactions with the Value Descriptor endpoint on the EdgeX Foundry core-data service.
+// ValueDescriptorClient defines the interface for interactions with the Value Descriptor endpoint on core-data.
 type ValueDescriptorClient interface {
 	// ValueDescriptors returns a list of all value descriptors
 	ValueDescriptors(ctx context.Context) ([]models.ValueDescriptor, error)
@@ -56,34 +57,24 @@ type ValueDescriptorClient interface {
 }
 
 type valueDescriptorRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	urlClient interfaces.URLClient
 }
 
 func NewValueDescriptorClient(params types.EndpointParams, m interfaces.Endpointer) ValueDescriptorClient {
-	v := valueDescriptorRestClient{endpoint: m}
-	v.init(params)
-	return &v
-}
-
-func (d *valueDescriptorRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					d.url = url
-				}
-			}
-		}(d.endpoint.Monitor(params))
-	} else {
-		d.url = params.Url
-	}
+	return &valueDescriptorRestClient{urlClient: urlclient.New(params, m)}
 }
 
 // Helper method to request and decode a valuedescriptor slice
-func (v *valueDescriptorRestClient) requestValueDescriptorSlice(url string, ctx context.Context) ([]models.ValueDescriptor, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (v *valueDescriptorRestClient) requestValueDescriptorSlice(
+	urlSuffix string,
+	ctx context.Context) ([]models.ValueDescriptor, error) {
+
+	urlPrefix, err := v.urlClient.Prefix()
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return []models.ValueDescriptor{}, err
 	}
@@ -94,8 +85,16 @@ func (v *valueDescriptorRestClient) requestValueDescriptorSlice(url string, ctx 
 }
 
 // Helper method to request and decode a device
-func (v *valueDescriptorRestClient) requestValueDescriptor(url string, ctx context.Context) (models.ValueDescriptor, error) {
-	data, err := clients.GetRequest(url, ctx)
+func (v *valueDescriptorRestClient) requestValueDescriptor(
+	urlSuffix string,
+	ctx context.Context) (models.ValueDescriptor, error) {
+
+	urlPrefix, err := v.urlClient.Prefix()
+	if err != nil {
+		return models.ValueDescriptor{}, err
+	}
+
+	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
 	if err != nil {
 		return models.ValueDescriptor{}, err
 	}
@@ -106,34 +105,55 @@ func (v *valueDescriptorRestClient) requestValueDescriptor(url string, ctx conte
 }
 
 func (v *valueDescriptorRestClient) ValueDescriptors(ctx context.Context) ([]models.ValueDescriptor, error) {
-	return v.requestValueDescriptorSlice(v.url, ctx)
+	return v.requestValueDescriptorSlice("", ctx)
 }
 
 func (v *valueDescriptorRestClient) ValueDescriptor(id string, ctx context.Context) (models.ValueDescriptor, error) {
-	return v.requestValueDescriptor(v.url+"/"+id, ctx)
+	return v.requestValueDescriptor("/"+id, ctx)
 }
 
-func (v *valueDescriptorRestClient) ValueDescriptorForName(name string, ctx context.Context) (models.ValueDescriptor, error) {
-	return v.requestValueDescriptor(v.url+"/name/"+url.QueryEscape(name), ctx)
+func (v *valueDescriptorRestClient) ValueDescriptorForName(
+	name string,
+	ctx context.Context) (models.ValueDescriptor, error) {
+
+	return v.requestValueDescriptor("/name/"+url.QueryEscape(name), ctx)
 }
 
-func (v *valueDescriptorRestClient) ValueDescriptorsByLabel(label string, ctx context.Context) ([]models.ValueDescriptor, error) {
-	return v.requestValueDescriptorSlice(v.url+"/label/"+url.QueryEscape(label), ctx)
+func (v *valueDescriptorRestClient) ValueDescriptorsByLabel(
+	label string,
+	ctx context.Context) ([]models.ValueDescriptor, error) {
+
+	return v.requestValueDescriptorSlice("/label/"+url.QueryEscape(label), ctx)
 }
 
-func (v *valueDescriptorRestClient) ValueDescriptorsForDevice(deviceId string, ctx context.Context) ([]models.ValueDescriptor, error) {
-	return v.requestValueDescriptorSlice(v.url+"/deviceid/"+deviceId, ctx)
+func (v *valueDescriptorRestClient) ValueDescriptorsForDevice(
+	deviceId string,
+	ctx context.Context) ([]models.ValueDescriptor, error) {
+
+	return v.requestValueDescriptorSlice("/deviceid/"+deviceId, ctx)
 }
 
-func (v *valueDescriptorRestClient) ValueDescriptorsForDeviceByName(deviceName string, ctx context.Context) ([]models.ValueDescriptor, error) {
-	return v.requestValueDescriptorSlice(v.url+"/devicename/"+deviceName, ctx)
+func (v *valueDescriptorRestClient) ValueDescriptorsForDeviceByName(
+	deviceName string,
+	ctx context.Context) ([]models.ValueDescriptor, error) {
+
+	return v.requestValueDescriptorSlice("/devicename/"+deviceName, ctx)
 }
 
-func (v *valueDescriptorRestClient) ValueDescriptorsByUomLabel(uomLabel string, ctx context.Context) ([]models.ValueDescriptor, error) {
-	return v.requestValueDescriptorSlice(v.url+"/uomlabel/"+uomLabel, ctx)
+func (v *valueDescriptorRestClient) ValueDescriptorsByUomLabel(
+	uomLabel string,
+	ctx context.Context) ([]models.ValueDescriptor, error) {
+
+	return v.requestValueDescriptorSlice("/uomlabel/"+uomLabel, ctx)
 }
+
 func (v *valueDescriptorRestClient) ValueDescriptorsUsage(names []string, ctx context.Context) (map[string]bool, error) {
-	u, err := url.Parse(v.url + "/usage")
+	urlPrefix, err := v.urlClient.Prefix()
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := url.Parse(urlPrefix + "/usage")
 	if err != nil {
 		return nil, err
 	}
@@ -155,19 +175,39 @@ func (v *valueDescriptorRestClient) ValueDescriptorsUsage(names []string, ctx co
 }
 
 func (v *valueDescriptorRestClient) Add(vdr *models.ValueDescriptor, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest(v.url, vdr, ctx)
+	urlPrefix, err := v.urlClient.Prefix()
+	if err != nil {
+		return "", err
+	}
+
+	return clients.PostJsonRequest(urlPrefix, vdr, ctx)
 }
 
 func (v *valueDescriptorRestClient) Update(vdr *models.ValueDescriptor, ctx context.Context) error {
-	return clients.UpdateRequest(v.url, vdr, ctx)
+	urlPrefix, err := v.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.UpdateRequest(urlPrefix, vdr, ctx)
 }
 
 func (v *valueDescriptorRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest(v.url+"/id/"+id, ctx)
+	urlPrefix, err := v.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
 }
 
 func (v *valueDescriptorRestClient) DeleteByName(name string, ctx context.Context) error {
-	return clients.DeleteRequest(v.url+"/name/"+name, ctx)
+	urlPrefix, err := v.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	return clients.DeleteRequest(urlPrefix+"/name/"+name, ctx)
 }
 
 // flattenValueDescriptorUsage puts all key and values into one map.

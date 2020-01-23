@@ -15,7 +15,6 @@
 package urlclient
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
@@ -37,12 +36,4 @@ func TestClientFactoryRegistry(t *testing.T) {
 	if !isRegistryClient {
 		t.Fatalf("expected type %T, found %T", registryClient{}, actualClient)
 	}
-}
-
-type mockEndpoint struct{}
-
-func (e mockEndpoint) Monitor(_ types.EndpointParams) chan string {
-	ch := make(chan string, 1)
-	ch <- fmt.Sprint("http://domain.com")
-	return ch
 }

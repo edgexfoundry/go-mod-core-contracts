@@ -12,9 +12,7 @@
  * the License.
  *******************************************************************************/
 
-/*
-Package notifications provides a client for integrating with the support-notifications service.
-*/
+// notifications provides a client for integrating with the support-notifications service.
 package notifications
 
 import (
@@ -23,6 +21,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 type CategoryEnum string
@@ -48,9 +47,7 @@ const (
 	ESCALATED StatusEnum = "ESCALATED"
 )
 
-/*
-NotificationsClient defines the interface for interactions with the EdgeX Foundry support-notifications service.
-*/
+// NotificationsClient defines the interface for interactions with the EdgeX Foundry support-notifications service.
 type NotificationsClient interface {
 	// SendNotification sends a notification.
 	SendNotification(n Notification, ctx context.Context) error
@@ -58,8 +55,7 @@ type NotificationsClient interface {
 
 // Type struct for REST-specific implementation of the NotificationsClient interface
 type notificationsRestClient struct {
-	url      string
-	endpoint interfaces.Endpointer
+	urlClient interfaces.URLClient
 }
 
 // Notification defines the structure of data being sent.
@@ -79,27 +75,15 @@ type Notification struct {
 
 // NewNotificationsClient creates an instance of NotificationsClient
 func NewNotificationsClient(params types.EndpointParams, m interfaces.Endpointer) NotificationsClient {
-	n := notificationsRestClient{endpoint: m}
-	n.init(params)
-	return &n
-}
-
-func (n *notificationsRestClient) init(params types.EndpointParams) {
-	if params.UseRegistry {
-		go func(ch chan string) {
-			for {
-				select {
-				case url := <-ch:
-					n.url = url
-				}
-			}
-		}(n.endpoint.Monitor(params))
-	} else {
-		n.url = params.Url
-	}
+	return &notificationsRestClient{urlClient: urlclient.New(params, m)}
 }
 
 func (nc *notificationsRestClient) SendNotification(n Notification, ctx context.Context) error {
-	_, err := clients.PostJsonRequest(nc.url, n, ctx)
+	urlPrefix, err := nc.urlClient.Prefix()
+	if err != nil {
+		return err
+	}
+
+	_, err = clients.PostJsonRequest(urlPrefix, n, ctx)
 	return err
 }
