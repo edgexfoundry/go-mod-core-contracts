@@ -152,14 +152,7 @@ func (v *valueDescriptorRestClient) ValueDescriptorsUsage(names []string, ctx co
 	q.Add("names", strings.Join(names, ","))
 	u.RawQuery = q.Encode()
 
-	// create a new URL client with an empty URL to fulfil the GetRequest contract while relying wholly on
-	// our parsed URL for the actual endpoint data
-	emptyURLClient := urlclient.New(types.EndpointParams{
-		UseRegistry: false,
-		Url:         "",
-	}, nil)
-
-	data, err := clients.GetRequest(u.String(), ctx, emptyURLClient)
+	data, err := clients.GetRequestWithURL(u.String(), ctx)
 	if err != nil {
 		return nil, err
 	}

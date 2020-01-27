@@ -45,14 +45,21 @@ func makeRequest(req *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-// Helper method to make the get request and return the body
+// GetRequest will make a GET request to the specified URL with the root URL retrieved by the URLClient prepended.
+// It returns the body as a byte array if successful and an error otherwise.
 func GetRequest(urlSuffix string, ctx context.Context, urlClient interfaces.URLClient) ([]byte, error) {
 	urlPrefix, err := urlClient.Prefix()
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodGet, urlPrefix+urlSuffix, nil)
+	return GetRequestWithURL(urlPrefix+urlSuffix, ctx)
+}
+
+// GetRequestWithURL will make a GET request to the specified URL.
+// It returns the body as a byte array if successful and an error otherwise.
+func GetRequestWithURL(url string, ctx context.Context) ([]byte, error) {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -112,6 +119,20 @@ func PostJsonRequest(
 	return PostRequest(urlSuffix, jsonStr, ctx, urlClient)
 }
 
+// PostJsonRequestWithURL will make a POST request to the specified URL with the object passed in
+// marshaled into a JSON formatted byte array.
+// It returns the body on success and an error otherwise.
+func PostJsonRequestWithURL(url string, data interface{}, ctx context.Context) (string, error) {
+	jsonStr, err := json.Marshal(data)
+	if err != nil {
+		return "", err
+	}
+
+	ctx = context.WithValue(ctx, ContentType, ContentTypeJSON)
+
+	return PostRequestWithURL(url, jsonStr, ctx)
+}
+
 // Helper method to make the post request and return the body
 func PostRequest(urlSuffix string, data []byte, ctx context.Context, urlClient interfaces.URLClient) (string, error) {
 	urlPrefix, err := urlClient.Prefix()
@@ -119,12 +140,18 @@ func PostRequest(urlSuffix string, data []byte, ctx context.Context, urlClient i
 		return "", err
 	}
 
+	return PostRequestWithURL(urlPrefix+urlSuffix, data, ctx)
+}
+
+// PostRequestWithURL will make a POST request to the specified URL.
+// It returns the body as a byte array if successful and an error otherwise.
+func PostRequestWithURL(url string, data []byte, ctx context.Context) (string, error) {
 	content := FromContext(ContentType, ctx)
 	if content == "" {
 		content = ContentTypeJSON
 	}
 
-	req, err := http.NewRequest(http.MethodPost, urlPrefix+urlSuffix, bytes.NewReader(data))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 	if err != nil {
 		return "", err
 	}

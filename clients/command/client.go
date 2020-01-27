@@ -48,8 +48,7 @@ func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) Comm
 }
 
 func (cc *commandRestClient) Get(deviceId string, commandId string, ctx context.Context) (string, error) {
-	body, err := clients.GetRequest("/"+deviceId+"/command/"+commandId, ctx, cc.urlClient)
-	return string(body), err
+	return cc.getRequestJSONBody("/"+deviceId+"/command/"+commandId, ctx)
 }
 
 func (cc *commandRestClient) Put(deviceId string, commandId string, body string, ctx context.Context) (string, error) {
@@ -61,12 +60,7 @@ func (cc *commandRestClient) GetDeviceCommandByNames(
 	commandName string,
 	ctx context.Context) (string, error) {
 
-	body, err := clients.GetRequest("/name/"+deviceName+"/command/"+commandName, ctx, cc.urlClient)
-	if err != nil {
-		return "", err
-	}
-
-	return string(body), nil
+	return cc.getRequestJSONBody("/name/"+deviceName+"/command/"+commandName, ctx)
 }
 
 func (cc *commandRestClient) PutDeviceCommandByNames(
@@ -76,4 +70,10 @@ func (cc *commandRestClient) PutDeviceCommandByNames(
 	ctx context.Context) (string, error) {
 
 	return clients.PutRequest("/name/"+deviceName+"/command/"+commandName, []byte(body), ctx, cc.urlClient)
+}
+
+func (cc *commandRestClient) getRequestJSONBody(urlSuffix string, ctx context.Context) (string, error) {
+	body, err := clients.GetRequest(urlSuffix, ctx, cc.urlClient)
+
+	return string(body), err
 }
