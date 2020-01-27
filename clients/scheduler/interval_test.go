@@ -19,6 +19,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
@@ -64,26 +65,46 @@ func TestIntervalRestClient_Add(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
+	var tests = []struct {
+		name          string
+		interval      models.Interval
+		ic            IntervalClient
+		expectedError bool
+	}{
+		{"happy path",
+			testInterval1,
+			NewIntervalClient(types.EndpointParams{
+				ServiceKey:  clients.SupportSchedulerServiceKey,
+				Path:        clients.ApiIntervalRoute,
+				UseRegistry: false,
+				Url:         ts.URL + clients.ApiIntervalRoute,
+				Interval:    clients.ClientMonitorDefault,
+			}, MockEndpoint{}),
+			false,
+		},
+		{
+			"nil client",
+			testInterval1,
+			NewIntervalClient(types.EndpointParams{}, nil),
+			true,
+		},
 	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := tt.ic.Add(&tt.interval, context.Background())
 
-	ic := NewIntervalClient(params, MockEndpoint{})
+			if !tt.expectedError && res == "" {
+				t.Error("unexpected empty string response")
+			} else if tt.expectedError && res != "" {
+				t.Errorf("expected empty string response, was %s", res)
+			}
 
-	res, err := ic.Add(&testInterval1, context.Background())
-
-	if res == "" {
-		t.Fatal("unexpected empty string response")
-	}
-
-	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
+			if !tt.expectedError && err != nil {
+				t.Errorf("unexpected error %s", err.Error())
+			} else if tt.expectedError && err == nil {
+				t.Error("expected error")
+			}
+		})
 	}
 }
 
@@ -155,24 +176,77 @@ func TestIntervalRestClient_Interval(t *testing.T) {
 		w.Write(data)
 	}))
 
+	badJSONServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+
+		if r.Method != http.MethodGet {
+			t.Fatalf("expected http method is GET, active http method is : %s", r.Method)
+		}
+
+		expectedURL := clients.ApiIntervalRoute + "/" + testID1
+		if r.URL.EscapedPath() != expectedURL {
+			t.Fatalf("expected uri path is %s, actual uri path is %s", expectedURL, r.URL.EscapedPath())
+		}
+
+		w.Write([]byte{1, 2, 3, 4})
+	}))
+
 	defer ts.Close()
+	defer badJSONServer.Close()
 
-	url := ts.URL + clients.ApiIntervalRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
+	var tests = []struct {
+		name          string
+		intervalID    string
+		ic            IntervalClient
+		expectedError bool
+	}{
+		{"happy path",
+			testInterval1.ID,
+			NewIntervalClient(types.EndpointParams{
+				ServiceKey:  clients.SupportSchedulerServiceKey,
+				Path:        clients.ApiIntervalRoute,
+				UseRegistry: false,
+				Url:         ts.URL + clients.ApiIntervalRoute,
+				Interval:    clients.ClientMonitorDefault,
+			}, MockEndpoint{}),
+			false,
+		},
+		{
+			"nil client",
+			testInterval1.ID,
+			NewIntervalClient(types.EndpointParams{}, nil),
+			true,
+		},
+		{"bad JSON marshal",
+			testInterval1.ID,
+			NewIntervalClient(types.EndpointParams{
+				ServiceKey:  clients.SupportSchedulerServiceKey,
+				Path:        clients.ApiIntervalRoute,
+				UseRegistry: false,
+				Url:         badJSONServer.URL + clients.ApiIntervalRoute,
+				Interval:    clients.ClientMonitorDefault,
+			}, MockEndpoint{}),
+			true,
+		},
 	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := tt.ic.Interval(tt.intervalID, context.Background())
 
-	ic := NewIntervalClient(params, MockEndpoint{})
+			emptyInterval := models.Interval{}
 
-	_, err := ic.Interval(testID1, context.Background())
+			if !tt.expectedError && res == emptyInterval {
+				t.Error("unexpected empty response")
+			} else if tt.expectedError && res != emptyInterval {
+				t.Errorf("expected empty response, was %s", res)
+			}
 
-	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
+			if !tt.expectedError && err != nil {
+				t.Errorf("unexpected error %s", err.Error())
+			} else if tt.expectedError && err == nil {
+				t.Error("expected error")
+			}
+		})
 	}
 }
 
@@ -239,24 +313,73 @@ func TestIntervalRestClient_Intervals(t *testing.T) {
 		w.Write(data)
 	}))
 
+	badJSONServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+
+		if r.Method != http.MethodGet {
+			t.Fatalf("expected http method is GET, active http method is : %s", r.Method)
+		}
+
+		expectedURL := clients.ApiIntervalRoute
+		if r.URL.EscapedPath() != expectedURL {
+			t.Fatalf("expected uri path is %s, actual uri path is %s", expectedURL, r.URL.EscapedPath())
+		}
+
+		w.Write([]byte{1, 2, 3, 4})
+	}))
+
 	defer ts.Close()
+	defer badJSONServer.Close()
 
-	url := ts.URL + clients.ApiIntervalRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
+	var tests = []struct {
+		name          string
+		ic            IntervalClient
+		expectedError bool
+	}{
+		{"happy path",
+			NewIntervalClient(types.EndpointParams{
+				ServiceKey:  clients.SupportSchedulerServiceKey,
+				Path:        clients.ApiIntervalRoute,
+				UseRegistry: false,
+				Url:         ts.URL + clients.ApiIntervalRoute,
+				Interval:    clients.ClientMonitorDefault,
+			}, MockEndpoint{}),
+			false,
+		},
+		{
+			"nil client",
+			NewIntervalClient(types.EndpointParams{}, nil),
+			true,
+		},
+		{"bad JSON marshal",
+			NewIntervalClient(types.EndpointParams{
+				ServiceKey:  clients.SupportSchedulerServiceKey,
+				Path:        clients.ApiIntervalRoute,
+				UseRegistry: false,
+				Url:         badJSONServer.URL + clients.ApiIntervalRoute,
+				Interval:    clients.ClientMonitorDefault,
+			}, MockEndpoint{}),
+			true,
+		},
 	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := tt.ic.Intervals(context.Background())
 
-	ic := NewIntervalClient(params, MockEndpoint{})
+			emptyIntervalSlice := []models.Interval{}
 
-	_, err := ic.Intervals(context.Background())
+			if !tt.expectedError && reflect.DeepEqual(res, emptyIntervalSlice) {
+				t.Error("unexpected empty response")
+			} else if tt.expectedError && !reflect.DeepEqual(res, emptyIntervalSlice) {
+				t.Errorf("expected empty response, was %s", res)
+			}
 
-	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
+			if !tt.expectedError && err != nil {
+				t.Errorf("unexpected error %s", err.Error())
+			} else if tt.expectedError && err == nil {
+				t.Error("expected error")
+			}
+		})
 	}
 }
 
