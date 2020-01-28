@@ -47,18 +47,12 @@ type addressableRestClient struct {
 
 // NewAddressableClient creates an instance of AddressableClient
 func NewAddressableClient(params types.EndpointParams, m interfaces.Endpointer) AddressableClient {
-	a := addressableRestClient{urlClient: urlclient.New(params, m)}
-	return &a
+	return &addressableRestClient{urlClient: urlclient.New(params, m)}
 }
 
 // Helper method to request and decode an addressable
 func (a *addressableRestClient) requestAddressable(urlSuffix string, ctx context.Context) (models.Addressable, error) {
-	urlPrefix, err := a.urlClient.Prefix()
-	if err != nil {
-		return models.Addressable{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, a.urlClient)
 	if err != nil {
 		return models.Addressable{}, err
 	}
@@ -69,12 +63,7 @@ func (a *addressableRestClient) requestAddressable(urlSuffix string, ctx context
 }
 
 func (a *addressableRestClient) Add(addr *models.Addressable, ctx context.Context) (string, error) {
-	serviceURL, err := a.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostJsonRequest(serviceURL, addr, ctx)
+	return clients.PostJsonRequest("", addr, ctx, a.urlClient)
 }
 
 func (a *addressableRestClient) Addressable(id string, ctx context.Context) (models.Addressable, error) {
@@ -86,19 +75,9 @@ func (a *addressableRestClient) AddressableForName(name string, ctx context.Cont
 }
 
 func (a *addressableRestClient) Update(addr models.Addressable, ctx context.Context) error {
-	serviceURL, err := a.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.UpdateRequest(serviceURL, addr, ctx)
+	return clients.UpdateRequest("", addr, ctx, a.urlClient)
 }
 
 func (a *addressableRestClient) Delete(id string, ctx context.Context) error {
-	serviceURL, err := a.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(serviceURL+"/id/"+id, ctx)
+	return clients.DeleteRequest("/id/"+id, ctx, a.urlClient)
 }

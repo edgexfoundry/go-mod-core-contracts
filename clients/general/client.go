@@ -42,21 +42,19 @@ func NewGeneralClient(params types.EndpointParams, m interfaces.Endpointer) Gene
 }
 
 func (gc *generalRestClient) FetchConfiguration(ctx context.Context) (string, error) {
-	urlPrefix, err := gc.urlClient.Prefix()
+	body, err := clients.GetRequest(clients.ApiConfigRoute, ctx, gc.urlClient)
 	if err != nil {
 		return "", err
 	}
 
-	body, err := clients.GetRequest(urlPrefix+clients.ApiConfigRoute, ctx)
-	return string(body), err
+	return string(body), nil
 }
 
 func (gc *generalRestClient) FetchMetrics(ctx context.Context) (string, error) {
-	urlPrefix, err := gc.urlClient.Prefix()
+	body, err := clients.GetRequest(clients.ApiMetricsRoute, ctx, gc.urlClient)
 	if err != nil {
 		return "", err
 	}
 
-	body, err := clients.GetRequest(urlPrefix+clients.ApiMetricsRoute, ctx)
-	return string(body), err
+	return string(body), nil
 }

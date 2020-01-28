@@ -77,12 +77,7 @@ func NewEventClient(params types.EndpointParams, m interfaces.Endpointer) EventC
 
 // Helper method to request and decode an event slice
 func (e *eventRestClient) requestEventSlice(urlSuffix string, ctx context.Context) ([]models.Event, error) {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return []models.Event{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, e.urlClient)
 	if err != nil {
 		return []models.Event{}, err
 	}
@@ -98,12 +93,7 @@ func (e *eventRestClient) requestEventSlice(urlSuffix string, ctx context.Contex
 
 // Helper method to request and decode an event
 func (e *eventRestClient) requestEvent(urlSuffix string, ctx context.Context) (models.Event, error) {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return models.Event{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, e.urlClient)
 	if err != nil {
 		return models.Event{}, err
 	}
@@ -122,21 +112,11 @@ func (e *eventRestClient) Event(id string, ctx context.Context) (models.Event, e
 }
 
 func (e *eventRestClient) EventCount(ctx context.Context) (int, error) {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return 0, err
-	}
-
-	return clients.CountRequest(urlPrefix+"/count", ctx)
+	return clients.CountRequest("/count", ctx, e.urlClient)
 }
 
 func (e *eventRestClient) EventCountForDevice(deviceId string, ctx context.Context) (int, error) {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return 0, err
-	}
-
-	return clients.CountRequest(urlPrefix+"/count/"+url.QueryEscape(deviceId), ctx)
+	return clients.CountRequest("/count/"+url.QueryEscape(deviceId), ctx, e.urlClient)
 }
 
 func (e *eventRestClient) EventsForDevice(deviceId string, limit int, ctx context.Context) ([]models.Event, error) {
@@ -166,71 +146,36 @@ func (e *eventRestClient) EventsForDeviceAndValueDescriptor(
 func (e *eventRestClient) Add(event *models.Event, ctx context.Context) (string, error) {
 	content := clients.FromContext(clients.ContentType, ctx)
 
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
 	if content == clients.ContentTypeCBOR {
-		return clients.PostRequest(urlPrefix, event.CBOR(), ctx)
+		return clients.PostRequest("", event.CBOR(), ctx, e.urlClient)
 	} else {
-		return clients.PostJsonRequest(urlPrefix, event, ctx)
+		return clients.PostJsonRequest("", event, ctx, e.urlClient)
 	}
 }
 
 func (e *eventRestClient) AddBytes(event []byte, ctx context.Context) (string, error) {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostRequest(urlPrefix, event, ctx)
+	return clients.PostRequest("", event, ctx, e.urlClient)
 }
 
 func (e *eventRestClient) Delete(id string, ctx context.Context) error {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
+	return clients.DeleteRequest("/id/"+id, ctx, e.urlClient)
 }
 
 func (e *eventRestClient) DeleteForDevice(deviceId string, ctx context.Context) error {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/device/"+url.QueryEscape(deviceId), ctx)
+	return clients.DeleteRequest("/device/"+url.QueryEscape(deviceId), ctx, e.urlClient)
 }
 
 func (e *eventRestClient) DeleteOld(age int, ctx context.Context) error {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/removeold/age/"+strconv.Itoa(age), ctx)
+	return clients.DeleteRequest("/removeold/age/"+strconv.Itoa(age), ctx, e.urlClient)
 }
 
 func (e *eventRestClient) MarkPushed(id string, ctx context.Context) error {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	_, err = clients.PutRequest(urlPrefix+"/id/"+id, nil, ctx)
+	_, err := clients.PutRequest("/id/"+id, nil, ctx, e.urlClient)
 	return err
 }
 
 func (e *eventRestClient) MarkPushedByChecksum(checksum string, ctx context.Context) error {
-	urlPrefix, err := e.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	_, err = clients.PutRequest(urlPrefix+"/checksum/"+checksum, nil, ctx)
+	_, err := clients.PutRequest("/checksum/"+checksum, nil, ctx, e.urlClient)
 	return err
 }
 

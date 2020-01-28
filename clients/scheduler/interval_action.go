@@ -60,12 +60,7 @@ func (iac *intervalActionRestClient) requestIntervalAction(
 	urlSuffix string,
 	ctx context.Context) (models.IntervalAction, error) {
 
-	urlPrefix, err := iac.urlClient.Prefix()
-	if err != nil {
-		return models.IntervalAction{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, iac.urlClient)
 	if err != nil {
 		return models.IntervalAction{}, err
 	}
@@ -84,12 +79,7 @@ func (iac *intervalActionRestClient) requestIntervalActionSlice(
 	urlSuffix string,
 	ctx context.Context) ([]models.IntervalAction, error) {
 
-	urlPrefix, err := iac.urlClient.Prefix()
-	if err != nil {
-		return nil, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+urlSuffix, ctx)
+	data, err := clients.GetRequest(urlSuffix, ctx, iac.urlClient)
 	if err != nil {
 		return []models.IntervalAction{}, err
 	}
@@ -104,30 +94,15 @@ func (iac *intervalActionRestClient) requestIntervalActionSlice(
 }
 
 func (iac *intervalActionRestClient) Add(ia *models.IntervalAction, ctx context.Context) (string, error) {
-	url, err := iac.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostJsonRequest(url, ia, ctx)
+	return clients.PostJsonRequest("", ia, ctx, iac.urlClient)
 }
 
 func (iac *intervalActionRestClient) Delete(id string, ctx context.Context) error {
-	urlPrefix, err := iac.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/id/"+id, ctx)
+	return clients.DeleteRequest("/id/"+id, ctx, iac.urlClient)
 }
 
 func (iac *intervalActionRestClient) DeleteByName(name string, ctx context.Context) error {
-	urlPrefix, err := iac.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.DeleteRequest(urlPrefix+"/name/"+url.QueryEscape(name), ctx)
+	return clients.DeleteRequest("/name/"+url.QueryEscape(name), ctx, iac.urlClient)
 }
 
 func (iac *intervalActionRestClient) IntervalAction(id string, ctx context.Context) (models.IntervalAction, error) {
@@ -147,10 +122,5 @@ func (iac *intervalActionRestClient) IntervalActionsForTargetByName(name string,
 }
 
 func (iac *intervalActionRestClient) Update(ia models.IntervalAction, ctx context.Context) error {
-	url, err := iac.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	return clients.UpdateRequest(url, ia, ctx)
+	return clients.UpdateRequest("", ia, ctx, iac.urlClient)
 }

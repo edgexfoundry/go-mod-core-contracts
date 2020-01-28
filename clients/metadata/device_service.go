@@ -44,49 +44,28 @@ type deviceServiceRestClient struct {
 
 // NewDeviceServiceClient creates an instance of DeviceServiceClient
 func NewDeviceServiceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceServiceClient {
-	s := deviceServiceRestClient{urlClient: urlclient.New(params, m)}
-	return &s
+	return &deviceServiceRestClient{urlClient: urlclient.New(params, m)}
 }
 
 func (dsc *deviceServiceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
-	serviceURL, err := dsc.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	_, err = clients.PutRequest(serviceURL+"/"+id+"/lastconnected/"+strconv.FormatInt(time, 10), nil, ctx)
+	_, err := clients.PutRequest("/"+id+"/lastconnected/"+strconv.FormatInt(time, 10), nil, ctx, dsc.urlClient)
 	return err
 }
 
 func (dsc *deviceServiceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
-	serviceURL, err := dsc.urlClient.Prefix()
-	if err != nil {
-		return err
-	}
-
-	_, err = clients.PutRequest(serviceURL+"/"+id+"/lastreported/"+strconv.FormatInt(time, 10), nil, ctx)
+	_, err := clients.PutRequest("/"+id+"/lastreported/"+strconv.FormatInt(time, 10), nil, ctx, dsc.urlClient)
 	return err
 }
 
 func (dsc *deviceServiceRestClient) Add(ds *models.DeviceService, ctx context.Context) (string, error) {
-	serviceURL, err := dsc.urlClient.Prefix()
-	if err != nil {
-		return "", err
-	}
-
-	return clients.PostJsonRequest(serviceURL, ds, ctx)
+	return clients.PostJsonRequest("", ds, ctx, dsc.urlClient)
 }
 
 func (dsc *deviceServiceRestClient) DeviceServiceForName(
 	name string,
 	ctx context.Context) (models.DeviceService, error) {
 
-	urlPrefix, err := dsc.urlClient.Prefix()
-	if err != nil {
-		return models.DeviceService{}, err
-	}
-
-	data, err := clients.GetRequest(urlPrefix+"/name/"+name, ctx)
+	data, err := clients.GetRequest("/name/"+name, ctx, dsc.urlClient)
 	if err != nil {
 		return models.DeviceService{}, err
 	}
