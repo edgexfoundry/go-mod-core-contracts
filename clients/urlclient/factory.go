@@ -19,12 +19,13 @@ package urlclient
 import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry"
 )
 
 // New provides the correct concrete implementation of the URLClient given the params provided.
 func New(params types.EndpointParams, m interfaces.Endpointer) interfaces.URLClient {
 	if params.UseRegistry {
-		return newRegistryClient(params, m, 10)
+		return newRegistryClient(params, m, retry.NewPeriodicRetry(500, 10))
 	}
 	return newLocalClient(params)
 }

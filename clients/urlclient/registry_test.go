@@ -17,28 +17,46 @@ package urlclient
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry"
 )
 
+var timeoutError = errors.NewTimeoutError()
+
 func TestNewRegistryClient(t *testing.T) {
-	actualClient := newRegistryClient(types.EndpointParams{UseRegistry: true}, mockEndpoint{}, 100)
+	actualClient := newRegistryClient(
+		types.EndpointParams{UseRegistry: true},
+		mockEndpoint{},
+		retry.NewPeriodicRetry(500, 10),
+	)
 
 	if actualClient == nil {
 		t.Fatal("nil returned from newRegistryClient")
 	}
 }
 
-func TestRegistryClient_URLPrefix(t *testing.T) {
+func TestRegistryClient_Prefix_Periodic(t *testing.T) {
+	strategy := retry.NewPeriodicRetry(500, 10)
+
 	expectedURL := "http://domain.com"
 	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
-	urlClient := newRegistryClient(types.EndpointParams{}, testEndpoint, 100)
+	urlClient := newRegistryClient(
+		types.EndpointParams{},
+		testEndpoint,
+		strategy,
+	)
 	testEndpoint.SendToChannel()
+
+	// don't sleep, we need to actuate the retry code
 
 	actualURL, err := urlClient.Prefix()
 
 	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
+		t.Fatalf("unexpected error: %s", err.Error())
 	}
 
 	if actualURL != expectedURL {
@@ -46,23 +64,27 @@ func TestRegistryClient_URLPrefix(t *testing.T) {
 	}
 }
 
-func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
+func TestRegistryClient_Prefix_Periodic_Initialized(t *testing.T) {
+	// use impossible timing to ensure that if hit, the retry logic will error out
+	strategy := retry.NewPeriodicRetry(100000, 1)
+
 	expectedURL := "http://domain.com"
 	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
-	urlClient := newRegistryClient(types.EndpointParams{}, testEndpoint, 100)
+	urlClient := newRegistryClient(
+		types.EndpointParams{},
+		testEndpoint,
+		strategy,
+	)
+
 	testEndpoint.SendToChannel()
 
-	// set up prerequisite condition, call Prefix once to set initialized to true
+	// sleep so that the retry code doesn't run and we only execute the shortcut
+	sleep(t, strategy)
+
 	actualURL, err := urlClient.Prefix()
-	if err != nil {
-		t.Fatalf("unexpected error in precondition %s", err.Error())
-	}
-
-	// call Prefix again without sending another message on the channel
-	actualURL, err = urlClient.Prefix()
 
 	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
+		t.Fatalf("unexpected error: %s", err.Error())
 	}
 
 	if actualURL != expectedURL {
@@ -70,8 +92,12 @@ func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
 	}
 }
 
-func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
-	urlClient := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 1)
+func TestRegistryClient_Prefix_Periodic_TimedOut(t *testing.T) {
+	urlClient := newRegistryClient(
+		types.EndpointParams{},
+		mockEndpoint{},
+		retry.NewPeriodicRetry(100000, 1),
+	)
 
 	actualURL, err := urlClient.Prefix()
 
@@ -79,8 +105,61 @@ func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
 		t.Fatal("expected error")
 	}
 
-	if err != TimeoutError {
-		t.Fatalf("expected error %s, found error %s", TimeoutError.Error(), err.Error())
+	if err != timeoutError {
+		t.Fatalf("expected error %s, found error %s", timeoutError.Error(), err.Error())
+	}
+}
+
+func TestRegistryClient_Prefix_Once(t *testing.T) {
+	strategy := retry.NewOnce()
+
+	expectedURL := "http://domain.com"
+	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
+	urlClient := newRegistryClient(
+		types.EndpointParams{},
+		testEndpoint,
+		strategy,
+	)
+	testEndpoint.SendToChannel()
+
+	sleep(t, strategy)
+
+	actualURL, err := urlClient.Prefix()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err.Error())
+	}
+
+	if actualURL != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
+	}
+}
+
+func TestRegistryClient_Prefix_Once_NotAvailable(t *testing.T) {
+	urlClient := newRegistryClient(
+		types.EndpointParams{},
+		mockEndpoint{},
+		retry.NewOnce(),
+	)
+
+	actualURL, err := urlClient.Prefix()
+
+	if err == nil || actualURL != "" {
+		t.Fatal("expected error")
+	}
+
+	if err != timeoutError {
+		t.Fatalf("expected error %s, found error %s", timeoutError.Error(), err.Error())
+	}
+}
+
+func sleep(t *testing.T, strategy interfaces.RetryStrategy) {
+	for i := 1; strategy.IsLocked(); i++ {
+		if i == 5 {
+			t.Fatal("waited too long for strategy to unlock")
+		}
+
+		time.Sleep(time.Second)
 	}
 }
 

@@ -15,11 +15,9 @@
 package urlclient
 
 import (
-	"errors"
-	"time"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	urlClientInterfaces "github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/interfaces"
 )
 
 // registryClient defines a URLClient implementation that checks for an update from an asynchronously run
@@ -28,16 +26,19 @@ type registryClient struct {
 	url         string
 	timeout     int
 	initialized bool
+	strategy    urlClientInterfaces.RetryStrategy
 }
-
-var TimeoutError = errors.New("unable to initialize client")
 
 // newRegistryClient returns a pointer to a registryClient.
 // A pointer is used so that when using configuration from a registry, the Prefix can be updated asynchronously.
-func newRegistryClient(params types.EndpointParams, m interfaces.Endpointer, timeout int) *registryClient {
+func newRegistryClient(
+	params types.EndpointParams,
+	m interfaces.Endpointer,
+	strategy urlClientInterfaces.RetryStrategy) *registryClient {
+
 	e := registryClient{
-		timeout:     timeout,
 		initialized: false,
+		strategy:    strategy,
 	}
 
 	go func(ch chan string) {
@@ -46,6 +47,7 @@ func newRegistryClient(params types.EndpointParams, m interfaces.Endpointer, tim
 			case url := <-ch:
 				e.url = url
 				e.initialized = true
+				strategy.SetLock(false)
 			}
 		}
 	}(m.Monitor(params))
@@ -56,21 +58,5 @@ func newRegistryClient(params types.EndpointParams, m interfaces.Endpointer, tim
 // Prefix waits for URLClient to be updated for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
 func (c *registryClient) Prefix() (string, error) {
-	if c.initialized {
-		return c.url, nil
-	}
-
-	timer := time.After(time.Duration(c.timeout) * time.Second)
-	ticker := time.Tick(500 * time.Millisecond)
-	for {
-		select {
-		case <-timer:
-			return "", TimeoutError
-		case <-ticker:
-			if c.initialized && len(c.url) != 0 {
-				return c.url, nil
-			}
-			// do not handle uninitialized case here, we need to keep trying
-		}
-	}
+	return c.strategy.Retry(&c.initialized, &c.url)
 }
