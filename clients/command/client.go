@@ -22,20 +22,18 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 // CommandClient interface defines interactions with the EdgeX Core Command microservice.
 type CommandClient interface {
 	// Get issues a GET command targeting the specified device, using the specified command id
-	Get(deviceId string, commandId string, ctx context.Context) (string, error)
+	Get(ctx context.Context, deviceId string, commandId string) (string, error)
 	// Put issues a PUT command targeting the specified device, using the specified command id
-	Put(deviceId string, commandId string, body string, ctx context.Context) (string, error)
+	Put(ctx context.Context, deviceId string, commandId string, body string) (string, error)
 	// GetDeviceCommandByNames issues a GET command targeting the specified device, using the specified device and command name
-	GetDeviceCommandByNames(deviceName string, commandName string, ctx context.Context) (string, error)
+	GetDeviceCommandByNames(ctx context.Context, deviceName string, commandName string) (string, error)
 	// PutDeviceCommandByNames issues a PUT command targeting the specified device, using the specified device and command names
-	PutDeviceCommandByNames(deviceName string, commandName string, body string, ctx context.Context) (string, error)
+	PutDeviceCommandByNames(ctx context.Context, deviceName string, commandName string, body string) (string, error)
 }
 
 type commandRestClient struct {
@@ -43,37 +41,39 @@ type commandRestClient struct {
 }
 
 // NewCommandClient creates an instance of CommandClient
-func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) CommandClient {
-	return &commandRestClient{urlClient: urlclient.New(params, m)}
+func NewCommandClient(urlClient interfaces.URLClient) CommandClient {
+	return &commandRestClient{
+		urlClient: urlClient,
+	}
 }
 
-func (cc *commandRestClient) Get(deviceId string, commandId string, ctx context.Context) (string, error) {
-	return cc.getRequestJSONBody("/"+deviceId+"/command/"+commandId, ctx)
+func (cc *commandRestClient) Get(ctx context.Context, deviceId string, commandId string) (string, error) {
+	return cc.getRequestJSONBody(ctx, "/"+deviceId+"/command/"+commandId)
 }
 
-func (cc *commandRestClient) Put(deviceId string, commandId string, body string, ctx context.Context) (string, error) {
-	return clients.PutRequest("/"+deviceId+"/command/"+commandId, []byte(body), ctx, cc.urlClient)
+func (cc *commandRestClient) Put(ctx context.Context, deviceId string, commandId string, body string) (string, error) {
+	return clients.PutRequest(ctx, "/"+deviceId+"/command/"+commandId, []byte(body), cc.urlClient)
 }
 
 func (cc *commandRestClient) GetDeviceCommandByNames(
+	ctx context.Context,
 	deviceName string,
-	commandName string,
-	ctx context.Context) (string, error) {
+	commandName string) (string, error) {
 
-	return cc.getRequestJSONBody("/name/"+deviceName+"/command/"+commandName, ctx)
+	return cc.getRequestJSONBody(ctx, "/name/"+deviceName+"/command/"+commandName)
 }
 
 func (cc *commandRestClient) PutDeviceCommandByNames(
+	ctx context.Context,
 	deviceName string,
 	commandName string,
-	body string,
-	ctx context.Context) (string, error) {
+	body string) (string, error) {
 
-	return clients.PutRequest("/name/"+deviceName+"/command/"+commandName, []byte(body), ctx, cc.urlClient)
+	return clients.PutRequest(ctx, "/name/"+deviceName+"/command/"+commandName, []byte(body), cc.urlClient)
 }
 
-func (cc *commandRestClient) getRequestJSONBody(urlSuffix string, ctx context.Context) (string, error) {
-	body, err := clients.GetRequest(urlSuffix, ctx, cc.urlClient)
+func (cc *commandRestClient) getRequestJSONBody(ctx context.Context, urlSuffix string) (string, error) {
+	body, err := clients.GetRequest(ctx, urlSuffix, cc.urlClient)
 
 	return string(body), err
 }

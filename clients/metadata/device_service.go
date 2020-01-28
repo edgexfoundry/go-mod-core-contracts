@@ -21,21 +21,19 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 // DeviceServiceClient defines the interface for interactions with the DeviceService endpoint on metadata.
 type DeviceServiceClient interface {
 	// Add a new device service
-	Add(ds *models.DeviceService, ctx context.Context) (string, error)
+	Add(ctx context.Context, ds *models.DeviceService) (string, error)
 	// DeviceServiceForName loads a device service for the specified name
-	DeviceServiceForName(name string, ctx context.Context) (models.DeviceService, error)
+	DeviceServiceForName(ctx context.Context, name string) (models.DeviceService, error)
 	// UpdateLastConnected updates a device service's last connected timestamp for the specified service ID
-	UpdateLastConnected(id string, time int64, ctx context.Context) error
+	UpdateLastConnected(ctx context.Context, id string, time int64) error
 	// UpdateLastReported updates a device service's last reported timestamp for the specified service ID
-	UpdateLastReported(id string, time int64, ctx context.Context) error
+	UpdateLastReported(ctx context.Context, id string, time int64) error
 }
 
 type deviceServiceRestClient struct {
@@ -43,29 +41,29 @@ type deviceServiceRestClient struct {
 }
 
 // NewDeviceServiceClient creates an instance of DeviceServiceClient
-func NewDeviceServiceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceServiceClient {
-	return &deviceServiceRestClient{urlClient: urlclient.New(params, m)}
+func NewDeviceServiceClient(urlClient interfaces.URLClient) DeviceServiceClient {
+	return &deviceServiceRestClient{
+		urlClient: urlClient,
+	}
 }
 
-func (dsc *deviceServiceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {
-	_, err := clients.PutRequest("/"+id+"/lastconnected/"+strconv.FormatInt(time, 10), nil, ctx, dsc.urlClient)
+func (dsc *deviceServiceRestClient) UpdateLastConnected(ctx context.Context, id string, time int64) error {
+	_, err := clients.PutRequest(ctx, "/"+id+"/lastconnected/"+strconv.FormatInt(time, 10), nil, dsc.urlClient)
 	return err
 }
 
-func (dsc *deviceServiceRestClient) UpdateLastReported(id string, time int64, ctx context.Context) error {
-	_, err := clients.PutRequest("/"+id+"/lastreported/"+strconv.FormatInt(time, 10), nil, ctx, dsc.urlClient)
+func (dsc *deviceServiceRestClient) UpdateLastReported(ctx context.Context, id string, time int64) error {
+	_, err := clients.PutRequest(ctx, "/"+id+"/lastreported/"+strconv.FormatInt(time, 10), nil, dsc.urlClient)
 	return err
 }
 
-func (dsc *deviceServiceRestClient) Add(ds *models.DeviceService, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest("", ds, ctx, dsc.urlClient)
+func (dsc *deviceServiceRestClient) Add(ctx context.Context, ds *models.DeviceService) (string, error) {
+	return clients.PostJSONRequest(ctx, "", ds, dsc.urlClient)
 }
 
-func (dsc *deviceServiceRestClient) DeviceServiceForName(
-	name string,
-	ctx context.Context) (models.DeviceService, error) {
+func (dsc *deviceServiceRestClient) DeviceServiceForName(ctx context.Context, name string) (models.DeviceService, error) {
 
-	data, err := clients.GetRequest("/name/"+name, ctx, dsc.urlClient)
+	data, err := clients.GetRequest(ctx, "/name/"+name, dsc.urlClient)
 	if err != nil {
 		return models.DeviceService{}, err
 	}

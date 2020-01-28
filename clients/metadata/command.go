@@ -20,27 +20,25 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 // CommandClient defines the interface for interactions with the Command endpoint on core-metadata.
 type CommandClient interface {
 	// Add a new command
-	Add(com *models.Command, ctx context.Context) (string, error)
+	Add(ctx context.Context, com *models.Command) (string, error)
 	// Command obtains the command for the specified ID
-	Command(id string, ctx context.Context) (models.Command, error)
+	Command(ctx context.Context, id string) (models.Command, error)
 	// Commands lists all the commands
 	Commands(ctx context.Context) ([]models.Command, error)
 	// CommandsForName lists all the commands for the specified name
-	CommandsForName(name string, ctx context.Context) ([]models.Command, error)
+	CommandsForName(ctx context.Context, name string) ([]models.Command, error)
 	// CommandsForDeviceId list all commands for device with specified ID
-	CommandsForDeviceId(id string, ctx context.Context) ([]models.Command, error)
+	CommandsForDeviceId(ctx context.Context, id string) ([]models.Command, error)
 	// Delete a command for the specified ID
-	Delete(id string, ctx context.Context) error
+	Delete(ctx context.Context, id string) error
 	// Update a command
-	Update(com models.Command, ctx context.Context) error
+	Update(ctx context.Context, com models.Command) error
 }
 
 type commandRestClient struct {
@@ -48,13 +46,15 @@ type commandRestClient struct {
 }
 
 // NewCommandClient creates an instance of CommandClient
-func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) CommandClient {
-	return &commandRestClient{urlClient: urlclient.New(params, m)}
+func NewCommandClient(urlClient interfaces.URLClient) CommandClient {
+	return &commandRestClient{
+		urlClient: urlClient,
+	}
 }
 
 // Helper method to request and decode a command
-func (c *commandRestClient) requestCommand(urlSuffix string, ctx context.Context) (models.Command, error) {
-	data, err := clients.GetRequest(urlSuffix, ctx, c.urlClient)
+func (c *commandRestClient) requestCommand(ctx context.Context, urlSuffix string) (models.Command, error) {
+	data, err := clients.GetRequest(ctx, urlSuffix, c.urlClient)
 	if err != nil {
 		return models.Command{}, err
 	}
@@ -65,8 +65,8 @@ func (c *commandRestClient) requestCommand(urlSuffix string, ctx context.Context
 }
 
 // Helper method to request and decode a command slice
-func (c *commandRestClient) requestCommandSlice(urlSuffix string, ctx context.Context) ([]models.Command, error) {
-	data, err := clients.GetRequest(urlSuffix, ctx, c.urlClient)
+func (c *commandRestClient) requestCommandSlice(ctx context.Context, urlSuffix string) ([]models.Command, error) {
+	data, err := clients.GetRequest(ctx, urlSuffix, c.urlClient)
 	if err != nil {
 		return []models.Command{}, err
 	}
@@ -76,30 +76,30 @@ func (c *commandRestClient) requestCommandSlice(urlSuffix string, ctx context.Co
 	return comSlice, err
 }
 
-func (c *commandRestClient) Command(id string, ctx context.Context) (models.Command, error) {
-	return c.requestCommand("/"+id, ctx)
+func (c *commandRestClient) Command(ctx context.Context, id string) (models.Command, error) {
+	return c.requestCommand(ctx, "/"+id)
 }
 
 func (c *commandRestClient) Commands(ctx context.Context) ([]models.Command, error) {
-	return c.requestCommandSlice("", ctx)
+	return c.requestCommandSlice(ctx, "")
 }
 
-func (c *commandRestClient) CommandsForName(name string, ctx context.Context) ([]models.Command, error) {
-	return c.requestCommandSlice("/name/"+name, ctx)
+func (c *commandRestClient) CommandsForName(ctx context.Context, name string) ([]models.Command, error) {
+	return c.requestCommandSlice(ctx, "/name/"+name)
 }
 
-func (c *commandRestClient) CommandsForDeviceId(id string, ctx context.Context) ([]models.Command, error) {
-	return c.requestCommandSlice("/device/"+id, ctx)
+func (c *commandRestClient) CommandsForDeviceId(ctx context.Context, id string) ([]models.Command, error) {
+	return c.requestCommandSlice(ctx, "/device/"+id)
 }
 
-func (c *commandRestClient) Add(com *models.Command, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest("", com, ctx, c.urlClient)
+func (c *commandRestClient) Add(ctx context.Context, com *models.Command) (string, error) {
+	return clients.PostJSONRequest(ctx, "", com, c.urlClient)
 }
 
-func (c *commandRestClient) Update(com models.Command, ctx context.Context) error {
-	return clients.UpdateRequest("", com, ctx, c.urlClient)
+func (c *commandRestClient) Update(ctx context.Context, com models.Command) error {
+	return clients.UpdateRequest(ctx, "", com, c.urlClient)
 }
 
-func (c *commandRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest("/id/"+id, ctx, c.urlClient)
+func (c *commandRestClient) Delete(ctx context.Context, id string) error {
+	return clients.DeleteRequest(ctx, "/id/"+id, c.urlClient)
 }

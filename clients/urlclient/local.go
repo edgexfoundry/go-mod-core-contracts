@@ -14,19 +14,17 @@
 
 package urlclient
 
-import (
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-)
+import "github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 
 // localClient defines a ClientURL implementation that returns the struct field for the URL.
 type localClient struct {
 	url string
 }
 
-// newLocalClient returns a pointer to a localClient.
-func newLocalClient(params types.EndpointParams) *localClient {
+// NewLocalClient returns a pointer to a localClient.
+func NewLocalClient(urlStreamResult interfaces.URLStream) *localClient {
 	return &localClient{
-		url: params.Url,
+		url: string(urlStreamResult),
 	}
 }
 

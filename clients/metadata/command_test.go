@@ -18,19 +18,14 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 func TestNewCommandClientWithConsul(t *testing.T) {
 	deviceUrl := "http://localhost:48081" + clients.ApiCommandRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiCommandRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
 
-	cc := NewCommandClient(params, mockCoreMetaDataEndpoint{})
+	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(deviceUrl)))
 
 	r, ok := cc.(*commandRestClient)
 	if !ok {

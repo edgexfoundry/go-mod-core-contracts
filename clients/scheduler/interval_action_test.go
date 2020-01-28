@@ -23,7 +23,9 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry/periodic"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -68,23 +70,13 @@ var testIntervalAction2 = models.IntervalAction{
 }
 
 func TestIntervalActionRestClient_Add(t *testing.T) {
-	ts := testHttpServer(t, http.MethodPost, clients.ApiIntervalActionRoute)
+	ts := testHTTPServer(t, http.MethodPost, clients.ApiIntervalActionRoute)
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalActionRoute
+	iac := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalActionRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	iac := NewIntervalActionClient(params, MockEndpoint{})
-
-	res, err := iac.Add(&testIntervalAction1, context.Background())
+	res, err := iac.Add(context.Background(), &testIntervalAction1)
 
 	if res == "" {
 		t.Fatal("unexpected empty string response")
@@ -96,23 +88,13 @@ func TestIntervalActionRestClient_Add(t *testing.T) {
 }
 
 func TestIntervalActionRestClient_Delete(t *testing.T) {
-	ts := testHttpServer(t, http.MethodDelete, clients.ApiIntervalActionRoute)
+	ts := testHTTPServer(t, http.MethodDelete, clients.ApiIntervalActionRoute)
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalActionRoute
+	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalActionRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalActionClient(params, MockEndpoint{})
-
-	err := ic.Delete(testID1, context.Background())
+	err := ic.Delete(context.Background(), testID1)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -120,23 +102,13 @@ func TestIntervalActionRestClient_Delete(t *testing.T) {
 }
 
 func TestIntervalActionRestClient_DeleteByName(t *testing.T) {
-	ts := testHttpServer(t, http.MethodDelete, clients.ApiIntervalActionRoute)
+	ts := testHTTPServer(t, http.MethodDelete, clients.ApiIntervalActionRoute)
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalActionRoute
+	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalActionRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalActionClient(params, MockEndpoint{})
-
-	err := ic.DeleteByName(testIntervalAction1.Name, context.Background())
+	err := ic.DeleteByName(context.Background(), testIntervalAction1.Name)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -189,36 +161,29 @@ func TestIntervalActionRestClient_IntervalAction(t *testing.T) {
 	}{
 		{"happy path",
 			testIntervalAction1.ID,
-			NewIntervalActionClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalActionRoute,
-				UseRegistry: false,
-				Url:         ts.URL + clients.ApiIntervalActionRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute))),
 			false,
 		},
 		{
-			"nil client",
+			"client error",
 			testIntervalAction1.ID,
-			NewIntervalActionClient(types.EndpointParams{}, nil),
+			NewIntervalActionClient(
+				urlclient.NewRegistryClient(make(chan interfaces.URLStream),
+					periodic.New(1, 0)),
+			),
 			true,
 		},
 		{"bad JSON marshal",
 			testIntervalAction1.ID,
-			NewIntervalActionClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalActionRoute,
-				UseRegistry: false,
-				Url:         badJSONServer.URL + clients.ApiIntervalActionRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(
+				badJSONServer.URL + clients.ApiIntervalActionRoute,
+			))),
 			true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, err := tt.ic.IntervalAction(tt.IntervalActionID, context.Background())
+			res, err := tt.ic.IntervalAction(context.Background(), tt.IntervalActionID)
 
 			emptyIntervalAction := models.IntervalAction{}
 
@@ -259,19 +224,9 @@ func TestIntervalActionRestClient_IntervalActionForName(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalActionRoute
+	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalActionRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalActionClient(params, MockEndpoint{})
-
-	_, err := ic.IntervalActionForName(testIntervalAction1.Name, context.Background())
+	_, err := ic.IntervalActionForName(context.Background(), testIntervalAction1.Name)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -324,28 +279,19 @@ func TestIntervalActionRestClient_IntervalActions(t *testing.T) {
 		expectedError bool
 	}{
 		{"happy path",
-			NewIntervalActionClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalActionRoute,
-				UseRegistry: false,
-				Url:         ts.URL + clients.ApiIntervalActionRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute))),
 			false,
 		},
 		{
-			"nil client",
-			NewIntervalActionClient(types.EndpointParams{}, nil),
+			"client error",
+			NewIntervalActionClient(urlclient.NewRegistryClient(make(chan interfaces.URLStream),
+				periodic.New(1, 0)),
+			),
 			true,
 		},
 		{"bad JSON marshal",
-			NewIntervalActionClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalActionRoute,
-				UseRegistry: false,
-				Url:         badJSONServer.URL + clients.ApiIntervalActionRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalActionClient(urlclient.NewLocalClient(
+				interfaces.URLStream(badJSONServer.URL + clients.ApiIntervalActionRoute))),
 			true,
 		},
 	}
@@ -394,19 +340,9 @@ func TestIntervalActionRestClient_IntervalActionsForTargetByName(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalActionRoute
+	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalActionRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalActionClient(params, MockEndpoint{})
-
-	_, err := ic.IntervalActionsForTargetByName(testIntervalAction1.Target, context.Background())
+	_, err := ic.IntervalActionsForTargetByName(context.Background(), testIntervalAction1.Target)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -414,23 +350,13 @@ func TestIntervalActionRestClient_IntervalActionsForTargetByName(t *testing.T) {
 }
 
 func TestIntervalActionRestClient_Update(t *testing.T) {
-	ts := testHttpServer(t, http.MethodPut, clients.ApiIntervalActionRoute)
+	ts := testHTTPServer(t, http.MethodPut, clients.ApiIntervalActionRoute)
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalActionRoute
+	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalActionRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalActionClient(params, MockEndpoint{})
-
-	err := ic.Update(testIntervalAction1, context.Background())
+	err := ic.Update(context.Background(), testIntervalAction1)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())

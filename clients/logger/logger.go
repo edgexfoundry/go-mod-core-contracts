@@ -251,7 +251,7 @@ func (lc edgeXLogger) buildLogEntry(logLevel string, msg string, args ...interfa
 // Send the log as an http request
 func (lc edgeXLogger) sendLog(logEntry models.LogEntry) {
 	go func() {
-		_, err := clients.PostJsonRequestWithURL(lc.logTarget, logEntry, context.Background())
+		_, err := clients.PostJSONRequestWithURL(context.Background(), lc.logTarget, logEntry)
 		if err != nil {
 			fmt.Println(err.Error())
 		}

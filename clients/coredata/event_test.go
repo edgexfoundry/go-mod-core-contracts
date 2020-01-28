@@ -19,13 +19,13 @@ package coredata
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 
 	"github.com/ugorji/go/codec"
@@ -57,18 +57,9 @@ func TestMarkPushed(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiEventRoute
+	ec := NewEventClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiEventRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiEventRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-
-	ec := NewEventClient(params, mockCoreDataEndpoint{})
-
-	err := ec.MarkPushed(TestId, context.Background())
+	err := ec.MarkPushed(context.Background(), TestId)
 
 	if err != nil {
 		t.FailNow()
@@ -92,18 +83,9 @@ func TestMarkPushedByChecksum(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiEventRoute
+	ec := NewEventClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiEventRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiEventRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-
-	ec := NewEventClient(params, mockCoreDataEndpoint{})
-
-	err := ec.MarkPushedByChecksum(TestChecksum, context.Background())
+	err := ec.MarkPushedByChecksum(context.Background(), TestChecksum)
 
 	if err != nil {
 		t.FailNow()
@@ -122,7 +104,7 @@ func TestGetEvents(t *testing.T) {
 			t.Errorf("expected uri path is %s, actual uri path is %s", clients.ApiEventRoute, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte("[" +
+		_, _ = w.Write([]byte("[" +
 			"{" +
 			"\"Device\" : \"" + TestEventDevice1 + "\"" +
 			"}," +
@@ -135,16 +117,7 @@ func TestGetEvents(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiEventRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiEventRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-
-	ec := NewEventClient(params, mockCoreDataEndpoint{})
+	ec := NewEventClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiEventRoute)))
 
 	eArr, err := ec.Events(context.Background())
 	if err != nil {
@@ -166,31 +139,6 @@ func TestGetEvents(t *testing.T) {
 	}
 }
 
-func TestNewEventClientWithConsul(t *testing.T) {
-	deviceUrl := "http://localhost:48080" + clients.ApiEventRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiEventRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
-
-	ec := NewEventClient(params, mockCoreDataEndpoint{})
-
-	r, ok := ec.(*eventRestClient)
-	if !ok {
-		t.Error("ec is not of expected type")
-	}
-
-	url, err := r.urlClient.Prefix()
-
-	if err != nil {
-		t.Error("url was not initialized")
-	} else if url != deviceUrl {
-		t.Errorf("unexpected url value %s", url)
-	}
-}
-
 func TestMarshalEvent(t *testing.T) {
 	var eventResult models.Event
 	binaryEvent := testEvent
@@ -199,7 +147,7 @@ func TestMarshalEvent(t *testing.T) {
 	regularEvent := testEvent
 	regularEvent.Readings = append(regularEvent.Readings, testReading)
 
-	client := NewEventClient(types.EndpointParams{Url: "test"}, mockCoreDataEndpoint{})
+	client := NewEventClient(urlclient.NewLocalClient("test"))
 
 	tests := []struct {
 		name        string
@@ -235,12 +183,4 @@ func TestMarshalEvent(t *testing.T) {
 			}
 		})
 	}
-}
-
-type mockCoreDataEndpoint struct{}
-
-func (e mockCoreDataEndpoint) Monitor(params types.EndpointParams) chan string {
-	ch := make(chan string, 1)
-	ch <- fmt.Sprintf("http://%s:%v%s", "localhost", 48080, params.Path)
-	return ch
 }
