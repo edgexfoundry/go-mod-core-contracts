@@ -60,8 +60,12 @@ type valueDescriptorRestClient struct {
 	urlClient interfaces.URLClient
 }
 
-func NewValueDescriptorClient(params types.EndpointParams, m interfaces.Endpointer) ValueDescriptorClient {
-	return &valueDescriptorRestClient{urlClient: urlclient.New(params, m)}
+func NewValueDescriptorClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) ValueDescriptorClient {
+
+	return &valueDescriptorRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode a valuedescriptor slice

@@ -53,8 +53,12 @@ type deviceProfileRestClient struct {
 }
 
 // Return an instance of DeviceProfileClient
-func NewDeviceProfileClient(params types.EndpointParams, m interfaces.Endpointer) DeviceProfileClient {
-	return &deviceProfileRestClient{urlClient: urlclient.New(params, m)}
+func NewDeviceProfileClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) DeviceProfileClient {
+
+	return &deviceProfileRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode a device profile

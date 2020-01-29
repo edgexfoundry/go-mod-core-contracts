@@ -55,8 +55,12 @@ type provisionWatcherRestClient struct {
 }
 
 // NewProvisionWatcherClient creates an instance of ProvisionWatcherClient
-func NewProvisionWatcherClient(params types.EndpointParams, m interfaces.Endpointer) ProvisionWatcherClient {
-	return &provisionWatcherRestClient{urlClient: urlclient.New(params, m)}
+func NewProvisionWatcherClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) ProvisionWatcherClient {
+
+	return &provisionWatcherRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode a provision watcher

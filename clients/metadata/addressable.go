@@ -46,8 +46,12 @@ type addressableRestClient struct {
 }
 
 // NewAddressableClient creates an instance of AddressableClient
-func NewAddressableClient(params types.EndpointParams, m interfaces.Endpointer) AddressableClient {
-	return &addressableRestClient{urlClient: urlclient.New(params, m)}
+func NewAddressableClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) AddressableClient {
+
+	return &addressableRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode an addressable

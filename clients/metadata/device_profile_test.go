@@ -34,7 +34,7 @@ func TestNewDeviceProfileClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	dpc := NewDeviceProfileClient(params, mockCoreMetaDataEndpoint{})
+	dpc := NewDeviceProfileClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	r, ok := dpc.(*deviceProfileRestClient)
 	if !ok {
@@ -82,7 +82,7 @@ func TestUpdateDeviceProfile(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	dpc := NewDeviceProfileClient(params, mockCoreMetaDataEndpoint{})
+	dpc := NewDeviceProfileClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	err := dpc.Update(p, context.Background())
 	if err != nil {

@@ -23,9 +23,13 @@ import (
 )
 
 // New provides the correct concrete implementation of the URLClient given the params provided.
-func New(params types.EndpointParams, m interfaces.Endpointer) interfaces.URLClient {
-	if params.UseRegistry {
-		return newRegistryClient(params, m, retry.NewPeriodicRetry(500, 10))
+func New(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) interfaces.URLClient {
+
+	if endpointParams.UseRegistry {
+		return newRegistryClient(endpointParams, m, retry.NewPeriodicRetry(urlClientParams))
 	}
-	return newLocalClient(params)
+	return newLocalClient(endpointParams)
 }

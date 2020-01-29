@@ -61,7 +61,7 @@ func TestGetConfig(t *testing.T) {
 		Interval:    clients.ClientMonitorDefault,
 	}
 
-	mc := NewGeneralClient(params, mockGeneralEndpoint{})
+	mc := NewGeneralClient(params, mockGeneralEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	responseJSON, err := mc.FetchConfiguration(context.Background())
 	if err != nil {
@@ -94,7 +94,7 @@ func TestGetMetrics(t *testing.T) {
 		Interval:    clients.ClientMonitorDefault,
 	}
 
-	mc := NewGeneralClient(params, mockGeneralEndpoint{})
+	mc := NewGeneralClient(params, mockGeneralEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	responseJSON, err := mc.FetchMetrics(context.Background())
 	if err != nil {

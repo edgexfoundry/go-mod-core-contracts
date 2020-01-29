@@ -39,7 +39,7 @@ func TestGetDeviceCommandById(t *testing.T) {
 		Interval:    clients.ClientMonitorDefault,
 	}
 
-	cc := NewCommandClient(params, MockEndpoint{})
+	cc := NewCommandClient(params, MockEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	res, _ := cc.Get("device1", "command1", context.Background())
 
@@ -63,7 +63,7 @@ func TestPutDeviceCommandById(t *testing.T) {
 		Interval:    clients.ClientMonitorDefault,
 	}
 
-	cc := NewCommandClient(params, MockEndpoint{})
+	cc := NewCommandClient(params, MockEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	res, _ := cc.Put("device1", "command1", "body", context.Background())
 
@@ -87,7 +87,7 @@ func TestGetDeviceByName(t *testing.T) {
 		Interval:    clients.ClientMonitorDefault,
 	}
 
-	cc := NewCommandClient(params, MockEndpoint{})
+	cc := NewCommandClient(params, MockEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	res, _ := cc.GetDeviceCommandByNames("device1", "command1", context.Background())
 
@@ -111,7 +111,7 @@ func TestPutDeviceCommandByNames(t *testing.T) {
 		Interval:    clients.ClientMonitorDefault,
 	}
 
-	cc := NewCommandClient(params, MockEndpoint{})
+	cc := NewCommandClient(params, MockEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	res, _ := cc.PutDeviceCommandByNames("device1", "command1", "body", context.Background())
 

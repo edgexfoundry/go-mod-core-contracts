@@ -63,8 +63,12 @@ type readingRestClient struct {
 }
 
 // NewReadingClient creates an instance of a ReadingClient
-func NewReadingClient(params types.EndpointParams, m interfaces.Endpointer) ReadingClient {
-	return &readingRestClient{urlClient: urlclient.New(params, m)}
+func NewReadingClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) ReadingClient {
+
+	return &readingRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode a reading slice

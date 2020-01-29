@@ -31,7 +31,7 @@ func TestNewRegistryClient(t *testing.T) {
 	actualClient := newRegistryClient(
 		types.EndpointParams{UseRegistry: true},
 		mockEndpoint{},
-		retry.NewPeriodicRetry(500, 10),
+		retry.NewPeriodicRetry(types.URLClientParams{Interval: 500, Timeout: 10}),
 	)
 
 	if actualClient == nil {
@@ -40,7 +40,7 @@ func TestNewRegistryClient(t *testing.T) {
 }
 
 func TestRegistryClient_Prefix_Periodic(t *testing.T) {
-	strategy := retry.NewPeriodicRetry(500, 10)
+	strategy := retry.NewPeriodicRetry(types.URLClientParams{Interval: 500, Timeout: 10})
 
 	expectedURL := "http://domain.com"
 	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
@@ -66,7 +66,7 @@ func TestRegistryClient_Prefix_Periodic(t *testing.T) {
 
 func TestRegistryClient_Prefix_Periodic_Initialized(t *testing.T) {
 	// use impossible timing to ensure that if hit, the retry logic will error out
-	strategy := retry.NewPeriodicRetry(100000, 1)
+	strategy := retry.NewPeriodicRetry(types.URLClientParams{Interval: 100000000, Timeout: 10})
 
 	expectedURL := "http://domain.com"
 	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
@@ -96,7 +96,7 @@ func TestRegistryClient_Prefix_Periodic_TimedOut(t *testing.T) {
 	urlClient := newRegistryClient(
 		types.EndpointParams{},
 		mockEndpoint{},
-		retry.NewPeriodicRetry(100000, 1),
+		retry.NewPeriodicRetry(types.URLClientParams{Interval: 100000000, Timeout: 10}),
 	)
 
 	actualURL, err := urlClient.Prefix()

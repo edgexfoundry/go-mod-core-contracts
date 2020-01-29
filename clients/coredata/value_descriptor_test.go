@@ -80,7 +80,7 @@ func TestGetvaluedescriptors(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
+	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	vdArr, err := vdc.ValueDescriptors(context.Background())
 	if err != nil {
@@ -133,7 +133,7 @@ func TestValueDescriptorUsage(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
+	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 	usage, err := vdc.ValueDescriptorsUsage([]string{testValueDesciptorDescription1, testValueDesciptorDescription2}, context.Background())
 	if err != nil {
 		t.Errorf(err.Error())
@@ -160,7 +160,7 @@ func TestValueDescriptorUsageSerializationError(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
+	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 	_, err := vdc.ValueDescriptorsUsage([]string{testValueDesciptorDescription1, testValueDesciptorDescription2}, context.Background())
 	if err == nil {
 		t.Error("Expected an error")
@@ -176,7 +176,7 @@ func TestValueDescriptorUsageGetRequestError(t *testing.T) {
 		Url:         "!@#",
 		Interval:    clients.ClientMonitorDefault}
 
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
+	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 	_, err := vdc.ValueDescriptorsUsage([]string{testValueDesciptorDescription1, testValueDesciptorDescription2}, context.Background())
 	if err == nil {
 		t.Error("Expected an error")
@@ -193,7 +193,7 @@ func TestNewValueDescriptorClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
+	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	r, ok := vdc.(*valueDescriptorRestClient)
 	if !ok {

@@ -66,7 +66,7 @@ func TestMarkPushed(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	ec := NewEventClient(params, mockCoreDataEndpoint{})
+	ec := NewEventClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	err := ec.MarkPushed(TestId, context.Background())
 
@@ -101,7 +101,7 @@ func TestMarkPushedByChecksum(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	ec := NewEventClient(params, mockCoreDataEndpoint{})
+	ec := NewEventClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	err := ec.MarkPushedByChecksum(TestChecksum, context.Background())
 
@@ -144,7 +144,7 @@ func TestGetEvents(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	ec := NewEventClient(params, mockCoreDataEndpoint{})
+	ec := NewEventClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	eArr, err := ec.Events(context.Background())
 	if err != nil {
@@ -175,7 +175,7 @@ func TestNewEventClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	ec := NewEventClient(params, mockCoreDataEndpoint{})
+	ec := NewEventClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	r, ok := ec.(*eventRestClient)
 	if !ok {
@@ -199,7 +199,7 @@ func TestMarshalEvent(t *testing.T) {
 	regularEvent := testEvent
 	regularEvent.Readings = append(regularEvent.Readings, testReading)
 
-	client := NewEventClient(types.EndpointParams{Url: "test"}, mockCoreDataEndpoint{})
+	client := NewEventClient(types.EndpointParams{Url: "test"}, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	tests := []struct {
 		name        string

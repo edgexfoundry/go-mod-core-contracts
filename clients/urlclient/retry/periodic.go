@@ -18,6 +18,7 @@ package retry
 import (
 	"time"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/errors"
 )
 
@@ -34,10 +35,10 @@ type periodic struct {
 // poll for the data on a regular frequency until the timeout happens.
 // tickTime defines the interval in milliseconds for how often the URL should be queried.
 // timeout defines the interval in seconds for how long the algorithm should query before giving up.
-func NewPeriodicRetry(tickTime int, timeout int) *periodic {
+func NewPeriodicRetry(params types.URLClientParams) *periodic {
 	return &periodic{
-		tickTime: time.Duration(tickTime),
-		timeout:  time.Duration(timeout),
+		tickTime: time.Duration(params.Interval),
+		timeout:  time.Duration(params.Timeout),
 		isLocked: true,
 	}
 }

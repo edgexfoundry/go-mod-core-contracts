@@ -71,8 +71,11 @@ type eventRestClient struct {
 }
 
 // NewEventClient creates an instance of EventClient
-func NewEventClient(params types.EndpointParams, m interfaces.Endpointer) EventClient {
-	return &eventRestClient{urlClient: urlclient.New(params, m)}
+func NewEventClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) EventClient {
+	return &eventRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode an event slice

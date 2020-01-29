@@ -48,8 +48,12 @@ type commandRestClient struct {
 }
 
 // NewCommandClient creates an instance of CommandClient
-func NewCommandClient(params types.EndpointParams, m interfaces.Endpointer) CommandClient {
-	return &commandRestClient{urlClient: urlclient.New(params, m)}
+func NewCommandClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) CommandClient {
+
+	return &commandRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode a command

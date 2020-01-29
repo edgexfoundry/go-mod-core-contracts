@@ -37,7 +37,7 @@ func TestNewAddressableClientWithConsul(t *testing.T) {
 		Url:         addressableURL,
 		Interval:    clients.ClientMonitorDefault}
 
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
+	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	r, ok := ac.(*addressableRestClient)
 	if !ok {
@@ -87,7 +87,7 @@ func TestAddAddressable(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
+	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	receivedAddressableID, err := ac.Add(&addressable, context.Background())
 	if err != nil {
@@ -132,7 +132,7 @@ func TestGetAddressable(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
+	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	receivedAddressable, err := ac.Addressable(addressable.Id, context.Background())
 	if err != nil {
@@ -177,7 +177,7 @@ func TestGetAddressableForName(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
+	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	receivedAddressable, err := ac.AddressableForName(addressable.Name, context.Background())
 	if err != nil {
@@ -219,7 +219,7 @@ func TestUpdateAddressable(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
+	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	err := ac.Update(addressable, context.Background())
 	if err != nil {
@@ -258,7 +258,7 @@ func TestDeleteAddressable(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
+	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	err := ac.Delete(addressable.Id, context.Background())
 	if err != nil {

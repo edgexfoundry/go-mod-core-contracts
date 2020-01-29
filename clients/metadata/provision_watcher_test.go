@@ -63,7 +63,7 @@ func TestAddProvisionWatcher(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	sc := NewProvisionWatcherClient(params, mockCoreMetaDataEndpoint{})
+	sc := NewProvisionWatcherClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	receivedProvisionWatcherID, err := sc.Add(&se, context.Background())
 	if err != nil {
@@ -84,7 +84,7 @@ func TestNewProvisionWatcherClientWithConsul(t *testing.T) {
 		Url:         provisionWatcherURL,
 		Interval:    clients.ClientMonitorDefault}
 
-	sc := NewProvisionWatcherClient(params, mockCoreMetaDataEndpoint{})
+	sc := NewProvisionWatcherClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	r, ok := sc.(*provisionWatcherRestClient)
 	if !ok {

@@ -37,8 +37,12 @@ type generalRestClient struct {
 }
 
 // NewGeneralClient creates an instance of GeneralClient
-func NewGeneralClient(params types.EndpointParams, m interfaces.Endpointer) GeneralClient {
-	return &generalRestClient{urlClient: urlclient.New(params, m)}
+func NewGeneralClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) GeneralClient {
+
+	return &generalRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 func (gc *generalRestClient) FetchConfiguration(ctx context.Context) (string, error) {

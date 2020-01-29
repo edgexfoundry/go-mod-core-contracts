@@ -67,7 +67,7 @@ func TestAddDevice(t *testing.T) {
 		UseRegistry: false,
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
-	dc := NewDeviceClient(params, mockCoreMetaDataEndpoint{})
+	dc := NewDeviceClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	receivedDeviceId, err := dc.Add(&d, context.Background())
 	if err != nil {
@@ -88,7 +88,7 @@ func TestNewDeviceClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	dc := NewDeviceClient(params, mockCoreMetaDataEndpoint{})
+	dc := NewDeviceClient(params, mockCoreMetaDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	r, ok := dc.(*deviceRestClient)
 	if !ok {

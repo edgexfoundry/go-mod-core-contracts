@@ -78,8 +78,12 @@ type deviceRestClient struct {
 }
 
 // NewDeviceClient creates an instance of DeviceClient
-func NewDeviceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceClient {
-	return &deviceRestClient{urlClient: urlclient.New(params, m)}
+func NewDeviceClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) DeviceClient {
+
+	return &deviceRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode a device

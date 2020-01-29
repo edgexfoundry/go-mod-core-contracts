@@ -76,7 +76,7 @@ func TestGetReadings(t *testing.T) {
 		Url:         url,
 		Interval:    clients.ClientMonitorDefault}
 
-	rc := NewReadingClient(params, mockCoreDataEndpoint{})
+	rc := NewReadingClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	rArr, err := rc.Readings(context.Background())
 	if err != nil {
@@ -108,7 +108,7 @@ func TestNewReadingClientWithConsul(t *testing.T) {
 		Url:         deviceUrl,
 		Interval:    clients.ClientMonitorDefault}
 
-	rc := NewReadingClient(params, mockCoreDataEndpoint{})
+	rc := NewReadingClient(params, mockCoreDataEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	r, ok := rc.(*readingRestClient)
 	if !ok {

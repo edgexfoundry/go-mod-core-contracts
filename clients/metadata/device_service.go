@@ -43,8 +43,12 @@ type deviceServiceRestClient struct {
 }
 
 // NewDeviceServiceClient creates an instance of DeviceServiceClient
-func NewDeviceServiceClient(params types.EndpointParams, m interfaces.Endpointer) DeviceServiceClient {
-	return &deviceServiceRestClient{urlClient: urlclient.New(params, m)}
+func NewDeviceServiceClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) DeviceServiceClient {
+
+	return &deviceServiceRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 func (dsc *deviceServiceRestClient) UpdateLastConnected(id string, time int64, ctx context.Context) error {

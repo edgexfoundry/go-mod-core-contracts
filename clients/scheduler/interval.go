@@ -50,8 +50,12 @@ type intervalRestClient struct {
 }
 
 // NewIntervalClient creates an instance of IntervalClient
-func NewIntervalClient(params types.EndpointParams, m interfaces.Endpointer) IntervalClient {
-	return &intervalRestClient{urlClient: urlclient.New(params, m)}
+func NewIntervalClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) IntervalClient {
+
+	return &intervalRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 func (ic *intervalRestClient) Add(interval *models.Interval, ctx context.Context) (string, error) {

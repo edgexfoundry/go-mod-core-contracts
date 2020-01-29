@@ -103,7 +103,7 @@ func TestReceiveNotification(t *testing.T) {
 		Interval:    clients.ClientMonitorDefault,
 	}
 
-	nc := NewNotificationsClient(params, mockNotificationEndpoint{})
+	nc := NewNotificationsClient(params, mockNotificationEndpoint{}, types.URLClientParams{Interval: 500, Timeout: 10})
 
 	notification := Notification{
 		Sender:      TestNotificationSender,

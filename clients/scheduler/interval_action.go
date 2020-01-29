@@ -51,8 +51,12 @@ type intervalActionRestClient struct {
 }
 
 // NewIntervalActionClient creates an instance of IntervalActionClient
-func NewIntervalActionClient(params types.EndpointParams, m interfaces.Endpointer) IntervalActionClient {
-	return &intervalActionRestClient{urlClient: urlclient.New(params, m)}
+func NewIntervalActionClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) IntervalActionClient {
+
+	return &intervalActionRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 // Helper method to request and decode an interval action

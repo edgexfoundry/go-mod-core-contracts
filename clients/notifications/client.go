@@ -74,8 +74,12 @@ type Notification struct {
 }
 
 // NewNotificationsClient creates an instance of NotificationsClient
-func NewNotificationsClient(params types.EndpointParams, m interfaces.Endpointer) NotificationsClient {
-	return &notificationsRestClient{urlClient: urlclient.New(params, m)}
+func NewNotificationsClient(
+	endpointParams types.EndpointParams,
+	m interfaces.Endpointer,
+	urlClientParams types.URLClientParams) NotificationsClient {
+
+	return &notificationsRestClient{urlClient: urlclient.New(endpointParams, m, urlClientParams)}
 }
 
 func (nc *notificationsRestClient) SendNotification(n Notification, ctx context.Context) error {

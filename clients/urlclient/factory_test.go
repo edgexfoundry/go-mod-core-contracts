@@ -20,8 +20,10 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
 )
 
+var urlClientParams = types.URLClientParams{Interval: 500, Timeout: 1}
+
 func TestClientFactoryLocal(t *testing.T) {
-	actualClient := New(types.EndpointParams{UseRegistry: false}, mockEndpoint{})
+	actualClient := New(types.EndpointParams{UseRegistry: false}, mockEndpoint{}, urlClientParams)
 	_, isLocalClient := actualClient.(*localClient)
 
 	if !isLocalClient {
@@ -30,7 +32,7 @@ func TestClientFactoryLocal(t *testing.T) {
 }
 
 func TestClientFactoryRegistry(t *testing.T) {
-	actualClient := New(types.EndpointParams{UseRegistry: true}, mockEndpoint{})
+	actualClient := New(types.EndpointParams{UseRegistry: true}, mockEndpoint{}, urlClientParams)
 	_, isRegistryClient := actualClient.(*registryClient)
 
 	if !isRegistryClient {
