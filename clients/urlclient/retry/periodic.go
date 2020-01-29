@@ -44,8 +44,8 @@ func NewPeriodicRetry(params types.URLClientParams) *periodic {
 }
 
 // Retry is designed to poll for the data on a regular frequency until the timeout happens.
-func (p *periodic) Retry(isInitialized *bool, url *string) (string, error) {
-	if *isInitialized {
+func (p *periodic) Retry(url *string) (string, error) {
+	if !p.isLocked {
 		return *url, nil
 	}
 
@@ -59,7 +59,7 @@ func (p *periodic) Retry(isInitialized *bool, url *string) (string, error) {
 		case <-timer:
 			return "", errors.NewTimeoutError()
 		case <-ticker:
-			if *isInitialized && len(*url) != 0 {
+			if !p.isLocked && len(*url) != 0 {
 				return *url, nil
 			}
 			// do not handle uninitialized case here, we need to keep trying

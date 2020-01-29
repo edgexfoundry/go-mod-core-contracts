@@ -31,11 +31,8 @@ func NewOnce() *once {
 }
 
 // Retry is designed to poll for the data one time. If successful, it returns the data, otherwise it returns an error.
-func (o *once) Retry(isInitialized *bool, url *string) (string, error) {
-	o.SetLock(true)
-	defer o.SetLock(false)
-
-	if *isInitialized {
+func (o *once) Retry(url *string) (string, error) {
+	if !o.isLocked {
 		return *url, nil
 	}
 

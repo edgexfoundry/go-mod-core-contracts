@@ -96,7 +96,7 @@ func TestRegistryClient_Prefix_Periodic_TimedOut(t *testing.T) {
 	urlClient := newRegistryClient(
 		types.EndpointParams{},
 		mockEndpoint{},
-		retry.NewPeriodicRetry(types.URLClientParams{Interval: 100000000, Timeout: 10}),
+		retry.NewPeriodicRetry(types.URLClientParams{Interval: 100000000, Timeout: 1}),
 	)
 
 	actualURL, err := urlClient.Prefix()

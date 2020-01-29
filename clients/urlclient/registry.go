@@ -46,7 +46,6 @@ func newRegistryClient(
 			select {
 			case url := <-ch:
 				e.url = url
-				e.initialized = true
 				strategy.SetLock(false)
 			}
 		}
@@ -58,5 +57,5 @@ func newRegistryClient(
 // Prefix waits for URLClient to be updated for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
 func (c *registryClient) Prefix() (string, error) {
-	return c.strategy.Retry(&c.initialized, &c.url)
+	return c.strategy.Retry(&c.url)
 }

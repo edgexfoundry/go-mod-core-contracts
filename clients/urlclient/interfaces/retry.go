@@ -22,7 +22,7 @@ package interfaces
 // the URL that should be passed back to the RegistryClient should be returned by the RetryStrategy.
 type RetryStrategy interface {
 	// Retry defines the actual behavior of the RegistryClient and how it processes the URL.
-	Retry(isInitialized *bool, url *string) (string, error)
+	Retry(url *string) (string, error)
 
 	// IsLocked communicates whether the value of the URL is currently being updated or not.
 	IsLocked() bool
