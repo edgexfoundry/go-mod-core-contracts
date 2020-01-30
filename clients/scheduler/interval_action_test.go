@@ -160,7 +160,7 @@ func TestIntervalActionRestClient_IntervalAction(t *testing.T) {
 		if err != nil {
 			t.Fatalf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 	}))
 
 	badJSONServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -175,7 +175,7 @@ func TestIntervalActionRestClient_IntervalAction(t *testing.T) {
 			t.Fatalf("expected uri path is %s, actual uri path is %s", expectedURL, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte{1, 2, 3, 4})
+		_, _ = w.Write([]byte{1, 2, 3, 4})
 	}))
 
 	defer ts.Close()
@@ -254,7 +254,7 @@ func TestIntervalActionRestClient_IntervalActionForName(t *testing.T) {
 		if err != nil {
 			t.Fatalf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 	}))
 
 	defer ts.Close()
@@ -297,7 +297,7 @@ func TestIntervalActionRestClient_IntervalActions(t *testing.T) {
 		if err != nil {
 			t.Fatalf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 	}))
 
 	badJSONServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -312,7 +312,7 @@ func TestIntervalActionRestClient_IntervalActions(t *testing.T) {
 			t.Fatalf("expected uri path is %s, actual uri path is %s", expectedURL, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte{1, 2, 3, 4})
+		_, _ = w.Write([]byte{1, 2, 3, 4})
 	}))
 
 	defer ts.Close()
@@ -389,7 +389,7 @@ func TestIntervalActionRestClient_IntervalActionsForTargetByName(t *testing.T) {
 		if err != nil {
 			t.Fatalf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 	}))
 
 	defer ts.Close()

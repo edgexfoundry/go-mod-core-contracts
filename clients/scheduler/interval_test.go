@@ -173,7 +173,7 @@ func TestIntervalRestClient_Interval(t *testing.T) {
 		if err != nil {
 			t.Fatalf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 	}))
 
 	badJSONServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -188,7 +188,7 @@ func TestIntervalRestClient_Interval(t *testing.T) {
 			t.Fatalf("expected uri path is %s, actual uri path is %s", expectedURL, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte{1, 2, 3, 4})
+		_, _ = w.Write([]byte{1, 2, 3, 4})
 	}))
 
 	defer ts.Close()
@@ -267,7 +267,7 @@ func TestIntervalRestClient_IntervalForName(t *testing.T) {
 		if err != nil {
 			t.Fatalf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 	}))
 
 	defer ts.Close()
@@ -310,7 +310,7 @@ func TestIntervalRestClient_Intervals(t *testing.T) {
 		if err != nil {
 			t.Fatalf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 	}))
 
 	badJSONServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -325,7 +325,7 @@ func TestIntervalRestClient_Intervals(t *testing.T) {
 			t.Fatalf("expected uri path is %s, actual uri path is %s", expectedURL, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte{1, 2, 3, 4})
+		_, _ = w.Write([]byte{1, 2, 3, 4})
 	}))
 
 	defer ts.Close()
@@ -410,7 +410,7 @@ func TestIntervalRestClient_Update(t *testing.T) {
 type MockEndpoint struct {
 }
 
-func (e MockEndpoint) Monitor(params types.EndpointParams) chan string {
+func (e MockEndpoint) Monitor(_ types.EndpointParams) chan string {
 	return make(chan string, 1)
 }
 
@@ -420,7 +420,7 @@ func testHttpServer(t *testing.T, matchingRequestMethod string, matchingRequestU
 		w.WriteHeader(http.StatusOK)
 
 		if r.Method == matchingRequestMethod && r.RequestURI == matchingRequestUri {
-			w.Write([]byte("Ok"))
+			_, _ = w.Write([]byte("Ok"))
 		} else if r.Method != matchingRequestMethod {
 			t.Fatalf("expected method %s to be invoked by client, %s invoked", matchingRequestMethod, r.Method)
 		} else if r.RequestURI == matchingRequestUri {
