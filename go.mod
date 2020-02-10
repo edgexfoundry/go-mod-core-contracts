@@ -9,4 +9,4 @@ require (
 	github.com/ugorji/go v1.1.4
 )
 
-go 1.12
+go 1.13
