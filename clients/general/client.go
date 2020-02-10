@@ -21,8 +21,6 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 type GeneralClient interface {
@@ -37,12 +35,14 @@ type generalRestClient struct {
 }
 
 // NewGeneralClient creates an instance of GeneralClient
-func NewGeneralClient(params types.EndpointParams, m interfaces.Endpointer) GeneralClient {
-	return &generalRestClient{urlClient: urlclient.New(params, m)}
+func NewGeneralClient(urlClient interfaces.URLClient) GeneralClient {
+	return &generalRestClient{
+		urlClient: urlClient,
+	}
 }
 
 func (gc *generalRestClient) FetchConfiguration(ctx context.Context) (string, error) {
-	body, err := clients.GetRequest(clients.ApiConfigRoute, ctx, gc.urlClient)
+	body, err := clients.GetRequest(ctx, clients.ApiConfigRoute, gc.urlClient)
 	if err != nil {
 		return "", err
 	}
@@ -51,7 +51,7 @@ func (gc *generalRestClient) FetchConfiguration(ctx context.Context) (string, er
 }
 
 func (gc *generalRestClient) FetchMetrics(ctx context.Context) (string, error) {
-	body, err := clients.GetRequest(clients.ApiMetricsRoute, ctx, gc.urlClient)
+	body, err := clients.GetRequest(ctx, clients.ApiMetricsRoute, gc.urlClient)
 	if err != nil {
 		return "", err
 	}

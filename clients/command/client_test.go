@@ -21,27 +21,18 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 func TestGetDeviceCommandById(t *testing.T) {
-	ts := testHttpServer(t, http.MethodGet, clients.ApiDeviceRoute+"/device1/command/command1")
+	ts := testHTTPServer(t, http.MethodGet, clients.ApiDeviceRoute+"/device1/command/command1")
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiDeviceRoute
+	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreCommandServiceKey,
-		Path:        clients.ApiDeviceRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	cc := NewCommandClient(params, MockEndpoint{})
-
-	res, _ := cc.Get("device1", "command1", context.Background())
+	res, _ := cc.Get(context.Background(), "device1", "command1")
 
 	if res != "Ok" {
 		t.Errorf("expected response body \"Ok\", but received %s", res)
@@ -49,23 +40,13 @@ func TestGetDeviceCommandById(t *testing.T) {
 }
 
 func TestPutDeviceCommandById(t *testing.T) {
-	ts := testHttpServer(t, http.MethodPut, clients.ApiDeviceRoute+"/device1/command/command1")
+	ts := testHTTPServer(t, http.MethodPut, clients.ApiDeviceRoute+"/device1/command/command1")
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiDeviceRoute
+	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreCommandServiceKey,
-		Path:        clients.ApiDeviceRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	cc := NewCommandClient(params, MockEndpoint{})
-
-	res, _ := cc.Put("device1", "command1", "body", context.Background())
+	res, _ := cc.Put(context.Background(), "device1", "command1", "body")
 
 	if res != "Ok" {
 		t.Errorf("expected response body \"Ok\", but received %s", res)
@@ -73,23 +54,13 @@ func TestPutDeviceCommandById(t *testing.T) {
 }
 
 func TestGetDeviceByName(t *testing.T) {
-	ts := testHttpServer(t, http.MethodGet, clients.ApiDeviceRoute+"/name/device1/command/command1")
+	ts := testHTTPServer(t, http.MethodGet, clients.ApiDeviceRoute+"/name/device1/command/command1")
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiDeviceRoute
+	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreCommandServiceKey,
-		Path:        clients.ApiDeviceRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	cc := NewCommandClient(params, MockEndpoint{})
-
-	res, _ := cc.GetDeviceCommandByNames("device1", "command1", context.Background())
+	res, _ := cc.GetDeviceCommandByNames(context.Background(), "device1", "command1")
 
 	if res != "Ok" {
 		t.Errorf("expected response body \"Ok\", but received %s", res)
@@ -97,43 +68,26 @@ func TestGetDeviceByName(t *testing.T) {
 }
 
 func TestPutDeviceCommandByNames(t *testing.T) {
-	ts := testHttpServer(t, http.MethodPut, clients.ApiDeviceRoute+"/name/device1/command/command1")
+	ts := testHTTPServer(t, http.MethodPut, clients.ApiDeviceRoute+"/name/device1/command/command1")
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiDeviceRoute
+	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreCommandServiceKey,
-		Path:        clients.ApiDeviceRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	cc := NewCommandClient(params, MockEndpoint{})
-
-	res, _ := cc.PutDeviceCommandByNames("device1", "command1", "body", context.Background())
+	res, _ := cc.PutDeviceCommandByNames(context.Background(), "device1", "command1", "body")
 
 	if res != "Ok" {
 		t.Errorf("expected response body \"Ok\", but received %s", res)
 	}
 }
 
-type MockEndpoint struct {
-}
-
-func (e MockEndpoint) Monitor(params types.EndpointParams) chan string {
-	return make(chan string, 1)
-}
-
-// testHttpServer instantiates a test HTTP Server to be used for conveniently verifying a client's invocation
-func testHttpServer(t *testing.T, matchingRequestMethod string, matchingRequestUri string) *httptest.Server {
+// testHTTPServer instantiates a test HTTP Server to be used for conveniently verifying a client's invocation
+func testHTTPServer(t *testing.T, matchingRequestMethod string, matchingRequestUri string) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 
 		if r.Method == matchingRequestMethod && r.RequestURI == matchingRequestUri {
-			w.Write([]byte("Ok"))
+			_, _ = w.Write([]byte("Ok"))
 		} else {
 			t.Errorf("expected endpoint %s to be invoked by client, %s invoked", matchingRequestUri, r.RequestURI)
 		}

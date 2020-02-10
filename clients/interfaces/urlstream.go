@@ -12,19 +12,6 @@
  * the License.
  *******************************************************************************/
 
-// urlclient provides concrete implementation types that implement the URLClient interface.
-// These types should all, in some way or another, provide some mechanism to fill in service data at runtime.
-package urlclient
+package interfaces
 
-import (
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-)
-
-// New provides the correct concrete implementation of the URLClient given the params provided.
-func New(params types.EndpointParams, m interfaces.Endpointer) interfaces.URLClient {
-	if params.UseRegistry {
-		return newRegistryClient(params, m, 10)
-	}
-	return newLocalClient(params)
-}
+type URLStream string

@@ -17,20 +17,19 @@ package urlclient
 import (
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 )
 
 func TestNewLocalClient(t *testing.T) {
-	actualClient := newLocalClient(types.EndpointParams{UseRegistry: false})
+	actualClient := NewLocalClient(interfaces.URLStream(expectedURL))
 
 	if actualClient == nil {
-		t.Fatal("nil returned from newLocalClient")
+		t.Fatal("nil returned from NewLocalClient")
 	}
 }
 
 func TestLocalClient_URLPrefix(t *testing.T) {
-	expectedURL := "http://domain.com"
-	urlClient := newLocalClient(types.EndpointParams{Url: expectedURL})
+	urlClient := NewLocalClient(interfaces.URLStream(expectedURL))
 
 	actualURL, err := urlClient.Prefix()
 

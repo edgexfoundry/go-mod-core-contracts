@@ -24,20 +24,15 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 func TestNewAddressableClientWithConsul(t *testing.T) {
 	addressableURL := "http://localhost:48081" + clients.ApiAddressableRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiAddressableRoute,
-		UseRegistry: true,
-		Url:         addressableURL,
-		Interval:    clients.ClientMonitorDefault}
 
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
+	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(addressableURL)))
 
 	r, ok := ac.(*addressableRestClient)
 	if !ok {
@@ -73,23 +68,15 @@ func TestAddAddressable(t *testing.T) {
 			t.Errorf("expected uri path is %s, actual uri path is %s", clients.ApiAddressableRoute, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte(addingAddressableID))
+		_, _ = w.Write([]byte(addingAddressableID))
 
 	}))
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiAddressableRoute
+	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiAddressableRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
-
-	receivedAddressableID, err := ac.Add(&addressable, context.Background())
+	receivedAddressableID, err := ac.Add(context.Background(), &addressable)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -119,24 +106,16 @@ func TestGetAddressable(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(addressable)
+		_ = json.NewEncoder(w).Encode(addressable)
 	}))
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiAddressableRoute
+	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiAddressableRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
-
-	receivedAddressable, err := ac.Addressable(addressable.Id, context.Background())
+	receivedAddressable, err := ac.Addressable(context.Background(), addressable.Id)
 	if err != nil {
-		t.Error(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	if receivedAddressable.String() != addressable.String() {
@@ -164,24 +143,16 @@ func TestGetAddressableForName(t *testing.T) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(addressable)
+		_ = json.NewEncoder(w).Encode(addressable)
 	}))
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiAddressableRoute
+	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiAddressableRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
-
-	receivedAddressable, err := ac.AddressableForName(addressable.Name, context.Background())
+	receivedAddressable, err := ac.AddressableForName(context.Background(), addressable.Name)
 	if err != nil {
-		t.Error(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	if receivedAddressable.String() != addressable.String() {
@@ -211,17 +182,9 @@ func TestUpdateAddressable(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiAddressableRoute
+	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiAddressableRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
-
-	err := ac.Update(addressable, context.Background())
+	err := ac.Update(context.Background(), addressable)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -250,17 +213,9 @@ func TestDeleteAddressable(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiAddressableRoute
+	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiAddressableRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-	ac := NewAddressableClient(params, mockCoreMetaDataEndpoint{})
-
-	err := ac.Delete(addressable.Id, context.Background())
+	err := ac.Delete(context.Background(), addressable.Id)
 	if err != nil {
 		t.Error(err.Error())
 	}

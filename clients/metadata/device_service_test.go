@@ -18,19 +18,14 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 func TestNewDeviceServiceClientWithConsul(t *testing.T) {
 	deviceServiceUrl := "http://localhost:48081" + clients.ApiDeviceServiceRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiDeviceServiceRoute,
-		UseRegistry: true,
-		Url:         deviceServiceUrl,
-		Interval:    clients.ClientMonitorDefault}
 
-	dsc := NewDeviceServiceClient(params, mockCoreMetaDataEndpoint{})
+	dsc := NewDeviceServiceClient(urlclient.NewLocalClient(interfaces.URLStream(deviceServiceUrl)))
 	r, ok := dsc.(*deviceServiceRestClient)
 	if !ok {
 		t.Error("dsc is not of expected type")

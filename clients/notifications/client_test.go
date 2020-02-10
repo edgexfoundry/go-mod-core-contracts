@@ -15,7 +15,8 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 // Test common const
@@ -39,7 +40,7 @@ const (
 func TestReceiveNotification(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("{ 'status' : 'OK' }"))
+		_, _ = w.Write([]byte("{ 'status' : 'OK' }"))
 		if r.Method != http.MethodPost {
 			t.Errorf(TestUnexpectedMsgFormatStr, r.Method, http.MethodPost)
 		}
@@ -48,10 +49,10 @@ func TestReceiveNotification(t *testing.T) {
 		}
 
 		result, _ := ioutil.ReadAll(r.Body)
-		r.Body.Close()
+		_ = r.Body.Close()
 
 		var receivedNotification Notification
-		json.Unmarshal([]byte(result), &receivedNotification)
+		_ = json.Unmarshal([]byte(result), &receivedNotification)
 
 		if receivedNotification.Sender != TestNotificationSender {
 			t.Errorf(TestUnexpectedMsgFormatStr, receivedNotification.Sender, TestNotificationSender)
@@ -93,17 +94,7 @@ func TestReceiveNotification(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiNotificationRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiNotificationRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	nc := NewNotificationsClient(params, mockNotificationEndpoint{})
+	nc := NewNotificationsClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiNotificationRoute)))
 
 	notification := Notification{
 		Sender:      TestNotificationSender,
@@ -115,11 +106,5 @@ func TestReceiveNotification(t *testing.T) {
 		Labels:      []string{TestNotificationLabel1, TestNotificationLabel2},
 	}
 
-	nc.SendNotification(notification, context.Background())
-}
-
-type mockNotificationEndpoint struct{}
-
-func (e mockNotificationEndpoint) Monitor(params types.EndpointParams) chan string {
-	return make(chan string, 1)
+	_ = nc.SendNotification(context.Background(), notification)
 }

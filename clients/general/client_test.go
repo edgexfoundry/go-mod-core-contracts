@@ -22,25 +22,18 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 const (
 	TestUnexpectedMsgFormatStr = "unexpected result, active: '%s' but expected: '%s'"
 )
 
-type mockGeneralEndpoint struct {
-}
-
-func (e mockGeneralEndpoint) Monitor(params types.EndpointParams) chan string {
-	return make(chan string, 1)
-}
-
 func TestGetConfig(t *testing.T) {
-
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("{ 'status' : 'OK' }"))
+		_, _ = w.Write([]byte("{ 'status' : 'OK' }"))
 		if r.Method != http.MethodGet {
 			t.Errorf(TestUnexpectedMsgFormatStr, r.Method, http.MethodGet)
 		}
@@ -51,17 +44,7 @@ func TestGetConfig(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.SystemManagementAgentServiceKey,
-		Path:        "/",
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	mc := NewGeneralClient(params, mockGeneralEndpoint{})
+	mc := NewGeneralClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL)))
 
 	responseJSON, err := mc.FetchConfiguration(context.Background())
 	if err != nil {
@@ -70,10 +53,9 @@ func TestGetConfig(t *testing.T) {
 }
 
 func TestGetMetrics(t *testing.T) {
-
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("{ 'status' : 'OK' }"))
+		_, _ = w.Write([]byte("{ 'status' : 'OK' }"))
 		if r.Method != http.MethodGet {
 			t.Errorf(TestUnexpectedMsgFormatStr, r.Method, http.MethodGet)
 		}
@@ -84,17 +66,7 @@ func TestGetMetrics(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.SystemManagementAgentServiceKey,
-		Path:        "/",
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	mc := NewGeneralClient(params, mockGeneralEndpoint{})
+	mc := NewGeneralClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL)))
 
 	responseJSON, err := mc.FetchMetrics(context.Background())
 	if err != nil {

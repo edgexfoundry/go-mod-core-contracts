@@ -22,7 +22,8 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -49,23 +50,15 @@ func TestAddProvisionWatcher(t *testing.T) {
 			t.Errorf("expected uri path is %s, actual uri path is %s", clients.ApiProvisionWatcherRoute, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte(addingProvisionWatcherID))
+		_, _ = w.Write([]byte(addingProvisionWatcherID))
 
 	}))
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiProvisionWatcherRoute
+	sc := NewProvisionWatcherClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiProvisionWatcherRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiProvisionWatcherRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-	sc := NewProvisionWatcherClient(params, mockCoreMetaDataEndpoint{})
-
-	receivedProvisionWatcherID, err := sc.Add(&se, context.Background())
+	receivedProvisionWatcherID, err := sc.Add(context.Background(), &se)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -77,14 +70,8 @@ func TestAddProvisionWatcher(t *testing.T) {
 
 func TestNewProvisionWatcherClientWithConsul(t *testing.T) {
 	provisionWatcherURL := "http://localhost:48081" + clients.ApiProvisionWatcherRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiProvisionWatcherRoute,
-		UseRegistry: true,
-		Url:         provisionWatcherURL,
-		Interval:    clients.ClientMonitorDefault}
 
-	sc := NewProvisionWatcherClient(params, mockCoreMetaDataEndpoint{})
+	sc := NewProvisionWatcherClient(urlclient.NewLocalClient(interfaces.URLStream(provisionWatcherURL)))
 
 	r, ok := sc.(*provisionWatcherRestClient)
 	if !ok {

@@ -21,29 +21,27 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 // IntervalActionClient defines the interface for interactions with the IntervalAction endpoint on support-scheduler.
 type IntervalActionClient interface {
 	// Add a new schedule interval action
-	Add(dev *models.IntervalAction, ctx context.Context) (string, error)
+	Add(ctx context.Context, ia *models.IntervalAction) (string, error)
 	// Delete a schedule interval action for the specified ID
-	Delete(id string, ctx context.Context) error
+	Delete(ctx context.Context, id string) error
 	// Delete a schedule interval action for the specified name
-	DeleteByName(name string, ctx context.Context) error
+	DeleteByName(ctx context.Context, name string) error
 	// IntervalAction loads a schedule interval action for the specified ID
-	IntervalAction(id string, ctx context.Context) (models.IntervalAction, error)
+	IntervalAction(ctx context.Context, id string) (models.IntervalAction, error)
 	// IntervalActionForName loads a schedule interval action for the specified name
-	IntervalActionForName(name string, ctx context.Context) (models.IntervalAction, error)
+	IntervalActionForName(ctx context.Context, name string) (models.IntervalAction, error)
 	// IntervalActions lists all schedule interval actions
 	IntervalActions(ctx context.Context) ([]models.IntervalAction, error)
 	// IntervalActionsForTargetByName lists all schedule interval actions that target a particular service
-	IntervalActionsForTargetByName(name string, ctx context.Context) ([]models.IntervalAction, error)
+	IntervalActionsForTargetByName(ctx context.Context, name string) ([]models.IntervalAction, error)
 	// Update a schedule interval action
-	Update(dev models.IntervalAction, ctx context.Context) error
+	Update(ctx context.Context, ia models.IntervalAction) error
 }
 
 type intervalActionRestClient struct {
@@ -51,16 +49,18 @@ type intervalActionRestClient struct {
 }
 
 // NewIntervalActionClient creates an instance of IntervalActionClient
-func NewIntervalActionClient(params types.EndpointParams, m interfaces.Endpointer) IntervalActionClient {
-	return &intervalActionRestClient{urlClient: urlclient.New(params, m)}
+func NewIntervalActionClient(urlClient interfaces.URLClient) IntervalActionClient {
+	return &intervalActionRestClient{
+		urlClient: urlClient,
+	}
 }
 
 // Helper method to request and decode an interval action
 func (iac *intervalActionRestClient) requestIntervalAction(
-	urlSuffix string,
-	ctx context.Context) (models.IntervalAction, error) {
+	ctx context.Context,
+	urlSuffix string) (models.IntervalAction, error) {
 
-	data, err := clients.GetRequest(urlSuffix, ctx, iac.urlClient)
+	data, err := clients.GetRequest(ctx, urlSuffix, iac.urlClient)
 	if err != nil {
 		return models.IntervalAction{}, err
 	}
@@ -76,10 +76,10 @@ func (iac *intervalActionRestClient) requestIntervalAction(
 
 // Helper method to request and decode an interval action slice
 func (iac *intervalActionRestClient) requestIntervalActionSlice(
-	urlSuffix string,
-	ctx context.Context) ([]models.IntervalAction, error) {
+	ctx context.Context,
+	urlSuffix string) ([]models.IntervalAction, error) {
 
-	data, err := clients.GetRequest(urlSuffix, ctx, iac.urlClient)
+	data, err := clients.GetRequest(ctx, urlSuffix, iac.urlClient)
 	if err != nil {
 		return []models.IntervalAction{}, err
 	}
@@ -93,34 +93,34 @@ func (iac *intervalActionRestClient) requestIntervalActionSlice(
 	return iaSlice, nil
 }
 
-func (iac *intervalActionRestClient) Add(ia *models.IntervalAction, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest("", ia, ctx, iac.urlClient)
+func (iac *intervalActionRestClient) Add(ctx context.Context, ia *models.IntervalAction) (string, error) {
+	return clients.PostJSONRequest(ctx, "", ia, iac.urlClient)
 }
 
-func (iac *intervalActionRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest("/id/"+id, ctx, iac.urlClient)
+func (iac *intervalActionRestClient) Delete(ctx context.Context, id string) error {
+	return clients.DeleteRequest(ctx, "/id/"+id, iac.urlClient)
 }
 
-func (iac *intervalActionRestClient) DeleteByName(name string, ctx context.Context) error {
-	return clients.DeleteRequest("/name/"+url.QueryEscape(name), ctx, iac.urlClient)
+func (iac *intervalActionRestClient) DeleteByName(ctx context.Context, name string) error {
+	return clients.DeleteRequest(ctx, "/name/"+url.QueryEscape(name), iac.urlClient)
 }
 
-func (iac *intervalActionRestClient) IntervalAction(id string, ctx context.Context) (models.IntervalAction, error) {
-	return iac.requestIntervalAction("/"+id, ctx)
+func (iac *intervalActionRestClient) IntervalAction(ctx context.Context, id string) (models.IntervalAction, error) {
+	return iac.requestIntervalAction(ctx, "/"+id)
 }
 
-func (iac *intervalActionRestClient) IntervalActionForName(name string, ctx context.Context) (models.IntervalAction, error) {
-	return iac.requestIntervalAction("/name/"+url.QueryEscape(name), ctx)
+func (iac *intervalActionRestClient) IntervalActionForName(ctx context.Context, name string) (models.IntervalAction, error) {
+	return iac.requestIntervalAction(ctx, "/name/"+url.QueryEscape(name))
 }
 
 func (iac *intervalActionRestClient) IntervalActions(ctx context.Context) ([]models.IntervalAction, error) {
-	return iac.requestIntervalActionSlice("", ctx)
+	return iac.requestIntervalActionSlice(ctx, "")
 }
 
-func (iac *intervalActionRestClient) IntervalActionsForTargetByName(name string, ctx context.Context) ([]models.IntervalAction, error) {
-	return iac.requestIntervalActionSlice("/target/"+url.QueryEscape(name), ctx)
+func (iac *intervalActionRestClient) IntervalActionsForTargetByName(ctx context.Context, name string) ([]models.IntervalAction, error) {
+	return iac.requestIntervalActionSlice(ctx, "/target/"+url.QueryEscape(name))
 }
 
-func (iac *intervalActionRestClient) Update(ia models.IntervalAction, ctx context.Context) error {
-	return clients.UpdateRequest("", ia, ctx, iac.urlClient)
+func (iac *intervalActionRestClient) Update(ctx context.Context, ia models.IntervalAction) error {
+	return clients.UpdateRequest(ctx, "", ia, iac.urlClient)
 }

@@ -15,62 +15,41 @@
 package urlclient
 
 import (
-	"errors"
-	"time"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	urlClientInterfaces "github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/interfaces"
 )
 
 // registryClient defines a URLClient implementation that checks for an update from an asynchronously run
 // EndpointMonitor that will emit a correct URL from the remote registry.
 type registryClient struct {
-	url         string
-	timeout     int
-	initialized bool
+	url      string
+	strategy urlClientInterfaces.RetryStrategy
 }
 
-var TimeoutError = errors.New("unable to initialize client")
-
-// newRegistryClient returns a pointer to a registryClient.
+// NewRegistryClient returns a pointer to a registryClient.
 // A pointer is used so that when using configuration from a registry, the Prefix can be updated asynchronously.
-func newRegistryClient(params types.EndpointParams, m interfaces.Endpointer, timeout int) *registryClient {
-	e := registryClient{
-		timeout:     timeout,
-		initialized: false,
+func NewRegistryClient(
+	urlStream chan interfaces.URLStream,
+	strategy urlClientInterfaces.RetryStrategy) *registryClient {
+	c := registryClient{
+		strategy: strategy,
 	}
 
-	go func(ch chan string) {
+	go func(ch chan interfaces.URLStream) {
 		for {
 			select {
 			case url := <-ch:
-				e.url = url
-				e.initialized = true
+				c.url = string(url)
+				strategy.SetInitialization(false)
 			}
 		}
-	}(m.Monitor(params))
+	}(urlStream)
 
-	return &e
+	return &c
 }
 
 // Prefix waits for URLClient to be updated for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
 func (c *registryClient) Prefix() (string, error) {
-	if c.initialized {
-		return c.url, nil
-	}
-
-	timer := time.After(time.Duration(c.timeout) * time.Second)
-	ticker := time.Tick(500 * time.Millisecond)
-	for {
-		select {
-		case <-timer:
-			return "", TimeoutError
-		case <-ticker:
-			if c.initialized && len(c.url) != 0 {
-				return c.url, nil
-			}
-			// do not handle uninitialized case here, we need to keep trying
-		}
-	}
+	return c.strategy.Retry(&c.url)
 }

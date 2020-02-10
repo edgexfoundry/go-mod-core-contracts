@@ -23,7 +23,9 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry/periodic"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -61,7 +63,7 @@ var testInterval2 = models.Interval{
 }
 
 func TestIntervalRestClient_Add(t *testing.T) {
-	ts := testHttpServer(t, http.MethodPost, clients.ApiIntervalRoute)
+	ts := testHTTPServer(t, http.MethodPost, clients.ApiIntervalRoute)
 
 	defer ts.Close()
 
@@ -73,25 +75,21 @@ func TestIntervalRestClient_Add(t *testing.T) {
 	}{
 		{"happy path",
 			testInterval1,
-			NewIntervalClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalRoute,
-				UseRegistry: false,
-				Url:         ts.URL + clients.ApiIntervalRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute))),
 			false,
 		},
 		{
-			"nil client",
+			"client error",
 			testInterval1,
-			NewIntervalClient(types.EndpointParams{}, nil),
+			NewIntervalClient(urlclient.NewRegistryClient(make(chan interfaces.URLStream),
+				periodic.New(1, 0)),
+			),
 			true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, err := tt.ic.Add(&tt.interval, context.Background())
+			res, err := tt.ic.Add(context.Background(), &tt.interval)
 
 			if !tt.expectedError && res == "" {
 				t.Error("unexpected empty string response")
@@ -109,23 +107,13 @@ func TestIntervalRestClient_Add(t *testing.T) {
 }
 
 func TestIntervalRestClient_Delete(t *testing.T) {
-	ts := testHttpServer(t, http.MethodDelete, clients.ApiIntervalRoute)
+	ts := testHTTPServer(t, http.MethodDelete, clients.ApiIntervalRoute)
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalRoute
+	ic := NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalClient(params, MockEndpoint{})
-
-	err := ic.Delete(testID1, context.Background())
+	err := ic.Delete(context.Background(), testID1)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -133,23 +121,13 @@ func TestIntervalRestClient_Delete(t *testing.T) {
 }
 
 func TestIntervalRestClient_DeleteByName(t *testing.T) {
-	ts := testHttpServer(t, http.MethodDelete, clients.ApiIntervalRoute)
+	ts := testHTTPServer(t, http.MethodDelete, clients.ApiIntervalRoute)
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalRoute
+	ic := NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalClient(params, MockEndpoint{})
-
-	err := ic.DeleteByName(testInterval1.Name, context.Background())
+	err := ic.DeleteByName(context.Background(), testInterval1.Name)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -202,36 +180,26 @@ func TestIntervalRestClient_Interval(t *testing.T) {
 	}{
 		{"happy path",
 			testInterval1.ID,
-			NewIntervalClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalRoute,
-				UseRegistry: false,
-				Url:         ts.URL + clients.ApiIntervalRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute))),
 			false,
 		},
 		{
-			"nil client",
+			"client error",
 			testInterval1.ID,
-			NewIntervalClient(types.EndpointParams{}, nil),
+			NewIntervalClient(urlclient.NewRegistryClient(make(chan interfaces.URLStream),
+				periodic.New(1, 0)),
+			),
 			true,
 		},
 		{"bad JSON marshal",
 			testInterval1.ID,
-			NewIntervalClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalRoute,
-				UseRegistry: false,
-				Url:         badJSONServer.URL + clients.ApiIntervalRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(badJSONServer.URL + clients.ApiIntervalRoute))),
 			true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, err := tt.ic.Interval(tt.intervalID, context.Background())
+			res, err := tt.ic.Interval(context.Background(), tt.intervalID)
 
 			emptyInterval := models.Interval{}
 
@@ -272,19 +240,9 @@ func TestIntervalRestClient_IntervalForName(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalRoute
+	ic := NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalClient(params, MockEndpoint{})
-
-	_, err := ic.IntervalForName(testInterval1.Name, context.Background())
+	_, err := ic.IntervalForName(context.Background(), testInterval1.Name)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
@@ -337,28 +295,18 @@ func TestIntervalRestClient_Intervals(t *testing.T) {
 		expectedError bool
 	}{
 		{"happy path",
-			NewIntervalClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalRoute,
-				UseRegistry: false,
-				Url:         ts.URL + clients.ApiIntervalRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute))),
 			false,
 		},
 		{
-			"nil client",
-			NewIntervalClient(types.EndpointParams{}, nil),
+			"client error",
+			NewIntervalClient(urlclient.NewRegistryClient(make(chan interfaces.URLStream),
+				periodic.New(1, 0)),
+			),
 			true,
 		},
 		{"bad JSON marshal",
-			NewIntervalClient(types.EndpointParams{
-				ServiceKey:  clients.SupportSchedulerServiceKey,
-				Path:        clients.ApiIntervalRoute,
-				UseRegistry: false,
-				Url:         badJSONServer.URL + clients.ApiIntervalRoute,
-				Interval:    clients.ClientMonitorDefault,
-			}, MockEndpoint{}),
+			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(badJSONServer.URL + clients.ApiIntervalRoute))),
 			true,
 		},
 	}
@@ -384,38 +332,21 @@ func TestIntervalRestClient_Intervals(t *testing.T) {
 }
 
 func TestIntervalRestClient_Update(t *testing.T) {
-	ts := testHttpServer(t, http.MethodPut, clients.ApiIntervalRoute)
+	ts := testHTTPServer(t, http.MethodPut, clients.ApiIntervalRoute)
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiIntervalRoute
+	ic := NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.SupportSchedulerServiceKey,
-		Path:        clients.ApiIntervalRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault,
-	}
-
-	ic := NewIntervalClient(params, MockEndpoint{})
-
-	err := ic.Update(testInterval1, context.Background())
+	err := ic.Update(context.Background(), testInterval1)
 
 	if err != nil {
 		t.Fatalf("unexpected error %s", err.Error())
 	}
 }
 
-type MockEndpoint struct {
-}
-
-func (e MockEndpoint) Monitor(_ types.EndpointParams) chan string {
-	return make(chan string, 1)
-}
-
-// testHttpServer instantiates a test HTTP Server to be used for conveniently verifying a client's invocation
-func testHttpServer(t *testing.T, matchingRequestMethod string, matchingRequestUri string) *httptest.Server {
+// testHTTPServer instantiates a test HTTP Server to be used for conveniently verifying a client's invocation
+func testHTTPServer(t *testing.T, matchingRequestMethod string, matchingRequestUri string) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 

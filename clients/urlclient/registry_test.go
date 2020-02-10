@@ -15,30 +15,46 @@
 package urlclient
 
 import (
-	"fmt"
 	"testing"
+	"time"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	interfaces2 "github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry/once"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry/periodic"
 )
 
+var timeoutError = errors.NewTimeoutError()
+var expectedURL = "http://domain.com"
+
 func TestNewRegistryClient(t *testing.T) {
-	actualClient := newRegistryClient(types.EndpointParams{UseRegistry: true}, mockEndpoint{}, 100)
+	actualClient := NewRegistryClient(
+		makeTestStream(),
+		periodic.New(500, 10),
+	)
 
 	if actualClient == nil {
-		t.Fatal("nil returned from newRegistryClient")
+		t.Fatal("nil returned from NewRegistryClient")
 	}
 }
 
-func TestRegistryClient_URLPrefix(t *testing.T) {
-	expectedURL := "http://domain.com"
-	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
-	urlClient := newRegistryClient(types.EndpointParams{}, testEndpoint, 100)
-	testEndpoint.SendToChannel()
+func TestRegistryClient_Prefix_Periodic(t *testing.T) {
+	strategy := periodic.New(500, 10)
+	testStream := makeTestStream()
+
+	urlClient := NewRegistryClient(
+		testStream,
+		strategy,
+	)
+	testStream <- interfaces2.URLStream(expectedURL)
+
+	// don't sleep, we need to actuate the retry code
 
 	actualURL, err := urlClient.Prefix()
 
 	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
+		t.Fatalf("unexpected error: %s", err.Error())
 	}
 
 	if actualURL != expectedURL {
@@ -46,23 +62,25 @@ func TestRegistryClient_URLPrefix(t *testing.T) {
 	}
 }
 
-func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
-	expectedURL := "http://domain.com"
-	testEndpoint := mockEndpoint{ch: make(chan string, 1)}
-	urlClient := newRegistryClient(types.EndpointParams{}, testEndpoint, 100)
-	testEndpoint.SendToChannel()
+func TestRegistryClient_Prefix_Periodic_Initialized(t *testing.T) {
+	// use impossible timing to ensure that if hit, the retry logic will error out
+	strategy := periodic.New(1, 0)
+	testStream := makeTestStream()
 
-	// set up prerequisite condition, call Prefix once to set initialized to true
+	urlClient := NewRegistryClient(
+		testStream,
+		strategy,
+	)
+
+	testStream <- interfaces2.URLStream(expectedURL)
+
+	// sleep so that the retry code doesn't run and we only execute the shortcut
+	sleep(t, strategy)
+
 	actualURL, err := urlClient.Prefix()
-	if err != nil {
-		t.Fatalf("unexpected error in precondition %s", err.Error())
-	}
-
-	// call Prefix again without sending another message on the channel
-	actualURL, err = urlClient.Prefix()
 
 	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
+		t.Fatalf("unexpected error: %s", err.Error())
 	}
 
 	if actualURL != expectedURL {
@@ -70,8 +88,11 @@ func TestRegistryClient_URLPrefixInitialized(t *testing.T) {
 	}
 }
 
-func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
-	urlClient := newRegistryClient(types.EndpointParams{}, mockEndpoint{}, 1)
+func TestRegistryClient_Prefix_Periodic_TimedOut(t *testing.T) {
+	urlClient := NewRegistryClient(
+		makeTestStream(),
+		periodic.New(1, 0),
+	)
 
 	actualURL, err := urlClient.Prefix()
 
@@ -79,19 +100,61 @@ func TestRegistryClient_URLPrefix_TimedOut(t *testing.T) {
 		t.Fatal("expected error")
 	}
 
-	if err != TimeoutError {
-		t.Fatalf("expected error %s, found error %s", TimeoutError.Error(), err.Error())
+	if err != timeoutError {
+		t.Fatalf("expected error %s, found error %s", timeoutError.Error(), err.Error())
 	}
 }
 
-type mockEndpoint struct {
-	ch chan string
+func TestRegistryClient_Prefix_Once(t *testing.T) {
+	strategy := once.New()
+	testStream := makeTestStream()
+
+	urlClient := NewRegistryClient(
+		testStream,
+		strategy,
+	)
+	testStream <- interfaces2.URLStream(expectedURL)
+
+	sleep(t, strategy)
+
+	actualURL, err := urlClient.Prefix()
+
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err.Error())
+	}
+
+	if actualURL != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
+	}
 }
 
-func (e mockEndpoint) Monitor(_ types.EndpointParams) chan string {
-	return e.ch
+func TestRegistryClient_Prefix_Once_NotAvailable(t *testing.T) {
+	urlClient := NewRegistryClient(
+		makeTestStream(),
+		once.New(),
+	)
+
+	actualURL, err := urlClient.Prefix()
+
+	if err == nil || actualURL != "" {
+		t.Fatal("expected error")
+	}
+
+	if err != timeoutError {
+		t.Fatalf("expected error %s, found error %s", timeoutError.Error(), err.Error())
+	}
 }
 
-func (e mockEndpoint) SendToChannel() {
-	e.ch <- fmt.Sprint("http://domain.com")
+func sleep(t *testing.T, strategy interfaces.RetryStrategy) {
+	for i := 1; strategy.IsInitialized(); i++ {
+		if i == 5 {
+			t.Fatal("waited too long for strategy to unlock")
+		}
+
+		time.Sleep(time.Second)
+	}
+}
+
+func makeTestStream() chan interfaces2.URLStream {
+	return make(chan interfaces2.URLStream)
 }

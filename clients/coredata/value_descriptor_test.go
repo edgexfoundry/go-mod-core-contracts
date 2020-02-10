@@ -23,7 +23,8 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -65,22 +66,13 @@ func TestGetvaluedescriptors(t *testing.T) {
 		if err != nil {
 			t.Errorf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 
 	}))
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiValueDescriptorRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiValueDescriptorRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
+	vdc := NewValueDescriptorClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiValueDescriptorRoute)))
 
 	vdArr, err := vdc.ValueDescriptors(context.Background())
 	if err != nil {
@@ -119,22 +111,13 @@ func TestValueDescriptorUsage(t *testing.T) {
 		if err != nil {
 			t.Errorf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 
 	}))
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiValueDescriptorRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiValueDescriptorRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
-	usage, err := vdc.ValueDescriptorsUsage([]string{testValueDesciptorDescription1, testValueDesciptorDescription2}, context.Background())
+	vdc := NewValueDescriptorClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiValueDescriptorRoute)))
+	usage, err := vdc.ValueDescriptorsUsage(context.Background(), []string{testValueDesciptorDescription1, testValueDesciptorDescription2})
 	if err != nil {
 		t.Errorf(err.Error())
 		t.FailNow()
@@ -151,17 +134,8 @@ func TestValueDescriptorUsageSerializationError(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiValueDescriptorRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiValueDescriptorRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
-	_, err := vdc.ValueDescriptorsUsage([]string{testValueDesciptorDescription1, testValueDesciptorDescription2}, context.Background())
+	vdc := NewValueDescriptorClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiValueDescriptorRoute)))
+	_, err := vdc.ValueDescriptorsUsage(context.Background(), []string{testValueDesciptorDescription1, testValueDesciptorDescription2})
 	if err == nil {
 		t.Error("Expected an error")
 		return
@@ -169,15 +143,8 @@ func TestValueDescriptorUsageSerializationError(t *testing.T) {
 }
 
 func TestValueDescriptorUsageGetRequestError(t *testing.T) {
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiValueDescriptorRoute,
-		UseRegistry: false,
-		Url:         "!@#",
-		Interval:    clients.ClientMonitorDefault}
-
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
-	_, err := vdc.ValueDescriptorsUsage([]string{testValueDesciptorDescription1, testValueDesciptorDescription2}, context.Background())
+	vdc := NewValueDescriptorClient(urlclient.NewLocalClient("!%&"))
+	_, err := vdc.ValueDescriptorsUsage(context.Background(), []string{testValueDesciptorDescription1, testValueDesciptorDescription2})
 	if err == nil {
 		t.Error("Expected an error")
 		return
@@ -186,14 +153,8 @@ func TestValueDescriptorUsageGetRequestError(t *testing.T) {
 
 func TestNewValueDescriptorClientWithConsul(t *testing.T) {
 	deviceUrl := "http://localhost:48080" + clients.ApiValueDescriptorRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiValueDescriptorRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
 
-	vdc := NewValueDescriptorClient(params, mockCoreDataEndpoint{})
+	vdc := NewValueDescriptorClient(urlclient.NewLocalClient(interfaces.URLStream(deviceUrl)))
 
 	r, ok := vdc.(*valueDescriptorRestClient)
 	if !ok {
