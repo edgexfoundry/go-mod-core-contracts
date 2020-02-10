@@ -47,24 +47,24 @@ func makeRequest(req *http.Request) (*http.Response, error) {
 
 // GetRequest will make a GET request to the specified URL with the root URL retrieved by the URLClient prepended.
 // It returns the body as a byte array if successful and an error otherwise.
-func GetRequest(urlSuffix string, ctx context.Context, urlClient interfaces.URLClient) ([]byte, error) {
+func GetRequest(ctx context.Context, urlSuffix string, urlClient interfaces.URLClient) ([]byte, error) {
 	urlPrefix, err := urlClient.Prefix()
 	if err != nil {
 		return nil, err
 	}
 
-	return GetRequestWithURL(urlPrefix+urlSuffix, ctx)
+	return GetRequestWithURL(ctx, urlPrefix+urlSuffix)
 }
 
 // GetRequestWithURL will make a GET request to the specified URL.
 // It returns the body as a byte array if successful and an error otherwise.
-func GetRequestWithURL(url string, ctx context.Context) ([]byte, error) {
+func GetRequestWithURL(ctx context.Context, url string) ([]byte, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	c := NewCorrelatedRequest(req, ctx)
+	c := NewCorrelatedRequest(ctx, req)
 	resp, err := makeRequest(c.Request)
 	if err != nil {
 		return nil, err
@@ -87,9 +87,9 @@ func GetRequestWithURL(url string, ctx context.Context) ([]byte, error) {
 }
 
 // Helper method to make the count request
-func CountRequest(urlSuffix string, ctx context.Context, urlClient interfaces.URLClient) (int, error) {
+func CountRequest(ctx context.Context, urlSuffix string, urlClient interfaces.URLClient) (int, error) {
 	// do not get URLPrefix here since GetRequest does it
-	data, err := GetRequest(urlSuffix, ctx, urlClient)
+	data, err := GetRequest(ctx, urlSuffix, urlClient)
 	if err != nil {
 		return 0, err
 	}
@@ -102,10 +102,10 @@ func CountRequest(urlSuffix string, ctx context.Context, urlClient interfaces.UR
 }
 
 // Helper method to make the post JSON request and return the body
-func PostJsonRequest(
+func PostJSONRequest(
+	ctx context.Context,
 	urlSuffix string,
 	data interface{},
-	ctx context.Context,
 	urlClient interfaces.URLClient) (string, error) {
 
 	jsonStr, err := json.Marshal(data)
@@ -116,13 +116,13 @@ func PostJsonRequest(
 	ctx = context.WithValue(ctx, ContentType, ContentTypeJSON)
 
 	// do not get URLPrefix here since PostRequest does it
-	return PostRequest(urlSuffix, jsonStr, ctx, urlClient)
+	return PostRequest(ctx, urlSuffix, jsonStr, urlClient)
 }
 
-// PostJsonRequestWithURL will make a POST request to the specified URL with the object passed in
+// PostJSONRequestWithURL will make a POST request to the specified URL with the object passed in
 // marshaled into a JSON formatted byte array.
 // It returns the body on success and an error otherwise.
-func PostJsonRequestWithURL(url string, data interface{}, ctx context.Context) (string, error) {
+func PostJSONRequestWithURL(ctx context.Context, url string, data interface{}) (string, error) {
 	jsonStr, err := json.Marshal(data)
 	if err != nil {
 		return "", err
@@ -130,23 +130,23 @@ func PostJsonRequestWithURL(url string, data interface{}, ctx context.Context) (
 
 	ctx = context.WithValue(ctx, ContentType, ContentTypeJSON)
 
-	return PostRequestWithURL(url, jsonStr, ctx)
+	return PostRequestWithURL(ctx, url, jsonStr)
 }
 
 // Helper method to make the post request and return the body
-func PostRequest(urlSuffix string, data []byte, ctx context.Context, urlClient interfaces.URLClient) (string, error) {
+func PostRequest(ctx context.Context, urlSuffix string, data []byte, urlClient interfaces.URLClient) (string, error) {
 	urlPrefix, err := urlClient.Prefix()
 	if err != nil {
 		return "", err
 	}
 
-	return PostRequestWithURL(urlPrefix+urlSuffix, data, ctx)
+	return PostRequestWithURL(ctx, urlPrefix+urlSuffix, data)
 }
 
 // PostRequestWithURL will make a POST request to the specified URL.
 // It returns the body as a byte array if successful and an error otherwise.
-func PostRequestWithURL(url string, data []byte, ctx context.Context) (string, error) {
-	content := FromContext(ContentType, ctx)
+func PostRequestWithURL(ctx context.Context, url string, data []byte) (string, error) {
+	content := FromContext(ctx, ContentType)
 	if content == "" {
 		content = ContentTypeJSON
 	}
@@ -157,7 +157,7 @@ func PostRequestWithURL(url string, data []byte, ctx context.Context) (string, e
 	}
 	req.Header.Set(ContentType, content)
 
-	c := NewCorrelatedRequest(req, ctx)
+	c := NewCorrelatedRequest(ctx, req)
 	resp, err := makeRequest(c.Request)
 	if err != nil {
 		return "", err
@@ -182,9 +182,10 @@ func PostRequestWithURL(url string, data []byte, ctx context.Context) (string, e
 
 // Helper method to make a post request in order to upload a file and return the request body
 func UploadFileRequest(
+	ctx context.Context,
 	urlSuffix string,
 	filePath string,
-	ctx context.Context, urlClient interfaces.URLClient) (string, error) {
+	urlClient interfaces.URLClient) (string, error) {
 
 	fileContents, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -215,7 +216,7 @@ func UploadFileRequest(
 	}
 	req.Header.Add(ContentType, writer.FormDataContentType())
 
-	c := NewCorrelatedRequest(req, ctx)
+	c := NewCorrelatedRequest(ctx, req)
 	resp, err := makeRequest(c.Request)
 	if err != nil {
 		return "", err
@@ -239,19 +240,19 @@ func UploadFileRequest(
 }
 
 // Helper method to make the update request
-func UpdateRequest(urlSuffix string, data interface{}, ctx context.Context, urlClient interfaces.URLClient) error {
+func UpdateRequest(ctx context.Context, urlSuffix string, data interface{}, urlClient interfaces.URLClient) error {
 	jsonStr, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
 
 	// do not get URLPrefix here since PutRequest does it
-	_, err = PutRequest(urlSuffix, jsonStr, ctx, urlClient)
+	_, err = PutRequest(ctx, urlSuffix, jsonStr, urlClient)
 	return err
 }
 
 // Helper method to make the put request
-func PutRequest(urlSuffix string, body []byte, ctx context.Context, urlClient interfaces.URLClient) (string, error) {
+func PutRequest(ctx context.Context, urlSuffix string, body []byte, urlClient interfaces.URLClient) (string, error) {
 	var err error
 	var req *http.Request
 
@@ -261,8 +262,11 @@ func PutRequest(urlSuffix string, body []byte, ctx context.Context, urlClient in
 	}
 	if body != nil {
 		req, err = http.NewRequest(http.MethodPut, urlPrefix+urlSuffix, bytes.NewReader(body))
+		if err != nil {
+			return "", err
+		}
 
-		content := FromContext(ContentType, ctx)
+		content := FromContext(ctx, ContentType)
 		if content == "" {
 			content = ContentTypeJSON
 		}
@@ -274,7 +278,7 @@ func PutRequest(urlSuffix string, body []byte, ctx context.Context, urlClient in
 		return "", err
 	}
 
-	c := NewCorrelatedRequest(req, ctx)
+	c := NewCorrelatedRequest(ctx, req)
 	resp, err := makeRequest(c.Request)
 	if err != nil {
 		return "", err
@@ -298,7 +302,7 @@ func PutRequest(urlSuffix string, body []byte, ctx context.Context, urlClient in
 }
 
 // Helper method to make the delete request
-func DeleteRequest(urlSuffix string, ctx context.Context, urlClient interfaces.URLClient) error {
+func DeleteRequest(ctx context.Context, urlSuffix string, urlClient interfaces.URLClient) error {
 	urlPrefix, err := urlClient.Prefix()
 	if err != nil {
 		return err
@@ -309,7 +313,7 @@ func DeleteRequest(urlSuffix string, ctx context.Context, urlClient interfaces.U
 		return err
 	}
 
-	c := NewCorrelatedRequest(req, ctx)
+	c := NewCorrelatedRequest(ctx, req)
 	resp, err := makeRequest(c.Request)
 	if err != nil {
 		return err
@@ -338,9 +342,9 @@ type CorrelatedRequest struct {
 
 // NewCorrelatedRequest will add the Correlation ID header to the supplied request. If no Correlation ID header is
 // present in the supplied context, one will be created along with a value.
-func NewCorrelatedRequest(req *http.Request, ctx context.Context) CorrelatedRequest {
+func NewCorrelatedRequest(ctx context.Context, req *http.Request) CorrelatedRequest {
 	c := CorrelatedRequest{Request: req}
-	correlation := FromContext(CorrelationHeader, ctx)
+	correlation := FromContext(ctx, CorrelationHeader)
 	if len(correlation) == 0 {
 		correlation = uuid.New().String()
 	}

@@ -22,23 +22,21 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 // AddressableClient defines the interface for interactions with the Addressable endpoint on core-metadata.
 type AddressableClient interface {
 	// Add creates a new Addressable and returns the ID of the new item if successful.
-	Add(addr *models.Addressable, ctx context.Context) (string, error)
+	Add(ctx context.Context, addr *models.Addressable) (string, error)
 	// Addressable returns an Addressable for the specified ID
-	Addressable(id string, ctx context.Context) (models.Addressable, error)
+	Addressable(ctx context.Context, id string) (models.Addressable, error)
 	// Addressable returns an Addressable for the specified name
-	AddressableForName(name string, ctx context.Context) (models.Addressable, error)
+	AddressableForName(ctx context.Context, name string) (models.Addressable, error)
 	// Update will update the Addressable data
-	Update(addr models.Addressable, ctx context.Context) error
+	Update(ctx context.Context, addr models.Addressable) error
 	// Delete will eliminate the Addressable for the specified ID
-	Delete(id string, ctx context.Context) error
+	Delete(ctx context.Context, id string) error
 }
 
 type addressableRestClient struct {
@@ -46,13 +44,15 @@ type addressableRestClient struct {
 }
 
 // NewAddressableClient creates an instance of AddressableClient
-func NewAddressableClient(params types.EndpointParams, m interfaces.Endpointer) AddressableClient {
-	return &addressableRestClient{urlClient: urlclient.New(params, m)}
+func NewAddressableClient(urlClient interfaces.URLClient) AddressableClient {
+	return &addressableRestClient{
+		urlClient: urlClient,
+	}
 }
 
 // Helper method to request and decode an addressable
-func (a *addressableRestClient) requestAddressable(urlSuffix string, ctx context.Context) (models.Addressable, error) {
-	data, err := clients.GetRequest(urlSuffix, ctx, a.urlClient)
+func (a *addressableRestClient) requestAddressable(ctx context.Context, urlSuffix string) (models.Addressable, error) {
+	data, err := clients.GetRequest(ctx, urlSuffix, a.urlClient)
 	if err != nil {
 		return models.Addressable{}, err
 	}
@@ -62,22 +62,22 @@ func (a *addressableRestClient) requestAddressable(urlSuffix string, ctx context
 	return add, err
 }
 
-func (a *addressableRestClient) Add(addr *models.Addressable, ctx context.Context) (string, error) {
-	return clients.PostJsonRequest("", addr, ctx, a.urlClient)
+func (a *addressableRestClient) Add(ctx context.Context, addr *models.Addressable) (string, error) {
+	return clients.PostJSONRequest(ctx, "", addr, a.urlClient)
 }
 
-func (a *addressableRestClient) Addressable(id string, ctx context.Context) (models.Addressable, error) {
-	return a.requestAddressable("/"+id, ctx)
+func (a *addressableRestClient) Addressable(ctx context.Context, id string) (models.Addressable, error) {
+	return a.requestAddressable(ctx, "/"+id)
 }
 
-func (a *addressableRestClient) AddressableForName(name string, ctx context.Context) (models.Addressable, error) {
-	return a.requestAddressable("/name/"+url.QueryEscape(name), ctx)
+func (a *addressableRestClient) AddressableForName(ctx context.Context, name string) (models.Addressable, error) {
+	return a.requestAddressable(ctx, "/name/"+url.QueryEscape(name))
 }
 
-func (a *addressableRestClient) Update(addr models.Addressable, ctx context.Context) error {
-	return clients.UpdateRequest("", addr, ctx, a.urlClient)
+func (a *addressableRestClient) Update(ctx context.Context, addr models.Addressable) error {
+	return clients.UpdateRequest(ctx, "", addr, a.urlClient)
 }
 
-func (a *addressableRestClient) Delete(id string, ctx context.Context) error {
-	return clients.DeleteRequest("/id/"+id, ctx, a.urlClient)
+func (a *addressableRestClient) Delete(ctx context.Context, id string) error {
+	return clients.DeleteRequest(ctx, "/id/"+id, a.urlClient)
 }

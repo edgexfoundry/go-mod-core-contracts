@@ -24,7 +24,8 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -67,16 +68,7 @@ func TestGetReadings(t *testing.T) {
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiReadingRoute
-
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiReadingRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-
-	rc := NewReadingClient(params, mockCoreDataEndpoint{})
+	rc := NewReadingClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiReadingRoute)))
 
 	rArr, err := rc.Readings(context.Background())
 	if err != nil {
@@ -101,14 +93,8 @@ func TestGetReadings(t *testing.T) {
 
 func TestNewReadingClientWithConsul(t *testing.T) {
 	deviceUrl := "http://localhost:48080" + clients.ApiReadingRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreDataServiceKey,
-		Path:        clients.ApiReadingRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
 
-	rc := NewReadingClient(params, mockCoreDataEndpoint{})
+	rc := NewReadingClient(urlclient.NewLocalClient(interfaces.URLStream(deviceUrl)))
 
 	r, ok := rc.(*readingRestClient)
 	if !ok {

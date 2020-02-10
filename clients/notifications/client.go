@@ -20,8 +20,6 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 )
 
 type CategoryEnum string
@@ -50,7 +48,7 @@ const (
 // NotificationsClient defines the interface for interactions with the EdgeX Foundry support-notifications service.
 type NotificationsClient interface {
 	// SendNotification sends a notification.
-	SendNotification(n Notification, ctx context.Context) error
+	SendNotification(ctx context.Context, n Notification) error
 }
 
 // Type struct for REST-specific implementation of the NotificationsClient interface
@@ -74,11 +72,13 @@ type Notification struct {
 }
 
 // NewNotificationsClient creates an instance of NotificationsClient
-func NewNotificationsClient(params types.EndpointParams, m interfaces.Endpointer) NotificationsClient {
-	return &notificationsRestClient{urlClient: urlclient.New(params, m)}
+func NewNotificationsClient(urlClient interfaces.URLClient) NotificationsClient {
+	return &notificationsRestClient{
+		urlClient: urlClient,
+	}
 }
 
-func (nc *notificationsRestClient) SendNotification(n Notification, ctx context.Context) error {
-	_, err := clients.PostJsonRequest("", n, ctx, nc.urlClient)
+func (nc *notificationsRestClient) SendNotification(ctx context.Context, n Notification) error {
+	_, err := clients.PostJSONRequest(ctx, "", n, nc.urlClient)
 	return err
 }

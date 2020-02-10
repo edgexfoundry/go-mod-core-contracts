@@ -21,20 +21,15 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 func TestNewDeviceProfileClientWithConsul(t *testing.T) {
 	deviceUrl := "http://localhost:48081" + clients.ApiCommandRoute
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiCommandRoute,
-		UseRegistry: true,
-		Url:         deviceUrl,
-		Interval:    clients.ClientMonitorDefault}
 
-	dpc := NewDeviceProfileClient(params, mockCoreMetaDataEndpoint{})
+	dpc := NewDeviceProfileClient(urlclient.NewLocalClient(interfaces.URLStream(deviceUrl)))
 
 	r, ok := dpc.(*deviceProfileRestClient)
 	if !ok {
@@ -68,23 +63,15 @@ func TestUpdateDeviceProfile(t *testing.T) {
 			t.Errorf("expected uri path is %s, actual uri path is %s", clients.ApiDeviceProfileRoute, r.URL.EscapedPath())
 		}
 
-		w.Write([]byte("true"))
+		_, _ = w.Write([]byte("true"))
 
 	}))
 
 	defer ts.Close()
 
-	url := ts.URL + clients.ApiDeviceProfileRoute
+	dpc := NewDeviceProfileClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceProfileRoute)))
 
-	params := types.EndpointParams{
-		ServiceKey:  clients.CoreMetaDataServiceKey,
-		Path:        clients.ApiDeviceProfileRoute,
-		UseRegistry: false,
-		Url:         url,
-		Interval:    clients.ClientMonitorDefault}
-	dpc := NewDeviceProfileClient(params, mockCoreMetaDataEndpoint{})
-
-	err := dpc.Update(p, context.Background())
+	err := dpc.Update(context.Background(), p)
 	if err != nil {
 		t.Error(err.Error())
 	}

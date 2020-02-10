@@ -12,28 +12,15 @@
  * the License.
  *******************************************************************************/
 
-package urlclient
+// errors defines a set of errors that urlclient will use.
+package errors
 
-import (
-	"testing"
+type timeoutError struct{}
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/types"
-)
-
-func TestClientFactoryLocal(t *testing.T) {
-	actualClient := New(types.EndpointParams{UseRegistry: false}, mockEndpoint{})
-	_, isLocalClient := actualClient.(*localClient)
-
-	if !isLocalClient {
-		t.Fatalf("expected type %T, found %T", localClient{}, actualClient)
-	}
+func NewTimeoutError() timeoutError {
+	return timeoutError{}
 }
 
-func TestClientFactoryRegistry(t *testing.T) {
-	actualClient := New(types.EndpointParams{UseRegistry: true}, mockEndpoint{})
-	_, isRegistryClient := actualClient.(*registryClient)
-
-	if !isRegistryClient {
-		t.Fatalf("expected type %T, found %T", registryClient{}, actualClient)
-	}
+func (timeoutError) Error() string {
+	return "unable to initialize client"
 }

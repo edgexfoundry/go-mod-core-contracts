@@ -106,7 +106,7 @@ func TestResourceOperation_FieldsAutoPopulation_MarshalJSON(t *testing.T) {
 	oldResourceOperation := ResourceOperation{Object: TestRODeviceResource, Resource: TestDeviceCommand}
 	newResourceOperation := ResourceOperation{DeviceResource: TestRODeviceResource, DeviceCommand: TestDeviceCommand}
 	oldNewResourceOperation := ResourceOperation{Object: "XX", DeviceResource: TestRODeviceResource, Resource: "XX", DeviceCommand: TestDeviceCommand}
-	expectedJsonString := "{\"object\":\"" + TestRODeviceResource + "\"" +
+	expectedJSONString := "{\"object\":\"" + TestRODeviceResource + "\"" +
 		",\"deviceResource\":\"" + TestRODeviceResource + "\"" +
 		",\"resource\":\"" + TestDeviceCommand + "\"" +
 		",\"deviceCommand\":\"" + TestDeviceCommand + "\"}"
@@ -124,7 +124,7 @@ func TestResourceOperation_FieldsAutoPopulation_MarshalJSON(t *testing.T) {
 			if err != nil {
 				t.Errorf("ResourceOperation.MarshalJSON() error = %v", err)
 			}
-			if string(jsonBytes) != expectedJsonString {
+			if string(jsonBytes) != expectedJSONString {
 				t.Errorf("Fields auto population is unexpected: %s, ", string(jsonBytes))
 			}
 		})
@@ -132,11 +132,11 @@ func TestResourceOperation_FieldsAutoPopulation_MarshalJSON(t *testing.T) {
 }
 
 func TestResourceOperation_FieldsAutoPopulation_UnmarshalJSON(t *testing.T) {
-	oldJson := "{\"object\":\"" + TestRODeviceResource + "\"" +
+	oldJSON := "{\"object\":\"" + TestRODeviceResource + "\"" +
 		",\"resource\":\"" + TestDeviceCommand + "\"}"
-	newJson := "{\"deviceResource\":\"" + TestRODeviceResource + "\"" +
+	newJSON := "{\"deviceResource\":\"" + TestRODeviceResource + "\"" +
 		",\"deviceCommand\":\"" + TestDeviceCommand + "\"}"
-	oldNewJson := "{\"object\":\"XX\"" +
+	oldNewJSON := "{\"object\":\"XX\"" +
 		",\"deviceResource\":\"" + TestRODeviceResource + "\"" +
 		",\"resource\":\"XX\"" +
 		",\"deviceCommand\":\"" + TestDeviceCommand + "\"}"
@@ -144,9 +144,9 @@ func TestResourceOperation_FieldsAutoPopulation_UnmarshalJSON(t *testing.T) {
 		name string
 		json string
 	}{
-		{"old fields only", oldJson},
-		{"new fields only", newJson},
-		{"new fields and old fields are different", oldNewJson},
+		{"old fields only", oldJSON},
+		{"new fields only", newJSON},
+		{"new fields and old fields are different", oldNewJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
