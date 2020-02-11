@@ -21,8 +21,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 )
 
 func TestGetDeviceCommandById(t *testing.T) {
@@ -30,7 +29,7 @@ func TestGetDeviceCommandById(t *testing.T) {
 
 	defer ts.Close()
 
-	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
+	cc := NewCommandClient(local.New(ts.URL + clients.ApiDeviceRoute))
 
 	res, _ := cc.Get(context.Background(), "device1", "command1")
 
@@ -44,7 +43,7 @@ func TestPutDeviceCommandById(t *testing.T) {
 
 	defer ts.Close()
 
-	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
+	cc := NewCommandClient(local.New(ts.URL + clients.ApiDeviceRoute))
 
 	res, _ := cc.Put(context.Background(), "device1", "command1", "body")
 
@@ -58,7 +57,7 @@ func TestGetDeviceByName(t *testing.T) {
 
 	defer ts.Close()
 
-	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
+	cc := NewCommandClient(local.New(ts.URL + clients.ApiDeviceRoute))
 
 	res, _ := cc.GetDeviceCommandByNames(context.Background(), "device1", "command1")
 
@@ -72,7 +71,7 @@ func TestPutDeviceCommandByNames(t *testing.T) {
 
 	defer ts.Close()
 
-	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
+	cc := NewCommandClient(local.New(ts.URL + clients.ApiDeviceRoute))
 
 	res, _ := cc.PutDeviceCommandByNames(context.Background(), "device1", "command1", "body")
 

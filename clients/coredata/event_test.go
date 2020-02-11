@@ -24,8 +24,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 
 	"github.com/ugorji/go/codec"
@@ -38,7 +37,7 @@ const (
 	TestEventDevice2 = "device2"
 )
 
-var testEvent models.Event = models.Event{Device: TestEventDevice1, Created: 123, Modified: 123, Origin: 123}
+var testEvent = models.Event{Device: TestEventDevice1, Created: 123, Modified: 123, Origin: 123}
 
 func TestMarkPushed(t *testing.T) {
 
@@ -57,7 +56,7 @@ func TestMarkPushed(t *testing.T) {
 
 	defer ts.Close()
 
-	ec := NewEventClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiEventRoute)))
+	ec := NewEventClient(local.New(ts.URL + clients.ApiEventRoute))
 
 	err := ec.MarkPushed(context.Background(), TestId)
 
@@ -83,7 +82,7 @@ func TestMarkPushedByChecksum(t *testing.T) {
 
 	defer ts.Close()
 
-	ec := NewEventClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiEventRoute)))
+	ec := NewEventClient(local.New(ts.URL + clients.ApiEventRoute))
 
 	err := ec.MarkPushedByChecksum(context.Background(), TestChecksum)
 
@@ -117,7 +116,7 @@ func TestGetEvents(t *testing.T) {
 
 	defer ts.Close()
 
-	ec := NewEventClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiEventRoute)))
+	ec := NewEventClient(local.New(ts.URL + clients.ApiEventRoute))
 
 	eArr, err := ec.Events(context.Background())
 	if err != nil {
@@ -147,7 +146,7 @@ func TestMarshalEvent(t *testing.T) {
 	regularEvent := testEvent
 	regularEvent.Readings = append(regularEvent.Readings, testReading)
 
-	client := NewEventClient(urlclient.NewLocalClient("test"))
+	client := NewEventClient(local.New("test"))
 
 	tests := []struct {
 		name        string

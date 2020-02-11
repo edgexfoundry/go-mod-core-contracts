@@ -12,32 +12,19 @@
  * the License.
  *******************************************************************************/
 
-package urlclient
+package local
 
-import (
-	"testing"
-
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-)
-
-func TestNewLocalClient(t *testing.T) {
-	actualClient := NewLocalClient(interfaces.URLStream(expectedURL))
-
-	if actualClient == nil {
-		t.Fatal("nil returned from NewLocalClient")
-	}
+// client defines a URLClient implementation that returns a statically defined URL.
+type client struct {
+	url string
 }
 
-func TestLocalClient_URLPrefix(t *testing.T) {
-	urlClient := NewLocalClient(interfaces.URLStream(expectedURL))
+// New returns a pointer to a client.
+func New(url string) *client {
+	return &client{url: url}
+}
 
-	actualURL, err := urlClient.Prefix()
-
-	if err != nil {
-		t.Fatalf("unexpected error %s", err.Error())
-	}
-
-	if actualURL != expectedURL {
-		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
-	}
+// Prefix returns the defined URL.
+func (c *client) Prefix() (string, error) {
+	return c.url, nil
 }

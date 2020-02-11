@@ -18,14 +18,13 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 )
 
 func TestNewCommandClientWithConsul(t *testing.T) {
 	deviceUrl := "http://localhost:48081" + clients.ApiCommandRoute
 
-	cc := NewCommandClient(urlclient.NewLocalClient(interfaces.URLStream(deviceUrl)))
+	cc := NewCommandClient(local.New(deviceUrl))
 
 	r, ok := cc.(*commandRestClient)
 	if !ok {

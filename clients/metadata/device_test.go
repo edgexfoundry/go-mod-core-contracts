@@ -21,8 +21,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -57,7 +56,7 @@ func TestAddDevice(t *testing.T) {
 
 	defer ts.Close()
 
-	dc := NewDeviceClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiDeviceRoute)))
+	dc := NewDeviceClient(local.New(ts.URL + clients.ApiDeviceRoute))
 
 	receivedDeviceId, err := dc.Add(context.Background(), &d)
 	if err != nil {
@@ -72,7 +71,7 @@ func TestAddDevice(t *testing.T) {
 func TestNewDeviceClientWithConsul(t *testing.T) {
 	deviceUrl := "http://localhost:48081" + clients.ApiDeviceRoute
 
-	dc := NewDeviceClient(urlclient.NewLocalClient(interfaces.URLStream(deviceUrl)))
+	dc := NewDeviceClient(local.New(deviceUrl))
 
 	r, ok := dc.(*deviceRestClient)
 	if !ok {

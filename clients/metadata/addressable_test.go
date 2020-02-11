@@ -24,15 +24,14 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
 func TestNewAddressableClientWithConsul(t *testing.T) {
 	addressableURL := "http://localhost:48081" + clients.ApiAddressableRoute
 
-	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(addressableURL)))
+	ac := NewAddressableClient(local.New(addressableURL))
 
 	r, ok := ac.(*addressableRestClient)
 	if !ok {
@@ -74,7 +73,7 @@ func TestAddAddressable(t *testing.T) {
 
 	defer ts.Close()
 
-	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
+	ac := NewAddressableClient(local.New(ts.URL + clients.ApiAddressableRoute))
 
 	receivedAddressableID, err := ac.Add(context.Background(), &addressable)
 	if err != nil {
@@ -111,7 +110,7 @@ func TestGetAddressable(t *testing.T) {
 
 	defer ts.Close()
 
-	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
+	ac := NewAddressableClient(local.New(ts.URL + clients.ApiAddressableRoute))
 
 	receivedAddressable, err := ac.Addressable(context.Background(), addressable.Id)
 	if err != nil {
@@ -148,7 +147,7 @@ func TestGetAddressableForName(t *testing.T) {
 
 	defer ts.Close()
 
-	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
+	ac := NewAddressableClient(local.New(ts.URL + clients.ApiAddressableRoute))
 
 	receivedAddressable, err := ac.AddressableForName(context.Background(), addressable.Name)
 	if err != nil {
@@ -182,7 +181,7 @@ func TestUpdateAddressable(t *testing.T) {
 
 	defer ts.Close()
 
-	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
+	ac := NewAddressableClient(local.New(ts.URL + clients.ApiAddressableRoute))
 
 	err := ac.Update(context.Background(), addressable)
 	if err != nil {
@@ -213,7 +212,7 @@ func TestDeleteAddressable(t *testing.T) {
 
 	defer ts.Close()
 
-	ac := NewAddressableClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiAddressableRoute)))
+	ac := NewAddressableClient(local.New(ts.URL + clients.ApiAddressableRoute))
 
 	err := ac.Delete(context.Background(), addressable.Id)
 	if err != nil {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Dell Inc.
+ * Copyright 2020 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,23 +12,32 @@
  * the License.
  *******************************************************************************/
 
-package urlclient
+package local
 
-import "github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+import (
+	"testing"
+)
 
-// localClient defines a ClientURL implementation that returns the struct field for the URL.
-type localClient struct {
-	url string
-}
+var expectedURL = "http://domain.com"
 
-// NewLocalClient returns a pointer to a localClient.
-func NewLocalClient(urlStreamResult interfaces.URLStream) *localClient {
-	return &localClient{
-		url: string(urlStreamResult),
+func TestNew(t *testing.T) {
+	actualClient := New(expectedURL)
+
+	if actualClient == nil {
+		t.Fatal("nil returned from NewLocalClient")
 	}
 }
 
-// Prefix always returns the URL statically defined on object creation.
-func (c *localClient) Prefix() (string, error) {
-	return c.url, nil
+func Test_URLPrefix(t *testing.T) {
+	urlClient := New(expectedURL)
+
+	actualURL, err := urlClient.Prefix()
+
+	if err != nil {
+		t.Fatalf("unexpected error %s", err.Error())
+	}
+
+	if actualURL != expectedURL {
+		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
+	}
 }

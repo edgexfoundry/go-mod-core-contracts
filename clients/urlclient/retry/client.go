@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Dell Inc.
+ * Copyright 2020 Dell Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,27 +12,31 @@
  * the License.
  *******************************************************************************/
 
-package urlclient
+package retry
 
 import (
+	"time"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	urlClientInterfaces "github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/errors"
 )
 
-// registryClient defines a URLClient implementation that checks for an update from an asynchronously run
+// client defines a URLClient implementation that checks for an update from an asynchronously run
 // EndpointMonitor that will emit a correct URL from the remote registry.
-type registryClient struct {
-	url      string
-	strategy urlClientInterfaces.RetryStrategy
+type client struct {
+	url           string
+	tickTime      time.Duration
+	timeout       time.Duration
+	isInitialized bool
 }
 
-// NewRegistryClient returns a pointer to a registryClient.
+// New returns a pointer to a client.
 // A pointer is used so that when using configuration from a registry, the Prefix can be updated asynchronously.
-func NewRegistryClient(
-	urlStream chan interfaces.URLStream,
-	strategy urlClientInterfaces.RetryStrategy) *registryClient {
-	c := registryClient{
-		strategy: strategy,
+func New(urlStream chan interfaces.URLStream, interval, timeout int) *client {
+	c := client{
+		tickTime:      time.Duration(interval),
+		timeout:       time.Duration(timeout),
+		isInitialized: false,
 	}
 
 	go func(ch chan interfaces.URLStream) {
@@ -40,7 +44,7 @@ func NewRegistryClient(
 			select {
 			case url := <-ch:
 				c.url = string(url)
-				strategy.SetInitialization(false)
+				c.isInitialized = true
 			}
 		}
 	}(urlStream)
@@ -50,6 +54,24 @@ func NewRegistryClient(
 
 // Prefix waits for URLClient to be updated for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
-func (c *registryClient) Prefix() (string, error) {
-	return c.strategy.Retry(&c.url)
+func (c *client) Prefix() (string, error) {
+	if c.isInitialized {
+		return c.url, nil
+	}
+
+	timer := time.After(c.timeout * time.Second)
+	ticker := time.NewTicker(c.tickTime * time.Millisecond)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-timer:
+			return "", errors.NewTimeoutError()
+		case <-ticker.C:
+			if !c.isInitialized && len(c.url) != 0 {
+				return c.url, nil
+			}
+			// do not handle uninitialized case here, we need to keep trying
+		}
+	}
 }
