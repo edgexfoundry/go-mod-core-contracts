@@ -24,8 +24,8 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry/periodic"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -75,15 +75,13 @@ func TestIntervalRestClient_Add(t *testing.T) {
 	}{
 		{"happy path",
 			testInterval1,
-			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute))),
+			NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute)),
 			false,
 		},
 		{
 			"client error",
 			testInterval1,
-			NewIntervalClient(urlclient.NewRegistryClient(make(chan interfaces.URLStream),
-				periodic.New(1, 0)),
-			),
+			NewIntervalClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
 			true,
 		},
 	}
@@ -111,7 +109,7 @@ func TestIntervalRestClient_Delete(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute)))
+	ic := NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute))
 
 	err := ic.Delete(context.Background(), testID1)
 
@@ -125,7 +123,7 @@ func TestIntervalRestClient_DeleteByName(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute)))
+	ic := NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute))
 
 	err := ic.DeleteByName(context.Background(), testInterval1.Name)
 
@@ -180,20 +178,18 @@ func TestIntervalRestClient_Interval(t *testing.T) {
 	}{
 		{"happy path",
 			testInterval1.ID,
-			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute))),
+			NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute)),
 			false,
 		},
 		{
 			"client error",
 			testInterval1.ID,
-			NewIntervalClient(urlclient.NewRegistryClient(make(chan interfaces.URLStream),
-				periodic.New(1, 0)),
-			),
+			NewIntervalClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
 			true,
 		},
 		{"bad JSON marshal",
 			testInterval1.ID,
-			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(badJSONServer.URL + clients.ApiIntervalRoute))),
+			NewIntervalClient(local.New(badJSONServer.URL + clients.ApiIntervalRoute)),
 			true,
 		},
 	}
@@ -240,7 +236,7 @@ func TestIntervalRestClient_IntervalForName(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute)))
+	ic := NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute))
 
 	_, err := ic.IntervalForName(context.Background(), testInterval1.Name)
 
@@ -295,18 +291,16 @@ func TestIntervalRestClient_Intervals(t *testing.T) {
 		expectedError bool
 	}{
 		{"happy path",
-			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute))),
+			NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute)),
 			false,
 		},
 		{
 			"client error",
-			NewIntervalClient(urlclient.NewRegistryClient(make(chan interfaces.URLStream),
-				periodic.New(1, 0)),
-			),
+			NewIntervalClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
 			true,
 		},
 		{"bad JSON marshal",
-			NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(badJSONServer.URL + clients.ApiIntervalRoute))),
+			NewIntervalClient(local.New(badJSONServer.URL + clients.ApiIntervalRoute)),
 			true,
 		},
 	}
@@ -336,7 +330,7 @@ func TestIntervalRestClient_Update(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalRoute)))
+	ic := NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute))
 
 	err := ic.Update(context.Background(), testInterval1)
 

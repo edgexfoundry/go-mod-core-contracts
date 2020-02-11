@@ -12,7 +12,7 @@
  * the License.
  *******************************************************************************/
 
-package urlclient
+package retry
 
 import (
 	"testing"
@@ -20,33 +20,22 @@ import (
 
 	interfaces2 "github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry/once"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry/periodic"
 )
 
 var timeoutError = errors.NewTimeoutError()
 var expectedURL = "http://domain.com"
 
-func TestNewRegistryClient(t *testing.T) {
-	actualClient := NewRegistryClient(
-		makeTestStream(),
-		periodic.New(500, 10),
-	)
+func TestNew(t *testing.T) {
+	actualClient := New(makeTestStream(), 500, 10)
 
 	if actualClient == nil {
-		t.Fatal("nil returned from NewRegistryClient")
+		t.Fatal("nil returned from New")
 	}
 }
 
 func TestRegistryClient_Prefix_Periodic(t *testing.T) {
-	strategy := periodic.New(500, 10)
 	testStream := makeTestStream()
-
-	urlClient := NewRegistryClient(
-		testStream,
-		strategy,
-	)
+	urlClient := New(testStream, 500, 10)
 	testStream <- interfaces2.URLStream(expectedURL)
 
 	// don't sleep, we need to actuate the retry code
@@ -64,18 +53,15 @@ func TestRegistryClient_Prefix_Periodic(t *testing.T) {
 
 func TestRegistryClient_Prefix_Periodic_Initialized(t *testing.T) {
 	// use impossible timing to ensure that if hit, the retry logic will error out
-	strategy := periodic.New(1, 0)
 	testStream := makeTestStream()
 
-	urlClient := NewRegistryClient(
-		testStream,
-		strategy,
-	)
+	timeoutValue := 0
+	urlClient := New(testStream, 1, timeoutValue)
 
 	testStream <- interfaces2.URLStream(expectedURL)
 
 	// sleep so that the retry code doesn't run and we only execute the shortcut
-	sleep(t, strategy)
+	time.Sleep(time.Duration(timeoutValue + 1))
 
 	actualURL, err := urlClient.Prefix()
 
@@ -89,10 +75,7 @@ func TestRegistryClient_Prefix_Periodic_Initialized(t *testing.T) {
 }
 
 func TestRegistryClient_Prefix_Periodic_TimedOut(t *testing.T) {
-	urlClient := NewRegistryClient(
-		makeTestStream(),
-		periodic.New(1, 0),
-	)
+	urlClient := New(makeTestStream(), 1, 0)
 
 	actualURL, err := urlClient.Prefix()
 
@@ -102,56 +85,6 @@ func TestRegistryClient_Prefix_Periodic_TimedOut(t *testing.T) {
 
 	if err != timeoutError {
 		t.Fatalf("expected error %s, found error %s", timeoutError.Error(), err.Error())
-	}
-}
-
-func TestRegistryClient_Prefix_Once(t *testing.T) {
-	strategy := once.New()
-	testStream := makeTestStream()
-
-	urlClient := NewRegistryClient(
-		testStream,
-		strategy,
-	)
-	testStream <- interfaces2.URLStream(expectedURL)
-
-	sleep(t, strategy)
-
-	actualURL, err := urlClient.Prefix()
-
-	if err != nil {
-		t.Fatalf("unexpected error: %s", err.Error())
-	}
-
-	if actualURL != expectedURL {
-		t.Fatalf("expected URL %s, found URL %s", expectedURL, actualURL)
-	}
-}
-
-func TestRegistryClient_Prefix_Once_NotAvailable(t *testing.T) {
-	urlClient := NewRegistryClient(
-		makeTestStream(),
-		once.New(),
-	)
-
-	actualURL, err := urlClient.Prefix()
-
-	if err == nil || actualURL != "" {
-		t.Fatal("expected error")
-	}
-
-	if err != timeoutError {
-		t.Fatalf("expected error %s, found error %s", timeoutError.Error(), err.Error())
-	}
-}
-
-func sleep(t *testing.T, strategy interfaces.RetryStrategy) {
-	for i := 1; strategy.IsInitialized(); i++ {
-		if i == 5 {
-			t.Fatal("waited too long for strategy to unlock")
-		}
-
-		time.Sleep(time.Second)
 	}
 }
 

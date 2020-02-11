@@ -15,8 +15,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 )
 
 // Test common const
@@ -52,7 +51,7 @@ func TestReceiveNotification(t *testing.T) {
 		_ = r.Body.Close()
 
 		var receivedNotification Notification
-		_ = json.Unmarshal([]byte(result), &receivedNotification)
+		_ = json.Unmarshal(result, &receivedNotification)
 
 		if receivedNotification.Sender != TestNotificationSender {
 			t.Errorf(TestUnexpectedMsgFormatStr, receivedNotification.Sender, TestNotificationSender)
@@ -94,7 +93,7 @@ func TestReceiveNotification(t *testing.T) {
 
 	defer ts.Close()
 
-	nc := NewNotificationsClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiNotificationRoute)))
+	nc := NewNotificationsClient(local.New(ts.URL + clients.ApiNotificationRoute))
 
 	notification := Notification{
 		Sender:      TestNotificationSender,

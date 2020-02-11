@@ -24,8 +24,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -63,12 +62,12 @@ func TestGetReadings(t *testing.T) {
 		if err != nil {
 			t.Errorf("marshaling error: %s", err.Error())
 		}
-		w.Write(data)
+		_, _ = w.Write(data)
 	}))
 
 	defer ts.Close()
 
-	rc := NewReadingClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiReadingRoute)))
+	rc := NewReadingClient(local.New(ts.URL + clients.ApiReadingRoute))
 
 	rArr, err := rc.Readings(context.Background())
 	if err != nil {
@@ -94,7 +93,7 @@ func TestGetReadings(t *testing.T) {
 func TestNewReadingClientWithConsul(t *testing.T) {
 	deviceUrl := "http://localhost:48080" + clients.ApiReadingRoute
 
-	rc := NewReadingClient(urlclient.NewLocalClient(interfaces.URLStream(deviceUrl)))
+	rc := NewReadingClient(local.New(deviceUrl))
 
 	r, ok := rc.(*readingRestClient)
 	if !ok {

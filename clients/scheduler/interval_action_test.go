@@ -24,8 +24,8 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry/periodic"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -74,7 +74,7 @@ func TestIntervalActionRestClient_Add(t *testing.T) {
 
 	defer ts.Close()
 
-	iac := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
+	iac := NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute))
 
 	res, err := iac.Add(context.Background(), &testIntervalAction1)
 
@@ -92,7 +92,7 @@ func TestIntervalActionRestClient_Delete(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
+	ic := NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute))
 
 	err := ic.Delete(context.Background(), testID1)
 
@@ -106,7 +106,7 @@ func TestIntervalActionRestClient_DeleteByName(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
+	ic := NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute))
 
 	err := ic.DeleteByName(context.Background(), testIntervalAction1.Name)
 
@@ -161,23 +161,18 @@ func TestIntervalActionRestClient_IntervalAction(t *testing.T) {
 	}{
 		{"happy path",
 			testIntervalAction1.ID,
-			NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute))),
+			NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute)),
 			false,
 		},
 		{
 			"client error",
 			testIntervalAction1.ID,
-			NewIntervalActionClient(
-				urlclient.NewRegistryClient(make(chan interfaces.URLStream),
-					periodic.New(1, 0)),
-			),
+			NewIntervalActionClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
 			true,
 		},
 		{"bad JSON marshal",
 			testIntervalAction1.ID,
-			NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(
-				badJSONServer.URL + clients.ApiIntervalActionRoute,
-			))),
+			NewIntervalActionClient(local.New(badJSONServer.URL + clients.ApiIntervalActionRoute)),
 			true,
 		},
 	}
@@ -224,7 +219,7 @@ func TestIntervalActionRestClient_IntervalActionForName(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
+	ic := NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute))
 
 	_, err := ic.IntervalActionForName(context.Background(), testIntervalAction1.Name)
 
@@ -279,19 +274,16 @@ func TestIntervalActionRestClient_IntervalActions(t *testing.T) {
 		expectedError bool
 	}{
 		{"happy path",
-			NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute))),
+			NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute)),
 			false,
 		},
 		{
 			"client error",
-			NewIntervalActionClient(urlclient.NewRegistryClient(make(chan interfaces.URLStream),
-				periodic.New(1, 0)),
-			),
+			NewIntervalActionClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
 			true,
 		},
 		{"bad JSON marshal",
-			NewIntervalActionClient(urlclient.NewLocalClient(
-				interfaces.URLStream(badJSONServer.URL + clients.ApiIntervalActionRoute))),
+			NewIntervalActionClient(local.New(badJSONServer.URL + clients.ApiIntervalActionRoute)),
 			true,
 		},
 	}
@@ -340,7 +332,7 @@ func TestIntervalActionRestClient_IntervalActionsForTargetByName(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
+	ic := NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute))
 
 	_, err := ic.IntervalActionsForTargetByName(context.Background(), testIntervalAction1.Target)
 
@@ -354,7 +346,7 @@ func TestIntervalActionRestClient_Update(t *testing.T) {
 
 	defer ts.Close()
 
-	ic := NewIntervalActionClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiIntervalActionRoute)))
+	ic := NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute))
 
 	err := ic.Update(context.Background(), testIntervalAction1)
 

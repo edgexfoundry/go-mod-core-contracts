@@ -22,8 +22,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 )
 
 const (
@@ -44,7 +43,7 @@ func TestGetConfig(t *testing.T) {
 
 	defer ts.Close()
 
-	mc := NewGeneralClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL)))
+	mc := NewGeneralClient(local.New(ts.URL))
 
 	responseJSON, err := mc.FetchConfiguration(context.Background())
 	if err != nil {
@@ -66,7 +65,7 @@ func TestGetMetrics(t *testing.T) {
 
 	defer ts.Close()
 
-	mc := NewGeneralClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL)))
+	mc := NewGeneralClient(local.New(ts.URL))
 
 	responseJSON, err := mc.FetchMetrics(context.Background())
 	if err != nil {

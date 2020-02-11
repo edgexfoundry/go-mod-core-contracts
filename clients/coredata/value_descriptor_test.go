@@ -23,8 +23,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient"
+	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -72,7 +71,7 @@ func TestGetvaluedescriptors(t *testing.T) {
 
 	defer ts.Close()
 
-	vdc := NewValueDescriptorClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiValueDescriptorRoute)))
+	vdc := NewValueDescriptorClient(local.New(ts.URL + clients.ApiValueDescriptorRoute))
 
 	vdArr, err := vdc.ValueDescriptors(context.Background())
 	if err != nil {
@@ -116,7 +115,7 @@ func TestValueDescriptorUsage(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	vdc := NewValueDescriptorClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiValueDescriptorRoute)))
+	vdc := NewValueDescriptorClient(local.New(ts.URL + clients.ApiValueDescriptorRoute))
 	usage, err := vdc.ValueDescriptorsUsage(context.Background(), []string{testValueDesciptorDescription1, testValueDesciptorDescription2})
 	if err != nil {
 		t.Errorf(err.Error())
@@ -134,7 +133,7 @@ func TestValueDescriptorUsageSerializationError(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	vdc := NewValueDescriptorClient(urlclient.NewLocalClient(interfaces.URLStream(ts.URL + clients.ApiValueDescriptorRoute)))
+	vdc := NewValueDescriptorClient(local.New(ts.URL + clients.ApiValueDescriptorRoute))
 	_, err := vdc.ValueDescriptorsUsage(context.Background(), []string{testValueDesciptorDescription1, testValueDesciptorDescription2})
 	if err == nil {
 		t.Error("Expected an error")
@@ -143,7 +142,7 @@ func TestValueDescriptorUsageSerializationError(t *testing.T) {
 }
 
 func TestValueDescriptorUsageGetRequestError(t *testing.T) {
-	vdc := NewValueDescriptorClient(urlclient.NewLocalClient("!%&"))
+	vdc := NewValueDescriptorClient(local.New("!%&"))
 	_, err := vdc.ValueDescriptorsUsage(context.Background(), []string{testValueDesciptorDescription1, testValueDesciptorDescription2})
 	if err == nil {
 		t.Error("Expected an error")
@@ -154,7 +153,7 @@ func TestValueDescriptorUsageGetRequestError(t *testing.T) {
 func TestNewValueDescriptorClientWithConsul(t *testing.T) {
 	deviceUrl := "http://localhost:48080" + clients.ApiValueDescriptorRoute
 
-	vdc := NewValueDescriptorClient(urlclient.NewLocalClient(interfaces.URLStream(deviceUrl)))
+	vdc := NewValueDescriptorClient(local.New(deviceUrl))
 
 	r, ok := vdc.(*valueDescriptorRestClient)
 	if !ok {
