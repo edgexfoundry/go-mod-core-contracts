@@ -28,6 +28,8 @@ type GeneralClient interface {
 	FetchConfiguration(ctx context.Context) (string, error)
 	// FetchMetrics obtains metrics information from the target service.
 	FetchMetrics(ctx context.Context) (string, error)
+	// FetchHealth obtains health information from the target service.
+	FetchHealth(ctx context.Context) (string, error)
 }
 
 type generalRestClient struct {
@@ -52,6 +54,15 @@ func (gc *generalRestClient) FetchConfiguration(ctx context.Context) (string, er
 
 func (gc *generalRestClient) FetchMetrics(ctx context.Context) (string, error) {
 	body, err := clients.GetRequest(ctx, clients.ApiMetricsRoute, gc.urlClient)
+	if err != nil {
+		return "", err
+	}
+
+	return string(body), nil
+}
+
+func (gc *generalRestClient) FetchHealth(ctx context.Context) (string, error) {
+	body, err := clients.GetRequest(ctx, clients.ApiHealthRoute, gc.urlClient)
 	if err != nil {
 		return "", err
 	}
