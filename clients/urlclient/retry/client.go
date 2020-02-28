@@ -32,10 +32,13 @@ type client struct {
 
 // New returns a pointer to a client.
 // A pointer is used so that when using configuration from a registry, the Prefix can be updated asynchronously.
+// urlStream is the channel of URLStream to check for updates on
+// interval is the time to wait between polls of the channel in milliseconds
+// timeout is the time to poll for in milliseconds
 func New(urlStream chan interfaces.URLStream, interval, timeout int) *client {
 	c := client{
-		tickTime:      time.Duration(interval),
-		timeout:       time.Duration(timeout),
+		tickTime:      time.Duration(interval) * time.Millisecond,
+		timeout:       time.Duration(timeout) * time.Millisecond,
 		isInitialized: false,
 	}
 
@@ -55,12 +58,12 @@ func New(urlStream chan interfaces.URLStream, interval, timeout int) *client {
 // Prefix waits for URLClient to be updated for timeout seconds. If a value is loaded in that time, it returns it.
 // Otherwise, it returns an error.
 func (c *client) Prefix() (string, error) {
-	if c.isInitialized {
+	if c.isInitialized && len(c.url) != 0 {
 		return c.url, nil
 	}
 
-	timer := time.After(c.timeout * time.Second)
-	ticker := time.NewTicker(c.tickTime * time.Millisecond)
+	timer := time.After(c.timeout)
+	ticker := time.NewTicker(c.tickTime)
 	defer ticker.Stop()
 
 	for {
@@ -68,7 +71,7 @@ func (c *client) Prefix() (string, error) {
 		case <-timer:
 			return "", errors.NewTimeoutError()
 		case <-ticker.C:
-			if !c.isInitialized && len(c.url) != 0 {
+			if c.isInitialized && len(c.url) != 0 {
 				return c.url, nil
 			}
 			// do not handle uninitialized case here, we need to keep trying

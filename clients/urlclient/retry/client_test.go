@@ -35,10 +35,12 @@ func TestNew(t *testing.T) {
 
 func TestRegistryClient_Prefix_Periodic(t *testing.T) {
 	testStream := makeTestStream()
-	urlClient := New(testStream, 500, 10)
-	testStream <- interfaces2.URLStream(expectedURL)
+	urlClient := New(testStream, 500, 5000)
 
-	// don't sleep, we need to actuate the retry code
+	go func() {
+		time.Sleep(time.Second)
+		testStream <- interfaces2.URLStream(expectedURL)
+	}()
 
 	actualURL, err := urlClient.Prefix()
 
