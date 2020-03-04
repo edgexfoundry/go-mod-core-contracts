@@ -27,8 +27,10 @@ import (
 var TestId = "Thermometer"
 var TestValueDescriptorName = "Temperature"
 var TestValue = "45"
+var TestValueType = "Int16"
 var TestBinaryValue = []byte{0xbf}
-var TestReading = Reading{Id: TestId, Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: TestDeviceName, Name: TestValueDescriptorName, Value: TestValue, BinaryValue: TestBinaryValue}
+var TestFloatEncoding = "float16"
+var TestReading = Reading{Id: TestId, Pushed: 123, Created: 123, Origin: 123, Modified: 123, Device: TestDeviceName, Name: TestValueDescriptorName, Value: TestValue, ValueType: TestValueType, FloatEncoding: TestFloatEncoding, BinaryValue: TestBinaryValue, MediaType: TestMediaType}
 
 func TestReading_String(t *testing.T) {
 	var binarySlice, _ = json.Marshal(TestReading.BinaryValue)
@@ -46,7 +48,10 @@ func TestReading_String(t *testing.T) {
 				",\"device\":\"" + TestDeviceName + "\"" +
 				",\"name\":\"" + TestValueDescriptorName + "\"" +
 				",\"value\":\"" + TestValue + "\"" +
+				",\"valueType\":\"" + TestValueType + "\"" +
+				",\"floatEncoding\":\"" + TestFloatEncoding + "\"" +
 				",\"binaryValue\":" + fmt.Sprint(string(binarySlice)) +
+				",\"mediaType\":\"" + TestMediaType + "\"" +
 				"}"},
 		{"empty reading to string", Reading{}, testEmptyJSON},
 	}
