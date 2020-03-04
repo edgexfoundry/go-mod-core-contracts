@@ -20,31 +20,37 @@ import (
 
 // Reading contains data that was gathered from a device.
 type Reading struct {
-	Id          string `json:"id,omitempty" codec:"id,omitempty"`
-	Pushed      int64  `json:"pushed,omitempty" codec:"pushed,omitempty"`   // When the data was pushed out of EdgeX (0 - not pushed yet)
-	Created     int64  `json:"created,omitempty" codec:"created,omitempty"` // When the reading was created
-	Origin      int64  `json:"origin,omitempty" codec:"origin,omitempty"`
-	Modified    int64  `json:"modified,omitempty" codec:"modified,omitempty"`
-	Device      string `json:"device,omitempty" codec:"device,omitempty"`
-	Name        string `json:"name,omitempty" codec:"name,omitempty"`
-	Value       string `json:"value,omitempty"  codec:"value,omitempty"`            // Device sensor data value
-	BinaryValue []byte `json:"binaryValue,omitempty" codec:"binaryValue,omitempty"` // Binary data payload
-	isValidated bool   // internal member used for validation check
+	Id            string `json:"id,omitempty" codec:"id,omitempty"`
+	Pushed        int64  `json:"pushed,omitempty" codec:"pushed,omitempty"`   // When the data was pushed out of EdgeX (0 - not pushed yet)
+	Created       int64  `json:"created,omitempty" codec:"created,omitempty"` // When the reading was created
+	Origin        int64  `json:"origin,omitempty" codec:"origin,omitempty"`
+	Modified      int64  `json:"modified,omitempty" codec:"modified,omitempty"`
+	Device        string `json:"device,omitempty" codec:"device,omitempty"`
+	Name          string `json:"name,omitempty" codec:"name,omitempty"`
+	Value         string `json:"value,omitempty" codec:"value,omitempty"` // Device sensor data value
+	ValueType     string `json:"valueType,omitempty" codec:"valueType,omitempty"`
+	FloatEncoding string `json:"floatEncoding,omitempty" codec:"floatEncoding,omitempty"`
+	BinaryValue   []byte `json:"binaryValue,omitempty" codec:"binaryValue,omitempty"` // Binary data payload
+	MediaType     string `json:"mediaType,omitempty" codec:"mediaType,omitempty"`
+	isValidated   bool   // internal member used for validation check
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the Reading type
 func (r *Reading) UnmarshalJSON(data []byte) error {
 	var err error
 	type Alias struct {
-		Id          *string `json:"id"`
-		Pushed      int64   `json:"pushed"`
-		Created     int64   `json:"created"`
-		Origin      int64   `json:"origin"`
-		Modified    int64   `json:"modified"`
-		Device      *string `json:"device"`
-		Name        *string `json:"name"`
-		Value       *string `json:"value"`
-		BinaryValue []byte  `json:"binaryValue"`
+		Id            *string `json:"id"`
+		Pushed        int64   `json:"pushed"`
+		Created       int64   `json:"created"`
+		Origin        int64   `json:"origin"`
+		Modified      int64   `json:"modified"`
+		Device        *string `json:"device"`
+		Name          *string `json:"name"`
+		Value         *string `json:"value"`
+		ValueType     *string `json:"valueType"`
+		FloatEncoding *string `json:"floatEncoding"`
+		BinaryValue   []byte  `json:"binaryValue"`
+		MediaType     *string `json:"mediaType"`
 	}
 	a := Alias{}
 
@@ -65,6 +71,15 @@ func (r *Reading) UnmarshalJSON(data []byte) error {
 	}
 	if a.Value != nil {
 		r.Value = *a.Value
+	}
+	if a.ValueType != nil {
+		r.ValueType = *a.ValueType
+	}
+	if a.FloatEncoding != nil {
+		r.FloatEncoding = *a.FloatEncoding
+	}
+	if a.MediaType != nil {
+		r.MediaType = *a.MediaType
 	}
 	r.Pushed = a.Pushed
 	r.Created = a.Created
