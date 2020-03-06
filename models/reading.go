@@ -18,6 +18,23 @@ import (
 	"encoding/json"
 )
 
+// Constants related to Reading ValueTypes
+const (
+	ValueTypeBool    = "Bool"
+	ValueTypeString  = "String"
+	ValueTypeUint8   = "Uint8"
+	ValueTypeUint16  = "Uint16"
+	ValueTypeUint32  = "Uint32"
+	ValueTypeUint64  = "Uint64"
+	ValueTypeInt8    = "Int8"
+	ValueTypeInt16   = "Int16"
+	ValueTypeInt32   = "Int32"
+	ValueTypeInt64   = "Int64"
+	ValueTypeFloat32 = "Float32"
+	ValueTypeFloat64 = "Float64"
+	ValueTypeBinary  = "Binary"
+)
+
 // Reading contains data that was gathered from a device.
 type Reading struct {
 	Id            string `json:"id,omitempty" codec:"id,omitempty"`
@@ -93,13 +110,22 @@ func (r *Reading) UnmarshalJSON(data []byte) error {
 
 // Validate satisfies the Validator interface
 func (r Reading) Validate() (bool, error) {
-	if !r.isValidated {
-		if r.Name == "" {
-			return false, NewErrContractInvalid("name for reading's value descriptor not specified")
-		}
-		if r.Value == "" && len(r.BinaryValue) == 0 {
-			return false, NewErrContractInvalid("reading has no value")
-		}
+	// Shortcut if Reading has already been validated
+	if r.isValidated {
+		return true, nil
+	}
+
+	if r.Name == "" {
+		return false, NewErrContractInvalid("name for reading's value descriptor not specified")
+	}
+	if r.Value == "" && len(r.BinaryValue) == 0 {
+		return false, NewErrContractInvalid("reading has no value")
+	}
+	if len(r.BinaryValue) != 0 && len(r.MediaType) == 0 {
+		return false, NewErrContractInvalid("media type must be specified for binary values")
+	}
+	if (r.ValueType == ValueTypeFloat32 || r.ValueType == ValueTypeFloat64) && len(r.FloatEncoding) == 0 {
+		return false, NewErrContractInvalid("float encoding must be specified for float values")
 	}
 	return true, nil
 }

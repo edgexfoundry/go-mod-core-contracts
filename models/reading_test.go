@@ -76,6 +76,12 @@ func TestReadingValidation(t *testing.T) {
 		{"empty device", Reading{Name: "test", Value: "0"}, false},
 		{"invalid name", Reading{Device: "test", Value: "0"}, true},
 		{"invalid value", Reading{Device: "test", Name: "test"}, true},
+		{"missing media type", Reading{Name: "test", BinaryValue: TestBinaryValue}, true},
+		{"media type present", Reading{Name: "test", BinaryValue: TestBinaryValue, MediaType: TestMediaType}, false},
+		{"missing float encoding f64", Reading{Name: "test", ValueType: ValueTypeFloat64, Value: "3.14"}, true},
+		{"missing float encoding f32", Reading{Name: "test", ValueType: ValueTypeFloat32, Value: "3.14"}, true},
+		{"valid float f64", Reading{Name: "test", ValueType: ValueTypeFloat64, FloatEncoding: TestFloatEncoding, Value: "3.14"}, false},
+		{"valid float f32", Reading{Name: "test", ValueType: ValueTypeFloat32, FloatEncoding: TestFloatEncoding, Value: "3.14"}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
