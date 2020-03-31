@@ -40,7 +40,7 @@ var TestBlockIds = map[string][]string{
 	TestPWNameKey1: {TestPWVal1b, TestPWVal1c},
 }
 var TestProvisionWatcher = ProvisionWatcher{Timestamps: testTimestamps, Id: TestPWID, Name: TestPWName, Identifiers: TestIdentifiers,
-	BlockingIdentifiers: TestBlockIds, Profile: TestProfile, Service: TestDeviceService, AdminState: "UNLOCKED"}
+	BlockingIdentifiers: TestBlockIds, ProfileName: TestProfile.Name, DeviceServiceName: TestDeviceService.Name, AdminState: "UNLOCKED"}
 
 var TestProvisionWatcherEmpty = ProvisionWatcher{}
 
@@ -83,8 +83,8 @@ func TestProvisionWatcher_String(t *testing.T) {
 				",\"name\":\"" + TestPWName + "\"" +
 				",\"identifiers\":" + fmt.Sprintf("%s", data) +
 				",\"blockingidentifiers\":" + fmt.Sprintf("%s", blockdata) +
-				",\"profile\":" + TestProvisionWatcher.Profile.String() +
-				",\"service\":" + TestProvisionWatcher.Service.String() +
+				",\"profileName\":\"" + TestProvisionWatcher.ProfileName + "\"" +
+				",\"deviceServiceName\":\"" + TestProvisionWatcher.DeviceServiceName + "\"" +
 				",\"adminState\":\"UNLOCKED\"" +
 				"}"},
 		{"provision watcher to string, empty", TestProvisionWatcherEmpty, testEmptyJSON},

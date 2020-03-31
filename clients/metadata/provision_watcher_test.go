@@ -29,11 +29,11 @@ import (
 // Test adding a provision watcher using the urlClient
 func TestAddProvisionWatcher(t *testing.T) {
 	se := models.ProvisionWatcher{
-		Id:             "1234",
-		Name:           "Test name for provision watcher",
-		Profile:        models.DeviceProfile{},
-		Service:        models.DeviceService{},
-		OperatingState: models.Enabled,
+		Id:                "1234",
+		Name:              "Test name for provision watcher",
+		ProfileName:       "Test name for device profile",
+		DeviceServiceName: "Test name for device profile",
+		OperatingState:    models.Enabled,
 	}
 
 	addingProvisionWatcherID := se.Id

@@ -16,7 +16,6 @@ package models
 
 import (
 	"encoding/json"
-	"reflect"
 )
 
 type ProvisionWatcher struct {
@@ -25,8 +24,8 @@ type ProvisionWatcher struct {
 	Name                string              `json:"name"`                // unique name and identifier of the provision watcher
 	Identifiers         map[string]string   `json:"identifiers"`         // set of key value pairs that identify property (MAC, HTTP,...) and value to watch for (00-05-1B-A1-99-99, 10.0.0.1,...)
 	BlockingIdentifiers map[string][]string `json:"blockingidentifiers"` // set of key-values pairs that identify devices which will not be added despite matching on Identifiers
-	Profile             DeviceProfile       `json:"profile"`             // device profile that should be applied to the devices available at the identifier addresses
-	Service             DeviceService       `json:"service"`             // device service that new devices will be associated to
+	ProfileName         string              `json:"profileName"`         // device profile that should be applied to the devices available at the identifier addresses
+	DeviceServiceName   string              `json:"deviceServiceName"`   // device service that new devices will be associated to
 	AdminState          AdminState          `json:"adminState"`          // administrative state for new devices - either unlocked or locked
 	OperatingState      OperatingState      `validate:"-"`               // Deprecated: exists for historical compatibility and will be ignored
 	isValidated         bool                ``                           // internal member used for validation check
@@ -40,8 +39,8 @@ func (pw ProvisionWatcher) MarshalJSON() ([]byte, error) {
 		Name                string               `json:"name,omitempty"`                // unique name and identifier of the addressable
 		Identifiers         *map[string]string   `json:"identifiers,omitempty"`         // set of key value pairs that identify property (MAC, HTTP,...) and value to watch for (00-05-1B-A1-99-99, 10.0.0.1,...)
 		BlockingIdentifiers *map[string][]string `json:"blockingidentifiers,omitempty"` // set of key-values pairs that identify devices which will not be added despite matching on Identifiers
-		Profile             *DeviceProfile       `json:"profile,omitempty"`             // device profile that should be applied to the devices available at the identifier addresses
-		Service             *DeviceService       `json:"service,omitempty"`             // device service that new devices will be associated to
+		ProfileName         string               `json:"profileName,omitempty"`         // device profile that should be applied to the devices available at the identifier addresses
+		DeviceServiceName   string               `json:"deviceServiceName,omitempty"`   // device service that new devices will be associated to
 		AdminState          AdminState           `json:"adminState,omitempty"`          // administrative state for new devices - either unlocked or locked
 	}{
 		Timestamps:          pw.Timestamps,
@@ -49,8 +48,8 @@ func (pw ProvisionWatcher) MarshalJSON() ([]byte, error) {
 		Name:                pw.Name,
 		Identifiers:         &pw.Identifiers,
 		BlockingIdentifiers: &pw.BlockingIdentifiers,
-		Profile:             &pw.Profile,
-		Service:             &pw.Service,
+		ProfileName:         pw.ProfileName,
+		DeviceServiceName:   pw.DeviceServiceName,
 		AdminState:          pw.AdminState,
 	}
 
@@ -60,14 +59,6 @@ func (pw ProvisionWatcher) MarshalJSON() ([]byte, error) {
 	}
 	if len(pw.BlockingIdentifiers) == 0 {
 		test.BlockingIdentifiers = nil
-	}
-
-	// Empty objects are nil
-	if reflect.DeepEqual(pw.Profile, DeviceProfile{}) {
-		test.Profile = nil
-	}
-	if reflect.DeepEqual(pw.Service, DeviceService{}) {
-		test.Service = nil
 	}
 
 	return json.Marshal(test)
@@ -82,8 +73,8 @@ func (pw *ProvisionWatcher) UnmarshalJSON(data []byte) error {
 		Name                *string             `json:"name"`
 		Identifiers         map[string]string   `json:"identifiers"`
 		BlockingIdentifiers map[string][]string `json:"blockingidentifiers"`
-		Profile             DeviceProfile       `json:"profile"`
-		Service             DeviceService       `json:"service"`
+		ProfileName         string              `json:"profileName"`
+		DeviceServiceName   string              `json:"deviceServiceName"`
 		AdminState          AdminState          `json:"adminState"`
 	}
 	a := Alias{}
@@ -101,8 +92,8 @@ func (pw *ProvisionWatcher) UnmarshalJSON(data []byte) error {
 	pw.Id = a.Id
 	pw.Identifiers = a.Identifiers
 	pw.BlockingIdentifiers = a.BlockingIdentifiers
-	pw.Profile = a.Profile
-	pw.Service = a.Service
+	pw.ProfileName = a.ProfileName
+	pw.DeviceServiceName = a.DeviceServiceName
 	pw.AdminState = a.AdminState
 
 	pw.isValidated, err = pw.Validate()
@@ -115,6 +106,12 @@ func (pw ProvisionWatcher) Validate() (bool, error) {
 	if !pw.isValidated {
 		if pw.Name == "" {
 			return false, NewErrContractInvalid("provision watcher name is blank")
+		}
+		if pw.ProfileName == "" {
+			return false, NewErrContractInvalid("the profile name in provision watcher is blank")
+		}
+		if pw.DeviceServiceName == "" {
+			return false, NewErrContractInvalid("the device service name in provision watcher is blank")
 		}
 		err := validate(pw)
 		if err != nil {
