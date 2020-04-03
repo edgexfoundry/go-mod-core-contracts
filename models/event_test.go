@@ -19,7 +19,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/ugorji/go/codec"
+	"github.com/fxamacker/cbor/v2"
 )
 
 var TestEvent = Event{Pushed: 123, Created: 123, Device: TestDeviceName, Origin: 123, Modified: 123, Readings: []Reading{TestReading}}
@@ -73,9 +73,7 @@ func TestEventValidation(t *testing.T) {
 func Test_encodeAsCBOR(t *testing.T) {
 	bytes := TestEvent.CBOR()
 	var evt Event
-	var handle codec.CborHandle
-	dec := codec.NewDecoderBytes(bytes, &handle)
-	err := dec.Decode(&evt)
+	err := cbor.Unmarshal(bytes, &evt)
 	if err != nil {
 		t.Error("Error decoding Event: " + err.Error())
 	}

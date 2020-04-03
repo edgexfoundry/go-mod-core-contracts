@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/ugorji/go/codec"
+	"github.com/fxamacker/cbor/v2"
 )
 
 var TestId = "Thermometer"
@@ -92,17 +92,13 @@ func TestReadingValidation(t *testing.T) {
 }
 
 func TestCborEncoding(t *testing.T) {
-	handle := codec.CborHandle{}
-	bytes := make([]byte, 32)
-	enc := codec.NewEncoderBytes(&bytes, &handle)
-	err := enc.Encode(&TestReading)
+	bytes, err := cbor.Marshal(TestReading)
 	if err != nil {
 		t.Error("Failed to encode Reading: " + err.Error())
 	}
 
 	var rd Reading
-	dec := codec.NewDecoderBytes(bytes, &handle)
-	err = dec.Decode(&rd)
+	err = cbor.Unmarshal(bytes, &rd)
 	if err != nil {
 		t.Error("Failed to encode reading")
 	}

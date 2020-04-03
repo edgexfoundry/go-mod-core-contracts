@@ -23,11 +23,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/fxamacker/cbor/v2"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
-
-	"github.com/ugorji/go/codec"
 )
 
 const (
@@ -169,9 +169,7 @@ func TestMarshalEvent(t *testing.T) {
 			case "json":
 				err = json.Unmarshal(data, &eventResult)
 			case "cbor":
-				h := codec.CborHandle{}
-				dec := codec.NewDecoderBytes(data, &h)
-				err = dec.Decode(&eventResult)
+				err = cbor.Unmarshal(data, &eventResult)
 			}
 
 			if !tt.expectError && err != nil {
