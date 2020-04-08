@@ -35,7 +35,7 @@ type AgentClient interface {
 	// Configuration obtains configuration information from the target service.
 	Configuration(ctx context.Context, services []string) (string, error)
 	// SetConfiguration issues a set configuration request.
-	SetConfiguration(ctx context.Context, request configuration.SetConfigRequest) (string, error)
+	SetConfiguration(ctx context.Context, services []string, request configuration.SetConfigRequest) (string, error)
 	// Metrics obtains metrics information from the target service.
 	Metrics(ctx context.Context, services []string) (string, error)
 	// Health issues requests to get service health status
