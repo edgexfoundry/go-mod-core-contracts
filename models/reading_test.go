@@ -69,23 +69,26 @@ func TestReadingValidation(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		r           Reading
+		reading     Reading
 		expectError bool
 	}{
 		{"valid reading", valid, false},
 		{"empty device", Reading{Name: "test", Value: "0"}, false},
-		{"invalid name", Reading{Device: "test", Value: "0"}, true},
-		{"invalid value", Reading{Device: "test", Name: "test"}, true},
+		{"missing name", Reading{Device: "test", Value: "0"}, true},
+		{"missing value", Reading{Device: "test", Name: "test"}, true},
 		{"missing media type", Reading{Name: "test", BinaryValue: TestBinaryValue}, true},
-		{"media type present", Reading{Name: "test", BinaryValue: TestBinaryValue, MediaType: TestMediaType}, false},
+		{"media type present", Reading{Name: "test", Value: "test", MediaType: TestMediaType}, false},
 		{"missing float encoding f64", Reading{Name: "test", ValueType: ValueTypeFloat64, Value: "3.14"}, true},
 		{"missing float encoding f32", Reading{Name: "test", ValueType: ValueTypeFloat32, Value: "3.14"}, true},
 		{"valid float f64", Reading{Name: "test", ValueType: ValueTypeFloat64, FloatEncoding: TestFloatEncoding, Value: "3.14"}, false},
 		{"valid float f32", Reading{Name: "test", ValueType: ValueTypeFloat32, FloatEncoding: TestFloatEncoding, Value: "3.14"}, false},
+		{"valid empty binary value", Reading{Name: "test", ValueType: ValueTypeBinary}, false},
+		{"valid binary value", Reading{Name: "test", ValueType: ValueTypeBinary, BinaryValue: TestBinaryValue, MediaType: TestMediaType}, false},
+		{"missing media type for binary reading", Reading{Name: "test", ValueType: ValueTypeBinary, BinaryValue: TestBinaryValue}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := tt.r.Validate()
+			_, err := tt.reading.Validate()
 			checkValidationError(err, tt.expectError, tt.name, t)
 		})
 	}

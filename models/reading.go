@@ -48,6 +48,12 @@ const (
 )
 
 // Reading contains data that was gathered from a device.
+//
+// NOTE a Reading's BinaryValue is not to be persisted in the database. This architectural decision requires that
+// serialization validation be relaxed for enforcing the presence of binary data for Binary ValueTypes. Also, that
+// issuing GET operations to obtain Readings directly or indirectly via Events will result in a Reading with no
+// BinaryValue for Readings with a ValueType of Binary. BinaryValue is to be present when creating or updating a Reading
+// either directly, indirectly via an Event, and when the information is put on the EventBus.
 type Reading struct {
 	Id            string `json:"id,omitempty" codec:"id,omitempty"`
 	Pushed        int64  `json:"pushed,omitempty" codec:"pushed,omitempty"`   // When the data was pushed out of EdgeX (0 - not pushed yet)
@@ -59,9 +65,11 @@ type Reading struct {
 	Value         string `json:"value,omitempty" codec:"value,omitempty"` // Device sensor data value
 	ValueType     string `json:"valueType,omitempty" codec:"valueType,omitempty"`
 	FloatEncoding string `json:"floatEncoding,omitempty" codec:"floatEncoding,omitempty"`
-	BinaryValue   []byte `json:"binaryValue,omitempty" codec:"binaryValue,omitempty"` // Binary data payload
-	MediaType     string `json:"mediaType,omitempty" codec:"mediaType,omitempty"`
-	isValidated   bool   // internal member used for validation check
+	// BinaryValue binary data payload. This information is not persisted in the Database and is expected to be empty
+	// when retrieving a Reading for the ValueType of Binary.
+	BinaryValue []byte `json:"binaryValue,omitempty" codec:"binaryValue,omitempty"`
+	MediaType   string `json:"mediaType,omitempty" codec:"mediaType,omitempty"`
+	isValidated bool   // internal member used for validation check
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the Reading type
@@ -130,12 +138,21 @@ func (r Reading) Validate() (bool, error) {
 	if r.Name == "" {
 		return false, NewErrContractInvalid("name for reading's value descriptor not specified")
 	}
-	if r.Value == "" && len(r.BinaryValue) == 0 {
+	// We do not expect the BinaryValue to always be present. This is due to an architectural decision to not persist
+	// Binary readings to save on memory. This means that the BinaryValue is only expected to be populated when creating
+	// a new reading or event. Otherwise the value will be empty as it will be coming from the database where we are
+	// explicitly not storing the information.
+	if r.ValueType != ValueTypeBinary && r.Value == "" {
 		return false, NewErrContractInvalid("reading has no value")
 	}
+
+	// Even though we do not want to enforce the BinaryValue always being present for Readings, we still want to enforce
+	// the MediaType being specified when the BinaryValue is provided. This will most likely only take affect when
+	// creating and updating events or readings.
 	if len(r.BinaryValue) != 0 && len(r.MediaType) == 0 {
 		return false, NewErrContractInvalid("media type must be specified for binary values")
 	}
+
 	if (r.ValueType == ValueTypeFloat32 || r.ValueType == ValueTypeFloat64) && len(r.FloatEncoding) == 0 {
 		return false, NewErrContractInvalid("float encoding must be specified for float values")
 	}
