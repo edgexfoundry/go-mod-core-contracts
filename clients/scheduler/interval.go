@@ -59,7 +59,7 @@ func (ic *intervalRestClient) Add(ctx context.Context, interval *models.Interval
 }
 
 func (ic *intervalRestClient) Delete(ctx context.Context, id string) error {
-	return clients.DeleteRequest(ctx, "/id/"+id, ic.urlClient)
+	return clients.DeleteRequest(ctx, "/"+id, ic.urlClient)
 }
 
 func (ic *intervalRestClient) DeleteByName(ctx context.Context, name string) error {
