@@ -16,5 +16,4 @@ type Event struct {
 	Modified      int64     // Modified is a timestamp indicating when the event was last modified.
 	Origin        int64     // Origin is a timestamp that can communicate the time of the original reading, prior to event creation
 	Readings      []Reading // Readings will contain zero to many entries for the associated readings of a given event.
-	isValidated   bool      // internal member used for validation check
 }
