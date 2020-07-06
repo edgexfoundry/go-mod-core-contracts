@@ -7,7 +7,7 @@ require (
 	github.com/go-playground/validator/v10 v10.3.0
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/google/uuid v1.1.0
-	github.com/stretchr/testify v1.3.0
+	github.com/stretchr/testify v1.5.1
 )
 
 go 1.13

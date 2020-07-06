@@ -23,9 +23,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -164,12 +162,6 @@ func TestIntervalActionRestClient_IntervalAction(t *testing.T) {
 			NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute)),
 			false,
 		},
-		{
-			"client error",
-			testIntervalAction1.ID,
-			NewIntervalActionClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
-			true,
-		},
 		{"bad JSON marshal",
 			testIntervalAction1.ID,
 			NewIntervalActionClient(local.New(badJSONServer.URL + clients.ApiIntervalActionRoute)),
@@ -276,11 +268,6 @@ func TestIntervalActionRestClient_IntervalActions(t *testing.T) {
 		{"happy path",
 			NewIntervalActionClient(local.New(ts.URL + clients.ApiIntervalActionRoute)),
 			false,
-		},
-		{
-			"client error",
-			NewIntervalActionClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
-			true,
 		},
 		{"bad JSON marshal",
 			NewIntervalActionClient(local.New(badJSONServer.URL + clients.ApiIntervalActionRoute)),
