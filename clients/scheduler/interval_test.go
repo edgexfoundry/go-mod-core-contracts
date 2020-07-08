@@ -23,9 +23,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/retry"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
 )
 
@@ -77,12 +75,6 @@ func TestIntervalRestClient_Add(t *testing.T) {
 			testInterval1,
 			NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute)),
 			false,
-		},
-		{
-			"client error",
-			testInterval1,
-			NewIntervalClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
-			true,
 		},
 	}
 	for _, tt := range tests {
@@ -180,12 +172,6 @@ func TestIntervalRestClient_Interval(t *testing.T) {
 			testInterval1.ID,
 			NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute)),
 			false,
-		},
-		{
-			"client error",
-			testInterval1.ID,
-			NewIntervalClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
-			true,
 		},
 		{"bad JSON marshal",
 			testInterval1.ID,
@@ -293,11 +279,6 @@ func TestIntervalRestClient_Intervals(t *testing.T) {
 		{"happy path",
 			NewIntervalClient(local.New(ts.URL + clients.ApiIntervalRoute)),
 			false,
-		},
-		{
-			"client error",
-			NewIntervalClient(retry.New(make(chan interfaces.URLStream), 1, 0)),
-			true,
 		},
 		{"bad JSON marshal",
 			NewIntervalClient(local.New(badJSONServer.URL + clients.ApiIntervalRoute)),
