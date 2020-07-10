@@ -17,7 +17,7 @@ type BaseReading struct {
 	Created       int64    `json:"created"`
 	Origin        int64    `json:"origin"`
 	Modified      int64    `json:"modified,omitempty"`
-	Device        string   `json:"device"`
+	DeviceName    string   `json:"deviceName"`
 	Name          string   `json:"name"`
 	Labels        []string `json:"labels,omitempty"`
 	BinaryReading `json:",inline"`
@@ -46,9 +46,9 @@ type SimpleReading struct {
 func ToReadingModel(r BaseReading, device string) models.Reading {
 	var readingModel models.Reading
 	br := models.BaseReading{
-		Device: device,
-		Name:   r.Name,
-		Labels: r.Labels,
+		DeviceName: device,
+		Name:       r.Name,
+		Labels:     r.Labels,
 	}
 	if r.ValueType != "" {
 		readingModel = models.SimpleReading{

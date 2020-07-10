@@ -21,19 +21,19 @@ var testAddEvent = AddEventRequest{
 	BaseRequest: common.BaseRequest{
 		RequestID: ExampleUUID,
 	},
-	Device:   TestDeviceName,
-	Origin:   TestOriginTime,
-	Readings: nil,
+	DeviceName: TestDeviceName,
+	Origin:     TestOriginTime,
+	Readings:   nil,
 }
 
 func TestAddEventRequest_Validate(t *testing.T) {
 	valid := testAddEvent
 	noReID := testAddEvent
 	noReID.RequestID = ""
-	noDevice := testAddEvent
-	noDevice.Device = ""
+	noDeviceName := testAddEvent
+	noDeviceName.DeviceName = ""
 	noDeviceOrigin := testAddEvent
-	noDeviceOrigin.Device = ""
+	noDeviceOrigin.DeviceName = ""
 	noDeviceOrigin.Origin = 0
 	tests := []struct {
 		name        string
@@ -42,7 +42,7 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	}{
 		{"valid AddEventRequest", valid, false},
 		{"invalid AddEventRequest, no Request Id", noReID, true},
-		{"invalid AddEventRequest, no Device", noDevice, true},
+		{"invalid AddEventRequest, no DeviceName", noDeviceName, true},
 		{"invalid AddEventRequest, no Origin", noDeviceOrigin, true},
 	}
 	for _, tt := range tests {
@@ -86,9 +86,9 @@ func TestAddEvent_UnmarshalJSON(t *testing.T) {
 func Test_AddEventReqToEventModels(t *testing.T) {
 	valid := []AddEventRequest{testAddEvent}
 	expectedEventModel := []models.Event{{
-		Device:   TestDeviceName,
-		Origin:   TestOriginTime,
-		Readings: []models.Reading{},
+		DeviceName: TestDeviceName,
+		Origin:     TestOriginTime,
+		Readings:   []models.Reading{},
 	}}
 	tests := []struct {
 		name      string

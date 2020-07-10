@@ -22,13 +22,13 @@ type AddEventResponse struct {
 // This object and its properties correspond to the Event object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/Event
 type Event struct {
-	ID       string             `json:"id"`
-	Pushed   int64              `json:"pushed,omitempty"`
-	Device   string             `json:"device"`
-	Created  int64              `json:"created"`
-	Modified int64              `json:"modified,omitempty"`
-	Origin   int64              `json:"origin"`
-	Readings []dtos.BaseReading `json:"readings"`
+	ID         string             `json:"id"`
+	Pushed     int64              `json:"pushed,omitempty"`
+	DeviceName string             `json:"deviceName"`
+	Created    int64              `json:"created"`
+	Modified   int64              `json:"modified,omitempty"`
+	Origin     int64              `json:"origin"`
+	Readings   []dtos.BaseReading `json:"readings"`
 }
 
 // EventCountResponse defines the Response Content for GET event count DTO.

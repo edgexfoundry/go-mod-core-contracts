@@ -14,7 +14,7 @@ type BaseReading struct {
 	Created     int64 // When the reading was created
 	Origin      int64
 	Modified    int64
-	Device      string
+	DeviceName  string
 	Name        string
 	Labels      []string // Custom labels assigned to a reading, added in the APIv2 specification.
 	isValidated bool     // internal member used for validation check
