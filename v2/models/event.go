@@ -11,7 +11,7 @@ type Event struct {
 	Checksum      string
 	Id            string    // Id uniquely identifies an event, for example a UUID
 	Pushed        int64     // Pushed is a timestamp indicating when the event was exported. If unexported, the value is zero.
-	Device        string    // Device identifies the source of the event, can be a device name or id. Usually the device name.
+	DeviceName    string    // DeviceName identifies the source of the event
 	Created       int64     // Created is a timestamp indicating when the event was created.
 	Modified      int64     // Modified is a timestamp indicating when the event was last modified.
 	Origin        int64     // Origin is a timestamp that can communicate the time of the original reading, prior to event creation

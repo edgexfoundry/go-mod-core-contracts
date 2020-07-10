@@ -19,7 +19,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/AddEventRequest
 type AddEventRequest struct {
 	common.BaseRequest `json:",inline"`
-	Device             string             `json:"device" validate:"required"`
+	DeviceName         string             `json:"deviceName" validate:"required"`
 	Origin             int64              `json:"origin" validate:"required"`
 	Readings           []dtos.BaseReading `json:"readings"`
 }
@@ -41,16 +41,16 @@ func (a AddEventRequest) Validate() error {
 func (a *AddEventRequest) UnmarshalJSON(b []byte) error {
 	var addEvent struct {
 		common.BaseRequest
-		Device   string
-		Origin   int64
-		Readings []dtos.BaseReading
+		DeviceName string
+		Origin     int64
+		Readings   []dtos.BaseReading
 	}
 	if err := json.Unmarshal(b, &addEvent); err != nil {
 		return v2.NewErrContractInvalid("Failed to unmarshal request body as JSON.")
 	}
 
 	a.RequestID = addEvent.RequestID
-	a.Device = addEvent.Device
+	a.DeviceName = addEvent.DeviceName
 	a.Origin = addEvent.Origin
 	a.Readings = addEvent.Readings
 
@@ -67,9 +67,9 @@ func AddEventReqToEventModels(addRequests []AddEventRequest) (events []models.Ev
 		var e models.Event
 		readings := make([]models.Reading, len(a.Readings))
 		for i, r := range a.Readings {
-			readings[i] = dtos.ToReadingModel(r, a.Device)
+			readings[i] = dtos.ToReadingModel(r, a.DeviceName)
 		}
-		e.Device = a.Device
+		e.DeviceName = a.DeviceName
 		e.Origin = a.Origin
 		e.Readings = readings
 		events = append(events, e)
