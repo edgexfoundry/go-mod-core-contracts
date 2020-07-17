@@ -18,19 +18,6 @@ type AddEventResponse struct {
 	ID                  string `json:"id"`
 }
 
-// Event represents a single measurable event read from a device
-// This object and its properties correspond to the Event object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/Event
-type Event struct {
-	ID         string             `json:"id"`
-	Pushed     int64              `json:"pushed,omitempty"`
-	DeviceName string             `json:"deviceName"`
-	Created    int64              `json:"created"`
-	Modified   int64              `json:"modified,omitempty"`
-	Origin     int64              `json:"origin"`
-	Readings   []dtos.BaseReading `json:"readings"`
-}
-
 // EventCountResponse defines the Response Content for GET event count DTO.
 // This object and its properties correspond to the EventCountResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/EventCountResponse
@@ -45,7 +32,7 @@ type EventCountResponse struct {
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/EventResponse
 type EventResponse struct {
 	common.BaseResponse `json:",inline"`
-	Event               Event
+	Event               dtos.Event
 }
 
 // UpdateEventPushedByChecksumResponse defines the Response Content for PUT event as pushed DTO.
