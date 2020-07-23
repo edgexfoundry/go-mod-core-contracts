@@ -41,7 +41,7 @@ const (
 	ApiMetricsRoute            = "/api/v1/metrics"
 	ApiNotificationRoute       = "/api/v1/notification"
 	ApiNotifyRegistrationRoute = "/api/v1/notify/registrations"
-	ApiOperationRoute          = "/api/v1/operations"
+	ApiOperationRoute          = "/api/v1/operation"
 	ApiPingRoute               = "/api/v1/ping"
 	ApiProvisionWatcherRoute   = "/api/v1/provisionwatcher"
 	ApiReadingRoute            = "/api/v1/reading"
