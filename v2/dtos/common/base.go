@@ -5,6 +5,8 @@
 
 package common
 
+import v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
+
 const API_VERSION = "v2"
 
 // Request defines the base content for request DTOs (data transfer objects).
@@ -27,4 +29,21 @@ type BaseResponse struct {
 // Versionable shows the API version in DTOs
 type Versionable struct {
 	ApiVersion string `json:"apiVersion,omitempty"`
+}
+
+func NewBaseResponseNoMessage(requestId string, statusCode uint16) BaseResponse {
+	return NewBaseResponse(requestId, "", statusCode)
+}
+
+func NewBaseResponse(requestId string, message string, statusCode uint16) BaseResponse {
+	return BaseResponse{
+		Versionable: NewVersionable(),
+		RequestID:   requestId,
+		Message:     message,
+		StatusCode:  statusCode,
+	}
+}
+
+func NewVersionable() Versionable {
+	return Versionable{ApiVersion: v2.ApiVersion}
 }
