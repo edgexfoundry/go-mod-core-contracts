@@ -8,6 +8,7 @@ package dtos
 import (
 	"testing"
 
+	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
@@ -24,7 +25,7 @@ func TestFromEventModelToDTO(t *testing.T) {
 		Origin:     TestTimestamp,
 	}
 	expectedDTO := Event{
-		Versionable: common.Versionable{ApiVersion: common.API_VERSION},
+		Versionable: common.Versionable{ApiVersion: v2.ApiVersion},
 		ID:          TestUUID,
 		Pushed:      TestTimestamp,
 		DeviceName:  TestDeviceName,

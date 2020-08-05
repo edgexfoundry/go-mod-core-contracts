@@ -10,14 +10,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 )
 
-// AddEventResponse defines the Response Content for POST event DTOs.
-// This object and its properties correspond to the AddEventResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/AddEventResponse
-type AddEventResponse struct {
-	common.BaseResponse `json:",inline"`
-	ID                  string `json:"id"`
-}
-
 // EventCountResponse defines the Response Content for GET event count DTO.
 // This object and its properties correspond to the EventCountResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/EventCountResponse
@@ -41,4 +33,38 @@ type EventResponse struct {
 type UpdateEventPushedByChecksumResponse struct {
 	common.BaseResponse `json:",inline"`
 	Checksum            string `json:"checksum"`
+}
+
+func NewEventCountResponseNoMessage(requestId string, statusCode uint16, count uint32, deviceId string) EventCountResponse {
+	return NewEventCountResponse(requestId, "", statusCode, count, deviceId)
+}
+
+func NewEventCountResponse(requestId string, message string, statusCode uint16, count uint32, deviceId string) EventCountResponse {
+	return EventCountResponse{
+		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
+		Count:        count,
+		DeviceID:     deviceId,
+	}
+}
+
+func NewEventResponseNoMessage(requestId string, statusCode uint16, event dtos.Event) EventResponse {
+	return NewEventResponse(requestId, "", statusCode, event)
+}
+
+func NewEventResponse(requestId string, message string, statusCode uint16, event dtos.Event) EventResponse {
+	return EventResponse{
+		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
+		Event:        event,
+	}
+}
+
+func NewUpdateEventPushedByChecksumResponseNoMessage(requestId string, statusCode uint16, checksum string) UpdateEventPushedByChecksumResponse {
+	return NewUpdateEventPushedByChecksumResponse(requestId, "", statusCode, checksum)
+}
+
+func NewUpdateEventPushedByChecksumResponse(requestId string, message string, statusCode uint16, checksum string) UpdateEventPushedByChecksumResponse {
+	return UpdateEventPushedByChecksumResponse{
+		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
+		Checksum:     checksum,
+	}
 }

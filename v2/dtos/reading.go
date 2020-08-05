@@ -6,6 +6,7 @@
 package dtos
 
 import (
+	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
@@ -75,7 +76,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	switch r := reading.(type) {
 	case models.BinaryReading:
 		baseReading = BaseReading{
-			Versionable:   common.Versionable{ApiVersion: common.API_VERSION},
+			Versionable:   common.Versionable{ApiVersion: v2.ApiVersion},
 			Id:            r.Id,
 			Pushed:        r.Pushed,
 			Created:       r.Created,
@@ -88,7 +89,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 		}
 	case models.SimpleReading:
 		baseReading = BaseReading{
-			Versionable:   common.Versionable{ApiVersion: common.API_VERSION},
+			Versionable:   common.Versionable{ApiVersion: v2.ApiVersion},
 			Id:            r.Id,
 			Pushed:        r.Pushed,
 			Created:       r.Created,

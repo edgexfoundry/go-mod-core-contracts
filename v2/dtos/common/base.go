@@ -7,8 +7,6 @@ package common
 
 import v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
 
-const API_VERSION = "v2"
-
 // Request defines the base content for request DTOs (data transfer objects).
 // This object and its properties correspond to the BaseRequest object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseRequest
@@ -31,6 +29,14 @@ type Versionable struct {
 	ApiVersion string `json:"apiVersion,omitempty"`
 }
 
+// BaseWithIdResponse defines the base content for response DTOs (data transfer objects).
+// This object and its properties correspond to the BaseWithIdResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseWithIdResponse
+type BaseWithIdResponse struct {
+	BaseResponse `json:",inline"`
+	Id           string `json:"id"`
+}
+
 func NewBaseResponseNoMessage(requestId string, statusCode uint16) BaseResponse {
 	return NewBaseResponse(requestId, "", statusCode)
 }
@@ -46,4 +52,15 @@ func NewBaseResponse(requestId string, message string, statusCode uint16) BaseRe
 
 func NewVersionable() Versionable {
 	return Versionable{ApiVersion: v2.ApiVersion}
+}
+
+func NewBaseWithIdResponseNoMessage(requestId string, statusCode uint16, id string) BaseWithIdResponse {
+	return NewBaseWithIdResponse(requestId, "", statusCode, id)
+}
+
+func NewBaseWithIdResponse(requestId string, message string, statusCode uint16, id string) BaseWithIdResponse {
+	return BaseWithIdResponse{
+		BaseResponse: NewBaseResponse(requestId, message, statusCode),
+		Id:           id,
+	}
 }

@@ -9,15 +9,14 @@ package models
 // Readings returned will all inherit from BaseReading but their concrete types will be either SimpleReading or BinaryReading,
 // potentially interleaved in the APIv2 specification.
 type BaseReading struct {
-	Id          string
-	Pushed      int64 // When the data was pushed out of EdgeX (0 - not pushed yet)
-	Created     int64 // When the reading was created
-	Origin      int64
-	Modified    int64
-	DeviceName  string
-	Name        string
-	Labels      []string // Custom labels assigned to a reading, added in the APIv2 specification.
-	isValidated bool     // internal member used for validation check
+	Id         string
+	Pushed     int64 // When the data was pushed out of EdgeX (0 - not pushed yet)
+	Created    int64 // When the reading was created
+	Origin     int64
+	Modified   int64
+	DeviceName string
+	Name       string
+	Labels     []string // Custom labels assigned to a reading, added in the APIv2 specification.
 }
 
 // An event reading for a binary data type
