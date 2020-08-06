@@ -38,11 +38,12 @@ type SimpleReading struct {
 
 // a abstract interface to be implemented by BinaryReading/SimpleReading
 type Reading interface {
-	defaultFunc()
+	GetBaseReading() BaseReading
 }
 
-// Implement defaultFunc() method in order for BinaryReading and SimpleReading structs to implement the
+// Implement GetBaseReading() method in order for BinaryReading and SimpleReading structs to implement the
 // abstract Reading interface and then be used as a Reading.
+// Also, the Reading interface can access the BaseReading fields.
 // This is Golang's way to implement inheritance.
-func (BinaryReading) defaultFunc() {}
-func (SimpleReading) defaultFunc() {}
+func (b BinaryReading) GetBaseReading() BaseReading { return b.BaseReading }
+func (s SimpleReading) GetBaseReading() BaseReading { return s.BaseReading }
