@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
@@ -21,9 +22,19 @@ var testAddEvent = AddEventRequest{
 	BaseRequest: common.BaseRequest{
 		RequestID: ExampleUUID,
 	},
-	DeviceName: TestDeviceName,
-	Origin:     TestOriginTime,
-	Readings:   nil,
+	Event: dtos.Event{
+		DeviceName: TestDeviceName,
+		Origin:     TestOriginTime,
+		Readings: []dtos.BaseReading{{
+			DeviceName: TestDeviceName,
+			Name:       TestDeviceResourceName,
+			Origin:     TestOriginTime,
+			ValueType:  dtos.ValueTypeUint8,
+			SimpleReading: dtos.SimpleReading{
+				Value: TestReadingValue,
+			},
+		}},
+	},
 }
 
 func TestAddEventRequest_Validate(t *testing.T) {
@@ -31,10 +42,98 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	noReID := testAddEvent
 	noReID.RequestID = ""
 	noDeviceName := testAddEvent
-	noDeviceName.DeviceName = ""
-	noDeviceOrigin := testAddEvent
-	noDeviceOrigin.DeviceName = ""
-	noDeviceOrigin.Origin = 0
+	noDeviceName.Event.DeviceName = ""
+	noOrigin := testAddEvent
+	noOrigin.Event.Origin = 0
+
+	noReading := testAddEvent
+	noReading.Event.Readings = nil
+
+	invalidReadingNoDevice := testAddEvent
+	invalidReadingNoDevice.Event.Readings = []dtos.BaseReading{{
+		DeviceName: "",
+		Name:       TestDeviceResourceName,
+		Origin:     TestOriginTime,
+		ValueType:  dtos.ValueTypeUint8,
+		SimpleReading: dtos.SimpleReading{
+			Value: TestReadingValue,
+		},
+	}}
+	invalidReadingNoName := testAddEvent
+	invalidReadingNoName.Event.Readings = []dtos.BaseReading{{
+		DeviceName: TestDeviceName,
+		Name:       "",
+		Origin:     TestOriginTime,
+		ValueType:  dtos.ValueTypeUint8,
+		SimpleReading: dtos.SimpleReading{
+			Value: TestReadingValue,
+		},
+	}}
+	invalidReadingNoOrigin := testAddEvent
+	invalidReadingNoOrigin.Event.Readings = []dtos.BaseReading{{
+		DeviceName: TestDeviceName,
+		Name:       TestDeviceResourceName,
+		Origin:     0,
+		ValueType:  dtos.ValueTypeUint8,
+		SimpleReading: dtos.SimpleReading{
+			Value: TestReadingValue,
+		},
+	}}
+	invalidReadingNoValueType := testAddEvent
+	invalidReadingNoValueType.Event.Readings = []dtos.BaseReading{{
+		DeviceName: TestDeviceName,
+		Name:       TestDeviceResourceName,
+		Origin:     TestOriginTime,
+		ValueType:  "",
+		SimpleReading: dtos.SimpleReading{
+			Value: TestReadingValue,
+		},
+	}}
+
+	invalidSimpleReadingNoValue := testAddEvent
+	invalidSimpleReadingNoValue.Event.Readings = []dtos.BaseReading{{
+		DeviceName: TestDeviceName,
+		Name:       TestDeviceResourceName,
+		Origin:     TestOriginTime,
+		ValueType:  dtos.ValueTypeUint8,
+		SimpleReading: dtos.SimpleReading{
+			Value: "",
+		},
+	}}
+	invalidSRNoFloatEncoding := testAddEvent
+	invalidSRNoFloatEncoding.Event.Readings = []dtos.BaseReading{{
+		DeviceName: TestDeviceName,
+		Name:       TestDeviceResourceName,
+		Origin:     TestOriginTime,
+		ValueType:  dtos.ValueTypeFloat32,
+		SimpleReading: dtos.SimpleReading{
+			Value: TestReadingFloatValue,
+		},
+	}}
+
+	invalidBinaryReadingNoValue := testAddEvent
+	invalidBinaryReadingNoValue.Event.Readings = []dtos.BaseReading{{
+		DeviceName: TestDeviceName,
+		Name:       TestDeviceResourceName,
+		Origin:     TestOriginTime,
+		ValueType:  dtos.ValueTypeBinary,
+		BinaryReading: dtos.BinaryReading{
+			BinaryValue: []byte{},
+			MediaType:   TestBinaryReadingMediaType,
+		},
+	}}
+	invalidBinaryReadingNoMedia := testAddEvent
+	invalidBinaryReadingNoMedia.Event.Readings = []dtos.BaseReading{{
+		DeviceName: TestDeviceName,
+		Name:       TestDeviceResourceName,
+		Origin:     TestOriginTime,
+		ValueType:  dtos.ValueTypeBinary,
+		BinaryReading: dtos.BinaryReading{
+			BinaryValue: []byte(TestReadingBinaryValue),
+			MediaType:   "",
+		},
+	}}
+
 	tests := []struct {
 		name        string
 		event       AddEventRequest
@@ -43,11 +142,25 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		{"valid AddEventRequest", valid, false},
 		{"invalid AddEventRequest, no Request Id", noReID, true},
 		{"invalid AddEventRequest, no DeviceName", noDeviceName, true},
-		{"invalid AddEventRequest, no Origin", noDeviceOrigin, true},
+		{"invalid AddEventRequest, no Origin", noOrigin, true},
+		{"invalid AddEventRequest, no Reading", noReading, true},
+		{"invalid AddEventRequest, no Reading DeviceName", invalidReadingNoDevice, true},
+		{"invalid AddEventRequest, no Reading Name", invalidReadingNoName, true},
+		{"invalid AddEventRequest, no Reading Origin", invalidReadingNoOrigin, true},
+		{"invalid AddEventRequest, no Reading ValueType", invalidReadingNoValueType, true},
+		{"invalid AddEventRequest, no SimpleReading Value", invalidSimpleReadingNoValue, true},
+		{"invalid AddEventRequest, no SimpleReading FloatEncoding", invalidSRNoFloatEncoding, true},
+		{"invalid AddEventRequest, no BinaryReading BinaryValue", invalidBinaryReadingNoValue, true},
+		{"invalid AddEventRequest, no BinaryReading MediaType", invalidBinaryReadingNoMedia, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.event.Validate()
+			err := tt.event.Validate()
+			if tt.expectError {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+			}
 		})
 	}
 }
@@ -85,11 +198,21 @@ func TestAddEvent_UnmarshalJSON(t *testing.T) {
 
 func Test_AddEventReqToEventModels(t *testing.T) {
 	valid := []AddEventRequest{testAddEvent}
+	s := models.SimpleReading{
+		BaseReading: models.BaseReading{
+			DeviceName: TestDeviceName,
+			Name:       TestDeviceResourceName,
+			Origin:     TestOriginTime,
+			ValueType:  dtos.ValueTypeUint8,
+		},
+		Value: TestReadingValue,
+	}
 	expectedEventModel := []models.Event{{
 		DeviceName: TestDeviceName,
 		Origin:     TestOriginTime,
-		Readings:   []models.Reading{},
+		Readings:   []models.Reading{s},
 	}}
+
 	tests := []struct {
 		name      string
 		addEvents []AddEventRequest

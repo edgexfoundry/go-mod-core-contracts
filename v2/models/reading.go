@@ -10,13 +10,12 @@ package models
 // potentially interleaved in the APIv2 specification.
 type BaseReading struct {
 	Id         string
-	Pushed     int64 // When the data was pushed out of EdgeX (0 - not pushed yet)
 	Created    int64 // When the reading was created
 	Origin     int64
-	Modified   int64
 	DeviceName string
 	Name       string
 	Labels     []string // Custom labels assigned to a reading, added in the APIv2 specification.
+	ValueType  string   // Indicates the datatype of the value property
 }
 
 // An event reading for a binary data type
@@ -32,7 +31,6 @@ type BinaryReading struct {
 type SimpleReading struct {
 	BaseReading   `json:",inline"`
 	Value         string // Device sensor data value
-	ValueType     string // Indicates the datatype of the value property
 	FloatEncoding string // Indicates how a float value is encoded
 }
 
