@@ -20,3 +20,19 @@ type DeviceProfile struct {
 	DeviceCommands  []ProfileResource `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
 	CoreCommands    []Command         `json:"coreCommands,omitempty" yaml:"coreCommands,omitempty" validate:"dive"`
 }
+
+// UpdateDeviceProfile represents the attributes and operational capabilities of a device. It is a template for which
+// there can be multiple matching devices within a given system.
+// This object and its properties correspond to the UpdateDeviceProfile object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceProfile
+type UpdateDeviceProfile struct {
+	Id              *string           `json:"id" validate:"required_without=Name"`
+	Name            *string           `json:"name" yaml:"name" validate:"required_without=Id" `
+	Manufacturer    *string           `json:"manufacturer" yaml:"manufacturer"`
+	Description     *string           `json:"description" yaml:"description"`
+	Model           *string           `json:"model" yaml:"model"`
+	Labels          []string          `json:"labels" yaml:"labels,flow"`
+	DeviceResources []DeviceResource  `json:"deviceResources" yaml:"deviceResources" validate:"omitempty,gt=0,dive"`
+	DeviceCommands  []ProfileResource `json:"deviceCommands" yaml:"deviceCommands" validate:"dive"`
+	CoreCommands    []Command         `json:"coreCommands" yaml:"coreCommands" validate:"dive"`
+}

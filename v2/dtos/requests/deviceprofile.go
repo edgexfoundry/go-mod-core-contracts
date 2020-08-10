@@ -70,28 +70,18 @@ func (dp *AddDeviceProfileRequest) UnmarshalYAML(b []byte) error {
 
 // AddDeviceProfileReqToDeviceProfileModel transforms the AddDeviceProfileRequest DTO to the DeviceProfile model
 func AddDeviceProfileReqToDeviceProfileModel(addReq AddDeviceProfileRequest) (DeviceProfiles models.DeviceProfile) {
-	deviceResources := make([]models.DeviceResource, len(addReq.Profile.DeviceResources))
-	for i, dr := range addReq.Profile.DeviceResources {
-		deviceResources[i] = dtos.ToDeviceResourceModel(dr)
-	}
-	deviceCommands := make([]models.ProfileResource, len(addReq.Profile.DeviceCommands))
-	for i, dc := range addReq.Profile.DeviceCommands {
-		deviceCommands[i] = dtos.ToProfileResourceModel(dc)
-	}
-	commands := make([]models.Command, len(addReq.Profile.CoreCommands))
-	for i, c := range addReq.Profile.CoreCommands {
-		commands[i] = dtos.ToCommandModel(c)
-	}
-
+	deviceResourceModels := dtos.ToDeviceResourceModels(addReq.Profile.DeviceResources)
+	deviceCommandModels := dtos.ToProfileResourceModels(addReq.Profile.DeviceCommands)
+	coreCommandModels := dtos.ToCommandModels(addReq.Profile.CoreCommands)
 	return models.DeviceProfile{
 		Name:            addReq.Profile.Name,
 		Description:     addReq.Profile.Description,
 		Manufacturer:    addReq.Profile.Manufacturer,
 		Model:           addReq.Profile.Model,
 		Labels:          addReq.Profile.Labels,
-		DeviceResources: deviceResources,
-		DeviceCommands:  deviceCommands,
-		CoreCommands:    commands,
+		DeviceResources: deviceResourceModels,
+		DeviceCommands:  deviceCommandModels,
+		CoreCommands:    coreCommandModels,
 	}
 }
 
@@ -102,4 +92,63 @@ func AddDeviceProfileReqToDeviceProfileModels(addRequests []AddDeviceProfileRequ
 		DeviceProfiles = append(DeviceProfiles, dp)
 	}
 	return DeviceProfiles
+}
+
+// UpdateDeviceProfileRequest defines the Request Content for PUT event as pushed DTO.
+// This object and its properties correspond to the UpdateDeviceProfileRequest object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceProfileRequest
+type UpdateDeviceProfileRequest struct {
+	common.BaseRequest `json:",inline"`
+	Profile            dtos.UpdateDeviceProfile `json:"profile"`
+}
+
+// Validate satisfies the Validator interface
+func (dp UpdateDeviceProfileRequest) Validate() error {
+	err := v2.Validate(dp)
+	return err
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the UpdateDeviceProfileRequest type
+func (dp *UpdateDeviceProfileRequest) UnmarshalJSON(b []byte) error {
+	var alias struct {
+		common.BaseRequest
+		Profile dtos.UpdateDeviceProfile
+	}
+	if err := json.Unmarshal(b, &alias); err != nil {
+		return v2.NewErrContractInvalid("Failed to unmarshal request body as JSON.")
+	}
+
+	*dp = UpdateDeviceProfileRequest(alias)
+
+	// validate UpdateDeviceProfileRequest DTO
+	if err := dp.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// ReplaceDeviceProfileModelFieldsWithDTO replace existing DeviceProfile's fields with DTO patch
+func ReplaceDeviceProfileModelFieldsWithDTO(profile *models.DeviceProfile, patch dtos.UpdateDeviceProfile) {
+	if patch.Manufacturer != nil {
+		profile.Manufacturer = *patch.Manufacturer
+	}
+	if patch.Description != nil {
+		profile.Description = *patch.Description
+	}
+	if patch.Model != nil {
+		profile.Model = *patch.Model
+	}
+	if patch.Labels != nil {
+		profile.Labels = patch.Labels
+	}
+
+	if patch.DeviceResources != nil {
+		profile.DeviceResources = dtos.ToDeviceResourceModels(patch.DeviceResources)
+	}
+	if patch.DeviceCommands != nil {
+		profile.DeviceCommands = dtos.ToProfileResourceModels(patch.DeviceCommands)
+	}
+	if patch.CoreCommands != nil {
+		profile.CoreCommands = dtos.ToCommandModels(patch.CoreCommands)
+	}
 }

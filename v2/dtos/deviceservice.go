@@ -22,3 +22,16 @@ type DeviceService struct {
 	BaseAddress    string   `json:"baseAddress" validate:"required,uri"`
 	AdminState     string   `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 }
+
+// UpdateDeviceService represents a service that is responsible for proxying connectivity between a set of devices and the
+// EdgeX Foundry core services.
+// This object and its properties correspond to the UpdateDeviceService object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceService
+type UpdateDeviceService struct {
+	Id             *string  `json:"id" validate:"required_without=Name"`
+	Name           *string  `json:"name" validate:"required_without=Id"`
+	BaseAddress    *string  `json:"baseAddress"`
+	OperatingState *string  `json:"operatingState" validate:"omitempty,oneof='ENABLED' 'DISABLED'"`
+	Labels         []string `json:"labels"`
+	AdminState     *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+}
