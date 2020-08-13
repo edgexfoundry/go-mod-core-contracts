@@ -23,6 +23,11 @@ const (
 
 	TestProfileResourceName = "TestProfileResource"
 
+	TestReadingValue           = "45"
+	TestReadingFloatValue      = "3.14"
+	TestBinaryReadingMediaType = "File"
+	TestReadingBinaryValue     = "testbinarydata"
+
 	testProtocol = "http"
 	testAddress  = "localhost"
 	testPort     = 48089

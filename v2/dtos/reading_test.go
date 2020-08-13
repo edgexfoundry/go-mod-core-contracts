@@ -18,9 +18,10 @@ import (
 var testSimpleReading = BaseReading{
 	DeviceName: TestDeviceName,
 	Name:       TestReadingName,
+	Origin:     TestTimestamp,
+	ValueType:  TestValueType,
 	SimpleReading: SimpleReading{
-		ValueType: TestValueType,
-		Value:     TestValue,
+		Value: TestValue,
 	},
 }
 
@@ -30,9 +31,10 @@ func Test_ToReadingModel(t *testing.T) {
 		BaseReading: models.BaseReading{
 			DeviceName: TestDeviceName,
 			Name:       TestReadingName,
+			Origin:     TestTimestamp,
+			ValueType:  TestValueType,
 		},
-		Value:     TestValue,
-		ValueType: TestValueType,
+		Value: TestValue,
 	}
 	tests := []struct {
 		name    string
@@ -52,28 +54,24 @@ func TestFromReadingModelToDTO(t *testing.T) {
 	valid := models.SimpleReading{
 		BaseReading: models.BaseReading{
 			Id:         TestUUID,
-			Pushed:     TestTimestamp,
 			Created:    TestTimestamp,
 			Origin:     TestTimestamp,
-			Modified:   TestTimestamp,
 			DeviceName: TestDeviceName,
 			Name:       TestReadingName,
+			ValueType:  TestValueType,
 		},
-		Value:     TestValue,
-		ValueType: TestValueType,
+		Value: TestValue,
 	}
 	expectedDTO := BaseReading{
 		Versionable: common.Versionable{ApiVersion: v2.ApiVersion},
 		Id:          TestUUID,
-		Pushed:      TestTimestamp,
 		Created:     TestTimestamp,
 		Origin:      TestTimestamp,
-		Modified:    TestTimestamp,
 		DeviceName:  TestDeviceName,
 		Name:        TestReadingName,
+		ValueType:   TestValueType,
 		SimpleReading: SimpleReading{
-			Value:     TestValue,
-			ValueType: TestValueType,
+			Value: TestValue,
 		},
 	}
 

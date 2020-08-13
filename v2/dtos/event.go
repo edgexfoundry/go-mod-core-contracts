@@ -18,11 +18,10 @@ type Event struct {
 	common.Versionable `json:",inline"`
 	ID                 string        `json:"id"`
 	Pushed             int64         `json:"pushed,omitempty"`
-	DeviceName         string        `json:"deviceName"`
+	DeviceName         string        `json:"deviceName" validate:"required"`
 	Created            int64         `json:"created"`
-	Modified           int64         `json:"modified,omitempty"`
-	Origin             int64         `json:"origin"`
-	Readings           []BaseReading `json:"readings"`
+	Origin             int64         `json:"origin" validate:"required"`
+	Readings           []BaseReading `json:"readings" validate:"gt=0,dive,required"`
 }
 
 func FromEventModelToDTO(event models.Event) Event {
@@ -36,7 +35,6 @@ func FromEventModelToDTO(event models.Event) Event {
 		Pushed:      event.Pushed,
 		DeviceName:  event.DeviceName,
 		Created:     event.Created,
-		Modified:    event.Modified,
 		Origin:      event.Origin,
 		Readings:    readings,
 	}

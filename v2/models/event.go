@@ -13,7 +13,6 @@ type Event struct {
 	Pushed        int64     // Pushed is a timestamp indicating when the event was exported. If unexported, the value is zero.
 	DeviceName    string    // DeviceName identifies the source of the event
 	Created       int64     // Created is a timestamp indicating when the event was created.
-	Modified      int64     // Modified is a timestamp indicating when the event was last modified.
 	Origin        int64     // Origin is a timestamp that can communicate the time of the original reading, prior to event creation
 	Readings      []Reading // Readings will contain zero to many entries for the associated readings of a given event.
 }

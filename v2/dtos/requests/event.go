@@ -19,9 +19,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/AddEventRequest
 type AddEventRequest struct {
 	common.BaseRequest `json:",inline"`
-	DeviceName         string             `json:"deviceName" validate:"required"`
-	Origin             int64              `json:"origin" validate:"required"`
-	Readings           []dtos.BaseReading `json:"readings"`
+	Event              dtos.Event `json:"event" validate:"required"`
 }
 
 // UpdateEventPushedByChecksumRequest defines the Request Content for PUT event as pushed DTO.
@@ -34,25 +32,32 @@ type UpdateEventPushedByChecksumRequest struct {
 
 // Validate satisfies the Validator interface
 func (a AddEventRequest) Validate() error {
-	err := v2.Validate(a)
-	return err
+	if err := v2.Validate(a); err != nil {
+		return err
+	}
+
+	// BaseReading has the skip("-") validation annotation for BinaryReading and SimpleReading
+	// Otherwise error will occur as only one of them exists
+	// Therefore, need to validate the nested BinaryReading and SimpleReading struct here
+	for _, r := range a.Event.Readings {
+		if err := r.Validate(); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (a *AddEventRequest) UnmarshalJSON(b []byte) error {
 	var addEvent struct {
 		common.BaseRequest
-		DeviceName string
-		Origin     int64
-		Readings   []dtos.BaseReading
+		Event dtos.Event
 	}
 	if err := json.Unmarshal(b, &addEvent); err != nil {
 		return v2.NewErrContractInvalid("Failed to unmarshal request body as JSON.")
 	}
 
-	a.RequestID = addEvent.RequestID
-	a.DeviceName = addEvent.DeviceName
-	a.Origin = addEvent.Origin
-	a.Readings = addEvent.Readings
+	*a = AddEventRequest(addEvent)
 
 	// validate AddEventRequest DTO
 	if err := a.Validate(); err != nil {
@@ -65,12 +70,12 @@ func (a *AddEventRequest) UnmarshalJSON(b []byte) error {
 func AddEventReqToEventModels(addRequests []AddEventRequest) (events []models.Event) {
 	for _, a := range addRequests {
 		var e models.Event
-		readings := make([]models.Reading, len(a.Readings))
-		for i, r := range a.Readings {
-			readings[i] = dtos.ToReadingModel(r, a.DeviceName)
+		readings := make([]models.Reading, len(a.Event.Readings))
+		for i, r := range a.Event.Readings {
+			readings[i] = dtos.ToReadingModel(r, a.Event.DeviceName)
 		}
-		e.DeviceName = a.DeviceName
-		e.Origin = a.Origin
+		e.DeviceName = a.Event.DeviceName
+		e.Origin = a.Event.Origin
 		e.Readings = readings
 		events = append(events, e)
 	}

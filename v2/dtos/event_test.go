@@ -21,7 +21,6 @@ func TestFromEventModelToDTO(t *testing.T) {
 		Pushed:     TestTimestamp,
 		DeviceName: TestDeviceName,
 		Created:    TestTimestamp,
-		Modified:   TestTimestamp,
 		Origin:     TestTimestamp,
 	}
 	expectedDTO := Event{
@@ -30,7 +29,6 @@ func TestFromEventModelToDTO(t *testing.T) {
 		Pushed:      TestTimestamp,
 		DeviceName:  TestDeviceName,
 		Created:     TestTimestamp,
-		Modified:    TestTimestamp,
 		Origin:      TestTimestamp,
 	}
 
