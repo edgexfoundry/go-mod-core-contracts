@@ -18,3 +18,12 @@ func ToProtocolPropertiesModel(p ProtocolProperties) models.ProtocolProperties {
 	}
 	return protocolProperties
 }
+
+// ToProtocolModels transforms the Protocol DTO map to the Protocol model map
+func ToProtocolModels(protocolDTOs map[string]ProtocolProperties) map[string]models.ProtocolProperties {
+	protocolModels := make(map[string]models.ProtocolProperties)
+	for k, protocolProperties := range protocolDTOs {
+		protocolModels[k] = ToProtocolPropertiesModel(protocolProperties)
+	}
+	return protocolModels
+}

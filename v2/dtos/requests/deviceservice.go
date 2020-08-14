@@ -7,7 +7,6 @@ package requests
 
 import (
 	"encoding/json"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
@@ -59,4 +58,53 @@ func AddDeviceServiceReqToDeviceServiceModels(addRequests []AddDeviceServiceRequ
 		DeviceServices = append(DeviceServices, ds)
 	}
 	return DeviceServices
+}
+
+// UpdateDeviceServiceRequest defines the Request Content for PUT event as pushed DTO.
+// This object and its properties correspond to the UpdateDeviceServiceRequest object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceServiceRequest
+type UpdateDeviceServiceRequest struct {
+	common.BaseRequest `json:",inline"`
+	Service            dtos.UpdateDeviceService `json:"service"`
+}
+
+// Validate satisfies the Validator interface
+func (ds UpdateDeviceServiceRequest) Validate() error {
+	err := v2.Validate(ds)
+	return err
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the UpdateDeviceServiceRequest type
+func (ds *UpdateDeviceServiceRequest) UnmarshalJSON(b []byte) error {
+	var alias struct {
+		common.BaseRequest
+		Service dtos.UpdateDeviceService
+	}
+	if err := json.Unmarshal(b, &alias); err != nil {
+		return v2.NewErrContractInvalid("Failed to unmarshal request body as JSON.")
+	}
+
+	*ds = UpdateDeviceServiceRequest(alias)
+
+	// validate UpdateDeviceServiceRequest DTO
+	if err := ds.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// ReplaceDeviceServiceModelFieldsWithDTO replace existing DeviceService's fields with DTO patch
+func ReplaceDeviceServiceModelFieldsWithDTO(ds *models.DeviceService, patch dtos.UpdateDeviceService) {
+	if patch.OperatingState != nil {
+		ds.OperatingState = models.OperatingState(*patch.OperatingState)
+	}
+	if patch.AdminState != nil {
+		ds.AdminState = models.AdminState(*patch.AdminState)
+	}
+	if patch.Labels != nil {
+		ds.Labels = patch.Labels
+	}
+	if patch.BaseAddress != nil {
+		ds.BaseAddress = *patch.BaseAddress
+	}
 }

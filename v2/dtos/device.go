@@ -5,8 +5,6 @@
 
 package dtos
 
-import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
-
 // Device represents a registered device participating within the EdgeX Foundry ecosystem
 // This object and its properties correspond to the Device object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Device
@@ -28,20 +26,22 @@ type Device struct {
 	Protocols      map[string]ProtocolProperties `json:"protocols,omitempty" validate:"required,gt=0"`
 }
 
-// AutoEventDTOsToModels transforms the AutoEvent DTO array to the AutoEvent model array
-func AutoEventDTOsToModels(autoEventDTOs []AutoEvent) []models.AutoEvent {
-	autoEvents := make([]models.AutoEvent, len(autoEventDTOs))
-	for i, a := range autoEventDTOs {
-		autoEvents[i] = ToAutoEventModel(a)
-	}
-	return autoEvents
-}
-
-// ProtocolDTOsToModels transforms the Protocol DTO map to the Protocol model map
-func ProtocolDTOsToModels(protocolDTOs map[string]ProtocolProperties) map[string]models.ProtocolProperties {
-	protocols := make(map[string]models.ProtocolProperties)
-	for k, protocolProperties := range protocolDTOs {
-		protocols[k] = ToProtocolPropertiesModel(protocolProperties)
-	}
-	return protocols
+// UpdateDevice represents a registered device participating within the EdgeX Foundry ecosystem
+// This object and its properties correspond to the UpdateDevice object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDevice
+type UpdateDevice struct {
+	Id             *string                       `json:"id" validate:"required_without=Name"`
+	Name           *string                       `json:"name" validate:"required_without=Id"`
+	Description    *string                       `json:"description"`
+	AdminState     *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	OperatingState *string                       `json:"operatingState" validate:"omitempty,oneof='ENABLED' 'DISABLED'"`
+	LastConnected  *int64                        `json:"lastConnected"`
+	LastReported   *int64                        `json:"lastReported"`
+	ServiceName    *string                       `json:"serviceName"`
+	ProfileName    *string                       `json:"profileName"`
+	Labels         []string                      `json:"labels"`
+	Location       interface{}                   `json:"location"`
+	AutoEvents     []AutoEvent                   `json:"autoEvents" validate:"dive"`
+	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"omitempty,gt=0"`
+	Notify         *bool                         `json:"notify"`
 }

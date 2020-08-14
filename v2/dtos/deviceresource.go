@@ -28,3 +28,12 @@ func ToDeviceResourceModel(d DeviceResource) models.DeviceResource {
 		Attributes:  d.Attributes,
 	}
 }
+
+// ToDeviceResourceModels transforms the DeviceResource DTOs to the DeviceResource models
+func ToDeviceResourceModels(deviceResourceDTOs []DeviceResource) []models.DeviceResource {
+	deviceResourceModels := make([]models.DeviceResource, len(deviceResourceDTOs))
+	for i, d := range deviceResourceDTOs {
+		deviceResourceModels[i] = ToDeviceResourceModel(d)
+	}
+	return deviceResourceModels
+}

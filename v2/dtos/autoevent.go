@@ -34,3 +34,12 @@ func ToAutoEventModel(a AutoEvent) models.AutoEvent {
 		Resource:  a.Resource,
 	}
 }
+
+// ToAutoEventModels transforms the AutoEvent DTO array to the AutoEvent model array
+func ToAutoEventModels(autoEventDTOs []AutoEvent) []models.AutoEvent {
+	autoEventModels := make([]models.AutoEvent, len(autoEventDTOs))
+	for i, a := range autoEventDTOs {
+		autoEventModels[i] = ToAutoEventModel(a)
+	}
+	return autoEventModels
+}

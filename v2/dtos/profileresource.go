@@ -33,3 +33,12 @@ func ToProfileResourceModel(p ProfileResource) models.ProfileResource {
 		Set:  setResourceOperations,
 	}
 }
+
+// ToProfileResourceModels transforms the ProfileResource DTOs to the ProfileResource models
+func ToProfileResourceModels(profileResourceDTOs []ProfileResource) []models.ProfileResource {
+	profileResourceModels := make([]models.ProfileResource, len(profileResourceDTOs))
+	for i, p := range profileResourceDTOs {
+		profileResourceModels[i] = ToProfileResourceModel(p)
+	}
+	return profileResourceModels
+}
