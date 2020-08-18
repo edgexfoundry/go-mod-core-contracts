@@ -90,6 +90,17 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		},
 	}}
 
+	invalidReadingInvalidValueType := testAddEvent
+	invalidReadingInvalidValueType.Event.Readings = []dtos.BaseReading{{
+		DeviceName: TestDeviceName,
+		Name:       TestDeviceResourceName,
+		Origin:     TestOriginTime,
+		ValueType:  "BadType",
+		SimpleReading: dtos.SimpleReading{
+			Value: TestReadingValue,
+		},
+	}}
+
 	invalidSimpleReadingNoValue := testAddEvent
 	invalidSimpleReadingNoValue.Event.Readings = []dtos.BaseReading{{
 		DeviceName: TestDeviceName,
@@ -148,6 +159,7 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		{"invalid AddEventRequest, no Reading Name", invalidReadingNoName, true},
 		{"invalid AddEventRequest, no Reading Origin", invalidReadingNoOrigin, true},
 		{"invalid AddEventRequest, no Reading ValueType", invalidReadingNoValueType, true},
+		{"invalid AddEventRequest, invalid Reading ValueType", invalidReadingInvalidValueType, true},
 		{"invalid AddEventRequest, no SimpleReading Value", invalidSimpleReadingNoValue, true},
 		{"invalid AddEventRequest, no SimpleReading FloatEncoding", invalidSRNoFloatEncoding, true},
 		{"invalid AddEventRequest, no BinaryReading BinaryValue", invalidBinaryReadingNoValue, true},
