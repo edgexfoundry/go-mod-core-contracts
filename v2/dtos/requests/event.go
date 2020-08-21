@@ -74,9 +74,16 @@ func AddEventReqToEventModels(addRequests []AddEventRequest) (events []models.Ev
 		for i, r := range a.Event.Readings {
 			readings[i] = dtos.ToReadingModel(r, a.Event.DeviceName)
 		}
+
+		tags := make(map[string]string)
+		for tag, value := range a.Event.Tags {
+			tags[tag] = value
+		}
+
 		e.DeviceName = a.Event.DeviceName
 		e.Origin = a.Event.Origin
 		e.Readings = readings
+		e.Tags = tags
 		events = append(events, e)
 	}
 	return events
