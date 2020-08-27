@@ -23,6 +23,8 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/requests/states/admin"
+	"github.com/edgexfoundry/go-mod-core-contracts/requests/states/operating"
 )
 
 // DeviceClient defines the interface for interactions with the Device endpoint on core-metadata.
@@ -54,9 +56,9 @@ type DeviceClient interface {
 	// Update the specified device
 	Update(ctx context.Context, dev models.Device) error
 	// UpdateAdminState modifies a device's AdminState for the specified device ID
-	UpdateAdminState(ctx context.Context, id string, adminState string) error
+	UpdateAdminState(ctx context.Context, id string, req admin.UpdateRequest) error
 	// UpdateAdminStateByName modifies a device's AdminState according to the specified device name
-	UpdateAdminStateByName(ctx context.Context, name string, adminState string) error
+	UpdateAdminStateByName(ctx context.Context, name string, req admin.UpdateRequest) error
 	// UpdateLastConnected updates a device's last connected timestamp according to the specified device ID
 	UpdateLastConnected(ctx context.Context, id string, time int64) error
 	// UpdateLastConnectedByName updates a device's last connected timestamp according to the specified device name
@@ -66,9 +68,9 @@ type DeviceClient interface {
 	// UpdateLastReportedByName updates a device's last reported timestamp according to the specified device name
 	UpdateLastReportedByName(ctx context.Context, name string, time int64) error
 	// UpdateOpState updates a device's last OperatingState according to the specified device ID
-	UpdateOpState(ctx context.Context, id string, opState string) error
+	UpdateOpState(ctx context.Context, id string, req operating.UpdateRequest) error
 	// UpdateOpStateByName updates a device's last OperatingState according to the specified device name
-	UpdateOpStateByName(ctx context.Context, name string, opState string) error
+	UpdateOpStateByName(ctx context.Context, name string, req operating.UpdateRequest) error
 }
 
 type deviceRestClient struct {
@@ -170,24 +172,20 @@ func (d *deviceRestClient) UpdateLastReportedByName(ctx context.Context, name st
 	return err
 }
 
-func (d *deviceRestClient) UpdateOpState(ctx context.Context, id string, opState string) error {
-	_, err := clients.PutRequest(ctx, "/"+id+"/opstate/"+opState, nil, d.urlClient)
-	return err
+func (d *deviceRestClient) UpdateOpState(ctx context.Context, id string, req operating.UpdateRequest) error {
+	return clients.UpdateRequest(ctx, "/"+id, req, d.urlClient)
 }
 
-func (d *deviceRestClient) UpdateOpStateByName(ctx context.Context, name string, opState string) error {
-	_, err := clients.PutRequest(ctx, "/name/"+url.QueryEscape(name)+"/opstate/"+opState, nil, d.urlClient)
-	return err
+func (d *deviceRestClient) UpdateOpStateByName(ctx context.Context, name string, req operating.UpdateRequest) error {
+	return clients.UpdateRequest(ctx, "/name/"+url.QueryEscape(name), req, d.urlClient)
 }
 
-func (d *deviceRestClient) UpdateAdminState(ctx context.Context, id string, adminState string) error {
-	_, err := clients.PutRequest(ctx, "/"+id+"/adminstate/"+adminState, nil, d.urlClient)
-	return err
+func (d *deviceRestClient) UpdateAdminState(ctx context.Context, id string, req admin.UpdateRequest) error {
+	return clients.UpdateRequest(ctx, "/"+id, req, d.urlClient)
 }
 
-func (d *deviceRestClient) UpdateAdminStateByName(ctx context.Context, name string, adminState string) error {
-	_, err := clients.PutRequest(ctx, "/name/"+url.QueryEscape(name)+"/adminstate/"+adminState, nil, d.urlClient)
-	return err
+func (d *deviceRestClient) UpdateAdminStateByName(ctx context.Context, name string, req admin.UpdateRequest) error {
+	return clients.UpdateRequest(ctx, "/name/"+url.QueryEscape(name), req, d.urlClient)
 }
 
 func (d *deviceRestClient) Delete(ctx context.Context, id string) error {
