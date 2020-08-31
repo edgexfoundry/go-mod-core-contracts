@@ -23,7 +23,7 @@ func TestFromEventModelToDTO(t *testing.T) {
 		Created:    TestTimestamp,
 		Origin:     TestTimestamp,
 		Tags: map[string]string{
-			"GatewayID": "Intel123",
+			"GatewayID": "Houston-0001",
 		},
 	}
 	expectedDTO := Event{
@@ -34,7 +34,7 @@ func TestFromEventModelToDTO(t *testing.T) {
 		Created:     TestTimestamp,
 		Origin:      TestTimestamp,
 		Tags: map[string]string{
-			"GatewayID": "Intel123",
+			"GatewayID": "Houston-0001",
 		},
 	}
 

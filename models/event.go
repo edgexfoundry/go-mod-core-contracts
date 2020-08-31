@@ -46,13 +46,14 @@ func encodeAsCBOR(e Event) ([]byte, error) {
 func (e *Event) UnmarshalJSON(data []byte) error {
 	var err error
 	type Alias struct {
-		ID       *string   `json:"id"`
-		Pushed   int64     `json:"pushed"`
-		Device   *string   `json:"device"`
-		Created  int64     `json:"created"`
-		Modified int64     `json:"modified"`
-		Origin   int64     `json:"origin"`
-		Readings []Reading `json:"readings"`
+		ID       *string           `json:"id"`
+		Pushed   int64             `json:"pushed"`
+		Device   *string           `json:"device"`
+		Created  int64             `json:"created"`
+		Modified int64             `json:"modified"`
+		Origin   int64             `json:"origin"`
+		Readings []Reading         `json:"readings"`
+		Tags     map[string]string `json:"tags"`
 	}
 	a := Alias{}
 
@@ -73,6 +74,7 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 	e.Modified = a.Modified
 	e.Origin = a.Origin
 	e.Readings = a.Readings
+	e.Tags = a.Tags
 
 	e.isValidated, err = e.Validate()
 	return err

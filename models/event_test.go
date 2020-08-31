@@ -20,9 +20,20 @@ import (
 	"testing"
 
 	"github.com/fxamacker/cbor/v2"
+	"github.com/go-playground/assert/v2"
 )
 
-var TestEvent = Event{Pushed: 123, Created: 123, Device: TestDeviceName, Origin: 123, Modified: 123, Readings: []Reading{TestReading}}
+var TestEvent = Event{
+	Pushed:   123,
+	Created:  123,
+	Device:   TestDeviceName,
+	Origin:   123,
+	Modified: 123,
+	Readings: []Reading{TestReading},
+	Tags: map[string]string{
+		"GatewayID": "Houston-0001",
+	},
+}
 
 func TestEvent_String(t *testing.T) {
 	tests := []struct {
@@ -37,14 +48,14 @@ func TestEvent_String(t *testing.T) {
 				",\"modified\":" + strconv.FormatInt(TestEvent.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestEvent.Origin, 10) +
 				",\"readings\":[" + TestReading.String() + "]" +
+				",\"tags\":{\"GatewayID\":\"Houston-0001\"}" +
 				"}"},
 		{"event to string, empty", Event{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.e.String(); got != tt.want {
-				t.Errorf("Event.String() = %v, want %v", got, tt.want)
-			}
+			got := tt.e.String()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
