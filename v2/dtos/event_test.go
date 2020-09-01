@@ -22,6 +22,9 @@ func TestFromEventModelToDTO(t *testing.T) {
 		DeviceName: TestDeviceName,
 		Created:    TestTimestamp,
 		Origin:     TestTimestamp,
+		Tags: map[string]string{
+			"GatewayID": "Houston-0001",
+		},
 	}
 	expectedDTO := Event{
 		Versionable: common.Versionable{ApiVersion: v2.ApiVersion},
@@ -30,6 +33,9 @@ func TestFromEventModelToDTO(t *testing.T) {
 		DeviceName:  TestDeviceName,
 		Created:     TestTimestamp,
 		Origin:      TestTimestamp,
+		Tags: map[string]string{
+			"GatewayID": "Houston-0001",
+		},
 	}
 
 	tests := []struct {

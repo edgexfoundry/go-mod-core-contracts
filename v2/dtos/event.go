@@ -16,12 +16,13 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/Event
 type Event struct {
 	common.Versionable `json:",inline"`
-	ID                 string        `json:"id"`
-	Pushed             int64         `json:"pushed,omitempty"`
-	DeviceName         string        `json:"deviceName" validate:"required"`
-	Created            int64         `json:"created"`
-	Origin             int64         `json:"origin" validate:"required"`
-	Readings           []BaseReading `json:"readings" validate:"gt=0,dive,required"`
+	ID                 string            `json:"id"`
+	Pushed             int64             `json:"pushed,omitempty"`
+	DeviceName         string            `json:"deviceName" validate:"required"`
+	Created            int64             `json:"created"`
+	Origin             int64             `json:"origin" validate:"required"`
+	Readings           []BaseReading     `json:"readings" validate:"gt=0,dive,required"`
+	Tags               map[string]string `json:"tags,omitempty"`
 }
 
 func FromEventModelToDTO(event models.Event) Event {
@@ -29,6 +30,12 @@ func FromEventModelToDTO(event models.Event) Event {
 	for _, reading := range event.Readings {
 		readings = append(readings, FromReadingModelToDTO(reading))
 	}
+
+	tags := make(map[string]string)
+	for tag, value := range event.Tags {
+		tags[tag] = value
+	}
+
 	return Event{
 		Versionable: common.Versionable{ApiVersion: v2.ApiVersion},
 		ID:          event.Id,
@@ -37,5 +44,6 @@ func FromEventModelToDTO(event models.Event) Event {
 		Created:     event.Created,
 		Origin:      event.Origin,
 		Readings:    readings,
+		Tags:        tags,
 	}
 }

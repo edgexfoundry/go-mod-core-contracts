@@ -34,6 +34,9 @@ var testAddEvent = AddEventRequest{
 				Value: TestReadingValue,
 			},
 		}},
+		Tags: map[string]string{
+			"GatewayId": "Houston-0001",
+		},
 	},
 }
 
@@ -223,6 +226,9 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 		DeviceName: TestDeviceName,
 		Origin:     TestOriginTime,
 		Readings:   []models.Reading{s},
+		Tags: map[string]string{
+			"GatewayId": "Houston-0001",
+		},
 	}}
 
 	tests := []struct {
@@ -233,8 +239,8 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			readingModel := AddEventReqToEventModels(tt.addEvents)
-			assert.Equal(t, expectedEventModel, readingModel, "AddEventReqToEventModels did not result in expected Event model.")
+			eventModel := AddEventReqToEventModels(tt.addEvents)
+			assert.Equal(t, expectedEventModel, eventModel, "AddEventReqToEventModels did not result in expected Event model.")
 		})
 	}
 }
