@@ -34,6 +34,8 @@ type DeviceServiceClient interface {
 	UpdateLastConnected(ctx context.Context, id string, time int64) error
 	// UpdateLastReported updates a device service's last reported timestamp for the specified service ID
 	UpdateLastReported(ctx context.Context, id string, time int64) error
+	// Update the specified device service
+	Update(ctx context.Context, ds models.DeviceService) error
 }
 
 type deviceServiceRestClient struct {
@@ -72,4 +74,8 @@ func (dsc *deviceServiceRestClient) DeviceServiceForName(ctx context.Context, na
 	err = json.Unmarshal(data, &ds)
 
 	return ds, err
+}
+
+func (d *deviceServiceRestClient) Update(ctx context.Context, ds models.DeviceService) error {
+	return clients.UpdateRequest(ctx, "", ds, d.urlClient)
 }
