@@ -16,6 +16,9 @@ package models
 
 import (
 	"encoding/json"
+	"encoding/xml"
+	"fmt"
+	"strings"
 
 	"github.com/fxamacker/cbor/v2"
 )
@@ -29,7 +32,7 @@ type Event struct {
 	Modified    int64             `json:"modified,omitempty" codec:"modified,omitempty"` // Modified is a timestamp indicating when the event was last modified.
 	Origin      int64             `json:"origin,omitempty" codec:"origin,omitempty"`     // Origin is a timestamp that can communicate the time of the original reading, prior to event creation
 	Readings    []Reading         `json:"readings,omitempty" codec:"readings,omitempty"` // Readings will contain zero to many entries for the associated readings of a given event.
-	Tags        map[string]string `json:"tags,omitempty" codec:"tags,omitempty"`         // Tags is an optional collection of key/value pairs that all the event to be tagged with custom information.
+	Tags        map[string]string `json:"tags,omitempty" codec:"tags,omitempty" xml:"-"` // Tags is an optional collection of key/value pairs that all the event to be tagged with custom information. Ignored for XML since maps not supported.
 	isValidated bool              // internal member used for validation check
 }
 
@@ -108,4 +111,27 @@ func (e Event) CBOR() []byte {
 	}
 
 	return cbor
+}
+
+// ToXML provides a XML representation of the Event as a string
+func (e Event) ToXML() (string, error) {
+	eventXml, err := xml.Marshal(e)
+	if err != nil {
+		return "", err
+	}
+
+	// The Tags field is being ignore from XML Marshaling since maps are not supported.
+	// We have to provide our own marshaling of the Tags field if it is non-empty
+	if len(e.Tags) > 0 {
+		tagsXmlElements := []string{"<Tags>"}
+		for key, value := range e.Tags {
+			tag := fmt.Sprintf("<%s>%s</%s>", key, value, key)
+			tagsXmlElements = append(tagsXmlElements, tag)
+		}
+		tagsXmlElements = append(tagsXmlElements, "</Tags>")
+		tagsXml := strings.Join(tagsXmlElements, "")
+		eventXml = []byte(strings.Replace(string(eventXml), "</Event>", tagsXml+"</Event>", 1))
+	}
+
+	return string(eventXml), nil
 }
