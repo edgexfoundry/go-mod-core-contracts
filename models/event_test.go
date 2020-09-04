@@ -15,12 +15,13 @@
 package models
 
 import (
+	"fmt"
 	"reflect"
 	"strconv"
 	"testing"
 
 	"github.com/fxamacker/cbor/v2"
-	"github.com/go-playground/assert/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 var TestEvent = Event{
@@ -32,6 +33,8 @@ var TestEvent = Event{
 	Readings: []Reading{TestReading},
 	Tags: map[string]string{
 		"GatewayID": "Houston-0001",
+		"Latitude":  "29.630771",
+		"Longitude": "-95.377603",
 	},
 }
 
@@ -48,8 +51,12 @@ func TestEvent_String(t *testing.T) {
 				",\"modified\":" + strconv.FormatInt(TestEvent.Modified, 10) +
 				",\"origin\":" + strconv.FormatInt(TestEvent.Origin, 10) +
 				",\"readings\":[" + TestReading.String() + "]" +
-				",\"tags\":{\"GatewayID\":\"Houston-0001\"}" +
-				"}"},
+				",\"tags\":{" +
+				"\"GatewayID\":\"Houston-0001\"" +
+				",\"Latitude\":\"29.630771\"" +
+				",\"Longitude\":\"-95.377603\"}" +
+				"}",
+		},
 		{"event to string, empty", Event{}, testEmptyJSON},
 	}
 	for _, tt := range tests {
@@ -91,5 +98,20 @@ func Test_encodeAsCBOR(t *testing.T) {
 
 	if !reflect.DeepEqual(TestEvent, evt) {
 		t.Error("Failed to properly decode event")
+	}
+}
+
+func TestEvent_ToXML(t *testing.T) {
+	// Since the order in map is random we have to verify the individual items exists without depending on order
+	contains := []string{
+		"<Event><ID></ID><Pushed>123</Pushed><Device>test device name</Device><Created>123</Created><Modified>123</Modified><Origin>123</Origin><Readings><Id>Thermometer</Id><Pushed>123</Pushed><Created>123</Created><Origin>123</Origin><Modified>123</Modified><Device>test device name</Device><Name>Temperature</Name><Value>45</Value><ValueType>Int16</ValueType><FloatEncoding>float16</FloatEncoding><BinaryValue>�</BinaryValue><MediaType>application/cbor</MediaType></Readings><Tags>",
+		"<GatewayID>Houston-0001</GatewayID>",
+		"<Latitude>29.630771</Latitude>",
+		"<Longitude>-95.377603</Longitude>",
+		"</Tags></Event>",
+	}
+	actual, _ := TestEvent.ToXML()
+	for _, item := range contains {
+		assert.Contains(t, actual, item, fmt.Sprintf("Missing item '%s'", item))
 	}
 }
