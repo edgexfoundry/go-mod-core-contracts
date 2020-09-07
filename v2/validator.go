@@ -34,7 +34,7 @@ func Validate(a interface{}) error {
 		for _, e := range errs {
 			errMsg = append(errMsg, getErrorMessage(e))
 		}
-		return NewErrContractInvalid(strings.Join(errMsg, "; "))
+		return NewCommonEdgexError(KindContractInvalid, strings.Join(errMsg, "; "), nil)
 	}
 	return nil
 }

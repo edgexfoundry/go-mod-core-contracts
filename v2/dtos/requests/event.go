@@ -54,7 +54,7 @@ func (a *AddEventRequest) UnmarshalJSON(b []byte) error {
 		Event dtos.Event
 	}
 	if err := json.Unmarshal(b, &addEvent); err != nil {
-		return v2.NewErrContractInvalid("Failed to unmarshal request body as JSON.")
+		return v2.NewCommonEdgexError(v2.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
 	}
 
 	*a = AddEventRequest(addEvent)
