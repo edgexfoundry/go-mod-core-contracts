@@ -35,11 +35,11 @@ type UpdateEventPushedByChecksumResponse struct {
 	Checksum            string `json:"checksum"`
 }
 
-func NewEventCountResponseNoMessage(requestId string, statusCode uint16, count uint32, deviceId string) EventCountResponse {
+func NewEventCountResponseNoMessage(requestId string, statusCode int, count uint32, deviceId string) EventCountResponse {
 	return NewEventCountResponse(requestId, "", statusCode, count, deviceId)
 }
 
-func NewEventCountResponse(requestId string, message string, statusCode uint16, count uint32, deviceId string) EventCountResponse {
+func NewEventCountResponse(requestId string, message string, statusCode int, count uint32, deviceId string) EventCountResponse {
 	return EventCountResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Count:        count,
@@ -47,22 +47,22 @@ func NewEventCountResponse(requestId string, message string, statusCode uint16, 
 	}
 }
 
-func NewEventResponseNoMessage(requestId string, statusCode uint16, event dtos.Event) EventResponse {
+func NewEventResponseNoMessage(requestId string, statusCode int, event dtos.Event) EventResponse {
 	return NewEventResponse(requestId, "", statusCode, event)
 }
 
-func NewEventResponse(requestId string, message string, statusCode uint16, event dtos.Event) EventResponse {
+func NewEventResponse(requestId string, message string, statusCode int, event dtos.Event) EventResponse {
 	return EventResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Event:        event,
 	}
 }
 
-func NewUpdateEventPushedByChecksumResponseNoMessage(requestId string, statusCode uint16, checksum string) UpdateEventPushedByChecksumResponse {
+func NewUpdateEventPushedByChecksumResponseNoMessage(requestId string, statusCode int, checksum string) UpdateEventPushedByChecksumResponse {
 	return NewUpdateEventPushedByChecksumResponse(requestId, "", statusCode, checksum)
 }
 
-func NewUpdateEventPushedByChecksumResponse(requestId string, message string, statusCode uint16, checksum string) UpdateEventPushedByChecksumResponse {
+func NewUpdateEventPushedByChecksumResponse(requestId string, message string, statusCode int, checksum string) UpdateEventPushedByChecksumResponse {
 	return UpdateEventPushedByChecksumResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Checksum:     checksum,

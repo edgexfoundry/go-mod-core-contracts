@@ -18,11 +18,11 @@ type DeviceResponse struct {
 	Device              dtos.Device `json:"device"`
 }
 
-func NewDeviceResponseNoMessage(requestId string, statusCode uint16, device dtos.Device) DeviceResponse {
+func NewDeviceResponseNoMessage(requestId string, statusCode int, device dtos.Device) DeviceResponse {
 	return NewDeviceResponse(requestId, "", statusCode, device)
 }
 
-func NewDeviceResponse(requestId string, message string, statusCode uint16, device dtos.Device) DeviceResponse {
+func NewDeviceResponse(requestId string, message string, statusCode int, device dtos.Device) DeviceResponse {
 	return DeviceResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Device:       device,

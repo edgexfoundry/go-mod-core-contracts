@@ -15,7 +15,7 @@ import (
 
 func TestNewReadingCountResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedCount := uint32(1000)
 	actual := NewReadingCountResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedCount)
@@ -28,7 +28,7 @@ func TestNewReadingCountResponse(t *testing.T) {
 
 func TestNewReadingCountResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedCount := uint32(1000)
 	actual := NewReadingCountResponseNoMessage(expectedRequestID, expectedStatusCode, expectedCount)
 
@@ -39,7 +39,7 @@ func TestNewReadingCountResponseNoMessage(t *testing.T) {
 
 func TestNewReadingResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedReading := dtos.BaseReading{Id: "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"}
 	actual := NewReadingResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedReading)
@@ -52,7 +52,7 @@ func TestNewReadingResponse(t *testing.T) {
 
 func TestNewReadingResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedReading := dtos.BaseReading{Id: "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"}
 	actual := NewReadingResponseNoMessage(expectedRequestID, expectedStatusCode, expectedReading)
 

@@ -15,7 +15,7 @@ import (
 
 func TestNewEventCountResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedCount := uint32(1000)
 	expectedDeviceId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
@@ -30,7 +30,7 @@ func TestNewEventCountResponse(t *testing.T) {
 
 func TestNewEventCountResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedCount := uint32(1000)
 	expectedDeviceId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
 	actual := NewEventCountResponseNoMessage(expectedRequestID, expectedStatusCode, expectedCount, expectedDeviceId)
@@ -43,7 +43,7 @@ func TestNewEventCountResponseNoMessage(t *testing.T) {
 
 func TestNewEventResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedEvent := dtos.Event{ID: "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"}
 	actual := NewEventResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedEvent)
@@ -56,7 +56,7 @@ func TestNewEventResponse(t *testing.T) {
 
 func TestNewEventResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedEvent := dtos.Event{ID: "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"}
 	actual := NewEventResponseNoMessage(expectedRequestID, expectedStatusCode, expectedEvent)
 
@@ -67,7 +67,7 @@ func TestNewEventResponseNoMessage(t *testing.T) {
 
 func TestNewUpdateEventPushedByChecksumResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedChecksum := "04698a6f20feecb8bbf7cd01e59d31ba1ce17b24ba14b71a8fb370065d951f57"
 	actual := NewUpdateEventPushedByChecksumResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedChecksum)
@@ -80,7 +80,7 @@ func TestNewUpdateEventPushedByChecksumResponse(t *testing.T) {
 
 func TestNewUpdateEventPushedByChecksumResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedChecksum := "04698a6f20feecb8bbf7cd01e59d31ba1ce17b24ba14b71a8fb370065d951f57"
 	actual := NewUpdateEventPushedByChecksumResponseNoMessage(expectedRequestID, expectedStatusCode, expectedChecksum)
 
