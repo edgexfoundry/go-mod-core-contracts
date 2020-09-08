@@ -21,7 +21,7 @@ type Metrics struct {
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/MetricsResponse
 type MetricsResponse struct {
 	Versionable `json:",inline"`
-	Metrics     `json:",inline"`
+	Metrics     Metrics `json:"metrics"`
 }
 
 // NewMetricsResponse creates new MetricsResponse with all fields set appropriately
