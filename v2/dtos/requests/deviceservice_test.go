@@ -56,8 +56,10 @@ func mockDeviceServiceDTO() dtos.UpdateDeviceService {
 
 func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 	valid := testAddDeviceService
-	noReID := testAddDeviceService
-	noReID.RequestID = ""
+	noReqID := testAddDeviceService
+	noReqID.RequestID = ""
+	invalidReqID := testAddDeviceService
+	invalidReqID.RequestID = "jfdw324"
 	noName := testAddDeviceService
 	noName.Service.Name = ""
 	noOperatingState := testAddDeviceService
@@ -78,7 +80,8 @@ func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 		expectError   bool
 	}{
 		{"valid AddDeviceServiceRequest", valid, false},
-		{"invalid AddDeviceServiceRequest, no Request Id", noReID, true},
+		{"valid AddDeviceServiceRequest, no Request Id", noReqID, false},
+		{"invalid AddDeviceServiceRequest, Request Id is not an uuid", invalidReqID, true},
 		{"invalid AddDeviceServiceRequest, no Name", noName, true},
 		{"invalid AddDeviceServiceRequest, no OperatingState", noOperatingState, true},
 		{"invalid AddDeviceServiceRequest, invalid OperatingState", invalidOperatingState, true},
@@ -176,8 +179,10 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 	validWithoutId.Service.Id = nil
 	validWithoutName := valid
 	validWithoutName.Service.Name = nil
-	noReID := valid
-	noReID.RequestID = ""
+	noReqID := valid
+	noReqID.RequestID = ""
+	invalidReqID := valid
+	invalidReqID.RequestID = "2h022mc"
 	noIdAndName := valid
 	noIdAndName.Service.Id = nil
 	noIdAndName.Service.Name = nil
@@ -194,7 +199,8 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 		{"valid UpdateDeviceServiceRequest", valid, false},
 		{"valid UpdateDeviceServiceRequest without Id", validWithoutId, false},
 		{"valid UpdateDeviceServiceRequest without name", validWithoutName, false},
-		{"invalid UpdateDeviceServiceRequest, no Request Id", noReID, true},
+		{"valid UpdateDeviceServiceRequest, no Request Id", noReqID, false},
+		{"invalid UpdateDeviceServiceRequest, no Request Id", invalidReqID, true},
 		{"invalid UpdateDeviceServiceRequest, no Id and Name", noIdAndName, true},
 		{"invalid UpdateDeviceServiceRequest, invalid OperatingState", invalidOperatingState, true},
 		{"invalid UpdateDeviceServiceRequest, invalid AdminState", invalidAdminState, true},

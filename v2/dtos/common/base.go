@@ -11,7 +11,7 @@ import v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
 // This object and its properties correspond to the BaseRequest object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseRequest
 type BaseRequest struct {
-	RequestID string `json:"requestId" validate:"uuid"`
+	RequestID string `json:"requestId" validate:"len=0|uuid"`
 }
 
 // BaseResponse defines the base content for response DTOs (data transfer objects).
