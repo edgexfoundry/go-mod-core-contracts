@@ -88,8 +88,10 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 	valid := testAddDevice
 	invalidFrequency := testAddDevice
 	invalidFrequency.Device.AutoEvents = testAutoEventsWithInvalidFrequency
-	noReID := testAddDevice
-	noReID.RequestID = ""
+	noReqID := testAddDevice
+	noReqID.RequestID = ""
+	invalidReqID := testAddDevice
+	invalidReqID.RequestID = "abc"
 	noDeviceName := testAddDevice
 	noDeviceName.Device.Name = ""
 	noServiceName := testAddDevice
@@ -113,7 +115,8 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 	}{
 		{"valid AddDeviceRequest", valid, false},
 		{"invalid AddDeviceRequest, invalid autoEvent frequency", invalidFrequency, true},
-		{"invalid AddDeviceRequest, no Request Id", noReID, true},
+		{"valid AddDeviceRequest, no Request Id", noReqID, false},
+		{"invalid AddDeviceRequest, Request Id is not an uuid", invalidReqID, true},
 		{"invalid AddDeviceRequest, no DeviceName", noDeviceName, true},
 		{"invalid AddDeviceRequest, no ServiceName", noServiceName, true},
 		{"invalid AddDeviceRequest, no ProfileName", noProfileName, true},
@@ -224,8 +227,10 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 	validWithoutId.Device.Id = nil
 	validWithoutDeviceName := testUpdateDevice
 	validWithoutDeviceName.Device.Name = nil
-	noReID := testUpdateDevice
-	noReID.RequestID = ""
+	noReqID := testUpdateDevice
+	noReqID.RequestID = ""
+	invalidReqID := testUpdateDevice
+	invalidReqID.RequestID = "123"
 	noIdAndDeviceName := testUpdateDevice
 	noIdAndDeviceName.Device.Id = nil
 	noIdAndDeviceName.Device.Name = nil
@@ -246,7 +251,8 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 		{"valid UpdateDeviceRequest", valid, false},
 		{"valid UpdateDeviceRequest without Id", validWithoutId, false},
 		{"valid UpdateDeviceRequest without Name", validWithoutDeviceName, false},
-		{"invalid UpdateDeviceRequest, no Request Id", noReID, true},
+		{"valid UpdateDeviceRequest, no Request Id", noReqID, false},
+		{"invalid UpdateDeviceRequest, Request Id is not an uuid", invalidReqID, true},
 		{"invalid UpdateDeviceRequest, invalid admin state", invalidAdminState, true},
 		{"invalid UpdateDeviceRequest, invalid operating state", invalidOperatingState, true},
 		{"invalid UpdateDeviceRequest, invalid autoEvent frequency", invalidFrequency, true},

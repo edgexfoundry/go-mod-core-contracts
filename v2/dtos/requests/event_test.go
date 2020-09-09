@@ -42,8 +42,10 @@ var testAddEvent = AddEventRequest{
 
 func TestAddEventRequest_Validate(t *testing.T) {
 	valid := testAddEvent
-	noReID := testAddEvent
-	noReID.RequestID = ""
+	noReqID := testAddEvent
+	noReqID.RequestID = ""
+	invalidReqID := testAddEvent
+	invalidReqID.RequestID = "xxy"
 	noDeviceName := testAddEvent
 	noDeviceName.Event.DeviceName = ""
 	noOrigin := testAddEvent
@@ -154,7 +156,8 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		expectError bool
 	}{
 		{"valid AddEventRequest", valid, false},
-		{"invalid AddEventRequest, no Request Id", noReID, true},
+		{"valid AddEventRequest, no Request Id", noReqID, false},
+		{"invalid AddEventRequest, Request Id is not an uuid", invalidReqID, true},
 		{"invalid AddEventRequest, no DeviceName", noDeviceName, true},
 		{"invalid AddEventRequest, no Origin", noOrigin, true},
 		{"invalid AddEventRequest, no Reading", noReading, true},
