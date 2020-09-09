@@ -45,7 +45,8 @@ type EdgexError interface {
 
 // CommonEdgexError generalizes an error structure which can be used for any type of EdgeX error.
 type CommonEdgexError struct {
-	op string
+	// callerInfo contains information of function call stacks.
+	callerInfo string
 	// kind contains information regarding the high level error type.
 	kind ErrKind
 	// message contains detailed information about the error.
@@ -58,7 +59,7 @@ type CommonEdgexError struct {
 }
 
 // Kind determines the Kind associated with an error by inspecting the chain of errors. The top-most matching Kind is
-// returned or KinkUnknown if no Kind can be determined.
+// returned or KindUnknown if no Kind can be determined.
 func Kind(err error) ErrKind {
 	var e CommonEdgexError
 	if !errors.As(err, &e) {
@@ -87,13 +88,13 @@ func (ce CommonEdgexError) Error() string {
 // DebugMessages returns a string taking all nested and wrapped operations and errors into account.
 func (ce CommonEdgexError) DebugMessages() string {
 	if ce.err == nil {
-		return ce.op + ": " + ce.message
+		return ce.callerInfo + ": " + ce.message
 	}
 
 	if w, ok := ce.err.(CommonEdgexError); ok {
-		return ce.op + ": " + ce.message + " -> " + w.DebugMessages()
+		return ce.callerInfo + ": " + ce.message + " -> " + w.DebugMessages()
 	} else {
-		return ce.op + ": " + ce.message + " -> " + ce.err.Error()
+		return ce.callerInfo + ": " + ce.message + " -> " + ce.err.Error()
 	}
 }
 
@@ -130,23 +131,23 @@ func (ce CommonEdgexError) Is(err error) bool {
 // NewCommonEdgexError creates a new CommonEdgexError with the information provided.
 func NewCommonEdgexError(kind ErrKind, message string, wrappedError error) CommonEdgexError {
 	return CommonEdgexError{
-		kind:    kind,
-		op:      addCallerInformation(),
-		message: message,
-		code:    codeMapping(kind),
-		err:     wrappedError,
+		kind:       kind,
+		callerInfo: addCallerInformation(),
+		message:    message,
+		code:       codeMapping(kind),
+		err:        wrappedError,
 	}
 }
 
-// NewCommonEdgexError creates a new CommonEdgexError to wrap another error to record the operation stacks.
+// NewWrapperEdgexError creates a new CommonEdgexError to wrap another error to record the function call stacks.
 func NewWrapperEdgexError(wrappedError error) CommonEdgexError {
 	kind := Kind(wrappedError)
 	return CommonEdgexError{
-		kind:    kind,
-		op:      addCallerInformation(),
-		message: "",
-		code:    codeMapping(kind),
-		err:     wrappedError,
+		kind:       kind,
+		callerInfo: addCallerInformation(),
+		message:    "",
+		code:       codeMapping(kind),
+		err:        wrappedError,
 	}
 }
 

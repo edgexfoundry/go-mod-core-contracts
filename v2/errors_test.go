@@ -26,7 +26,7 @@ func TestKind(t *testing.T) {
 		err  error
 		kind ErrKind
 	}{
-		{"Chekck the non-CommonEdgexError", L1Error, KindUnknown},
+		{"Check the non-CommonEdgexError", L1Error, KindUnknown},
 		{"Get the first error kind with 1 error wrapped", L2Error, KindDatabaseError},
 		{"Get the first error kind with 2 error wrapped", L3Error, KindDatabaseError},
 		{"Get the first non-unknown error kind with 3 error wrapped", L4Error, KindDatabaseError},
