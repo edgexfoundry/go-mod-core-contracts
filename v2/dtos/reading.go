@@ -6,6 +6,7 @@
 package dtos
 
 import (
+	"github.com/edgexfoundry/go-mod-core-contracts/errors"
 	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
@@ -77,7 +78,7 @@ type SimpleReading struct {
 // Validate satisfies the Validator interface
 func (b BaseReading) Validate() error {
 	if !validateValueType(b.ValueType) {
-		return v2.NewCommonEdgexError(v2.KindContractInvalid, "invalid valueType.", nil)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid valueType.", nil)
 	}
 	if b.ValueType == ValueTypeBinary {
 		// validate the inner BinaryReading struct
@@ -91,7 +92,7 @@ func (b BaseReading) Validate() error {
 		// check if FloatEncoding has value when ValueType is Float32 or Float64
 		if b.ValueType == ValueTypeFloat32 || b.ValueType == ValueTypeFloat64 {
 			if simpleReading.FloatEncoding == "" {
-				return v2.NewCommonEdgexError(v2.KindContractInvalid, "FloatEncoding field is required when valueType is Float32 or Float64.", nil)
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, "FloatEncoding field is required when valueType is Float32 or Float64.", nil)
 			}
 		}
 		if err := v2.Validate(simpleReading); err != nil {

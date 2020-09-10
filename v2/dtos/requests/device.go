@@ -7,6 +7,8 @@ package requests
 
 import (
 	"encoding/json"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
@@ -34,7 +36,7 @@ func (d *AddDeviceRequest) UnmarshalJSON(b []byte) error {
 		Device dtos.Device
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
-		return v2.NewCommonEdgexError(v2.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
 	}
 
 	*d = AddDeviceRequest(alias)
@@ -85,7 +87,7 @@ func (d *UpdateDeviceRequest) UnmarshalJSON(b []byte) error {
 		Device dtos.UpdateDevice
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
-		return v2.NewCommonEdgexError(v2.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
 	}
 
 	*d = UpdateDeviceRequest(alias)

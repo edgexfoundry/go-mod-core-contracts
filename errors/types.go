@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package v2
+package errors
 
 import (
 	"errors"
@@ -29,10 +29,10 @@ const (
 	KindServiceUnavailable ErrKind = "ServiceUnavailable"
 )
 
-// EdgexError provides an abstraction for all internal EdgeX errors.
+// EdgeX provides an abstraction for all internal EdgeX errors.
 // This exists so that we can use this type in our method signatures and return nil which will fit better with the way
 // the Go builtin errors are normally handled.
-type EdgexError interface {
+type EdgeX interface {
 	// Error obtains the error message associated with the error.
 	Error() string
 	// DebugMessages returns a detailed string for debug purpose.
@@ -43,8 +43,8 @@ type EdgexError interface {
 	Code() int
 }
 
-// CommonEdgexError generalizes an error structure which can be used for any type of EdgeX error.
-type CommonEdgexError struct {
+// CommonEdgeX generalizes an error structure which can be used for any type of EdgeX error.
+type CommonEdgeX struct {
 	// callerInfo contains information of function call stacks.
 	callerInfo string
 	// kind contains information regarding the high level error type.
@@ -61,7 +61,7 @@ type CommonEdgexError struct {
 // Kind determines the Kind associated with an error by inspecting the chain of errors. The top-most matching Kind is
 // returned or KindUnknown if no Kind can be determined.
 func Kind(err error) ErrKind {
-	var e CommonEdgexError
+	var e CommonEdgeX
 	if !errors.As(err, &e) {
 		return KindUnknown
 	}
@@ -75,23 +75,23 @@ func Kind(err error) ErrKind {
 }
 
 // Error creates an error message taking all nested and wrapped errors into account.
-func (ce CommonEdgexError) Error() string {
+func (ce CommonEdgeX) Error() string {
 	if ce.err == nil {
 		return ce.message
 	}
 
-	// ce.err.Error functionality gets the error message of the nested error and which will handle both CommonEdgexError
+	// ce.err.Error functionality gets the error message of the nested error and which will handle both CommonEdgeX
 	// types and Go standard errors(both wrapped and non-wrapped).
 	return ce.message + " -> " + ce.err.Error()
 }
 
 // DebugMessages returns a string taking all nested and wrapped operations and errors into account.
-func (ce CommonEdgexError) DebugMessages() string {
+func (ce CommonEdgeX) DebugMessages() string {
 	if ce.err == nil {
 		return ce.callerInfo + ": " + ce.message
 	}
 
-	if w, ok := ce.err.(CommonEdgexError); ok {
+	if w, ok := ce.err.(CommonEdgeX); ok {
 		return ce.callerInfo + ": " + ce.message + " -> " + w.DebugMessages()
 	} else {
 		return ce.callerInfo + ": " + ce.message + " -> " + ce.err.Error()
@@ -99,28 +99,28 @@ func (ce CommonEdgexError) DebugMessages() string {
 }
 
 // Message returns the first level error message without further details.
-func (ce CommonEdgexError) Message() string {
+func (ce CommonEdgeX) Message() string {
 	return ce.message
 }
 
 // Code returns the status code of this error.
-func (ce CommonEdgexError) Code() int {
+func (ce CommonEdgeX) Code() int {
 	return ce.code
 }
 
 // Unwrap retrieves the next nested error in the wrapped error chain.
 // This is used by the new wrapping and unwrapping features available in Go 1.13 and aids in traversing the error chain
 // of wrapped errors.
-func (ce CommonEdgexError) Unwrap() error {
+func (ce CommonEdgeX) Unwrap() error {
 	return ce.err
 }
 
-// Is determines if an error is of type CommonEdgexError.
+// Is determines if an error is of type CommonEdgeX.
 // This is used by the new wrapping and unwrapping features available in Go 1.13 and aids the errors.Is function when
 // determining is an error or any error in the wrapped chain contains an error of a particular type.
-func (ce CommonEdgexError) Is(err error) bool {
+func (ce CommonEdgeX) Is(err error) bool {
 	switch err.(type) {
-	case CommonEdgexError:
+	case CommonEdgeX:
 		return true
 	default:
 		return false
@@ -128,34 +128,34 @@ func (ce CommonEdgexError) Is(err error) bool {
 	}
 }
 
-// NewCommonEdgexError creates a new CommonEdgexError with the information provided.
-func NewCommonEdgexError(kind ErrKind, message string, wrappedError error) CommonEdgexError {
-	return CommonEdgexError{
+// NewCommonEdgeX creates a new CommonEdgeX with the information provided.
+func NewCommonEdgeX(kind ErrKind, message string, wrappedError error) CommonEdgeX {
+	return CommonEdgeX{
 		kind:       kind,
-		callerInfo: addCallerInformation(),
+		callerInfo: getCallerInformation(),
 		message:    message,
 		code:       codeMapping(kind),
 		err:        wrappedError,
 	}
 }
 
-// NewWrapperEdgexError creates a new CommonEdgexError to wrap another error to record the function call stacks.
-func NewWrapperEdgexError(wrappedError error) CommonEdgexError {
+// NewCommonEdgeXWrapper creates a new CommonEdgeX to wrap another error to record the function call stacks.
+func NewCommonEdgeXWrapper(wrappedError error) CommonEdgeX {
 	kind := Kind(wrappedError)
-	return CommonEdgexError{
+	return CommonEdgeX{
 		kind:       kind,
-		callerInfo: addCallerInformation(),
+		callerInfo: getCallerInformation(),
 		message:    "",
 		code:       codeMapping(kind),
 		err:        wrappedError,
 	}
 }
 
-// addCallerInformation generates information about the caller function. This function skips the caller which has
+// getCallerInformation generates information about the caller function. This function skips the caller which has
 // invoked this function, but rather introspects the calling function 3 frames below this frame in the call stack. This
-// function is a helper function which eliminates the need for the 'op' field in the `CommonEdgexError` type and
-// providing an 'op' string when creating an 'CommonEdgexError'
-func addCallerInformation() string {
+// function is a helper function which eliminates the need for the 'callerInfo' field in the `CommonEdgeX` type and
+// providing an 'callerInfo' string when creating an 'CommonEdgeX'
+func getCallerInformation() string {
 	pc := make([]uintptr, 10)
 	runtime.Callers(3, pc)
 	f := runtime.FuncForPC(pc[0])

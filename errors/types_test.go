@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package v2
+package errors
 
 import (
 	"fmt"
@@ -14,10 +14,10 @@ import (
 
 var (
 	L1Error = fmt.Errorf("nothing")
-	L2Error = NewCommonEdgexError(KindDatabaseError, "database failed", L1Error)
-	L3Error = NewWrapperEdgexError(L2Error)
-	L4Error = NewCommonEdgexError(KindUnknown, "don't know", L3Error)
-	L5Error = NewCommonEdgexError(KindCommunicationError, "network disconnected", L4Error)
+	L2Error = NewCommonEdgeX(KindDatabaseError, "database failed", L1Error)
+	L3Error = NewCommonEdgeXWrapper(L2Error)
+	L4Error = NewCommonEdgeX(KindUnknown, "don't know", L3Error)
+	L5Error = NewCommonEdgeX(KindCommunicationError, "network disconnected", L4Error)
 )
 
 func TestKind(t *testing.T) {
@@ -26,7 +26,7 @@ func TestKind(t *testing.T) {
 		err  error
 		kind ErrKind
 	}{
-		{"Check the non-CommonEdgexError", L1Error, KindUnknown},
+		{"Check the non-CommonEdgeX", L1Error, KindUnknown},
 		{"Get the first error kind with 1 error wrapped", L2Error, KindDatabaseError},
 		{"Get the first error kind with 2 error wrapped", L3Error, KindDatabaseError},
 		{"Get the first non-unknown error kind with 3 error wrapped", L4Error, KindDatabaseError},

@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"gopkg.in/yaml.v2"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
@@ -36,7 +37,7 @@ func (dp *AddDeviceProfileRequest) UnmarshalJSON(b []byte) error {
 		Profile dtos.DeviceProfile
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
-		return v2.NewCommonEdgexError(v2.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
 	}
 
 	*dp = AddDeviceProfileRequest(alias)
@@ -55,7 +56,7 @@ func (dp *AddDeviceProfileRequest) UnmarshalYAML(b []byte) error {
 		Profile dtos.DeviceProfile
 	}
 	if err := yaml.Unmarshal(b, &alias); err != nil {
-		return v2.NewCommonEdgexError(v2.KindContractInvalid, "Failed to unmarshal request body as YAML.", err)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as YAML.", err)
 	}
 
 	*dp = AddDeviceProfileRequest(alias)
@@ -114,7 +115,7 @@ func (dp *UpdateDeviceProfileRequest) UnmarshalJSON(b []byte) error {
 		Profile dtos.UpdateDeviceProfile
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
-		return v2.NewCommonEdgexError(v2.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
 	}
 
 	*dp = UpdateDeviceProfileRequest(alias)
