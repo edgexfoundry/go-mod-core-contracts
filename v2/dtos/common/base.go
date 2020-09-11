@@ -21,7 +21,7 @@ type BaseResponse struct {
 	Versionable `json:",inline"`
 	RequestID   string      `json:"requestId"`
 	Message     interface{} `json:"message,omitempty"`
-	StatusCode  uint16      `json:"statusCode"`
+	StatusCode  int         `json:"statusCode"`
 }
 
 // Versionable shows the API version in DTOs
@@ -37,11 +37,11 @@ type BaseWithIdResponse struct {
 	Id           string `json:"id"`
 }
 
-func NewBaseResponseNoMessage(requestId string, statusCode uint16) BaseResponse {
+func NewBaseResponseNoMessage(requestId string, statusCode int) BaseResponse {
 	return NewBaseResponse(requestId, "", statusCode)
 }
 
-func NewBaseResponse(requestId string, message string, statusCode uint16) BaseResponse {
+func NewBaseResponse(requestId string, message string, statusCode int) BaseResponse {
 	return BaseResponse{
 		Versionable: NewVersionable(),
 		RequestID:   requestId,
@@ -54,11 +54,11 @@ func NewVersionable() Versionable {
 	return Versionable{ApiVersion: v2.ApiVersion}
 }
 
-func NewBaseWithIdResponseNoMessage(requestId string, statusCode uint16, id string) BaseWithIdResponse {
+func NewBaseWithIdResponseNoMessage(requestId string, statusCode int, id string) BaseWithIdResponse {
 	return NewBaseWithIdResponse(requestId, "", statusCode, id)
 }
 
-func NewBaseWithIdResponse(requestId string, message string, statusCode uint16, id string) BaseWithIdResponse {
+func NewBaseWithIdResponse(requestId string, message string, statusCode int, id string) BaseWithIdResponse {
 	return BaseWithIdResponse{
 		BaseResponse: NewBaseResponse(requestId, message, statusCode),
 		Id:           id,

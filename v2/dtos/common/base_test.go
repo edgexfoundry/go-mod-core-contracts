@@ -16,7 +16,7 @@ import (
 
 func TestNewBaseResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	actual := NewBaseResponse(expectedRequestID, expectedMessage, expectedStatusCode)
 
@@ -27,7 +27,7 @@ func TestNewBaseResponse(t *testing.T) {
 
 func TestNewBaseResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	actual := NewBaseResponseNoMessage(expectedRequestID, expectedStatusCode)
 
 	assert.Equal(t, expectedRequestID, actual.RequestID)
@@ -42,7 +42,7 @@ func TestNewVersionable(t *testing.T) {
 
 func TestNewBaseWithIdResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
 	actual := NewBaseWithIdResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedId)
@@ -55,7 +55,7 @@ func TestNewBaseWithIdResponse(t *testing.T) {
 
 func TestNewBaseWithIdResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
 	actual := NewBaseWithIdResponseNoMessage(expectedRequestID, expectedStatusCode, expectedId)
 

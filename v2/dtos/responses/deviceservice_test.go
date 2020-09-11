@@ -14,7 +14,7 @@ import (
 
 func TestNewDeviceServiceResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedDeviceService := dtos.DeviceService{Name: "test device service"}
 	actual := NewDeviceServiceResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedDeviceService)
@@ -27,7 +27,7 @@ func TestNewDeviceServiceResponse(t *testing.T) {
 
 func TestNewDeviceServiceResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedDeviceService := dtos.DeviceService{Name: "test device service"}
 	actual := NewDeviceServiceResponseNoMessage(expectedRequestID, expectedStatusCode, expectedDeviceService)
 

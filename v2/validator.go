@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/errors"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -34,7 +36,7 @@ func Validate(a interface{}) error {
 		for _, e := range errs {
 			errMsg = append(errMsg, getErrorMessage(e))
 		}
-		return NewErrContractInvalid(strings.Join(errMsg, "; "))
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, strings.Join(errMsg, "; "), nil)
 	}
 	return nil
 }

@@ -14,7 +14,7 @@ import (
 
 func TestNewDeviceProfileResponse(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedDeviceProfile := dtos.DeviceProfile{Name: "test device profile"}
 	actual := NewDeviceProfileResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedDeviceProfile)
@@ -27,7 +27,7 @@ func TestNewDeviceProfileResponse(t *testing.T) {
 
 func TestNewDeviceProfileResponseNoMessage(t *testing.T) {
 	expectedRequestID := "123456"
-	expectedStatusCode := uint16(200)
+	expectedStatusCode := 200
 	expectedDeviceProfile := dtos.DeviceProfile{Name: "test device profile"}
 	actual := NewDeviceProfileResponseNoMessage(expectedRequestID, expectedStatusCode, expectedDeviceProfile)
 

@@ -8,6 +8,7 @@ package requests
 import (
 	"encoding/json"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
@@ -54,7 +55,7 @@ func (a *AddEventRequest) UnmarshalJSON(b []byte) error {
 		Event dtos.Event
 	}
 	if err := json.Unmarshal(b, &addEvent); err != nil {
-		return v2.NewErrContractInvalid("Failed to unmarshal request body as JSON.")
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
 	}
 
 	*a = AddEventRequest(addEvent)

@@ -26,22 +26,22 @@ type ReadingResponse struct {
 	Reading             dtos.BaseReading
 }
 
-func NewReadingCountResponseNoMessage(requestId string, statusCode uint16, count uint32) ReadingCountResponse {
+func NewReadingCountResponseNoMessage(requestId string, statusCode int, count uint32) ReadingCountResponse {
 	return NewReadingCountResponse(requestId, "", statusCode, count)
 }
 
-func NewReadingCountResponse(requestId string, message string, statusCode uint16, count uint32) ReadingCountResponse {
+func NewReadingCountResponse(requestId string, message string, statusCode int, count uint32) ReadingCountResponse {
 	return ReadingCountResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Count:        count,
 	}
 }
 
-func NewReadingResponseNoMessage(requestId string, statusCode uint16, reading dtos.BaseReading) ReadingResponse {
+func NewReadingResponseNoMessage(requestId string, statusCode int, reading dtos.BaseReading) ReadingResponse {
 	return NewReadingResponse(requestId, "", statusCode, reading)
 }
 
-func NewReadingResponse(requestId string, message string, statusCode uint16, reading dtos.BaseReading) ReadingResponse {
+func NewReadingResponse(requestId string, message string, statusCode int, reading dtos.BaseReading) ReadingResponse {
 	return ReadingResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Reading:      reading,
