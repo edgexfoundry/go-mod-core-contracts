@@ -137,7 +137,7 @@ func validateValueType(valueType string) bool {
 }
 
 // Convert Reading DTO to Reading model
-func ToReadingModel(r BaseReading, _ string) models.Reading {
+func ToReadingModel(r BaseReading) models.Reading {
 	var readingModel models.Reading
 	br := models.BaseReading{
 		Origin:     r.Origin,
