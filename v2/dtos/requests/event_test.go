@@ -23,6 +23,7 @@ var testAddEvent = AddEventRequest{
 		RequestID: ExampleUUID,
 	},
 	Event: dtos.Event{
+		ID:         ExampleUUID,
 		DeviceName: TestDeviceName,
 		Origin:     TestOriginTime,
 		Readings: []dtos.BaseReading{{
@@ -46,6 +47,10 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	noReqID.RequestID = ""
 	invalidReqID := testAddEvent
 	invalidReqID.RequestID = "xxy"
+	noEventID := testAddEvent
+	noEventID.Event.ID = ""
+	invalidEventID := testAddEvent
+	invalidEventID.Event.ID = "gj93j2-v92hvi3h"
 	noDeviceName := testAddEvent
 	noDeviceName.Event.DeviceName = ""
 	noOrigin := testAddEvent
@@ -158,6 +163,8 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		{"valid AddEventRequest", valid, false},
 		{"valid AddEventRequest, no Request Id", noReqID, false},
 		{"invalid AddEventRequest, Request Id is not an uuid", invalidReqID, true},
+		{"invalid AddEventRequest, no Event Id", noEventID, true},
+		{"invalid AddEventRequest, Event Id is not an uuid", invalidEventID, true},
 		{"invalid AddEventRequest, no DeviceName", noDeviceName, true},
 		{"invalid AddEventRequest, no Origin", noOrigin, true},
 		{"invalid AddEventRequest, no Reading", noReading, true},

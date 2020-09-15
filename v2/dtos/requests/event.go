@@ -73,7 +73,7 @@ func AddEventReqToEventModels(addRequests []AddEventRequest) (events []models.Ev
 		var e models.Event
 		readings := make([]models.Reading, len(a.Event.Readings))
 		for i, r := range a.Event.Readings {
-			readings[i] = dtos.ToReadingModel(r, a.Event.DeviceName)
+			readings[i] = dtos.ToReadingModel(r)
 		}
 
 		tags := make(map[string]string)

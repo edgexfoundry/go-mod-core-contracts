@@ -20,7 +20,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/Event
 type Event struct {
 	common.Versionable `json:",inline"`
-	ID                 string            `json:"id"`
+	ID                 string            `json:"id" validate:"required,uuid"`
 	Pushed             int64             `json:"pushed,omitempty"`
 	DeviceName         string            `json:"deviceName" validate:"required"`
 	Created            int64             `json:"created"`
