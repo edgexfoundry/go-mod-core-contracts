@@ -44,7 +44,7 @@ func Test_ToReadingModel(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			readingModel := ToReadingModel(tt.reading, TestDeviceName)
+			readingModel := ToReadingModel(tt.reading)
 			assert.Equal(t, expectedSimpleReading, readingModel, "ToReadingModel did not result in expected Reading model.")
 		})
 	}
