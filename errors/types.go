@@ -100,6 +100,14 @@ func (ce CommonEdgeX) DebugMessages() string {
 
 // Message returns the first level error message without further details.
 func (ce CommonEdgeX) Message() string {
+	if ce.message == "" && ce.err != nil {
+		if w, ok := ce.err.(CommonEdgeX); ok {
+			return w.Message()
+		} else {
+			return ce.err.Error()
+		}
+	}
+
 	return ce.message
 }
 
