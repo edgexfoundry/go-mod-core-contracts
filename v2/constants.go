@@ -27,6 +27,9 @@ const (
 	ApiAllReadingByDeviceRoute = ApiReadingRoute + "/" + Device + "/{" + DeviceIdParam + "}/" + All
 	ApiReadingByTypeRoute      = ApiReadingRoute + "/" + Type + "/{" + Type + "}"
 	ApiReadingByTimeRangeRoute = ApiReadingRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiDeviceProfileRoute      = ApiBase + "/deviceprofile"
+	ApiDeviceRoute             = ApiBase + "/device"
+	ApiDeviceServiceRoute      = ApiBase + "/deviceservice"
 	ApiConfigRoute             = ApiBase + "/config"
 	ApiMetricsRoute            = ApiBase + "/metrics"
 	ApiPingRoute               = ApiBase + "/ping"
