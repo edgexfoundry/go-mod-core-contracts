@@ -5,7 +5,10 @@
 
 package dtos
 
-import "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
+import (
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+)
 
 // DeviceProfile represents the attributes and operational capabilities of a device. It is a template for which
 // there can be multiple matching devices within a given system.
@@ -22,6 +25,20 @@ type DeviceProfile struct {
 	DeviceResources    []DeviceResource  `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
 	DeviceCommands     []ProfileResource `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
 	CoreCommands       []Command         `json:"coreCommands,omitempty" yaml:"coreCommands,omitempty" validate:"dive"`
+}
+
+// ToCommandModels transforms the Command DTOs to the Command models
+func ToDeviceProfileModels(deviceProfileDTO DeviceProfile) models.DeviceProfile {
+	return models.DeviceProfile{
+		Name:            deviceProfileDTO.Name,
+		Description:     deviceProfileDTO.Description,
+		Manufacturer:    deviceProfileDTO.Manufacturer,
+		Model:           deviceProfileDTO.Model,
+		Labels:          deviceProfileDTO.Labels,
+		DeviceResources: ToDeviceResourceModels(deviceProfileDTO.DeviceResources),
+		DeviceCommands:  ToProfileResourceModels(deviceProfileDTO.DeviceCommands),
+		CoreCommands:    ToCommandModels(deviceProfileDTO.CoreCommands),
+	}
 }
 
 // UpdateDeviceProfile represents the attributes and operational capabilities of a device. It is a template for which
