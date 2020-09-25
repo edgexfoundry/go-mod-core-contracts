@@ -27,6 +27,9 @@ const (
 	KindDuplicateName      ErrKind = "DuplicateName"
 	KindInvalidId          ErrKind = "InvalidId"
 	KindServiceUnavailable ErrKind = "ServiceUnavailable"
+	KindNotAllowed         ErrKind = "NotAllowed"
+	KindServiceLocked      ErrKind = "ServiceLocked"
+	KindNotImplemented     ErrKind = "NotImplemented"
 )
 
 // EdgeX provides an abstraction for all internal EdgeX errors.
@@ -188,6 +191,12 @@ func codeMapping(kind ErrKind) int {
 		return http.StatusRequestEntityTooLarge
 	case KindServiceUnavailable:
 		return http.StatusServiceUnavailable
+	case KindServiceLocked:
+		return http.StatusLocked
+	case KindNotImplemented:
+		return http.StatusNotImplemented
+	case KindNotAllowed:
+		return http.StatusMethodNotAllowed
 	default:
 		return http.StatusInternalServerError
 	}
