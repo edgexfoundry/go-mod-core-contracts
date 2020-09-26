@@ -27,7 +27,7 @@ type DeviceProfile struct {
 	CoreCommands       []Command         `json:"coreCommands,omitempty" yaml:"coreCommands,omitempty" validate:"dive"`
 }
 
-// ToCommandModels transforms the Command DTOs to the Command models
+// ToDeviceProfileModels transforms the DeviceProfile DTOs to the DeviceProfile models
 func ToDeviceProfileModels(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 	return models.DeviceProfile{
 		Name:            deviceProfileDTO.Name,
