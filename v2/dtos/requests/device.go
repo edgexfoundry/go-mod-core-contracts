@@ -40,11 +40,6 @@ func (d *AddDeviceRequest) UnmarshalJSON(b []byte) error {
 	}
 
 	*d = AddDeviceRequest(alias)
-
-	// validate AddDeviceRequest DTO
-	if err := d.Validate(); err != nil {
-		return err
-	}
 	return nil
 }
 

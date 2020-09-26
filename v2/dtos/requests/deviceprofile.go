@@ -41,11 +41,6 @@ func (dp *AddDeviceProfileRequest) UnmarshalJSON(b []byte) error {
 	}
 
 	*dp = AddDeviceProfileRequest(alias)
-
-	// validate AddDeviceProfileRequest DTO
-	if err := dp.Validate(); err != nil {
-		return err
-	}
 	return nil
 }
 

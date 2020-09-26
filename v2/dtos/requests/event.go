@@ -59,11 +59,6 @@ func (a *AddEventRequest) UnmarshalJSON(b []byte) error {
 	}
 
 	*a = AddEventRequest(addEvent)
-
-	// validate AddEventRequest DTO
-	if err := a.Validate(); err != nil {
-		return err
-	}
 	return nil
 }
 

@@ -40,11 +40,6 @@ func (ds *AddDeviceServiceRequest) UnmarshalJSON(b []byte) error {
 	}
 
 	*ds = AddDeviceServiceRequest(alias)
-
-	// validate AddDeviceServiceRequest DTO
-	if err := ds.Validate(); err != nil {
-		return err
-	}
 	return nil
 }
 
