@@ -233,6 +233,7 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 		Value: TestReadingValue,
 	}
 	expectedEventModel := []models.Event{{
+		Id:         ExampleUUID,
 		DeviceName: TestDeviceName,
 		Origin:     TestOriginTime,
 		Readings:   []models.Reading{s},
