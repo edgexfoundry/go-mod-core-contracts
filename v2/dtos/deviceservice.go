@@ -5,7 +5,10 @@
 
 package dtos
 
-import "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
+import (
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+)
 
 // DeviceService represents a service that is responsible for proxying connectivity between a set of devices and the
 // EdgeX Foundry core services.
@@ -37,4 +40,34 @@ type UpdateDeviceService struct {
 	OperatingState *string  `json:"operatingState" validate:"omitempty,oneof='ENABLED' 'DISABLED'"`
 	Labels         []string `json:"labels"`
 	AdminState     *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+}
+
+// ToDeviceServiceModel transforms the DeviceService DTO to the DeviceService Model
+func ToDeviceServiceModel(dto DeviceService) models.DeviceService {
+	var ds models.DeviceService
+	ds.Id = dto.Id
+	ds.Name = dto.Name
+	ds.Description = dto.Description
+	ds.LastReported = dto.LastReported
+	ds.LastConnected = dto.LastConnected
+	ds.BaseAddress = dto.BaseAddress
+	ds.OperatingState = models.OperatingState(dto.OperatingState)
+	ds.Labels = dto.Labels
+	ds.AdminState = models.AdminState(dto.AdminState)
+	return ds
+}
+
+// FromDeviceServiceModelToDTO transforms the DeviceService Model to the DeviceService DTO
+func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
+	var dto DeviceService
+	dto.Id = ds.Id
+	dto.Name = ds.Name
+	dto.Description = ds.Description
+	dto.LastReported = ds.LastReported
+	dto.LastConnected = ds.LastConnected
+	dto.BaseAddress = ds.BaseAddress
+	dto.OperatingState = string(ds.OperatingState)
+	dto.Labels = ds.Labels
+	dto.AdminState = string(ds.AdminState)
+	return dto
 }

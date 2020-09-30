@@ -51,16 +51,7 @@ func (d *AddDeviceRequest) UnmarshalJSON(b []byte) error {
 // AddDeviceReqToDeviceModels transforms the AddDeviceRequest DTO array to the Device model array
 func AddDeviceReqToDeviceModels(addRequests []AddDeviceRequest) (Devices []models.Device) {
 	for _, req := range addRequests {
-		var d models.Device
-		d.Name = req.Device.Name
-		d.ServiceName = req.Device.ServiceName
-		d.ProfileName = req.Device.ProfileName
-		d.AdminState = models.AdminState(req.Device.AdminState)
-		d.OperatingState = models.OperatingState(req.Device.OperatingState)
-		d.Labels = req.Device.Labels
-		d.Location = req.Device.Location
-		d.AutoEvents = dtos.ToAutoEventModels(req.Device.AutoEvents)
-		d.Protocols = dtos.ToProtocolModels(req.Device.Protocols)
+		d := dtos.ToDeviceModel(req.Device)
 		Devices = append(Devices, d)
 	}
 	return Devices

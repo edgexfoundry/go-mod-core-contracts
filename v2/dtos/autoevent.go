@@ -43,3 +43,21 @@ func ToAutoEventModels(autoEventDTOs []AutoEvent) []models.AutoEvent {
 	}
 	return autoEventModels
 }
+
+// FromAutoEventModelToDTO transforms the AutoEvent model to the AutoEvent DTO
+func FromAutoEventModelToDTO(a models.AutoEvent) AutoEvent {
+	return AutoEvent{
+		Frequency: a.Frequency,
+		OnChange:  a.OnChange,
+		Resource:  a.Resource,
+	}
+}
+
+// ToAutoEventModels transforms the AutoEvent model array to the AutoEvent DTO array
+func FromAutoEventModelsToDTOs(autoEvents []models.AutoEvent) []AutoEvent {
+	dtos := make([]AutoEvent, len(autoEvents))
+	for i, a := range autoEvents {
+		dtos[i] = FromAutoEventModelToDTO(a)
+	}
+	return dtos
+}
