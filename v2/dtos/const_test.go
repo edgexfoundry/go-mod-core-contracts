@@ -12,4 +12,14 @@ const (
 	TestReadingName = "TestDeviceResource"
 	TestValueType   = "Int8"
 	TestValue       = "500"
+
+	TestDeviceProfileName = "TestDeviceProfileName"
+	TestManufacturer      = "TestManufacturer"
+	TestDescription       = "TestDescription"
+	TestModel             = "TestModel"
+
+	TestDeviceResourceName = "TestDeviceResourceName"
+	TestTag                = "TestTag"
+
+	TestProfileResourceName = "TestProfileResource"
 )

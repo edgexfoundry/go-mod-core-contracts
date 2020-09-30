@@ -46,3 +46,23 @@ func ToPropertyValueModel(p PropertyValue) models.PropertyValue {
 		MediaType:     p.MediaType,
 	}
 }
+
+// FromPropertyValueModelToDTO transforms the PropertyValue Model to the PropertyValue DTO
+func FromPropertyValueModelToDTO(p models.PropertyValue) PropertyValue {
+	return PropertyValue{
+		Type:          p.Type,
+		ReadWrite:     p.ReadWrite,
+		Units:         p.Units,
+		Minimum:       p.Minimum,
+		Maximum:       p.Maximum,
+		DefaultValue:  p.DefaultValue,
+		Mask:          p.Mask,
+		Shift:         p.Shift,
+		Scale:         p.Scale,
+		Offset:        p.Offset,
+		Base:          p.Base,
+		Assertion:     p.Assertion,
+		FloatEncoding: p.FloatEncoding,
+		MediaType:     p.MediaType,
+	}
+}

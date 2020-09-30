@@ -37,3 +37,23 @@ func ToDeviceResourceModels(deviceResourceDTOs []DeviceResource) []models.Device
 	}
 	return deviceResourceModels
 }
+
+// FromDeviceResourceModelToDTO transforms the DeviceResource model to the DeviceResource DTO
+func FromDeviceResourceModelToDTO(d models.DeviceResource) DeviceResource {
+	return DeviceResource{
+		Description: d.Description,
+		Name:        d.Name,
+		Tag:         d.Tag,
+		Properties:  FromPropertyValueModelToDTO(d.Properties),
+		Attributes:  d.Attributes,
+	}
+}
+
+// FromDeviceResourceModelsToDTOs transforms the DeviceResource models to the DeviceResource DTOs
+func FromDeviceResourceModelsToDTOs(deviceResourceModels []models.DeviceResource) []DeviceResource {
+	deviceResourceDTOs := make([]DeviceResource, len(deviceResourceModels))
+	for i, d := range deviceResourceModels {
+		deviceResourceDTOs[i] = FromDeviceResourceModelToDTO(d)
+	}
+	return deviceResourceDTOs
+}
