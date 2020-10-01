@@ -30,6 +30,7 @@ type DeviceProfile struct {
 // ToDeviceProfileModel transforms the DeviceProfile DTO to the DeviceProfile model
 func ToDeviceProfileModel(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 	return models.DeviceProfile{
+		Id:              deviceProfileDTO.Id,
 		Name:            deviceProfileDTO.Name,
 		Description:     deviceProfileDTO.Description,
 		Manufacturer:    deviceProfileDTO.Manufacturer,
@@ -44,6 +45,7 @@ func ToDeviceProfileModel(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 // FromDeviceProfileModelToDTO transforms the DeviceProfile Model to the DeviceProfile DTO
 func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfile {
 	return DeviceProfile{
+		Id:              deviceProfile.Id,
 		Name:            deviceProfile.Name,
 		Description:     deviceProfile.Description,
 		Manufacturer:    deviceProfile.Manufacturer,

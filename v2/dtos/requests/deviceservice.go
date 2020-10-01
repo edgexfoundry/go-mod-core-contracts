@@ -51,12 +51,7 @@ func (ds *AddDeviceServiceRequest) UnmarshalJSON(b []byte) error {
 // AddDeviceServiceReqToDeviceServiceModels transforms the AddDeviceServiceRequest DTO array to the DeviceService model array
 func AddDeviceServiceReqToDeviceServiceModels(addRequests []AddDeviceServiceRequest) (DeviceServices []models.DeviceService) {
 	for _, req := range addRequests {
-		var ds models.DeviceService
-		ds.Name = req.Service.Name
-		ds.BaseAddress = req.Service.BaseAddress
-		ds.OperatingState = models.OperatingState(req.Service.OperatingState)
-		ds.Labels = req.Service.Labels
-		ds.AdminState = models.AdminState(req.Service.AdminState)
+		ds := dtos.ToDeviceServiceModel(req.Service)
 		DeviceServices = append(DeviceServices, ds)
 	}
 	return DeviceServices
