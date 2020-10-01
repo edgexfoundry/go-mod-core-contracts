@@ -33,3 +33,21 @@ func ToCommandModels(commandDTOs []Command) []models.Command {
 	}
 	return commandModels
 }
+
+// FromCommandModelToDTO transforms the Command model to the Command DTO
+func FromCommandModelToDTO(c models.Command) Command {
+	return Command{
+		Name: c.Name,
+		Get:  c.Get,
+		Put:  c.Put,
+	}
+}
+
+// FromCommandModelsToDTOs transforms the Command models to the Command DTOs
+func FromCommandModelsToDTOs(commandModels []models.Command) []Command {
+	commandDTOs := make([]Command, len(commandModels))
+	for i, c := range commandModels {
+		commandDTOs[i] = FromCommandModelToDTO(c)
+	}
+	return commandDTOs
+}

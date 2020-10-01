@@ -42,3 +42,30 @@ func ToProfileResourceModels(profileResourceDTOs []ProfileResource) []models.Pro
 	}
 	return profileResourceModels
 }
+
+// FromProfileResourceModelToDTO transforms the ProfileResource model to the ProfileResource DTO
+func FromProfileResourceModelToDTO(p models.ProfileResource) ProfileResource {
+	getResourceOperations := make([]ResourceOperation, len(p.Get))
+	for i, ro := range p.Get {
+		getResourceOperations[i] = FromResourceOperationModelToDTO(ro)
+	}
+	setResourceOperations := make([]ResourceOperation, len(p.Set))
+	for i, ro := range p.Set {
+		setResourceOperations[i] = FromResourceOperationModelToDTO(ro)
+	}
+
+	return ProfileResource{
+		Name: p.Name,
+		Get:  getResourceOperations,
+		Set:  setResourceOperations,
+	}
+}
+
+// FromProfileResourceModelsToDTOs transforms the ProfileResource models to the ProfileResource DTOs
+func FromProfileResourceModelsToDTOs(profileResourceModels []models.ProfileResource) []ProfileResource {
+	profileResourceDTOs := make([]ProfileResource, len(profileResourceModels))
+	for i, p := range profileResourceModels {
+		profileResourceDTOs[i] = FromProfileResourceModelToDTO(p)
+	}
+	return profileResourceDTOs
+}

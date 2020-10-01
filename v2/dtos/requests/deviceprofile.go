@@ -70,7 +70,7 @@ func (dp *AddDeviceProfileRequest) UnmarshalYAML(b []byte) error {
 
 // AddDeviceProfileReqToDeviceProfileModel transforms the AddDeviceProfileRequest DTO to the DeviceProfile model
 func AddDeviceProfileReqToDeviceProfileModel(addReq AddDeviceProfileRequest) (DeviceProfiles models.DeviceProfile) {
-	return dtos.ToDeviceProfileModels(addReq.Profile)
+	return dtos.ToDeviceProfileModel(addReq.Profile)
 }
 
 // AddDeviceProfileReqToDeviceProfileModels transforms the AddDeviceProfileRequest DTO array to the DeviceProfile model array

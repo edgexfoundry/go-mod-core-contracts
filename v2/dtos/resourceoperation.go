@@ -24,3 +24,12 @@ func ToResourceOperationModel(ro ResourceOperation) models.ResourceOperation {
 		Mappings:       ro.Mappings,
 	}
 }
+
+// FromResourceOperationModelToDTO transforms the ResourceOperation model to the ResourceOperation DTO
+func FromResourceOperationModelToDTO(ro models.ResourceOperation) ResourceOperation {
+	return ResourceOperation{
+		DeviceResource: ro.DeviceResource,
+		Parameter:      ro.Parameter,
+		Mappings:       ro.Mappings,
+	}
+}
