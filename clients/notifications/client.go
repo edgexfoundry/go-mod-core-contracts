@@ -64,6 +64,7 @@ type Notification struct {
 	Category    CategoryEnum `json:"category"`              // Allows for categorization of notifications
 	Severity    SeverityEnum `json:"severity"`              // Denotes the severity of a notification
 	Content     string       `json:"content"`               // Content contains the body of the notification
+	ContentType string       `json:"contenttype,omitempty"` // ContentType contains the content type of the notification
 	Description string       `json:"description,omitempty"` // Description content for the notification
 	Status      StatusEnum   `json:"status,omitempty"`      // Status reflects a simple workflow assignment for the notification
 	Labels      []string     `json:"labels,omitempty"`      // Labels allows the notification to be further described/classified
