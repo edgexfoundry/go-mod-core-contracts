@@ -34,6 +34,7 @@ const (
 	TestNotificationStatus      = NEW
 	TestNotificationLabel1      = "Label One"
 	TestNotificationLabel2      = "Label Two"
+	TestNotificationContentType = "Content Type"
 )
 
 func TestReceiveNotification(t *testing.T) {
@@ -69,6 +70,10 @@ func TestReceiveNotification(t *testing.T) {
 			t.Errorf(TestUnexpectedMsgFormatStr, receivedNotification.Content, TestNotificationContent)
 		}
 
+		if receivedNotification.ContentType != TestNotificationContentType {
+			t.Errorf(TestUnexpectedMsgFormatStr, receivedNotification.ContentType, TestNotificationContentType)
+		}
+
 		if receivedNotification.Description != TestNotificationDescription {
 			t.Errorf(TestUnexpectedMsgFormatStr, receivedNotification.Description, TestNotificationDescription)
 		}
@@ -100,6 +105,7 @@ func TestReceiveNotification(t *testing.T) {
 		Category:    TestNotificationCategory,
 		Severity:    TestNotificationSeverity,
 		Content:     TestNotificationContent,
+		ContentType: TestNotificationContentType,
 		Description: TestNotificationDescription,
 		Status:      TestNotificationStatus,
 		Labels:      []string{TestNotificationLabel1, TestNotificationLabel2},
