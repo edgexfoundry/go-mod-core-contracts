@@ -37,12 +37,16 @@ const (
 	ApiDeviceProfileByModelRoute                = ApiDeviceProfileRoute + "/" + Model + "/{" + Model + "}"
 	ApiDeviceProfileByManufacturerAndModelRoute = ApiDeviceProfileRoute + "/" + Manufacturer + "/{" + Manufacturer + "}" + "/" + Model + "/{" + Model + "}"
 
-	ApiDeviceRoute        = ApiBase + "/device"
-	ApiDeviceServiceRoute = ApiBase + "/deviceservice"
-	ApiConfigRoute        = ApiBase + "/config"
-	ApiMetricsRoute       = ApiBase + "/metrics"
-	ApiPingRoute          = ApiBase + "/ping"
-	ApiVersionRoute       = ApiBase + "/version"
+	ApiDeviceServiceRoute       = ApiBase + "/deviceservice"
+	ApiAllDeviceServiceRoute    = ApiDeviceServiceRoute + "/" + All
+	ApiDeviceServiceByNameRoute = ApiDeviceServiceRoute + "/" + Name + "/{" + Name + "}"
+	ApiDeviceServiceByIdRoute   = ApiDeviceServiceRoute + "/" + Id + "/{" + Id + "}"
+
+	ApiDeviceRoute  = ApiBase + "/device"
+	ApiConfigRoute  = ApiBase + "/config"
+	ApiMetricsRoute = ApiBase + "/metrics"
+	ApiPingRoute    = ApiBase + "/ping"
+	ApiVersionRoute = ApiBase + "/version"
 )
 
 // Constants related to defined url path names and parameters in the v2 service APIs
