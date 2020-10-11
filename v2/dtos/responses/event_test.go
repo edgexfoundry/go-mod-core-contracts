@@ -18,27 +18,27 @@ func TestNewEventCountResponse(t *testing.T) {
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedCount := uint32(1000)
-	expectedDeviceId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
-	actual := NewEventCountResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedCount, expectedDeviceId)
+	expectedDeviceName := "device1"
+	actual := NewEventCountResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedCount, expectedDeviceName)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedCount, actual.Count)
-	assert.Equal(t, expectedDeviceId, actual.DeviceId)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
 }
 
 func TestNewEventCountResponseNoMessage(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedCount := uint32(1000)
-	expectedDeviceId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
-	actual := NewEventCountResponseNoMessage(expectedRequestId, expectedStatusCode, expectedCount, expectedDeviceId)
+	expectedDeviceName := "device1"
+	actual := NewEventCountResponseNoMessage(expectedRequestId, expectedStatusCode, expectedCount, expectedDeviceName)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedCount, actual.Count)
-	assert.Equal(t, expectedDeviceId, actual.DeviceId)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
 }
 
 func TestNewEventResponse(t *testing.T) {
