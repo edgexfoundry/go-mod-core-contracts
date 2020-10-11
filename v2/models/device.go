@@ -8,7 +8,7 @@ package models
 // Device represents a registered device participating within the EdgeX Foundry ecosystem
 type Device struct {
 	Timestamps
-	Id             string                        // ID uniquely identifies the device, a UUID for example
+	Id             string                        // Id uniquely identifies the device, a UUID for example
 	Name           string                        // Unique name for identifying a device
 	Description    string                        // Description of the device
 	AdminState     AdminState                    // Admin state (locked/unlocked)

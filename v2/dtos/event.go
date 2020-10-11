@@ -20,7 +20,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/Event
 type Event struct {
 	common.Versionable `json:",inline"`
-	ID                 string            `json:"id" validate:"required,uuid"`
+	Id                 string            `json:"id" validate:"required,uuid"`
 	Pushed             int64             `json:"pushed,omitempty"`
 	DeviceName         string            `json:"deviceName" validate:"required"`
 	Created            int64             `json:"created"`
@@ -42,7 +42,7 @@ func FromEventModelToDTO(event models.Event) Event {
 
 	return Event{
 		Versionable: common.Versionable{ApiVersion: v2.ApiVersion},
-		ID:          event.Id,
+		Id:          event.Id,
 		Pushed:      event.Pushed,
 		DeviceName:  event.DeviceName,
 		Created:     event.Created,

@@ -13,25 +13,25 @@ import (
 )
 
 func TestNewDeviceProfileResponse(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedDeviceProfile := dtos.DeviceProfile{Name: "test device profile"}
-	actual := NewDeviceProfileResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedDeviceProfile)
+	actual := NewDeviceProfileResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDeviceProfile)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedDeviceProfile, actual.Profile)
 }
 
 func TestNewDeviceProfileResponseNoMessage(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedDeviceProfile := dtos.DeviceProfile{Name: "test device profile"}
-	actual := NewDeviceProfileResponseNoMessage(expectedRequestID, expectedStatusCode, expectedDeviceProfile)
+	actual := NewDeviceProfileResponseNoMessage(expectedRequestId, expectedStatusCode, expectedDeviceProfile)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedDeviceProfile, actual.Profile)
 }

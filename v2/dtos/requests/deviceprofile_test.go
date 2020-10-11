@@ -51,7 +51,7 @@ var testCoreCommands = []dtos.Command{{
 
 var testAddDeviceProfileReq = DeviceProfileRequest{
 	BaseRequest: common.BaseRequest{
-		RequestID: ExampleUUID,
+		RequestId: ExampleUUID,
 	},
 	Profile: dtos.DeviceProfile{
 		Name:            TestDeviceProfileName,

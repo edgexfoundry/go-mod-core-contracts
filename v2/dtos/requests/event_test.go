@@ -20,10 +20,10 @@ import (
 
 var testAddEvent = AddEventRequest{
 	BaseRequest: common.BaseRequest{
-		RequestID: ExampleUUID,
+		RequestId: ExampleUUID,
 	},
 	Event: dtos.Event{
-		ID:         ExampleUUID,
+		Id:         ExampleUUID,
 		DeviceName: TestDeviceName,
 		Origin:     TestOriginTime,
 		Readings: []dtos.BaseReading{{
@@ -43,14 +43,14 @@ var testAddEvent = AddEventRequest{
 
 func TestAddEventRequest_Validate(t *testing.T) {
 	valid := testAddEvent
-	noReqID := testAddEvent
-	noReqID.RequestID = ""
-	invalidReqID := testAddEvent
-	invalidReqID.RequestID = "xxy"
-	noEventID := testAddEvent
-	noEventID.Event.ID = ""
-	invalidEventID := testAddEvent
-	invalidEventID.Event.ID = "gj93j2-v92hvi3h"
+	noReqId := testAddEvent
+	noReqId.RequestId = ""
+	invalidReqId := testAddEvent
+	invalidReqId.RequestId = "xxy"
+	noEventId := testAddEvent
+	noEventId.Event.Id = ""
+	invalidEventId := testAddEvent
+	invalidEventId.Event.Id = "gj93j2-v92hvi3h"
 	noDeviceName := testAddEvent
 	noDeviceName.Event.DeviceName = ""
 	noOrigin := testAddEvent
@@ -161,10 +161,10 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		expectError bool
 	}{
 		{"valid AddEventRequest", valid, false},
-		{"valid AddEventRequest, no Request Id", noReqID, false},
-		{"invalid AddEventRequest, Request Id is not an uuid", invalidReqID, true},
-		{"invalid AddEventRequest, no Event Id", noEventID, true},
-		{"invalid AddEventRequest, Event Id is not an uuid", invalidEventID, true},
+		{"valid AddEventRequest, no Request Id", noReqId, false},
+		{"invalid AddEventRequest, Request Id is not an uuid", invalidReqId, true},
+		{"invalid AddEventRequest, no Event Id", noEventId, true},
+		{"invalid AddEventRequest, Event Id is not an uuid", invalidEventId, true},
 		{"invalid AddEventRequest, no DeviceName", noDeviceName, true},
 		{"invalid AddEventRequest, no Origin", noOrigin, true},
 		{"invalid AddEventRequest, no Reading", noReading, true},
