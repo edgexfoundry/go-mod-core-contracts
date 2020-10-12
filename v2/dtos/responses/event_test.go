@@ -65,6 +65,22 @@ func TestNewEventResponseNoMessage(t *testing.T) {
 	assert.Equal(t, expectedEvent, actual.Event)
 }
 
+func TestNewMultiEventsResponse(t *testing.T) {
+	expectedRequestId := "123456"
+	expectedStatusCode := 200
+	expectedMessage := "unit test message"
+	expectedEvents := []dtos.Event{
+		{Id: "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"},
+		{Id: "11111111-2222-3333-4444-555555555555"},
+	}
+	actual := NewMultiEventsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedEvents)
+
+	assert.Equal(t, expectedRequestId, actual.RequestId)
+	assert.Equal(t, expectedStatusCode, actual.StatusCode)
+	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedEvents, actual.Events)
+}
+
 func TestNewUpdateEventPushedByChecksumResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200
