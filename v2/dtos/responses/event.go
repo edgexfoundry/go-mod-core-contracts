@@ -16,7 +16,7 @@ import (
 type EventCountResponse struct {
 	common.BaseResponse `json:",inline"`
 	Count               uint32
-	DeviceId            string `json:"deviceId"` // Id uniquely identifies a device
+	DeviceName          string `json:"deviceName"`
 }
 
 // EventResponse defines the Response Content for GET event DTOs.
@@ -39,11 +39,11 @@ func NewEventCountResponseNoMessage(requestId string, statusCode int, count uint
 	return NewEventCountResponse(requestId, "", statusCode, count, deviceId)
 }
 
-func NewEventCountResponse(requestId string, message string, statusCode int, count uint32, deviceId string) EventCountResponse {
+func NewEventCountResponse(requestId string, message string, statusCode int, count uint32, deviceName string) EventCountResponse {
 	return EventCountResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Count:        count,
-		DeviceId:     deviceId,
+		DeviceName:   deviceName,
 	}
 }
 
