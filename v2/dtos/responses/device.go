@@ -28,3 +28,18 @@ func NewDeviceResponse(requestId string, message string, statusCode int, device 
 		Device:       device,
 	}
 }
+
+// MultiDevicesResponse defines the Response Content for GET multiple Device DTOs.
+// This object and its properties correspond to the MultiDevicesResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/MultiDevicesResponse
+type MultiDevicesResponse struct {
+	common.BaseResponse `json:",inline"`
+	Devices             []dtos.Device `json:"devices"`
+}
+
+func NewMultiDevicesResponse(requestId string, message string, statusCode int, devices []dtos.Device) MultiDevicesResponse {
+	return MultiDevicesResponse{
+		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
+		Devices:      devices,
+	}
+}

@@ -35,3 +35,19 @@ func TestNewDeviceServiceResponseNoMessage(t *testing.T) {
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedDeviceService, actual.Service)
 }
+
+func TestNewMultiDeviceServicesResponse(t *testing.T) {
+	expectedRequestId := "123456"
+	expectedStatusCode := 200
+	expectedMessage := "unit test message"
+	expectedDeviceServices := []dtos.DeviceService{
+		{Name: "test device service1"},
+		{Name: "test device service2"},
+	}
+	actual := NewMultiDeviceServicesResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDeviceServices)
+
+	assert.Equal(t, expectedRequestId, actual.RequestId)
+	assert.Equal(t, expectedStatusCode, actual.StatusCode)
+	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedDeviceServices, actual.Services)
+}
