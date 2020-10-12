@@ -14,49 +14,49 @@ import (
 )
 
 func TestNewReadingCountResponse(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedCount := uint32(1000)
-	actual := NewReadingCountResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedCount)
+	actual := NewReadingCountResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedCount)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedCount, actual.Count)
 }
 
 func TestNewReadingCountResponseNoMessage(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedCount := uint32(1000)
-	actual := NewReadingCountResponseNoMessage(expectedRequestID, expectedStatusCode, expectedCount)
+	actual := NewReadingCountResponseNoMessage(expectedRequestId, expectedStatusCode, expectedCount)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedCount, actual.Count)
 }
 
 func TestNewReadingResponse(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedReading := dtos.BaseReading{Id: "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"}
-	actual := NewReadingResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedReading)
+	actual := NewReadingResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedReading)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedReading, actual.Reading)
 }
 
 func TestNewReadingResponseNoMessage(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedReading := dtos.BaseReading{Id: "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"}
-	actual := NewReadingResponseNoMessage(expectedRequestID, expectedStatusCode, expectedReading)
+	actual := NewReadingResponseNoMessage(expectedRequestId, expectedStatusCode, expectedReading)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedReading, actual.Reading)
 }

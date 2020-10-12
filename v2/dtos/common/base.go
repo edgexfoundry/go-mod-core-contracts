@@ -11,7 +11,7 @@ import v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
 // This object and its properties correspond to the BaseRequest object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseRequest
 type BaseRequest struct {
-	RequestID string `json:"requestId" validate:"len=0|uuid"`
+	RequestId string `json:"requestId" validate:"len=0|uuid"`
 }
 
 // BaseResponse defines the base content for response DTOs (data transfer objects).
@@ -19,7 +19,7 @@ type BaseRequest struct {
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseResponse
 type BaseResponse struct {
 	Versionable `json:",inline"`
-	RequestID   string      `json:"requestId"`
+	RequestId   string      `json:"requestId"`
 	Message     interface{} `json:"message,omitempty"`
 	StatusCode  int         `json:"statusCode"`
 }
@@ -44,7 +44,7 @@ func NewBaseResponseNoMessage(requestId string, statusCode int) BaseResponse {
 func NewBaseResponse(requestId string, message string, statusCode int) BaseResponse {
 	return BaseResponse{
 		Versionable: NewVersionable(),
-		RequestID:   requestId,
+		RequestId:   requestId,
 		Message:     message,
 		StatusCode:  statusCode,
 	}

@@ -20,7 +20,7 @@ import (
 
 var testAddDeviceService = AddDeviceServiceRequest{
 	BaseRequest: common.BaseRequest{
-		RequestID: ExampleUUID,
+		RequestId: ExampleUUID,
 	},
 	Service: dtos.DeviceService{
 		Name:           TestDeviceServiceName,
@@ -33,7 +33,7 @@ var testAddDeviceService = AddDeviceServiceRequest{
 
 var testUpdateDeviceService = UpdateDeviceServiceRequest{
 	BaseRequest: common.BaseRequest{
-		RequestID: ExampleUUID,
+		RequestId: ExampleUUID,
 	},
 	Service: mockDeviceServiceDTO(),
 }
@@ -56,10 +56,10 @@ func mockDeviceServiceDTO() dtos.UpdateDeviceService {
 
 func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 	valid := testAddDeviceService
-	noReqID := testAddDeviceService
-	noReqID.RequestID = ""
-	invalidReqID := testAddDeviceService
-	invalidReqID.RequestID = "jfdw324"
+	noReqId := testAddDeviceService
+	noReqId.RequestId = ""
+	invalidReqId := testAddDeviceService
+	invalidReqId.RequestId = "jfdw324"
 	noName := testAddDeviceService
 	noName.Service.Name = ""
 	noOperatingState := testAddDeviceService
@@ -80,8 +80,8 @@ func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 		expectError   bool
 	}{
 		{"valid AddDeviceServiceRequest", valid, false},
-		{"valid AddDeviceServiceRequest, no Request Id", noReqID, false},
-		{"invalid AddDeviceServiceRequest, Request Id is not an uuid", invalidReqID, true},
+		{"valid AddDeviceServiceRequest, no Request Id", noReqId, false},
+		{"invalid AddDeviceServiceRequest, Request Id is not an uuid", invalidReqId, true},
 		{"invalid AddDeviceServiceRequest, no Name", noName, true},
 		{"invalid AddDeviceServiceRequest, no OperatingState", noOperatingState, true},
 		{"invalid AddDeviceServiceRequest, invalid OperatingState", invalidOperatingState, true},
@@ -179,10 +179,10 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 	validWithoutId.Service.Id = nil
 	validWithoutName := valid
 	validWithoutName.Service.Name = nil
-	noReqID := valid
-	noReqID.RequestID = ""
-	invalidReqID := valid
-	invalidReqID.RequestID = "2h022mc"
+	noReqId := valid
+	noReqId.RequestId = ""
+	invalidReqId := valid
+	invalidReqId.RequestId = "2h022mc"
 	noIdAndName := valid
 	noIdAndName.Service.Id = nil
 	noIdAndName.Service.Name = nil
@@ -199,8 +199,8 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 		{"valid UpdateDeviceServiceRequest", valid, false},
 		{"valid UpdateDeviceServiceRequest without Id", validWithoutId, false},
 		{"valid UpdateDeviceServiceRequest without name", validWithoutName, false},
-		{"valid UpdateDeviceServiceRequest, no Request Id", noReqID, false},
-		{"invalid UpdateDeviceServiceRequest, no Request Id", invalidReqID, true},
+		{"valid UpdateDeviceServiceRequest, no Request Id", noReqId, false},
+		{"invalid UpdateDeviceServiceRequest, no Request Id", invalidReqId, true},
 		{"invalid UpdateDeviceServiceRequest, no Id and Name", noIdAndName, true},
 		{"invalid UpdateDeviceServiceRequest, invalid OperatingState", invalidOperatingState, true},
 		{"invalid UpdateDeviceServiceRequest, invalid AdminState", invalidAdminState, true},

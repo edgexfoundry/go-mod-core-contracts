@@ -13,25 +13,25 @@ import (
 )
 
 func TestNewDeviceResponse(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedDevice := dtos.Device{Name: "test device"}
-	actual := NewDeviceResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedDevice)
+	actual := NewDeviceResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDevice)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedDevice, actual.Device)
 }
 
 func TestNewDeviceResponseNoMessage(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedDevice := dtos.Device{Name: "test device"}
-	actual := NewDeviceResponseNoMessage(expectedRequestID, expectedStatusCode, expectedDevice)
+	actual := NewDeviceResponseNoMessage(expectedRequestId, expectedStatusCode, expectedDevice)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedDevice, actual.Device)
 }

@@ -15,22 +15,22 @@ import (
 )
 
 func TestNewBaseResponse(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
-	actual := NewBaseResponse(expectedRequestID, expectedMessage, expectedStatusCode)
+	actual := NewBaseResponse(expectedRequestId, expectedMessage, expectedStatusCode)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
 }
 
 func TestNewBaseResponseNoMessage(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
-	actual := NewBaseResponseNoMessage(expectedRequestID, expectedStatusCode)
+	actual := NewBaseResponseNoMessage(expectedRequestId, expectedStatusCode)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Empty(t, actual.Message)
 }
@@ -41,25 +41,25 @@ func TestNewVersionable(t *testing.T) {
 }
 
 func TestNewBaseWithIdResponse(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
 	expectedId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
-	actual := NewBaseWithIdResponse(expectedRequestID, expectedMessage, expectedStatusCode, expectedId)
+	actual := NewBaseWithIdResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedId)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedId, actual.Id)
 }
 
 func TestNewBaseWithIdResponseNoMessage(t *testing.T) {
-	expectedRequestID := "123456"
+	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
-	actual := NewBaseWithIdResponseNoMessage(expectedRequestID, expectedStatusCode, expectedId)
+	actual := NewBaseWithIdResponseNoMessage(expectedRequestId, expectedStatusCode, expectedId)
 
-	assert.Equal(t, expectedRequestID, actual.RequestID)
+	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedId, actual.Id)
 }
