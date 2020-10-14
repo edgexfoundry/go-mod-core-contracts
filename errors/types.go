@@ -17,19 +17,20 @@ type ErrKind string
 
 const (
 	// Constant Kind identifiers which can be used to label and group errors.
-	KindUnknown            ErrKind = "Unknown"
-	KindDatabaseError      ErrKind = "Database"
-	KindCommunicationError ErrKind = "Communication"
-	KindEntityDoesNotExist ErrKind = "NotFound"
-	KindContractInvalid    ErrKind = "ContractInvalid"
-	KindServerError        ErrKind = "UnexpectedServerError"
-	KindLimitExceeded      ErrKind = "LimitExceeded"
-	KindDuplicateName      ErrKind = "DuplicateName"
-	KindInvalidId          ErrKind = "InvalidId"
-	KindServiceUnavailable ErrKind = "ServiceUnavailable"
-	KindNotAllowed         ErrKind = "NotAllowed"
-	KindServiceLocked      ErrKind = "ServiceLocked"
-	KindNotImplemented     ErrKind = "NotImplemented"
+	KindUnknown             ErrKind = "Unknown"
+	KindDatabaseError       ErrKind = "Database"
+	KindCommunicationError  ErrKind = "Communication"
+	KindEntityDoesNotExist  ErrKind = "NotFound"
+	KindContractInvalid     ErrKind = "ContractInvalid"
+	KindServerError         ErrKind = "UnexpectedServerError"
+	KindLimitExceeded       ErrKind = "LimitExceeded"
+	KindDuplicateName       ErrKind = "DuplicateName"
+	KindInvalidId           ErrKind = "InvalidId"
+	KindServiceUnavailable  ErrKind = "ServiceUnavailable"
+	KindNotAllowed          ErrKind = "NotAllowed"
+	KindServiceLocked       ErrKind = "ServiceLocked"
+	KindNotImplemented      ErrKind = "NotImplemented"
+	KindRangeNotSatisfiable ErrKind = "RangeNotSatisfiable"
 )
 
 // EdgeX provides an abstraction for all internal EdgeX errors.
@@ -197,6 +198,8 @@ func codeMapping(kind ErrKind) int {
 		return http.StatusNotImplemented
 	case KindNotAllowed:
 		return http.StatusMethodNotAllowed
+	case KindRangeNotSatisfiable:
+		return http.StatusRequestedRangeNotSatisfiable
 	default:
 		return http.StatusInternalServerError
 	}
