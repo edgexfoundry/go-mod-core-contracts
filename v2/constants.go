@@ -65,4 +65,13 @@ const (
 	Name          = "name"
 	Manufacturer  = "manufacturer"
 	Model         = "model"
+	Offset        = "offset" //query string to specify the number of items to skip before starting to collect the result set.
+	Limit         = "limit"  //query string to specify the numbers of items to return
+	Labels        = "labels" //query string to specify associated user-defined labels for querying a given object. More than one label may be specified via a comma-delimited list
+)
+
+// Constants related to the default value of query strings in the v2 service APIs
+const (
+	DefaultOffset = 0
+	DefaultLimit  = 20
 )
