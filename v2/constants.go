@@ -72,6 +72,7 @@ const (
 
 // Constants related to the default value of query strings in the v2 service APIs
 const (
-	DefaultOffset = 0
-	DefaultLimit  = 20
+	DefaultOffset  = 0
+	DefaultLimit   = 20
+	CommaSeparator = ","
 )
