@@ -48,10 +48,15 @@ func (d *AddDeviceRequest) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+// AddDeviceReqToDeviceModel transforms the AddDeviceRequest DTO to the Device model
+func AddDeviceReqToDeviceModel(addRequest AddDeviceRequest) (Device models.Device) {
+	return dtos.ToDeviceModel(addRequest.Device)
+}
+
 // AddDeviceReqToDeviceModels transforms the AddDeviceRequest DTO array to the Device model array
 func AddDeviceReqToDeviceModels(addRequests []AddDeviceRequest) (Devices []models.Device) {
 	for _, req := range addRequests {
-		d := dtos.ToDeviceModel(req.Device)
+		d := AddDeviceReqToDeviceModel(req)
 		Devices = append(Devices, d)
 	}
 	return Devices
