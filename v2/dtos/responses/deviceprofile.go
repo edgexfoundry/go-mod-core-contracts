@@ -18,10 +18,6 @@ type DeviceProfileResponse struct {
 	Profile             dtos.DeviceProfile `json:"profile"`
 }
 
-func NewDeviceProfileResponseNoMessage(requestId string, statusCode int, deviceProfile dtos.DeviceProfile) DeviceProfileResponse {
-	return NewDeviceProfileResponse(requestId, "", statusCode, deviceProfile)
-}
-
 func NewDeviceProfileResponse(requestId string, message string, statusCode int, deviceProfile dtos.DeviceProfile) DeviceProfileResponse {
 	return DeviceProfileResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),

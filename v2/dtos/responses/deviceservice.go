@@ -18,10 +18,6 @@ type DeviceServiceResponse struct {
 	Service             dtos.DeviceService `json:"service"`
 }
 
-func NewDeviceServiceResponseNoMessage(requestId string, statusCode int, deviceService dtos.DeviceService) DeviceServiceResponse {
-	return NewDeviceServiceResponse(requestId, "", statusCode, deviceService)
-}
-
 func NewDeviceServiceResponse(requestId string, message string, statusCode int, deviceService dtos.DeviceService) DeviceServiceResponse {
 	return DeviceServiceResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),

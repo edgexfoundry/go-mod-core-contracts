@@ -25,17 +25,6 @@ func TestNewDeviceServiceResponse(t *testing.T) {
 	assert.Equal(t, expectedDeviceService, actual.Service)
 }
 
-func TestNewDeviceServiceResponseNoMessage(t *testing.T) {
-	expectedRequestId := "123456"
-	expectedStatusCode := 200
-	expectedDeviceService := dtos.DeviceService{Name: "test device service"}
-	actual := NewDeviceServiceResponseNoMessage(expectedRequestId, expectedStatusCode, expectedDeviceService)
-
-	assert.Equal(t, expectedRequestId, actual.RequestId)
-	assert.Equal(t, expectedStatusCode, actual.StatusCode)
-	assert.Equal(t, expectedDeviceService, actual.Service)
-}
-
 func TestNewMultiDeviceServicesResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200

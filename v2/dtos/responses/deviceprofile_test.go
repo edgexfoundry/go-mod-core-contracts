@@ -25,17 +25,6 @@ func TestNewDeviceProfileResponse(t *testing.T) {
 	assert.Equal(t, expectedDeviceProfile, actual.Profile)
 }
 
-func TestNewDeviceProfileResponseNoMessage(t *testing.T) {
-	expectedRequestId := "123456"
-	expectedStatusCode := 200
-	expectedDeviceProfile := dtos.DeviceProfile{Name: "test device profile"}
-	actual := NewDeviceProfileResponseNoMessage(expectedRequestId, expectedStatusCode, expectedDeviceProfile)
-
-	assert.Equal(t, expectedRequestId, actual.RequestId)
-	assert.Equal(t, expectedStatusCode, actual.StatusCode)
-	assert.Equal(t, expectedDeviceProfile, actual.Profile)
-}
-
 func TestNewMultiDeviceProfilesResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200

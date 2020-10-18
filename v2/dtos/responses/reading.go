@@ -34,19 +34,11 @@ type MultiReadingsResponse struct {
 	Readings            []dtos.BaseReading `json:"readings"`
 }
 
-func NewReadingCountResponseNoMessage(requestId string, statusCode int, count uint32) ReadingCountResponse {
-	return NewReadingCountResponse(requestId, "", statusCode, count)
-}
-
 func NewReadingCountResponse(requestId string, message string, statusCode int, count uint32) ReadingCountResponse {
 	return ReadingCountResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Count:        count,
 	}
-}
-
-func NewReadingResponseNoMessage(requestId string, statusCode int, reading dtos.BaseReading) ReadingResponse {
-	return NewReadingResponse(requestId, "", statusCode, reading)
 }
 
 func NewReadingResponse(requestId string, message string, statusCode int, reading dtos.BaseReading) ReadingResponse {

@@ -37,10 +37,6 @@ type BaseWithIdResponse struct {
 	Id           string `json:"id"`
 }
 
-func NewBaseResponseNoMessage(requestId string, statusCode int) BaseResponse {
-	return NewBaseResponse(requestId, "", statusCode)
-}
-
 func NewBaseResponse(requestId string, message string, statusCode int) BaseResponse {
 	return BaseResponse{
 		Versionable: NewVersionable(),
@@ -52,10 +48,6 @@ func NewBaseResponse(requestId string, message string, statusCode int) BaseRespo
 
 func NewVersionable() Versionable {
 	return Versionable{ApiVersion: v2.ApiVersion}
-}
-
-func NewBaseWithIdResponseNoMessage(requestId string, statusCode int, id string) BaseWithIdResponse {
-	return NewBaseWithIdResponse(requestId, "", statusCode, id)
 }
 
 func NewBaseWithIdResponse(requestId string, message string, statusCode int, id string) BaseWithIdResponse {
