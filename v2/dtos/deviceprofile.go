@@ -10,9 +10,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
-// DeviceProfile represents the attributes and operational capabilities of a device. It is a template for which
-// there can be multiple matching devices within a given system.
-// This object and its properties correspond to the DeviceProfile object in the APIv2 specification:
+// DeviceProfile and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceProfile
 type DeviceProfile struct {
 	common.Versionable `json:",inline"`

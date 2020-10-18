@@ -10,8 +10,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
-// Device represents a registered device participating within the EdgeX Foundry ecosystem
-// This object and its properties correspond to the Device object in the APIv2 specification:
+// Device and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Device
 type Device struct {
 	common.Versionable `json:",inline"`
@@ -32,8 +31,7 @@ type Device struct {
 	Protocols          map[string]ProtocolProperties `json:"protocols,omitempty" validate:"required,gt=0"`
 }
 
-// UpdateDevice represents a registered device participating within the EdgeX Foundry ecosystem
-// This object and its properties correspond to the UpdateDevice object in the APIv2 specification:
+// UpdateDevice and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDevice
 type UpdateDevice struct {
 	Id             *string                       `json:"id" validate:"required_without=Name"`

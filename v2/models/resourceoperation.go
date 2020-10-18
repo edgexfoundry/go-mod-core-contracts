@@ -5,9 +5,11 @@
 
 package models
 
-// ResourceOperation defines an operation of which a device is capable
+// ResourceOperation and its properties are defined in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ResourceOperation
+// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type ResourceOperation struct {
-	DeviceResource string // The replacement of Object field
+	DeviceResource string
 	Parameter      string
 	Mappings       map[string]string
 }

@@ -5,7 +5,9 @@
 
 package models
 
-// ProfileResource defines read/write capabilities native to the device
+// ProfileResource and its properties are defined in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ProfileResource
+// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type ProfileResource struct {
 	Name string
 	Get  []ResourceOperation
