@@ -14,8 +14,8 @@ const (
 	ApiEventIdRoute            = ApiEventRoute + "/" + Id + "/{" + Id + "}"
 	ApiEventPushRoute          = ApiEventRoute + "/" + Pushed
 	ApiEventCountRoute         = ApiEventRoute + "/" + Count
-	ApiEventCountByDeviceRoute = ApiEventCountRoute + "/" + Device + "/{" + DeviceIdParam + "}"
-	ApiEventByDeviceRoute      = ApiEventRoute + "/" + Device + "/{" + DeviceIdParam + "}"
+	ApiEventCountByDeviceRoute = ApiEventCountRoute + "/" + Device + "/{" + DeviceName + "}"
+	ApiEventByDeviceRoute      = ApiEventRoute + "/" + Device + "/{" + DeviceName + "}"
 	ApiAllEventByDeviceRoute   = ApiEventByDeviceRoute + "/" + All
 	ApiEventByTimeRangeRoute   = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
 	ApiEventByAgeRoute         = ApiEventRoute + "/" + Age + "/{" + Age + "}"
@@ -24,7 +24,7 @@ const (
 	ApiAllReadingRoute         = ApiReadingRoute + "/" + All
 	ApiReadingCountRoute       = ApiReadingRoute + "/" + Count
 	ApiReadingIdRoute          = ApiReadingRoute + "/" + Id + "/{" + Id + "}"
-	ApiAllReadingByDeviceRoute = ApiReadingRoute + "/" + Device + "/{" + DeviceIdParam + "}/" + All
+	ApiAllReadingByDeviceRoute = ApiReadingRoute + "/" + Device + "/{" + DeviceName + "}/" + All
 	ApiReadingByTypeRoute      = ApiReadingRoute + "/" + Type + "/{" + Type + "}"
 	ApiReadingByTimeRangeRoute = ApiReadingRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
 
@@ -51,23 +51,29 @@ const (
 
 // Constants related to defined url path names and parameters in the v2 service APIs
 const (
-	All           = "all"
-	Id            = "id"
-	Pushed        = "pushed"
-	Count         = "count"
-	Device        = "device"
-	DeviceIdParam = "deviceId"
-	Start         = "start"
-	End           = "end"
-	Age           = "age"
-	Scrub         = "scrub"
-	Type          = "type"
-	Name          = "name"
-	Manufacturer  = "manufacturer"
-	Model         = "model"
-	Offset        = "offset" //query string to specify the number of items to skip before starting to collect the result set.
-	Limit         = "limit"  //query string to specify the numbers of items to return
-	Labels        = "labels" //query string to specify associated user-defined labels for querying a given object. More than one label may be specified via a comma-delimited list
+	All          = "all"
+	Id           = "id"
+	Created      = "created"
+	Modified     = "modified"
+	Pushed       = "pushed"
+	Count        = "count"
+	Device       = "device"
+	DeviceId     = "deviceId"
+	DeviceName   = "deviceName"
+	ProfileName  = "profileName"
+	ServiceName  = "serviceName"
+	Start        = "start"
+	End          = "end"
+	Age          = "age"
+	Scrub        = "scrub"
+	Type         = "type"
+	Name         = "name"
+	Manufacturer = "manufacturer"
+	Model        = "model"
+	ValueType    = "valueType"
+	Offset       = "offset" //query string to specify the number of items to skip before starting to collect the result set.
+	Limit        = "limit"  //query string to specify the numbers of items to return
+	Labels       = "labels" //query string to specify associated user-defined labels for querying a given object. More than one label may be specified via a comma-delimited list
 )
 
 // Constants related to the default value of query strings in the v2 service APIs
