@@ -81,6 +81,7 @@ const (
 	Scrub        = "scrub"
 	Type         = "type"
 	Name         = "name"
+	Label        = "label"
 	Manufacturer = "manufacturer"
 	Model        = "model"
 	ValueType    = "valueType"
