@@ -42,7 +42,17 @@ const (
 	ApiDeviceServiceByNameRoute = ApiDeviceServiceRoute + "/" + Name + "/{" + Name + "}"
 	ApiDeviceServiceByIdRoute   = ApiDeviceServiceRoute + "/" + Id + "/{" + Id + "}"
 
-	ApiDeviceRoute  = ApiBase + "/device"
+	ApiDeviceRoute                 = ApiBase + "/device"
+	ApiAllDeviceRoute              = ApiDeviceRoute + "/" + All
+	ApiDeviceExistsByIdRoute       = ApiDeviceRoute + "/" + Check + "/" + Id + "/{" + Id + "}"
+	ApiDeviceExistsByNameRoute     = ApiDeviceRoute + "/" + Check + "/" + Name + "/{" + Name + "}"
+	ApiDeviceByIdRoute             = ApiDeviceRoute + "/" + Id + "/{" + Id + "}"
+	ApiDeviceByNameRoute           = ApiDeviceRoute + "/" + Name + "/{" + Name + "}"
+	ApiAllDeviceByProfileIdRoute   = ApiDeviceRoute + "/" + Profile + "/" + Id + "/{" + Id + "}"
+	ApiAllDeviceByProfileNameRoute = ApiDeviceRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
+	ApiAllDeviceByServiceIdRoute   = ApiDeviceRoute + "/" + Service + "/" + Id + "/{" + Id + "}"
+	ApiAllDeviceByServiceNameRoute = ApiDeviceRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
+
 	ApiConfigRoute  = ApiBase + "/config"
 	ApiMetricsRoute = ApiBase + "/metrics"
 	ApiPingRoute    = ApiBase + "/ping"
@@ -60,6 +70,9 @@ const (
 	Device       = "device"
 	DeviceId     = "deviceId"
 	DeviceName   = "deviceName"
+	Check        = "check"
+	Profile      = "profile"
+	Service      = "service"
 	ProfileName  = "profileName"
 	ServiceName  = "serviceName"
 	Start        = "start"
