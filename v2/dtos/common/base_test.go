@@ -25,16 +25,6 @@ func TestNewBaseResponse(t *testing.T) {
 	assert.Equal(t, expectedMessage, actual.Message)
 }
 
-func TestNewBaseResponseNoMessage(t *testing.T) {
-	expectedRequestId := "123456"
-	expectedStatusCode := 200
-	actual := NewBaseResponseNoMessage(expectedRequestId, expectedStatusCode)
-
-	assert.Equal(t, expectedRequestId, actual.RequestId)
-	assert.Equal(t, expectedStatusCode, actual.StatusCode)
-	assert.Empty(t, actual.Message)
-}
-
 func TestNewVersionable(t *testing.T) {
 	actual := NewVersionable()
 	assert.Equal(t, v2.ApiVersion, actual.ApiVersion)
@@ -50,16 +40,5 @@ func TestNewBaseWithIdResponse(t *testing.T) {
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
-	assert.Equal(t, expectedId, actual.Id)
-}
-
-func TestNewBaseWithIdResponseNoMessage(t *testing.T) {
-	expectedRequestId := "123456"
-	expectedStatusCode := 200
-	expectedId := "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"
-	actual := NewBaseWithIdResponseNoMessage(expectedRequestId, expectedStatusCode, expectedId)
-
-	assert.Equal(t, expectedRequestId, actual.RequestId)
-	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedId, actual.Id)
 }

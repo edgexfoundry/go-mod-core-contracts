@@ -43,20 +43,12 @@ type UpdateEventPushedByIdResponse struct {
 	Id                  string `json:"id"`
 }
 
-func NewEventCountResponseNoMessage(requestId string, statusCode int, count uint32, deviceId string) EventCountResponse {
-	return NewEventCountResponse(requestId, "", statusCode, count, deviceId)
-}
-
 func NewEventCountResponse(requestId string, message string, statusCode int, count uint32, deviceName string) EventCountResponse {
 	return EventCountResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Count:        count,
 		DeviceName:   deviceName,
 	}
-}
-
-func NewEventResponseNoMessage(requestId string, statusCode int, event dtos.Event) EventResponse {
-	return NewEventResponse(requestId, "", statusCode, event)
 }
 
 func NewEventResponse(requestId string, message string, statusCode int, event dtos.Event) EventResponse {
@@ -71,10 +63,6 @@ func NewMultiEventsResponse(requestId string, message string, statusCode int, ev
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Events:       events,
 	}
-}
-
-func NewUpdateEventPushedByIdResponseNoMessage(requestId string, statusCode int, id string) UpdateEventPushedByIdResponse {
-	return NewUpdateEventPushedByIdResponse(requestId, "", statusCode, id)
 }
 
 func NewUpdateEventPushedByIdResponse(requestId string, message string, statusCode int, id string) UpdateEventPushedByIdResponse {
