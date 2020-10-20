@@ -35,12 +35,12 @@ type MultiEventsResponse struct {
 	Events              []dtos.Event `json:"events"`
 }
 
-// UpdateEventPushedByChecksumResponse defines the Response Content for PUT event as pushed DTO.
-// This object and its properties correspond to the UpdateEventPushedByChecksumResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/UpdateEventPushedByChecksumResponse
-type UpdateEventPushedByChecksumResponse struct {
+// UpdateEventPushedByIdResponse defines the Response Content for PUT event as pushed DTO.
+// This object and its properties correspond to the UpdateEventPushedByIdResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/UpdateEventPushedByIdResponse
+type UpdateEventPushedByIdResponse struct {
 	common.BaseResponse `json:",inline"`
-	Checksum            string `json:"checksum"`
+	Id                  string `json:"id"`
 }
 
 func NewEventCountResponseNoMessage(requestId string, statusCode int, count uint32, deviceId string) EventCountResponse {
@@ -73,13 +73,13 @@ func NewMultiEventsResponse(requestId string, message string, statusCode int, ev
 	}
 }
 
-func NewUpdateEventPushedByChecksumResponseNoMessage(requestId string, statusCode int, checksum string) UpdateEventPushedByChecksumResponse {
-	return NewUpdateEventPushedByChecksumResponse(requestId, "", statusCode, checksum)
+func NewUpdateEventPushedByIdResponseNoMessage(requestId string, statusCode int, id string) UpdateEventPushedByIdResponse {
+	return NewUpdateEventPushedByIdResponse(requestId, "", statusCode, id)
 }
 
-func NewUpdateEventPushedByChecksumResponse(requestId string, message string, statusCode int, checksum string) UpdateEventPushedByChecksumResponse {
-	return UpdateEventPushedByChecksumResponse{
+func NewUpdateEventPushedByIdResponse(requestId string, message string, statusCode int, id string) UpdateEventPushedByIdResponse {
+	return UpdateEventPushedByIdResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
-		Checksum:     checksum,
+		Id:           id,
 	}
 }

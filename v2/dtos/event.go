@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"strings"
 
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )

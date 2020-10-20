@@ -23,12 +23,12 @@ type AddEventRequest struct {
 	Event              dtos.Event `json:"event" validate:"required"`
 }
 
-// UpdateEventPushedByChecksumRequest defines the Request Content for PUT event as pushed DTO.
-// This object and its properties correspond to the UpdateEventPushedByChecksumRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/UpdateEventPushedByChecksumRequest
-type UpdateEventPushedByChecksumRequest struct {
+// UpdateEventPushedByIdRequest defines the Request Content for PUT event as pushed DTO.
+// This object and its properties correspond to the UpdateEventPushedByIdRequest object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/UpdateEventPushedByIdRequest
+type UpdateEventPushedByIdRequest struct {
 	common.BaseRequest `json:",inline"`
-	Checksum           string `json:"checksum" validate:"required"`
+	Id                 string `json:"id" validate:"required,uuid"`
 }
 
 // Validate satisfies the Validator interface
