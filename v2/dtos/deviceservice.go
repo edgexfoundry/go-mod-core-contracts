@@ -10,9 +10,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
-// DeviceService represents a service that is responsible for proxying connectivity between a set of devices and the
-// EdgeX Foundry core services.
-// This object and its properties correspond to the DeviceService object in the APIv2 specification:
+// DeviceService and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceService
 type DeviceService struct {
 	common.Versionable `json:",inline"`
@@ -29,9 +27,7 @@ type DeviceService struct {
 	AdminState         string   `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 }
 
-// UpdateDeviceService represents a service that is responsible for proxying connectivity between a set of devices and the
-// EdgeX Foundry core services.
-// This object and its properties correspond to the UpdateDeviceService object in the APIv2 specification:
+// UpdateDeviceService and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceService
 type UpdateDeviceService struct {
 	Id             *string  `json:"id" validate:"required_without=Name"`

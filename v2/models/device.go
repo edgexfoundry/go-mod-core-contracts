@@ -5,23 +5,25 @@
 
 package models
 
-// Device represents a registered device participating within the EdgeX Foundry ecosystem
+// Device and its properties are defined in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Device
+// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Device struct {
 	Timestamps
-	Id             string                        // Id uniquely identifies the device, a UUID for example
-	Name           string                        // Unique name for identifying a device
-	Description    string                        // Description of the device
-	AdminState     AdminState                    // Admin state (locked/unlocked)
-	OperatingState OperatingState                // Operating state (enabled/disabled)
-	Protocols      map[string]ProtocolProperties // A map of supported protocols for the given device
-	LastConnected  int64                         // Time (milliseconds) that the device last provided any feedback or responded to any request
-	LastReported   int64                         // Time (milliseconds) that the device reported data to the core microservice
-	Labels         []string                      // Other labels applied to the device to help with searching
-	Location       interface{}                   // Device service specific location (interface{} is an empty interface so it can be anything)
-	ServiceName    string                        // Associated Device Service - One per device
-	ProfileName    string                        // Associated Device Profile - Describes the device
-	AutoEvents     []AutoEvent                   // A list of auto-generated events coming from the device
-	Notify         bool                          // If the 'notify' property is set to true, the device service managing the device will receive a notification.
+	Id             string
+	Name           string
+	Description    string
+	AdminState     AdminState
+	OperatingState OperatingState
+	Protocols      map[string]ProtocolProperties
+	LastConnected  int64
+	LastReported   int64
+	Labels         []string
+	Location       interface{}
+	ServiceName    string
+	ProfileName    string
+	AutoEvents     []AutoEvent
+	Notify         bool
 }
 
 // ProtocolProperties contains the device connection information in key/value pair

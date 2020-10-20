@@ -15,8 +15,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
-// Event represents a single measurable event read from a device
-// This object and its properties correspond to the Event object in the APIv2 specification:
+// Event and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/Event
 type Event struct {
 	common.Versionable `json:",inline"`
@@ -29,6 +28,7 @@ type Event struct {
 	Tags               map[string]string `json:"tags,omitempty" xml:"-"` // Have to ignore since map not supported for XML
 }
 
+// FromEventModelToDTO transforms the Event Model to the Event DTO
 func FromEventModelToDTO(event models.Event) Event {
 	var readings []BaseReading
 	for _, reading := range event.Readings {

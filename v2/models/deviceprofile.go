@@ -5,17 +5,18 @@
 
 package models
 
-// DeviceProfile represents the attributes and operational capabilities of a device. It is a template for which
-// there can be multiple matching devices within a given system.
+// DeviceProfile and its properties are defined in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceProfile
+// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type DeviceProfile struct {
 	Timestamps
-	Description     string // Description.
+	Description     string
 	Id              string
-	Name            string   // Non-database identifier (must be unique)
-	Manufacturer    string   // Manufacturer of the device
-	Model           string   // Model of the device
-	Labels          []string // Labels used to search for groups of profiles
+	Name            string
+	Manufacturer    string
+	Model           string
+	Labels          []string
 	DeviceResources []DeviceResource
 	DeviceCommands  []ProfileResource
-	CoreCommands    []Command // List of commands to Get/Put information for devices associated with this profile
+	CoreCommands    []Command
 }

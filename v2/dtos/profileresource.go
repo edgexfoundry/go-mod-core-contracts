@@ -7,8 +7,7 @@ package dtos
 
 import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
-// ProfileResource defines read/write capabilities native to the device
-// This object and its properties correspond to the ProfileResource object in the APIv2 specification:
+// ProfileResource and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ProfileResource
 type ProfileResource struct {
 	Name string              `json:"name,omitempty" yaml:"name,omitempty" validate:"required"`
