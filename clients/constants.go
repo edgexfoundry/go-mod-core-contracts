@@ -79,4 +79,5 @@ const (
 	ContentTypeJSON = "application/json"
 	ContentTypeYAML = "application/x-yaml"
 	ContentTypeText = "text/plain"
+	ContentTypeXML  = "application/xml"
 )
