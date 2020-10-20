@@ -81,26 +81,26 @@ func TestNewMultiEventsResponse(t *testing.T) {
 	assert.Equal(t, expectedEvents, actual.Events)
 }
 
-func TestNewUpdateEventPushedByChecksumResponse(t *testing.T) {
+func TestNewUpdateEventPushedByIdResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
-	expectedChecksum := "04698a6f20feecb8bbf7cd01e59d31ba1ce17b24ba14b71a8fb370065d951f57"
-	actual := NewUpdateEventPushedByChecksumResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedChecksum)
+	expectedId := "11111111-2222-3333-4444-555555555555"
+	actual := NewUpdateEventPushedByIdResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedId)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
-	assert.Equal(t, expectedChecksum, actual.Checksum)
+	assert.Equal(t, expectedId, actual.Id)
 }
 
-func TestNewUpdateEventPushedByChecksumResponseNoMessage(t *testing.T) {
+func TestNewUpdateEventPushedByIdResponseNoMessage(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200
-	expectedChecksum := "04698a6f20feecb8bbf7cd01e59d31ba1ce17b24ba14b71a8fb370065d951f57"
-	actual := NewUpdateEventPushedByChecksumResponseNoMessage(expectedRequestId, expectedStatusCode, expectedChecksum)
+	expectedId := "11111111-2222-3333-4444-555555555555"
+	actual := NewUpdateEventPushedByIdResponseNoMessage(expectedRequestId, expectedStatusCode, expectedId)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
-	assert.Equal(t, expectedChecksum, actual.Checksum)
+	assert.Equal(t, expectedId, actual.Id)
 }
