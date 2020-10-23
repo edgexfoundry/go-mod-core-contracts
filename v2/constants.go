@@ -7,26 +7,27 @@ package v2
 
 // Constants related to defined routes in the v2 service APIs
 const (
-	ApiVersion                 = "v2"
-	ApiBase                    = "/api/v2"
-	ApiEventRoute              = ApiBase + "/event"
-	ApiAllEventRoute           = ApiEventRoute + "/" + All
-	ApiEventIdRoute            = ApiEventRoute + "/" + Id + "/{" + Id + "}"
-	ApiEventPushRoute          = ApiEventRoute + "/" + Pushed
-	ApiEventCountRoute         = ApiEventRoute + "/" + Count
-	ApiEventCountByDeviceRoute = ApiEventCountRoute + "/" + Device + "/{" + DeviceName + "}"
-	ApiEventByDeviceRoute      = ApiEventRoute + "/" + Device + "/{" + DeviceName + "}"
-	ApiAllEventByDeviceRoute   = ApiEventByDeviceRoute + "/" + All
-	ApiEventByTimeRangeRoute   = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiEventByAgeRoute         = ApiEventRoute + "/" + Age + "/{" + Age + "}"
-	ApiEventScrubRoute         = ApiEventRoute + "/" + Scrub
-	ApiReadingRoute            = ApiBase + "/reading"
-	ApiAllReadingRoute         = ApiReadingRoute + "/" + All
-	ApiReadingCountRoute       = ApiReadingRoute + "/" + Count
-	ApiReadingIdRoute          = ApiReadingRoute + "/" + Id + "/{" + Id + "}"
-	ApiAllReadingByDeviceRoute = ApiReadingRoute + "/" + Device + "/{" + DeviceName + "}/" + All
-	ApiReadingByTypeRoute      = ApiReadingRoute + "/" + Type + "/{" + Type + "}"
-	ApiReadingByTimeRangeRoute = ApiReadingRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiVersion = "v2"
+	ApiBase    = "/api/v2"
+
+	ApiEventRoute                = ApiBase + "/event"
+	ApiAllEventRoute             = ApiEventRoute + "/" + All
+	ApiEventIdRoute              = ApiEventRoute + "/" + Id + "/{" + Id + "}"
+	ApiEventPushRoute            = ApiEventRoute + "/" + Pushed
+	ApiEventCountRoute           = ApiEventRoute + "/" + Count
+	ApiEventCountByDeviceRoute   = ApiEventCountRoute + "/" + Device + "/{" + DeviceName + "}"
+	ApiAllEventByDeviceNameRoute = ApiEventRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
+	ApiEventByTimeRangeRoute     = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiEventByAgeRoute           = ApiEventRoute + "/" + Age + "/{" + Age + "}"
+	ApiEventScrubRoute           = ApiEventRoute + "/" + Scrub
+
+	ApiReadingRoute                = ApiBase + "/reading"
+	ApiAllReadingRoute             = ApiReadingRoute + "/" + All
+	ApiReadingCountRoute           = ApiReadingRoute + "/" + Count
+	ApiReadingIdRoute              = ApiReadingRoute + "/" + Id + "/{" + Id + "}"
+	ApiAllReadingByDeviceNameRoute = ApiReadingRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
+	ApiReadingByTypeRoute          = ApiReadingRoute + "/" + Type + "/{" + Type + "}"
+	ApiReadingByTimeRangeRoute     = ApiReadingRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
 
 	ApiDeviceProfileRoute                       = ApiBase + "/deviceprofile"
 	ApiDeviceProfileUploadFileRoute             = ApiDeviceProfileRoute + "/uploadfile"
