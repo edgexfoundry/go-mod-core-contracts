@@ -14,8 +14,8 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceProfile
 type DeviceProfile struct {
 	common.Versionable `json:",inline"`
-	Id                 string            `json:"id,omitempty"`
-	Name               string            `json:"name" yaml:"name" validate:"required" `
+	Id                 string            `json:"id,omitempty" validate:"omitempty,uuid"`
+	Name               string            `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string" `
 	Manufacturer       string            `json:"manufacturer,omitempty" yaml:"manufacturer,omitempty"`
 	Description        string            `json:"description,omitempty" yaml:"description,omitempty"`
 	Model              string            `json:"model,omitempty" yaml:"model,omitempty"`

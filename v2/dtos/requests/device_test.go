@@ -85,6 +85,7 @@ func mockUpdateDevice() dtos.UpdateDevice {
 }
 
 func TestAddDeviceRequest_Validate(t *testing.T) {
+	emptyString := " "
 	valid := testAddDevice
 	invalidFrequency := testAddDevice
 	invalidFrequency.Device.AutoEvents = testAutoEventsWithInvalidFrequency
@@ -93,11 +94,11 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 	invalidReqId := testAddDevice
 	invalidReqId.RequestId = "abc"
 	noDeviceName := testAddDevice
-	noDeviceName.Device.Name = ""
+	noDeviceName.Device.Name = emptyString
 	noServiceName := testAddDevice
-	noServiceName.Device.ServiceName = ""
+	noServiceName.Device.ServiceName = emptyString
 	noProfileName := testAddDevice
-	noProfileName.Device.ProfileName = ""
+	noProfileName.Device.ProfileName = emptyString
 	noProtocols := testAddDevice
 	noProtocols.Device.Protocols = map[string]dtos.ProtocolProperties{}
 	noAutoEventFrequency := testAddDevice
@@ -222,42 +223,85 @@ func TestUpdateDeviceRequest_UnmarshalJSON(t *testing.T) {
 }
 
 func TestUpdateDeviceRequest_Validate(t *testing.T) {
+	emptyString := " "
+	invalidUUID := "invalidUUID"
+
 	valid := testUpdateDevice
-	validWithoutId := testUpdateDevice
-	validWithoutId.Device.Id = nil
-	validWithoutDeviceName := testUpdateDevice
-	validWithoutDeviceName.Device.Name = nil
-	noReqId := testUpdateDevice
+	noReqId := valid
 	noReqId.RequestId = ""
-	invalidReqId := testUpdateDevice
-	invalidReqId.RequestId = "123"
-	noIdAndDeviceName := testUpdateDevice
-	noIdAndDeviceName.Device.Id = nil
-	noIdAndDeviceName.Device.Name = nil
+	invalidReqId := valid
+	invalidReqId.RequestId = invalidUUID
+
+	// id
+	validOnlyId := valid
+	validOnlyId.Device.Name = nil
+	invalidId := valid
+	invalidId.Device.Id = &invalidUUID
+	// name
+	validOnlyName := valid
+	validOnlyName.Device.Id = nil
+	invalidEmptyName := valid
+	invalidEmptyName.Device.Name = &emptyString
+	// no id and name
+	noIdAndName := valid
+	noIdAndName.Device.Id = nil
+	noIdAndName.Device.Name = nil
+	// description
+	validNilDescription := valid
+	validNilDescription.Device.Description = nil
+	invalidEmptyDescription := valid
+	invalidEmptyDescription.Device.Description = &emptyString
+	// ServiceName
+	validNilServiceName := valid
+	validNilServiceName.Device.ServiceName = nil
+	invalidEmptyServiceName := valid
+	invalidEmptyServiceName.Device.ServiceName = &emptyString
+	// ProfileName
+	validNilProfileName := valid
+	validNilProfileName.Device.ProfileName = nil
+	invalidEmptyProfileName := valid
+	invalidEmptyProfileName.Device.ProfileName = &emptyString
+
 	invalidState := "invalid state"
-	invalidAdminState := testUpdateDevice
+	invalidAdminState := valid
 	invalidAdminState.Device.AdminState = &invalidState
-	invalidOperatingState := testUpdateDevice
+	invalidOperatingState := valid
 	invalidOperatingState.Device.OperatingState = &invalidState
-	invalidFrequency := testUpdateDevice
+	invalidFrequency := valid
 	invalidFrequency.Device.AutoEvents = testAutoEventsWithInvalidFrequency
-	emptyProtocols := testUpdateDevice
+	emptyProtocols := valid
 	emptyProtocols.Device.Protocols = map[string]dtos.ProtocolProperties{}
+
 	tests := []struct {
 		name        string
 		req         UpdateDeviceRequest
 		expectError bool
 	}{
-		{"valid UpdateDeviceRequest", valid, false},
-		{"valid UpdateDeviceRequest without Id", validWithoutId, false},
-		{"valid UpdateDeviceRequest without Name", validWithoutDeviceName, false},
-		{"valid UpdateDeviceRequest, no Request Id", noReqId, false},
-		{"invalid UpdateDeviceRequest, Request Id is not an uuid", invalidReqId, true},
-		{"invalid UpdateDeviceRequest, invalid admin state", invalidAdminState, true},
-		{"invalid UpdateDeviceRequest, invalid operating state", invalidOperatingState, true},
-		{"invalid UpdateDeviceRequest, invalid autoEvent frequency", invalidFrequency, true},
-		{"invalid UpdateDeviceRequest, no Id and DeviceName", noIdAndDeviceName, true},
-		{"invalid UpdateDeviceRequest, empty protocols", emptyProtocols, true},
+		{"valid", valid, false},
+		{"valid, no Request Id", noReqId, false},
+		{"invalid, Request Id is not an uuid", invalidReqId, true},
+
+		{"valid, only id", validOnlyId, false},
+		{"invalid, invalid Id", invalidId, true},
+		{"valid, only name", validOnlyName, false},
+		{"invalid, empty name", invalidEmptyName, true},
+
+		{"invalid, no Id and name", noIdAndName, true},
+
+		{"valid, nil description", validNilDescription, false},
+		{"invalid, empty description", invalidEmptyDescription, true},
+
+		{"valid, nil service name", validNilServiceName, false},
+		{"invalid, empty service name", invalidEmptyServiceName, true},
+
+		{"valid, nil profile name", validNilProfileName, false},
+		{"invalid, empty profile name", invalidEmptyProfileName, true},
+
+		{"invalid, invalid admin state", invalidAdminState, true},
+		{"invalid, invalid operating state", invalidOperatingState, true},
+		{"invalid, invalid autoEvent frequency", invalidFrequency, true},
+
+		{"invalid, empty protocols", emptyProtocols, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

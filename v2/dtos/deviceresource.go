@@ -11,7 +11,7 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceResource
 type DeviceResource struct {
 	Description string            `json:"description" yaml:"description,omitempty"`
-	Name        string            `json:"name" yaml:"name,omitempty" validate:"required"`
+	Name        string            `json:"name" yaml:"name,omitempty" validate:"required,edgex-dto-none-empty-string"`
 	Tag         string            `json:"tag" yaml:"tag,omitempty"`
 	Properties  PropertyValue     `json:"properties" yaml:"properties"`
 	Attributes  map[string]string `json:"attributes" yaml:"attributes,omitempty"`

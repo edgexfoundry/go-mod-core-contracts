@@ -55,23 +55,24 @@ func mockDeviceServiceDTO() dtos.UpdateDeviceService {
 }
 
 func TestAddDeviceServiceRequest_Validate(t *testing.T) {
+	emptyString := " "
 	valid := testAddDeviceService
 	noReqId := testAddDeviceService
 	noReqId.RequestId = ""
 	invalidReqId := testAddDeviceService
 	invalidReqId.RequestId = "jfdw324"
 	noName := testAddDeviceService
-	noName.Service.Name = ""
+	noName.Service.Name = emptyString
 	noOperatingState := testAddDeviceService
-	noOperatingState.Service.OperatingState = ""
+	noOperatingState.Service.OperatingState = emptyString
 	invalidOperatingState := testAddDeviceService
 	invalidOperatingState.Service.OperatingState = "invalid"
 	noAdminState := testAddDeviceService
-	noAdminState.Service.OperatingState = ""
+	noAdminState.Service.OperatingState = emptyString
 	invalidAdminState := testAddDeviceService
 	invalidAdminState.Service.OperatingState = "invalid"
 	noBaseAddress := testAddDeviceService
-	noBaseAddress.Service.BaseAddress = ""
+	noBaseAddress.Service.BaseAddress = emptyString
 	invalidBaseAddress := testAddDeviceService
 	invalidBaseAddress.Service.BaseAddress = "invalid"
 	tests := []struct {
@@ -174,18 +175,36 @@ func TestUpdateDeviceService_UnmarshalJSON(t *testing.T) {
 }
 
 func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
+	emptyString := " "
+	invalidUUID := "invalidUUID"
+	invalidUrl := "http127.0.0.1"
+
 	valid := testUpdateDeviceService
-	validWithoutId := valid
-	validWithoutId.Service.Id = nil
-	validWithoutName := valid
-	validWithoutName.Service.Name = nil
 	noReqId := valid
 	noReqId.RequestId = ""
 	invalidReqId := valid
-	invalidReqId.RequestId = "2h022mc"
+	invalidReqId.RequestId = invalidUUID
+
+	// id
+	validOnlyId := valid
+	validOnlyId.Service.Name = nil
+	invalidId := valid
+	invalidId.Service.Id = &invalidUUID
+	// name
+	validOnlyName := valid
+	validOnlyName.Service.Id = nil
+	invalidEmptyName := valid
+	invalidEmptyName.Service.Name = &emptyString
+	// no id and name
 	noIdAndName := valid
 	noIdAndName.Service.Id = nil
 	noIdAndName.Service.Name = nil
+	// baseAddress
+	validNilBaseAddress := valid
+	validNilBaseAddress.Service.BaseAddress = nil
+	invalidBaseAddress := valid
+	invalidBaseAddress.Service.BaseAddress = &invalidUrl
+
 	invalidOperatingState := valid
 	invalid := "invalid"
 	invalidOperatingState.Service.OperatingState = &invalid
@@ -196,14 +215,22 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 		req         UpdateDeviceServiceRequest
 		expectError bool
 	}{
-		{"valid UpdateDeviceServiceRequest", valid, false},
-		{"valid UpdateDeviceServiceRequest without Id", validWithoutId, false},
-		{"valid UpdateDeviceServiceRequest without name", validWithoutName, false},
-		{"valid UpdateDeviceServiceRequest, no Request Id", noReqId, false},
-		{"invalid UpdateDeviceServiceRequest, no Request Id", invalidReqId, true},
-		{"invalid UpdateDeviceServiceRequest, no Id and Name", noIdAndName, true},
-		{"invalid UpdateDeviceServiceRequest, invalid OperatingState", invalidOperatingState, true},
-		{"invalid UpdateDeviceServiceRequest, invalid AdminState", invalidAdminState, true},
+		{"valid", valid, false},
+		{"valid, no Request Id", noReqId, false},
+		{"invalid, Request Id is not an uuid", invalidReqId, true},
+
+		{"valid, only id", validOnlyId, false},
+		{"invalid, invalid Id", invalidId, true},
+		{"valid, only name", validOnlyName, false},
+		{"invalid, empty name", invalidEmptyName, true},
+
+		{"invalid, no Id and name", noIdAndName, true},
+
+		{"valid, nil baseAddress", validNilBaseAddress, false},
+		{"invalid, invalid baseAddress", invalidBaseAddress, true},
+
+		{"invalid, invalid OperatingState", invalidOperatingState, true},
+		{"invalid, invalid AdminState", invalidAdminState, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
