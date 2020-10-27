@@ -98,13 +98,15 @@ var expectedDeviceProfile = models.DeviceProfile{
 }
 
 func TestAddDeviceProfileRequest_Validate(t *testing.T) {
+	emptyString := " "
 	valid := testAddDeviceProfileReq
 	noName := testAddDeviceProfileReq
-	noName.Profile.Name = ""
+	noName.Profile.Name = emptyString
 	noDeviceResource := testAddDeviceProfileReq
 	noDeviceResource.Profile.DeviceResources = []dtos.DeviceResource{}
 	noDeviceResourceName := testAddDeviceProfileReq
 	noDeviceResourceName.Profile.DeviceResources = []dtos.DeviceResource{{
+		Name:        emptyString,
 		Description: TestDescription,
 		Tag:         TestTag,
 		Attributes:  testAttributes,
@@ -120,13 +122,15 @@ func TestAddDeviceProfileRequest_Validate(t *testing.T) {
 		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: dtos.PropertyValue{
+			Type:      emptyString,
 			ReadWrite: "RW",
 		},
 	}}
 	noCommandName := testAddDeviceProfileReq
 	noCommandName.Profile.CoreCommands = []dtos.Command{{
-		Get: true,
-		Put: true,
+		Name: emptyString,
+		Get:  true,
+		Put:  true,
 	}}
 	noCommandGet := testAddDeviceProfileReq
 	noCommandGet.Profile.CoreCommands = []dtos.Command{{

@@ -14,8 +14,8 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceService
 type DeviceService struct {
 	common.Versionable `json:",inline"`
-	Id                 string   `json:"id,omitempty"`
-	Name               string   `json:"name" validate:"required"`
+	Id                 string   `json:"id,omitempty" validate:"omitempty,uuid"`
+	Name               string   `json:"name" validate:"required,edgex-dto-none-empty-string"`
 	Created            int64    `json:"created,omitempty"`
 	Modified           int64    `json:"modified,omitempty"`
 	Description        string   `json:"description,omitempty"`
@@ -30,9 +30,9 @@ type DeviceService struct {
 // UpdateDeviceService and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceService
 type UpdateDeviceService struct {
-	Id             *string  `json:"id" validate:"required_without=Name"`
-	Name           *string  `json:"name" validate:"required_without=Id"`
-	BaseAddress    *string  `json:"baseAddress"`
+	Id             *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name           *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
+	BaseAddress    *string  `json:"baseAddress" validate:"omitempty,uri"`
 	OperatingState *string  `json:"operatingState" validate:"omitempty,oneof='ENABLED' 'DISABLED'"`
 	Labels         []string `json:"labels"`
 	AdminState     *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`

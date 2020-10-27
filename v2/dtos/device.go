@@ -14,10 +14,10 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Device
 type Device struct {
 	common.Versionable `json:",inline"`
-	Id                 string                        `json:"id,omitempty"`
+	Id                 string                        `json:"id,omitempty" validate:"omitempty,uuid"`
 	Created            int64                         `json:"created,omitempty"`
 	Modified           int64                         `json:"modified,omitempty"`
-	Name               string                        `json:"name" validate:"required"`
+	Name               string                        `json:"name" validate:"required,edgex-dto-none-empty-string"`
 	Description        string                        `json:"description,omitempty"`
 	AdminState         string                        `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 	OperatingState     string                        `json:"operatingState" validate:"oneof='ENABLED' 'DISABLED'"`
@@ -25,8 +25,8 @@ type Device struct {
 	LastReported       int64                         `json:"lastReported,omitempty"`
 	Labels             []string                      `json:"labels,omitempty"`
 	Location           interface{}                   `json:"location,omitempty"`
-	ServiceName        string                        `json:"serviceName" validate:"required"`
-	ProfileName        string                        `json:"profileName" validate:"required"`
+	ServiceName        string                        `json:"serviceName" validate:"required,edgex-dto-none-empty-string"`
+	ProfileName        string                        `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
 	AutoEvents         []AutoEvent                   `json:"autoEvents,omitempty" validate:"dive"`
 	Protocols          map[string]ProtocolProperties `json:"protocols,omitempty" validate:"required,gt=0"`
 }
@@ -34,15 +34,15 @@ type Device struct {
 // UpdateDevice and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDevice
 type UpdateDevice struct {
-	Id             *string                       `json:"id" validate:"required_without=Name"`
-	Name           *string                       `json:"name" validate:"required_without=Id"`
-	Description    *string                       `json:"description"`
+	Id             *string                       `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name           *string                       `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
+	Description    *string                       `json:"description" validate:"omitempty,edgex-dto-none-empty-string"`
 	AdminState     *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 	OperatingState *string                       `json:"operatingState" validate:"omitempty,oneof='ENABLED' 'DISABLED'"`
 	LastConnected  *int64                        `json:"lastConnected"`
 	LastReported   *int64                        `json:"lastReported"`
-	ServiceName    *string                       `json:"serviceName"`
-	ProfileName    *string                       `json:"profileName"`
+	ServiceName    *string                       `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string"`
+	ProfileName    *string                       `json:"profileName" validate:"omitempty,edgex-dto-none-empty-string"`
 	Labels         []string                      `json:"labels"`
 	Location       interface{}                   `json:"location"`
 	AutoEvents     []AutoEvent                   `json:"autoEvents" validate:"dive"`
