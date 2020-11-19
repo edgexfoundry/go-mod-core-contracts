@@ -31,6 +31,13 @@ const (
 	KindServiceLocked       ErrKind = "ServiceLocked"
 	KindNotImplemented      ErrKind = "NotImplemented"
 	KindRangeNotSatisfiable ErrKind = "RangeNotSatisfiable"
+	KindClientError         ErrKind = "ClientError"
+	KindIOError             ErrKind = "IOError"
+)
+
+// Error codes are not defined in HTTP status codes
+const (
+	ClientErrorCode int = 0
 )
 
 // EdgeX provides an abstraction for all internal EdgeX errors.
@@ -200,6 +207,8 @@ func codeMapping(kind ErrKind) int {
 		return http.StatusMethodNotAllowed
 	case KindRangeNotSatisfiable:
 		return http.StatusRequestedRangeNotSatisfiable
+	case KindClientError, KindIOError:
+		return ClientErrorCode
 	default:
 		return http.StatusInternalServerError
 	}
