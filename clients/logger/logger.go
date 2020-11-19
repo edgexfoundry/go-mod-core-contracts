@@ -69,11 +69,6 @@ type fileWriter struct {
 // NewClient creates an instance of LoggingClient
 func NewClient(owningServiceName string, isRemote bool, logTarget string, logLevel string) LoggingClient {
 	lc := newClient(owningServiceName, isRemote, logTarget, logLevel)
-
-	if logTarget == "" {
-		lc.Error("logTarget cannot be blank, using stdout only")
-	}
-
 	return lc
 }
 
