@@ -8,7 +8,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/stretchr/testify v1.5.1
-	gopkg.in/yaml.v2 v2.2.8
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 go 1.15
