@@ -16,10 +16,11 @@ import (
 )
 
 var testSimpleReading = BaseReading{
-	DeviceName: TestDeviceName,
-	Name:       TestReadingName,
-	Origin:     TestTimestamp,
-	ValueType:  TestValueType,
+	DeviceName:   TestDeviceName,
+	ResourceName: TestReadingName,
+	ProfileName:  TestDeviceProfileName,
+	Origin:       TestTimestamp,
+	ValueType:    TestValueType,
 	SimpleReading: SimpleReading{
 		Value: TestValue,
 	},
@@ -29,10 +30,11 @@ func Test_ToReadingModel(t *testing.T) {
 	valid := testSimpleReading
 	expectedSimpleReading := models.SimpleReading{
 		BaseReading: models.BaseReading{
-			DeviceName: TestDeviceName,
-			Name:       TestReadingName,
-			Origin:     TestTimestamp,
-			ValueType:  TestValueType,
+			DeviceName:   TestDeviceName,
+			ResourceName: TestReadingName,
+			ProfileName:  TestDeviceProfileName,
+			Origin:       TestTimestamp,
+			ValueType:    TestValueType,
 		},
 		Value: TestValue,
 	}
@@ -53,23 +55,25 @@ func Test_ToReadingModel(t *testing.T) {
 func TestFromReadingModelToDTO(t *testing.T) {
 	valid := models.SimpleReading{
 		BaseReading: models.BaseReading{
-			Id:         TestUUID,
-			Created:    TestTimestamp,
-			Origin:     TestTimestamp,
-			DeviceName: TestDeviceName,
-			Name:       TestReadingName,
-			ValueType:  TestValueType,
+			Id:           TestUUID,
+			Created:      TestTimestamp,
+			Origin:       TestTimestamp,
+			DeviceName:   TestDeviceName,
+			ResourceName: TestReadingName,
+			ProfileName:  TestDeviceProfileName,
+			ValueType:    TestValueType,
 		},
 		Value: TestValue,
 	}
 	expectedDTO := BaseReading{
-		Versionable: common.Versionable{ApiVersion: v2.ApiVersion},
-		Id:          TestUUID,
-		Created:     TestTimestamp,
-		Origin:      TestTimestamp,
-		DeviceName:  TestDeviceName,
-		Name:        TestReadingName,
-		ValueType:   TestValueType,
+		Versionable:  common.Versionable{ApiVersion: v2.ApiVersion},
+		Id:           TestUUID,
+		Created:      TestTimestamp,
+		Origin:       TestTimestamp,
+		DeviceName:   TestDeviceName,
+		ResourceName: TestReadingName,
+		ProfileName:  TestDeviceProfileName,
+		ValueType:    TestValueType,
 		SimpleReading: SimpleReading{
 			Value: TestValue,
 		},

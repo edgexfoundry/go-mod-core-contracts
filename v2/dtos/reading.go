@@ -49,7 +49,8 @@ type BaseReading struct {
 	Created            int64    `json:"created"`
 	Origin             int64    `json:"origin" validate:"required"`
 	DeviceName         string   `json:"deviceName" validate:"required"`
-	Name               string   `json:"name" validate:"required"`
+	ResourceName       string   `json:"resourceName" validate:"required"`
+	ProfileName        string   `json:"profileName" validate:"required"`
 	Labels             []string `json:"labels,omitempty"`
 	ValueType          string   `json:"valueType" validate:"required"`
 	BinaryReading      `json:",inline" validate:"-"`
@@ -135,11 +136,12 @@ func validateValueType(valueType string) bool {
 func ToReadingModel(r BaseReading) models.Reading {
 	var readingModel models.Reading
 	br := models.BaseReading{
-		Origin:     r.Origin,
-		DeviceName: r.DeviceName,
-		Name:       r.Name,
-		Labels:     r.Labels,
-		ValueType:  r.ValueType,
+		Origin:       r.Origin,
+		DeviceName:   r.DeviceName,
+		ResourceName: r.ResourceName,
+		ProfileName:  r.ProfileName,
+		Labels:       r.Labels,
+		ValueType:    r.ValueType,
 	}
 	if r.ValueType == ValueTypeBinary {
 		readingModel = models.BinaryReading{
@@ -166,7 +168,8 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			Created:       r.Created,
 			Origin:        r.Origin,
 			DeviceName:    r.DeviceName,
-			Name:          r.Name,
+			ResourceName:  r.ResourceName,
+			ProfileName:   r.ProfileName,
 			Labels:        r.Labels,
 			ValueType:     r.ValueType,
 			BinaryReading: BinaryReading{BinaryValue: r.BinaryValue, MediaType: r.MediaType},
@@ -178,7 +181,8 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			Created:       r.Created,
 			Origin:        r.Origin,
 			DeviceName:    r.DeviceName,
-			Name:          r.Name,
+			ResourceName:  r.ResourceName,
+			ProfileName:   r.ProfileName,
 			Labels:        r.Labels,
 			ValueType:     r.ValueType,
 			SimpleReading: SimpleReading{Value: r.Value, FloatEncoding: r.FloatEncoding},
