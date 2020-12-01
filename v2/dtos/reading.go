@@ -67,8 +67,7 @@ type BinaryReading struct {
 // SimpleReading and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/SimpleReading
 type SimpleReading struct {
-	Value         string `json:"value" validate:"required"`
-	FloatEncoding string `json:"floatEncoding,omitempty"`
+	Value string `json:"value" validate:"required"`
 }
 
 // Validate satisfies the Validator interface
@@ -85,12 +84,6 @@ func (b BaseReading) Validate() error {
 	} else {
 		// validate the inner SimpleReading struct
 		simpleReading := b.SimpleReading
-		// check if FloatEncoding has value when ValueType is Float32 or Float64
-		if b.ValueType == ValueTypeFloat32 || b.ValueType == ValueTypeFloat64 {
-			if simpleReading.FloatEncoding == "" {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, "FloatEncoding field is required when valueType is Float32 or Float64.", nil)
-			}
-		}
 		if err := v2.Validate(simpleReading); err != nil {
 			return err
 		}
@@ -185,7 +178,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ProfileName:   r.ProfileName,
 			Labels:        r.Labels,
 			ValueType:     r.ValueType,
-			SimpleReading: SimpleReading{Value: r.Value, FloatEncoding: r.FloatEncoding},
+			SimpleReading: SimpleReading{Value: r.Value},
 		}
 	}
 
