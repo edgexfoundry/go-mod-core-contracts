@@ -32,9 +32,8 @@ type BinaryReading struct {
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/SimpleReading
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type SimpleReading struct {
-	BaseReading   `json:",inline"`
-	Value         string
-	FloatEncoding string
+	BaseReading `json:",inline"`
+	Value       string
 }
 
 // Reading is an abstract interface to be implemented by BinaryReading/SimpleReading

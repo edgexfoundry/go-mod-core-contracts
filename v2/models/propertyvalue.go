@@ -16,18 +16,17 @@ const (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/PropertyValue
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type PropertyValue struct {
-	Type          string
-	ReadWrite     string
-	Units         string
-	Minimum       string
-	Maximum       string
-	DefaultValue  string
-	Mask          string
-	Shift         string
-	Scale         string
-	Offset        string
-	Base          string
-	Assertion     string
-	FloatEncoding string
-	MediaType     string
+	Type         string
+	ReadWrite    string
+	Units        string
+	Minimum      string
+	Maximum      string
+	DefaultValue string
+	Mask         string
+	Shift        string
+	Scale        string
+	Offset       string
+	Base         string
+	Assertion    string
+	MediaType    string
 }
