@@ -23,9 +23,10 @@ var testAddEvent = AddEventRequest{
 		RequestId: ExampleUUID,
 	},
 	Event: dtos.Event{
-		Id:         ExampleUUID,
-		DeviceName: TestDeviceName,
-		Origin:     TestOriginTime,
+		Id:          ExampleUUID,
+		DeviceName:  TestDeviceName,
+		ProfileName: TestDeviceProfileName,
+		Origin:      TestOriginTime,
 		Readings: []dtos.BaseReading{{
 			DeviceName:   TestDeviceName,
 			ResourceName: TestDeviceResourceName,
@@ -54,6 +55,8 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	invalidEventId.Event.Id = "gj93j2-v92hvi3h"
 	noDeviceName := testAddEvent
 	noDeviceName.Event.DeviceName = ""
+	noProfileName := testAddEvent
+	noProfileName.Event.ProfileName = ""
 	noOrigin := testAddEvent
 	noOrigin.Event.Origin = 0
 
@@ -176,6 +179,7 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		{"invalid AddEventRequest, no Event Id", noEventId, true},
 		{"invalid AddEventRequest, Event Id is not an uuid", invalidEventId, true},
 		{"invalid AddEventRequest, no DeviceName", noDeviceName, true},
+		{"invalid AddEventRequest, no ProfileName", noProfileName, true},
 		{"invalid AddEventRequest, no Origin", noOrigin, true},
 		{"invalid AddEventRequest, no Reading", noReading, true},
 		{"invalid AddEventRequest, no Reading DeviceName", invalidReadingNoDevice, true},
@@ -244,10 +248,11 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 		Value: TestReadingValue,
 	}
 	expectedEventModel := []models.Event{{
-		Id:         ExampleUUID,
-		DeviceName: TestDeviceName,
-		Origin:     TestOriginTime,
-		Readings:   []models.Reading{s},
+		Id:          ExampleUUID,
+		DeviceName:  TestDeviceName,
+		ProfileName: TestDeviceProfileName,
+		Origin:      TestOriginTime,
+		Readings:    []models.Reading{s},
 		Tags: map[string]string{
 			"GatewayId": "Houston-0001",
 		},

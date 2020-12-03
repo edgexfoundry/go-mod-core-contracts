@@ -9,11 +9,12 @@ package models
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/Event
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Event struct {
-	Id         string
-	Pushed     int64
-	DeviceName string
-	Created    int64
-	Origin     int64
-	Readings   []Reading
-	Tags       map[string]string
+	Id          string
+	Pushed      int64
+	DeviceName  string
+	ProfileName string
+	Created     int64
+	Origin      int64
+	Readings    []Reading
+	Tags        map[string]string
 }
