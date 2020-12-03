@@ -22,6 +22,7 @@ type Event struct {
 	Id                 string            `json:"id" validate:"required,uuid"`
 	Pushed             int64             `json:"pushed,omitempty"`
 	DeviceName         string            `json:"deviceName" validate:"required"`
+	ProfileName        string            `json:"profileName" validate:"required"`
 	Created            int64             `json:"created"`
 	Origin             int64             `json:"origin" validate:"required"`
 	Readings           []BaseReading     `json:"readings" validate:"gt=0,dive,required"`
@@ -45,6 +46,7 @@ func FromEventModelToDTO(event models.Event) Event {
 		Id:          event.Id,
 		Pushed:      event.Pushed,
 		DeviceName:  event.DeviceName,
+		ProfileName: event.ProfileName,
 		Created:     event.Created,
 		Origin:      event.Origin,
 		Readings:    readings,

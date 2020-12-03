@@ -83,6 +83,7 @@ func AddEventReqToEventModels(addRequests []AddEventRequest) (events []models.Ev
 
 		e.Id = a.Event.Id
 		e.DeviceName = a.Event.DeviceName
+		e.ProfileName = a.Event.ProfileName
 		e.Origin = a.Event.Origin
 		e.Readings = readings
 		e.Tags = tags
