@@ -15,7 +15,6 @@ type BaseReading struct {
 	DeviceName   string
 	ResourceName string
 	ProfileName  string
-	Labels       []string
 	ValueType    string
 }
 

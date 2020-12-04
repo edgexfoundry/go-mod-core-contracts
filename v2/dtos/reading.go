@@ -45,14 +45,13 @@ const (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseReading
 type BaseReading struct {
 	common.Versionable `json:",inline"`
-	Id                 string   `json:"id"`
-	Created            int64    `json:"created"`
-	Origin             int64    `json:"origin" validate:"required"`
-	DeviceName         string   `json:"deviceName" validate:"required"`
-	ResourceName       string   `json:"resourceName" validate:"required"`
-	ProfileName        string   `json:"profileName" validate:"required"`
-	Labels             []string `json:"labels,omitempty"`
-	ValueType          string   `json:"valueType" validate:"required"`
+	Id                 string `json:"id"`
+	Created            int64  `json:"created"`
+	Origin             int64  `json:"origin" validate:"required"`
+	DeviceName         string `json:"deviceName" validate:"required"`
+	ResourceName       string `json:"resourceName" validate:"required"`
+	ProfileName        string `json:"profileName" validate:"required"`
+	ValueType          string `json:"valueType" validate:"required"`
 	BinaryReading      `json:",inline" validate:"-"`
 	SimpleReading      `json:",inline" validate:"-"`
 }
@@ -133,7 +132,6 @@ func ToReadingModel(r BaseReading) models.Reading {
 		DeviceName:   r.DeviceName,
 		ResourceName: r.ResourceName,
 		ProfileName:  r.ProfileName,
-		Labels:       r.Labels,
 		ValueType:    r.ValueType,
 	}
 	if r.ValueType == ValueTypeBinary {
@@ -163,7 +161,6 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			DeviceName:    r.DeviceName,
 			ResourceName:  r.ResourceName,
 			ProfileName:   r.ProfileName,
-			Labels:        r.Labels,
 			ValueType:     r.ValueType,
 			BinaryReading: BinaryReading{BinaryValue: r.BinaryValue, MediaType: r.MediaType},
 		}
@@ -176,7 +173,6 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			DeviceName:    r.DeviceName,
 			ResourceName:  r.ResourceName,
 			ProfileName:   r.ProfileName,
-			Labels:        r.Labels,
 			ValueType:     r.ValueType,
 			SimpleReading: SimpleReading{Value: r.Value},
 		}
