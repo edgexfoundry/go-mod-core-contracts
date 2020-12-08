@@ -20,7 +20,7 @@ type Device struct {
 	Name               string                        `json:"name" validate:"required,edgex-dto-none-empty-string"`
 	Description        string                        `json:"description,omitempty"`
 	AdminState         string                        `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
-	OperatingState     string                        `json:"operatingState" validate:"oneof='ENABLED' 'DISABLED'"`
+	OperatingState     string                        `json:"operatingState" validate:"oneof='UP' 'DOWN' 'UNKNOWN'"`
 	LastConnected      int64                         `json:"lastConnected,omitempty"`
 	LastReported       int64                         `json:"lastReported,omitempty"`
 	Labels             []string                      `json:"labels,omitempty"`
@@ -38,7 +38,7 @@ type UpdateDevice struct {
 	Name           *string                       `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
 	Description    *string                       `json:"description" validate:"omitempty,edgex-dto-none-empty-string"`
 	AdminState     *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
-	OperatingState *string                       `json:"operatingState" validate:"omitempty,oneof='ENABLED' 'DISABLED'"`
+	OperatingState *string                       `json:"operatingState" validate:"omitempty,oneof='UP' 'DOWN' 'UNKNOWN'"`
 	LastConnected  *int64                        `json:"lastConnected"`
 	LastReported   *int64                        `json:"lastReported"`
 	ServiceName    *string                       `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string"`
