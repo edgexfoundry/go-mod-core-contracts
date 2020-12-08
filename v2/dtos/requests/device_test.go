@@ -43,7 +43,7 @@ var testAddDevice = AddDeviceRequest{
 		ServiceName:    TestDeviceServiceName,
 		ProfileName:    TestDeviceProfileName,
 		AdminState:     models.Locked,
-		OperatingState: models.Enabled,
+		OperatingState: models.Up,
 		Labels:         testDeviceLabels,
 		Location:       testDeviceLocation,
 		AutoEvents:     testAutoEvents,
@@ -64,7 +64,7 @@ func mockUpdateDevice() dtos.UpdateDevice {
 	testName := TestDeviceName
 	testDescription := TestDescription
 	testAdminState := models.Locked
-	testOperatingState := models.Enabled
+	testOperatingState := models.Up
 	testDeviceServiceName := TestDeviceServiceName
 	testProfileName := TestDeviceProfileName
 	d := dtos.UpdateDevice{}
@@ -172,7 +172,7 @@ func Test_AddDeviceReqToDeviceModels(t *testing.T) {
 			ServiceName:    TestDeviceServiceName,
 			ProfileName:    TestDeviceProfileName,
 			AdminState:     models.Locked,
-			OperatingState: models.Enabled,
+			OperatingState: models.Up,
 			Labels:         testDeviceLabels,
 			Location:       testDeviceLocation,
 			AutoEvents: []models.AutoEvent{
@@ -366,7 +366,7 @@ func TestReplaceDeviceModelFieldsWithDTO(t *testing.T) {
 
 	assert.Equal(t, TestDescription, device.Description)
 	assert.Equal(t, models.AdminState(models.Locked), device.AdminState)
-	assert.Equal(t, models.OperatingState(models.Enabled), device.OperatingState)
+	assert.Equal(t, models.OperatingState(models.Up), device.OperatingState)
 	assert.Equal(t, testNowTime, device.LastConnected)
 	assert.Equal(t, testNowTime, device.LastReported)
 	assert.Equal(t, TestDeviceServiceName, device.ServiceName)

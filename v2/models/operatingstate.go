@@ -9,10 +9,12 @@ package models
 type OperatingState string
 
 /*
-	Enabled  : ENABLED
-	Disabled : DISABLED
+	Up      : UP
+	Down    : DOWN
+	Unknown : UNKNOWN
 */
 const (
-	Enabled  = "ENABLED"
-	Disabled = "DISABLED"
+	Up      = "UP"
+	Down    = "DOWN"
+	Unknown = "UNKNOWN"
 )
