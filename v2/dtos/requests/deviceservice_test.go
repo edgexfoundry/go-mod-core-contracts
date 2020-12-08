@@ -23,11 +23,10 @@ var testAddDeviceService = AddDeviceServiceRequest{
 		RequestId: ExampleUUID,
 	},
 	Service: dtos.DeviceService{
-		Name:           TestDeviceServiceName,
-		BaseAddress:    TestBaseAddress,
-		OperatingState: models.Enabled,
-		Labels:         []string{"MODBUS", "TEMP"},
-		AdminState:     models.Locked,
+		Name:        TestDeviceServiceName,
+		BaseAddress: TestBaseAddress,
+		Labels:      []string{"MODBUS", "TEMP"},
+		AdminState:  models.Locked,
 	},
 }
 
@@ -42,13 +41,11 @@ func mockDeviceServiceDTO() dtos.UpdateDeviceService {
 	testUUID := ExampleUUID
 	testName := TestDeviceServiceName
 	testBaseAddress := TestBaseAddress
-	testOperatingState := models.Enabled
 	testAdminState := models.Locked
 	ds := dtos.UpdateDeviceService{}
 	ds.Id = &testUUID
 	ds.Name = &testName
 	ds.BaseAddress = &testBaseAddress
-	ds.OperatingState = &testOperatingState
 	ds.AdminState = &testAdminState
 	ds.Labels = testLabels
 	return ds
@@ -63,14 +60,10 @@ func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 	invalidReqId.RequestId = "jfdw324"
 	noName := testAddDeviceService
 	noName.Service.Name = emptyString
-	noOperatingState := testAddDeviceService
-	noOperatingState.Service.OperatingState = emptyString
-	invalidOperatingState := testAddDeviceService
-	invalidOperatingState.Service.OperatingState = "invalid"
 	noAdminState := testAddDeviceService
-	noAdminState.Service.OperatingState = emptyString
+	noAdminState.Service.AdminState = emptyString
 	invalidAdminState := testAddDeviceService
-	invalidAdminState.Service.OperatingState = "invalid"
+	invalidAdminState.Service.AdminState = "invalid"
 	noBaseAddress := testAddDeviceService
 	noBaseAddress.Service.BaseAddress = emptyString
 	invalidBaseAddress := testAddDeviceService
@@ -84,8 +77,6 @@ func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 		{"valid AddDeviceServiceRequest, no Request Id", noReqId, false},
 		{"invalid AddDeviceServiceRequest, Request Id is not an uuid", invalidReqId, true},
 		{"invalid AddDeviceServiceRequest, no Name", noName, true},
-		{"invalid AddDeviceServiceRequest, no OperatingState", noOperatingState, true},
-		{"invalid AddDeviceServiceRequest, invalid OperatingState", invalidOperatingState, true},
 		{"invalid AddDeviceServiceRequest, no AdminState", noAdminState, true},
 		{"invalid AddDeviceServiceRequest, invalid AdminState", invalidAdminState, true},
 		{"invalid AddDeviceServiceRequest, no BaseAddress", noBaseAddress, true},
@@ -133,11 +124,10 @@ func TestAddDeviceService_UnmarshalJSON(t *testing.T) {
 func TestAddDeviceServiceReqToDeviceServiceModels(t *testing.T) {
 	requests := []AddDeviceServiceRequest{testAddDeviceService}
 	expectedDeviceServiceModel := []models.DeviceService{{
-		Name:           TestDeviceServiceName,
-		BaseAddress:    TestBaseAddress,
-		OperatingState: models.Enabled,
-		Labels:         []string{"MODBUS", "TEMP"},
-		AdminState:     models.Locked,
+		Name:        TestDeviceServiceName,
+		BaseAddress: TestBaseAddress,
+		Labels:      []string{"MODBUS", "TEMP"},
+		AdminState:  models.Locked,
 	}}
 	resultModels := AddDeviceServiceReqToDeviceServiceModels(requests)
 	assert.Equal(t, expectedDeviceServiceModel, resultModels, "AddDeviceServiceReqToDeviceServiceModels did not result in expected DeviceService model.")
@@ -205,11 +195,9 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 	invalidBaseAddress := valid
 	invalidBaseAddress.Service.BaseAddress = &invalidUrl
 
-	invalidOperatingState := valid
 	invalid := "invalid"
-	invalidOperatingState.Service.OperatingState = &invalid
 	invalidAdminState := valid
-	invalidAdminState.Service.OperatingState = &invalid
+	invalidAdminState.Service.AdminState = &invalid
 	tests := []struct {
 		name        string
 		req         UpdateDeviceServiceRequest
@@ -229,7 +217,6 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 		{"valid, nil baseAddress", validNilBaseAddress, false},
 		{"invalid, invalid baseAddress", invalidBaseAddress, true},
 
-		{"invalid, invalid OperatingState", invalidOperatingState, true},
 		{"invalid, invalid AdminState", invalidAdminState, true},
 	}
 	for _, tt := range tests {
@@ -255,7 +242,6 @@ func TestUpdateDeviceServiceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	// Nil field checking is used to update with patch
 	assert.Nil(t, req.Service.BaseAddress)
 	assert.Nil(t, req.Service.AdminState)
-	assert.Nil(t, req.Service.OperatingState)
 	assert.Nil(t, req.Service.Labels)
 }
 
@@ -286,7 +272,6 @@ func TestReplaceDeviceServiceModelFieldsWithDTO(t *testing.T) {
 	ReplaceDeviceServiceModelFieldsWithDTO(&ds, patch)
 
 	assert.Equal(t, TestBaseAddress, ds.BaseAddress)
-	assert.Equal(t, models.Enabled, string(ds.OperatingState))
 	assert.Equal(t, models.Locked, string(ds.AdminState))
 	assert.Equal(t, testLabels, ds.Labels)
 }
