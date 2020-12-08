@@ -21,7 +21,6 @@ type DeviceService struct {
 	Description        string   `json:"description,omitempty"`
 	LastConnected      int64    `json:"lastConnected,omitempty"`
 	LastReported       int64    `json:"lastReported,omitempty"`
-	OperatingState     string   `json:"operatingState" validate:"oneof='ENABLED' 'DISABLED'"`
 	Labels             []string `json:"labels,omitempty"`
 	BaseAddress        string   `json:"baseAddress" validate:"required,uri"`
 	AdminState         string   `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
@@ -30,12 +29,11 @@ type DeviceService struct {
 // UpdateDeviceService and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceService
 type UpdateDeviceService struct {
-	Id             *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name           *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
-	BaseAddress    *string  `json:"baseAddress" validate:"omitempty,uri"`
-	OperatingState *string  `json:"operatingState" validate:"omitempty,oneof='ENABLED' 'DISABLED'"`
-	Labels         []string `json:"labels"`
-	AdminState     *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Id          *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name        *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
+	BaseAddress *string  `json:"baseAddress" validate:"omitempty,uri"`
+	Labels      []string `json:"labels"`
+	AdminState  *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 }
 
 // ToDeviceServiceModel transforms the DeviceService DTO to the DeviceService Model
@@ -47,7 +45,6 @@ func ToDeviceServiceModel(dto DeviceService) models.DeviceService {
 	ds.LastReported = dto.LastReported
 	ds.LastConnected = dto.LastConnected
 	ds.BaseAddress = dto.BaseAddress
-	ds.OperatingState = models.OperatingState(dto.OperatingState)
 	ds.Labels = dto.Labels
 	ds.AdminState = models.AdminState(dto.AdminState)
 	return ds
@@ -62,7 +59,6 @@ func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 	dto.LastReported = ds.LastReported
 	dto.LastConnected = ds.LastConnected
 	dto.BaseAddress = ds.BaseAddress
-	dto.OperatingState = string(ds.OperatingState)
 	dto.Labels = ds.Labels
 	dto.AdminState = string(ds.AdminState)
 	return dto
