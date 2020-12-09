@@ -3,14 +3,16 @@ package http
 import (
 	"context"
 	"encoding/json"
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAddDeviceProfiles(t *testing.T) {
@@ -61,7 +63,7 @@ func TestPutDeviceProfiles(t *testing.T) {
 	defer ts.Close()
 
 	client := NewDeviceProfileClient(ts.URL)
-	res, err := client.Put(context.Background(), []requests.DeviceProfileRequest{})
+	res, err := client.Update(context.Background(), []requests.DeviceProfileRequest{})
 	require.NoError(t, err)
 	require.NotNil(t, res)
 	require.Equal(t, requestId, res[0].RequestId)

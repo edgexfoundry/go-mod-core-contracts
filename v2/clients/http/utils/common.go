@@ -6,12 +6,16 @@
 package utils
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 
 	"github.com/google/uuid"
 )
@@ -24,6 +28,16 @@ func FromContext(ctx context.Context, key string) string {
 		hdr = ""
 	}
 	return hdr
+}
+
+// correlatedId gets Correlation ID from supplied context. If no Correlation ID header is
+// present in the supplied context, one will be created along with a value.
+func correlatedId(ctx context.Context) string {
+	correlation := FromContext(ctx, clients.CorrelationHeader)
+	if len(correlation) == 0 {
+		correlation = uuid.New().String()
+	}
+	return correlation
 }
 
 // Helper method to get the body from the response after making the request
@@ -45,19 +59,65 @@ func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
 	return resp, nil
 }
 
-// CorrelatedRequest is a wrapper type for use in managing Correlation IDs during service to service API calls.
-type CorrelatedRequest struct {
-	*http.Request
+func createRequest(ctx context.Context, httpMethod string, url string) (*http.Request, errors.EdgeX) {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
+	}
+	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
+	return req, nil
 }
 
-// NewCorrelatedRequest will add the Correlation ID header to the supplied request. If no Correlation ID header is
-// present in the supplied context, one will be created along with a value.
-func NewCorrelatedRequest(ctx context.Context, req *http.Request) CorrelatedRequest {
-	c := CorrelatedRequest{Request: req}
-	correlation := FromContext(ctx, clients.CorrelationHeader)
-	if len(correlation) == 0 {
-		correlation = uuid.New().String()
+func createRequestWithRawData(ctx context.Context, httpMethod string, url string, data interface{}) (*http.Request, errors.EdgeX) {
+	jsonEncodedData, err := json.Marshal(data)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to JSON", err)
 	}
-	c.Header.Set(clients.CorrelationHeader, correlation)
-	return c
+
+	content := FromContext(ctx, clients.ContentType)
+	if content == "" {
+		content = clients.ContentTypeJSON
+	}
+
+	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(jsonEncodedData))
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
+	}
+	req.Header.Set(clients.ContentType, content)
+	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
+	return req, nil
+}
+
+// sendRequest will make a request with raw data to the specified URL.
+// It returns the body as a byte array if successful and an error otherwise.
+func sendRequest(ctx context.Context, req *http.Request) ([]byte, errors.EdgeX) {
+	resp, err := makeRequest(req)
+	if err != nil {
+		return nil, errors.NewCommonEdgeXWrapper(err)
+	}
+	if resp == nil {
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "the response should not be a nil", nil)
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, err := getBody(resp)
+	if err != nil {
+		return nil, errors.NewCommonEdgeXWrapper(err)
+	}
+
+	if resp.StatusCode <= http.StatusMultiStatus {
+		return bodyBytes, nil
+	}
+
+	// Handle error response
+	var res common.BaseResponse
+	if err := json.Unmarshal(bodyBytes, &res); err != nil {
+		return nil, errors.NewCommonEdgeXWrapper(err)
+	}
+	msg := fmt.Sprintf("request failed, status code: %d, err: %s", res.StatusCode, res.Message)
+	if resp.StatusCode == http.StatusBadRequest {
+		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, msg, nil)
+	} else {
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, msg, nil)
+	}
 }

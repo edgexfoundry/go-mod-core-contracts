@@ -17,6 +17,6 @@ import (
 type DeviceProfileClient interface {
 	// Add adds new profiles
 	Add(ctx context.Context, reqs []requests.DeviceProfileRequest) ([]common.BaseWithIdResponse, errors.EdgeX)
-	// Put updates profiles
-	Put(ctx context.Context, reqs []requests.DeviceProfileRequest) ([]common.BaseResponse, errors.EdgeX)
+	// Update updates profiles
+	Update(ctx context.Context, reqs []requests.DeviceProfileRequest) ([]common.BaseResponse, errors.EdgeX)
 }
