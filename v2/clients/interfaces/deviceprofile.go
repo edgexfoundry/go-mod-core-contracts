@@ -23,4 +23,6 @@ type DeviceProfileClient interface {
 	AddByYaml(ctx context.Context, yamlFilePath string) (common.BaseWithIdResponse, errors.EdgeX)
 	// UpdateByYaml updates profile by uploading a file in YAML format
 	UpdateByYaml(ctx context.Context, yamlFilePath string) (common.BaseResponse, errors.EdgeX)
+	// DeleteByName deletes profile by name
+	DeleteByName(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX)
 }

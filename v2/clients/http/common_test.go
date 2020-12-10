@@ -23,7 +23,7 @@ const (
 
 func TestGetConfig(t *testing.T) {
 	expected := common.ConfigResponse{}
-	ts := newTestServer(v2.ApiConfigRoute, common.ConfigResponse{})
+	ts := newTestServer(http.MethodGet, v2.ApiConfigRoute, common.ConfigResponse{})
 	defer ts.Close()
 
 	gc := NewCommonClient(ts.URL)
@@ -34,7 +34,7 @@ func TestGetConfig(t *testing.T) {
 
 func TestGetMetrics(t *testing.T) {
 	expected := common.MetricsResponse{}
-	ts := newTestServer(v2.ApiMetricsRoute, common.MetricsResponse{})
+	ts := newTestServer(http.MethodGet, v2.ApiMetricsRoute, common.MetricsResponse{})
 	defer ts.Close()
 
 	gc := NewCommonClient(ts.URL)
@@ -45,7 +45,7 @@ func TestGetMetrics(t *testing.T) {
 
 func TestPing(t *testing.T) {
 	expected := common.PingResponse{}
-	ts := newTestServer(v2.ApiPingRoute, common.PingResponse{})
+	ts := newTestServer(http.MethodGet, v2.ApiPingRoute, common.PingResponse{})
 	defer ts.Close()
 
 	gc := NewCommonClient(ts.URL)
@@ -56,7 +56,7 @@ func TestPing(t *testing.T) {
 
 func TestVersion(t *testing.T) {
 	expected := common.VersionResponse{}
-	ts := newTestServer(v2.ApiVersionRoute, common.VersionResponse{})
+	ts := newTestServer(http.MethodGet, v2.ApiVersionRoute, common.VersionResponse{})
 	defer ts.Close()
 
 	gc := NewCommonClient(ts.URL)
@@ -65,9 +65,9 @@ func TestVersion(t *testing.T) {
 	require.Equal(t, expected, response)
 }
 
-func newTestServer(apiRoute string, expectedResponse interface{}) *httptest.Server {
+func newTestServer(httpMethod string, apiRoute string, expectedResponse interface{}) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodGet {
+		if r.Method != httpMethod {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}

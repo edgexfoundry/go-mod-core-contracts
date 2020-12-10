@@ -63,7 +63,7 @@ func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
 }
 
 func createRequest(ctx context.Context, httpMethod string, url string) (*http.Request, errors.EdgeX) {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(httpMethod, url, nil)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}
