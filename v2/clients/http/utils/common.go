@@ -10,8 +10,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
+	"path/filepath"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/errors"
@@ -84,6 +87,34 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, url string
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}
 	req.Header.Set(clients.ContentType, content)
+	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
+	return req, nil
+}
+
+// createRequestFromYamlFilePath creates multipart/form-data request with YAML file
+func createRequestFromYamlFilePath(ctx context.Context, httpMethod string, url string, yamlFilePath string) (*http.Request, errors.EdgeX) {
+	fileContents, err := ioutil.ReadFile(yamlFilePath)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, fmt.Sprintf("fail to read YAML file from %s", yamlFilePath), err)
+	}
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	formFileWriter, err := writer.CreateFormFile("file", filepath.Base(yamlFilePath))
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, "fail to create form data", err)
+	}
+	_, err = io.Copy(formFileWriter, bytes.NewReader(fileContents))
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, "fail to copy file to form data", err)
+	}
+	writer.Close()
+
+	req, err := http.NewRequest(httpMethod, url, body)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
+	}
+	req.Header.Set(clients.ContentType, writer.FormDataContentType())
 	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
 	return req, nil
 }

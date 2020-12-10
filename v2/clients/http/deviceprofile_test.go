@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
@@ -67,4 +69,60 @@ func TestPutDeviceProfiles(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, res)
 	require.Equal(t, requestId, res[0].RequestId)
+}
+
+func TestAddDeviceProfileByYaml(t *testing.T) {
+	requestId := uuid.New().String()
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+		if r.URL.EscapedPath() != v2.ApiDeviceProfileUploadFileRoute {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
+		br := common.NewBaseWithIdResponse(requestId, "", http.StatusCreated, uuid.New().String())
+		res, _ := json.Marshal(br)
+		_, _ = w.Write(res)
+	}))
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	_, b, _, _ := runtime.Caller(0)
+	res, err := client.AddByYaml(context.Background(), filepath.Dir(b)+"/data/sample-profile.yaml")
+	require.NoError(t, err)
+	require.NotNil(t, res)
+	require.Equal(t, requestId, requestId)
+}
+
+func TestUpdateDeviceProfileByYaml(t *testing.T) {
+	requestId := uuid.New().String()
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPut {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+		if r.URL.EscapedPath() != v2.ApiDeviceProfileUploadFileRoute {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		br := common.NewBaseResponse(requestId, "", http.StatusOK)
+		res, _ := json.Marshal(br)
+		_, _ = w.Write(res)
+	}))
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	_, b, _, _ := runtime.Caller(0)
+	res, err := client.UpdateByYaml(context.Background(), filepath.Dir(b)+"/data/sample-profile.yaml")
+	require.NoError(t, err)
+	require.NotNil(t, res)
+	require.Equal(t, requestId, requestId)
 }

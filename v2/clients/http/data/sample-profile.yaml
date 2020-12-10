@@ -1,0 +1,29 @@
+name: "Sample-Profile"
+manufacturer: "Sample-Company"
+model: "Sample-Device"
+labels:
+  - "device-example"
+description: "Example of Device"
+
+deviceResources:
+  -
+    name: "temperature"
+    description: "query temperature"
+    attributes:
+      {
+        attr1: "attr1",
+        attr2: "attr2",
+      }
+    properties:
+      { type: "INT16", readWrite: "R"}
+
+deviceCommands:
+  -
+    name: "temperature"
+    get:
+      - { deviceResource: "temperature" }
+
+coreCommands:
+  -
+    name: "temperature"
+    get: true

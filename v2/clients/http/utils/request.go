@@ -73,3 +73,47 @@ func PutRequest(
 	}
 	return nil
 }
+
+// Helper method to make the post YAML file request and return the body
+func PostByYamlFileRequest(
+	ctx context.Context,
+	returnValuePointer interface{},
+	url string,
+	yamlFilePath string) errors.EdgeX {
+
+	req, err := createRequestFromYamlFilePath(ctx, http.MethodPost, url, yamlFilePath)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}
+
+// Helper method to make the put YAML file request and return the body
+func PutByYamlFileRequest(
+	ctx context.Context,
+	returnValuePointer interface{},
+	url string,
+	yamlFilePath string) errors.EdgeX {
+
+	req, err := createRequestFromYamlFilePath(ctx, http.MethodPut, url, yamlFilePath)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}
