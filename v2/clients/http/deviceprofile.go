@@ -44,3 +44,21 @@ func (client *DeviceProfileClient) Update(ctx context.Context, reqs []requests.D
 	}
 	return responses, nil
 }
+
+func (client *DeviceProfileClient) AddByYaml(ctx context.Context, yamlFilePath string) (common.BaseWithIdResponse, errors.EdgeX) {
+	var responses common.BaseWithIdResponse
+	err := utils.PostByFileRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileUploadFileRoute, yamlFilePath)
+	if err != nil {
+		return responses, errors.NewCommonEdgeXWrapper(err)
+	}
+	return responses, nil
+}
+
+func (client *DeviceProfileClient) UpdateByYaml(ctx context.Context, yamlFilePath string) (common.BaseResponse, errors.EdgeX) {
+	var responses common.BaseResponse
+	err := utils.PutByFileRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileUploadFileRoute, yamlFilePath)
+	if err != nil {
+		return responses, errors.NewCommonEdgeXWrapper(err)
+	}
+	return responses, nil
+}

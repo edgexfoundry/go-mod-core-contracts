@@ -73,3 +73,47 @@ func PutRequest(
 	}
 	return nil
 }
+
+// Helper method to make the post file request and return the body
+func PostByFileRequest(
+	ctx context.Context,
+	returnValuePointer interface{},
+	url string,
+	filePath string) errors.EdgeX {
+
+	req, err := createRequestFromFilePath(ctx, http.MethodPost, url, filePath)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}
+
+// Helper method to make the put file request and return the body
+func PutByFileRequest(
+	ctx context.Context,
+	returnValuePointer interface{},
+	url string,
+	filePath string) errors.EdgeX {
+
+	req, err := createRequestFromFilePath(ctx, http.MethodPut, url, filePath)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}
