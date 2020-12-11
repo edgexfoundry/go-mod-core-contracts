@@ -109,11 +109,11 @@ func TestAddDeviceProfileByYaml(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			res, err := client.AddByYaml(context.Background(), testCase.filePath)
 			if testCase.errorExpected {
-				assert.True(t, errors.Is(err, os.ErrNotExist))
+				require.True(t, errors.Is(err, os.ErrNotExist))
 				assert.Equal(t, edgexErrors.KindClientError, edgexErrors.Kind(err))
 				assert.Equal(t, edgexErrors.ClientErrorCode, res.StatusCode)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, requestId, res.RequestId)
 				assert.Equal(t, http.StatusCreated, res.StatusCode)
 			}
@@ -155,11 +155,11 @@ func TestUpdateDeviceProfileByYaml(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			res, err := client.UpdateByYaml(context.Background(), testCase.filePath)
 			if testCase.errorExpected {
-				assert.True(t, errors.Is(err, os.ErrNotExist))
+				require.True(t, errors.Is(err, os.ErrNotExist))
 				assert.Equal(t, edgexErrors.KindClientError, edgexErrors.Kind(err))
 				assert.Equal(t, edgexErrors.ClientErrorCode, res.StatusCode)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Equal(t, requestId, res.RequestId)
 				assert.Equal(t, http.StatusOK, res.StatusCode)
 			}
