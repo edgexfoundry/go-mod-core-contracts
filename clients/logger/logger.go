@@ -212,6 +212,13 @@ func (lc edgeXLogger) SetLogLevel(logLevel string) error {
 	return types.ErrNotFound{}
 }
 
+func (lc edgeXLogger) LogLevel() string {
+	if lc.logLevel == nil {
+		return ""
+	}
+	return *lc.logLevel
+}
+
 func (lc edgeXLogger) Info(msg string, args ...interface{}) {
 	lc.log(models.InfoLog, msg, args...)
 }
