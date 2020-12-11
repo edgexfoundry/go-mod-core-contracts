@@ -153,7 +153,7 @@ func newFileWriter(logTarget string) (io.Writer, error) {
 	return &fileWriter, nil
 }
 
-func (lc edgeXLogger) log(logLevel string, msg string, args ...interface{}) {
+func (lc edgeXLogger) log(logLevel string, formatted bool, msg string, args ...interface{}) {
 	// Check minimum log level
 	for _, name := range logLevels() {
 		if name == *lc.logLevel {
@@ -172,6 +172,8 @@ func (lc edgeXLogger) log(logLevel string, msg string, args ...interface{}) {
 
 	if args == nil {
 		args = []interface{}{"msg", msg}
+	} else if formatted {
+		args = []interface{}{"msg", fmt.Sprintf(msg, args...)}
 	} else {
 		if len(args)%2 == 1 {
 			// add an empty string to keep k/v pairs correct
@@ -220,23 +222,43 @@ func (lc edgeXLogger) LogLevel() string {
 }
 
 func (lc edgeXLogger) Info(msg string, args ...interface{}) {
-	lc.log(models.InfoLog, msg, args...)
+	lc.log(models.InfoLog, false, msg, args...)
 }
 
 func (lc edgeXLogger) Trace(msg string, args ...interface{}) {
-	lc.log(models.TraceLog, msg, args...)
+	lc.log(models.TraceLog, false, msg, args...)
 }
 
 func (lc edgeXLogger) Debug(msg string, args ...interface{}) {
-	lc.log(models.DebugLog, msg, args...)
+	lc.log(models.DebugLog, false, msg, args...)
 }
 
 func (lc edgeXLogger) Warn(msg string, args ...interface{}) {
-	lc.log(models.WarnLog, msg, args...)
+	lc.log(models.WarnLog, false, msg, args...)
 }
 
 func (lc edgeXLogger) Error(msg string, args ...interface{}) {
-	lc.log(models.ErrorLog, msg, args...)
+	lc.log(models.ErrorLog, false, msg, args...)
+}
+
+func (lc edgeXLogger) Infof(msg string, args ...interface{}) {
+	lc.log(models.InfoLog, true, msg, args...)
+}
+
+func (lc edgeXLogger) Tracef(msg string, args ...interface{}) {
+	lc.log(models.TraceLog, true, msg, args...)
+}
+
+func (lc edgeXLogger) Debugf(msg string, args ...interface{}) {
+	lc.log(models.DebugLog, true, msg, args...)
+}
+
+func (lc edgeXLogger) Warnf(msg string, args ...interface{}) {
+	lc.log(models.WarnLog, true, msg, args...)
+}
+
+func (lc edgeXLogger) Errorf(msg string, args ...interface{}) {
+	lc.log(models.ErrorLog, true, msg, args...)
 }
 
 // Build the log entry object
