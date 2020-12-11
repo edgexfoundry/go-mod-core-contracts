@@ -74,14 +74,14 @@ func PutRequest(
 	return nil
 }
 
-// Helper method to make the post YAML file request and return the body
-func PostByYamlFileRequest(
+// Helper method to make the post file request and return the body
+func PostByFileRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
 	url string,
-	yamlFilePath string) errors.EdgeX {
+	filePath string) errors.EdgeX {
 
-	req, err := createRequestFromYamlFilePath(ctx, http.MethodPost, url, yamlFilePath)
+	req, err := createRequestFromFilePath(ctx, http.MethodPost, url, filePath)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -96,14 +96,14 @@ func PostByYamlFileRequest(
 	return nil
 }
 
-// Helper method to make the put YAML file request and return the body
-func PutByYamlFileRequest(
+// Helper method to make the put file request and return the body
+func PutByFileRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
 	url string,
-	yamlFilePath string) errors.EdgeX {
+	filePath string) errors.EdgeX {
 
-	req, err := createRequestFromYamlFilePath(ctx, http.MethodPut, url, yamlFilePath)
+	req, err := createRequestFromFilePath(ctx, http.MethodPut, url, filePath)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}

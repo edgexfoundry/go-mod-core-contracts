@@ -91,16 +91,16 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, url string
 	return req, nil
 }
 
-// createRequestFromYamlFilePath creates multipart/form-data request with YAML file
-func createRequestFromYamlFilePath(ctx context.Context, httpMethod string, url string, yamlFilePath string) (*http.Request, errors.EdgeX) {
-	fileContents, err := ioutil.ReadFile(yamlFilePath)
+// createRequestFromFilePath creates multipart/form-data request with the specified file
+func createRequestFromFilePath(ctx context.Context, httpMethod string, url string, filePath string) (*http.Request, errors.EdgeX) {
+	fileContents, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, fmt.Sprintf("fail to read YAML file from %s", yamlFilePath), err)
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, fmt.Sprintf("fail to read file from %s", filePath), err)
 	}
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
-	formFileWriter, err := writer.CreateFormFile("file", filepath.Base(yamlFilePath))
+	formFileWriter, err := writer.CreateFormFile("file", filepath.Base(filePath))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "fail to create form data", err)
 	}

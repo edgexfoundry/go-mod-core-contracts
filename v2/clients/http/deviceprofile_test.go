@@ -3,17 +3,21 @@ package http
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
 
+	edgexErrors "github.com/edgexfoundry/go-mod-core-contracts/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -90,13 +94,31 @@ func TestAddDeviceProfileByYaml(t *testing.T) {
 		_, _ = w.Write(res)
 	}))
 	defer ts.Close()
-
 	client := NewDeviceProfileClient(ts.URL)
 	_, b, _, _ := runtime.Caller(0)
-	res, err := client.AddByYaml(context.Background(), filepath.Dir(b)+"/data/sample-profile.yaml")
-	require.NoError(t, err)
-	require.NotNil(t, res)
-	require.Equal(t, requestId, requestId)
+
+	tests := []struct {
+		name          string
+		filePath      string
+		errorExpected bool
+	}{
+		{name: "Add device profile by yaml file", filePath: filepath.Dir(b) + "/data/sample-profile.yaml", errorExpected: false},
+		{name: "file not found error", filePath: filepath.Dir(b) + "/data/file-not-found.yaml", errorExpected: true},
+	}
+	for _, testCase := range tests {
+		t.Run(testCase.name, func(t *testing.T) {
+			res, err := client.AddByYaml(context.Background(), testCase.filePath)
+			if testCase.errorExpected {
+				assert.True(t, errors.Is(err, os.ErrNotExist))
+				assert.Equal(t, edgexErrors.KindClientError, edgexErrors.Kind(err))
+				assert.Equal(t, edgexErrors.ClientErrorCode, res.StatusCode)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, requestId, res.RequestId)
+				assert.Equal(t, http.StatusCreated, res.StatusCode)
+			}
+		})
+	}
 }
 
 func TestUpdateDeviceProfileByYaml(t *testing.T) {
@@ -118,11 +140,29 @@ func TestUpdateDeviceProfileByYaml(t *testing.T) {
 		_, _ = w.Write(res)
 	}))
 	defer ts.Close()
-
 	client := NewDeviceProfileClient(ts.URL)
 	_, b, _, _ := runtime.Caller(0)
-	res, err := client.UpdateByYaml(context.Background(), filepath.Dir(b)+"/data/sample-profile.yaml")
-	require.NoError(t, err)
-	require.NotNil(t, res)
-	require.Equal(t, requestId, requestId)
+
+	tests := []struct {
+		name          string
+		filePath      string
+		errorExpected bool
+	}{
+		{name: "Update device profile by yaml file", filePath: filepath.Dir(b) + "/data/sample-profile.yaml", errorExpected: false},
+		{name: "file not found error", filePath: filepath.Dir(b) + "/data/file-not-found.yaml", errorExpected: true},
+	}
+	for _, testCase := range tests {
+		t.Run(testCase.name, func(t *testing.T) {
+			res, err := client.UpdateByYaml(context.Background(), testCase.filePath)
+			if testCase.errorExpected {
+				assert.True(t, errors.Is(err, os.ErrNotExist))
+				assert.Equal(t, edgexErrors.KindClientError, edgexErrors.Kind(err))
+				assert.Equal(t, edgexErrors.ClientErrorCode, res.StatusCode)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, requestId, res.RequestId)
+				assert.Equal(t, http.StatusOK, res.StatusCode)
+			}
+		})
+	}
 }
