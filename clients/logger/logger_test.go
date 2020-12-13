@@ -7,8 +7,11 @@
 package logger
 
 import (
-	"github.com/edgexfoundry/go-mod-core-contracts/models"
 	"testing"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/models"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestIsValidLogLevel(t *testing.T) {
@@ -34,4 +37,10 @@ func TestIsValidLogLevel(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestLogLevel(t *testing.T) {
+	expectedLogLevel := models.DebugLog
+	lc := newClient("testService", false, "", expectedLogLevel)
+	assert.Equal(t, expectedLogLevel, lc.LogLevel())
 }
