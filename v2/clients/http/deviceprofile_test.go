@@ -6,7 +6,6 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"path"
 	"os"
 	"path"
 	"path/filepath"
@@ -185,7 +184,7 @@ func TestDeleteDeviceProfileByName(t *testing.T) {
 func TestQueryDeviceProfileByName(t *testing.T) {
 	testName := "testName"
 	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Name, testName)
-	ts := newTestServer(urlPath, responses.DeviceProfileResponse{})
+	ts := newTestServer(http.MethodGet, urlPath, responses.DeviceProfileResponse{})
 	defer ts.Close()
 	client := NewDeviceProfileClient(ts.URL)
 	_, err := client.DeviceProfileByName(context.Background(), testName)
@@ -193,7 +192,7 @@ func TestQueryDeviceProfileByName(t *testing.T) {
 }
 
 func TestQueryAllDeviceProfiles(t *testing.T) {
-	ts := newTestServer(v2.ApiAllDeviceProfileRoute, responses.MultiDeviceProfilesResponse{})
+	ts := newTestServer(http.MethodGet, v2.ApiAllDeviceProfileRoute, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
 	client := NewDeviceProfileClient(ts.URL)
 	_, err := client.AllDeviceProfiles(context.Background(), []string{"testLabel1", "testLabel2"}, 1, 10)
@@ -203,7 +202,7 @@ func TestQueryAllDeviceProfiles(t *testing.T) {
 func TestQueryDeviceProfilesByModel(t *testing.T) {
 	testModel := "testModel"
 	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Model, testModel)
-	ts := newTestServer(urlPath, responses.MultiDeviceProfilesResponse{})
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
 	client := NewDeviceProfileClient(ts.URL)
 	_, err := client.DeviceProfilesByModel(context.Background(), testModel, 1, 10)
@@ -213,7 +212,7 @@ func TestQueryDeviceProfilesByModel(t *testing.T) {
 func TestQueryDeviceProfilesByManufacturer(t *testing.T) {
 	testManufacturer := "testManufacturer"
 	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Manufacturer, testManufacturer)
-	ts := newTestServer(urlPath, responses.MultiDeviceProfilesResponse{})
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
 	client := NewDeviceProfileClient(ts.URL)
 	_, err := client.DeviceProfilesByManufacturer(context.Background(), testManufacturer, 1, 10)
@@ -224,7 +223,7 @@ func TestQueryDeviceProfilesByManufacturerAndModel(t *testing.T) {
 	testManufacturer := "testManufacturer"
 	testModel := "testModel"
 	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Manufacturer, testManufacturer, v2.Model, testModel)
-	ts := newTestServer(urlPath, responses.MultiDeviceProfilesResponse{})
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
 	client := NewDeviceProfileClient(ts.URL)
 	_, err := client.DeviceProfilesByManufacturerAndModel(context.Background(), testManufacturer, testModel, 1, 10)

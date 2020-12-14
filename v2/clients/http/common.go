@@ -28,7 +28,7 @@ func NewCommonClient(baseUrl string) interfaces.CommonClient {
 
 func (cc *commonClient) Configuration(ctx context.Context) (common.ConfigResponse, errors.EdgeX) {
 	cr := common.ConfigResponse{}
-	err := utils.GetRequest(ctx, &cr, cc.baseUrl+v2.ApiConfigRoute)
+	err := utils.GetRequest(ctx, &cr, cc.baseUrl, v2.ApiConfigRoute, nil)
 	if err != nil {
 		return cr, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -37,7 +37,7 @@ func (cc *commonClient) Configuration(ctx context.Context) (common.ConfigRespons
 
 func (cc *commonClient) Metrics(ctx context.Context) (common.MetricsResponse, errors.EdgeX) {
 	mr := common.MetricsResponse{}
-	err := utils.GetRequest(ctx, &mr, cc.baseUrl+v2.ApiMetricsRoute)
+	err := utils.GetRequest(ctx, &mr, cc.baseUrl, v2.ApiMetricsRoute, nil)
 	if err != nil {
 		return mr, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -46,7 +46,7 @@ func (cc *commonClient) Metrics(ctx context.Context) (common.MetricsResponse, er
 
 func (cc *commonClient) Ping(ctx context.Context) (common.PingResponse, errors.EdgeX) {
 	pr := common.PingResponse{}
-	err := utils.GetRequest(ctx, &pr, cc.baseUrl+v2.ApiPingRoute)
+	err := utils.GetRequest(ctx, &pr, cc.baseUrl, v2.ApiPingRoute, nil)
 	if err != nil {
 		return pr, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -55,7 +55,7 @@ func (cc *commonClient) Ping(ctx context.Context) (common.PingResponse, errors.E
 
 func (cc *commonClient) Version(ctx context.Context) (common.VersionResponse, errors.EdgeX) {
 	vr := common.VersionResponse{}
-	err := utils.GetRequest(ctx, &vr, cc.baseUrl+v2.ApiVersionRoute)
+	err := utils.GetRequest(ctx, &vr, cc.baseUrl, v2.ApiVersionRoute, nil)
 	if err != nil {
 		return vr, errors.NewCommonEdgeXWrapper(err)
 	}

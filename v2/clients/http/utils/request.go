@@ -8,14 +8,22 @@ package utils
 import (
 	"context"
 	"encoding/json"
-	"net/http"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/errors"
+	"net/http"
+	"net/url"
 )
 
 // Helper method to make the get request and return the body
-func GetRequest(ctx context.Context, returnValuePointer interface{}, url string) errors.EdgeX {
-	req, err := createRequest(ctx, http.MethodGet, url)
+func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, requestParams url.Values) errors.EdgeX {
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return errors.NewCommonEdgeX(errors.KindClientError, "fail to parse baseUrl", err)
+	}
+	u.Path = requestPath
+	if requestParams != nil {
+		u.RawQuery = requestParams.Encode()
+	}
+	req, err := createRequest(ctx, http.MethodGet, u.String())
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
