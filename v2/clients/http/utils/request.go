@@ -117,3 +117,20 @@ func PutByFileRequest(
 	}
 	return nil
 }
+
+// Helper method to make the delete request and return the body
+func DeleteRequest(ctx context.Context, returnValuePointer interface{}, url string) errors.EdgeX {
+	req, err := createRequest(ctx, http.MethodDelete, url)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}

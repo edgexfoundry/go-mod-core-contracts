@@ -7,6 +7,8 @@ package http
 
 import (
 	"context"
+	"net/url"
+	"path"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
@@ -61,4 +63,18 @@ func (client *DeviceProfileClient) UpdateByYaml(ctx context.Context, yamlFilePat
 		return responses, errors.NewCommonEdgeXWrapper(err)
 	}
 	return responses, nil
+}
+
+func (client *DeviceProfileClient) DeleteByName(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX) {
+	var response common.BaseResponse
+	u, err := url.Parse(client.baseUrl)
+	if err != nil {
+		return response, errors.NewCommonEdgeX(errors.KindClientError, "fail to parse baseUrl", err)
+	}
+	u.Path = path.Join(u.Path, v2.ApiDeviceProfileRoute, v2.Name, url.QueryEscape(name))
+	err = utils.DeleteRequest(ctx, &response, u.String())
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
 }

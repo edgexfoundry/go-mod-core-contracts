@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -165,4 +166,16 @@ func TestUpdateDeviceProfileByYaml(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestDeleteDeviceProfileByName(t *testing.T) {
+	testName := "testName"
+	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Name, testName)
+	ts := newTestServer(http.MethodDelete, urlPath, common.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	res, err := client.DeleteByName(context.Background(), testName)
+	require.NoError(t, err)
+	require.NotNil(t, res)
 }
