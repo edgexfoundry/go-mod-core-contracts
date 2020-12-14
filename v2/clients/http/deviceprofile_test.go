@@ -16,6 +16,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -178,4 +179,53 @@ func TestDeleteDeviceProfileByName(t *testing.T) {
 	res, err := client.DeleteByName(context.Background(), testName)
 	require.NoError(t, err)
 	require.NotNil(t, res)
+}
+
+func TestQueryDeviceProfileByName(t *testing.T) {
+	testName := "testName"
+	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Name, testName)
+	ts := newTestServer(http.MethodGet, urlPath, responses.DeviceProfileResponse{})
+	defer ts.Close()
+	client := NewDeviceProfileClient(ts.URL)
+	_, err := client.DeviceProfileByName(context.Background(), testName)
+	require.NoError(t, err)
+}
+
+func TestQueryAllDeviceProfiles(t *testing.T) {
+	ts := newTestServer(http.MethodGet, v2.ApiAllDeviceProfileRoute, responses.MultiDeviceProfilesResponse{})
+	defer ts.Close()
+	client := NewDeviceProfileClient(ts.URL)
+	_, err := client.AllDeviceProfiles(context.Background(), []string{"testLabel1", "testLabel2"}, 1, 10)
+	require.NoError(t, err)
+}
+
+func TestQueryDeviceProfilesByModel(t *testing.T) {
+	testModel := "testModel"
+	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Model, testModel)
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
+	defer ts.Close()
+	client := NewDeviceProfileClient(ts.URL)
+	_, err := client.DeviceProfilesByModel(context.Background(), testModel, 1, 10)
+	require.NoError(t, err)
+}
+
+func TestQueryDeviceProfilesByManufacturer(t *testing.T) {
+	testManufacturer := "testManufacturer"
+	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Manufacturer, testManufacturer)
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
+	defer ts.Close()
+	client := NewDeviceProfileClient(ts.URL)
+	_, err := client.DeviceProfilesByManufacturer(context.Background(), testManufacturer, 1, 10)
+	require.NoError(t, err)
+}
+
+func TestQueryDeviceProfilesByManufacturerAndModel(t *testing.T) {
+	testManufacturer := "testManufacturer"
+	testModel := "testModel"
+	urlPath := path.Join(v2.ApiDeviceProfileRoute, v2.Manufacturer, testManufacturer, v2.Model, testModel)
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
+	defer ts.Close()
+	client := NewDeviceProfileClient(ts.URL)
+	_, err := client.DeviceProfilesByManufacturerAndModel(context.Background(), testManufacturer, testModel, 1, 10)
+	require.NoError(t, err)
 }
