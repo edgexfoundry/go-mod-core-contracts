@@ -6,6 +6,9 @@
 package dtos
 
 import (
+	"fmt"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
@@ -53,4 +56,77 @@ func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfi
 		DeviceCommands:  FromProfileResourceModelsToDTOs(deviceProfile.DeviceCommands),
 		CoreCommands:    FromCommandModelsToDTOs(deviceProfile.CoreCommands),
 	}
+}
+
+func ValidateDeviceProfileDTO(profile DeviceProfile) error {
+	// deviceResources should not duplicated
+	for i := 0; i < len(profile.DeviceResources); i++ {
+		for j := i + 1; j < len(profile.DeviceResources); j++ {
+			if profile.DeviceResources[i].Name == profile.DeviceResources[j].Name {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device resource %s is duplicated", profile.DeviceResources[j].Name), nil)
+			}
+		}
+	}
+	// deviceCommands should not duplicated
+	for i := 0; i < len(profile.DeviceCommands); i++ {
+		for j := i + 1; j < len(profile.DeviceCommands); j++ {
+			if profile.DeviceCommands[i].Name == profile.DeviceCommands[j].Name {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command %s is duplicated", profile.DeviceCommands[j].Name), nil)
+			}
+		}
+	}
+	// coreCommands should not duplicated
+	for i := 0; i < len(profile.CoreCommands); i++ {
+		for j := i + 1; j < len(profile.CoreCommands); j++ {
+			if profile.CoreCommands[i].Name == profile.CoreCommands[j].Name {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("core command %s is duplicated", profile.CoreCommands[j].Name), nil)
+			}
+		}
+	}
+	// coreCommands should match the one of deviceResources and deviceCommands
+	for i := 0; i < len(profile.CoreCommands); i++ {
+		match := false
+		for j := 0; j < len(profile.DeviceCommands); j++ {
+			if profile.CoreCommands[i].Name == profile.DeviceCommands[j].Name {
+				match = true
+				break
+			}
+		}
+		for j := 0; j < len(profile.DeviceResources); j++ {
+			if profile.CoreCommands[i].Name == profile.DeviceResources[j].Name {
+				match = true
+				break
+			}
+		}
+		if !match {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("core command %s doesn't match any deivce command or resource", profile.CoreCommands[i].Name), nil)
+		}
+	}
+	// deviceResources referenced in deviceCommands must exist
+	for i := 0; i < len(profile.DeviceCommands); i++ {
+		getCommands := profile.DeviceCommands[i].Get
+		for j := 0; j < len(getCommands); j++ {
+			if !deviceResourcesContains(profile.DeviceResources, getCommands[j].DeviceResource) {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's Get resource %s doesn't match any deivce resource", getCommands[j].DeviceResource), nil)
+			}
+		}
+		setCommands := profile.DeviceCommands[i].Set
+		for j := 0; j < len(setCommands); j++ {
+			if !deviceResourcesContains(profile.DeviceResources, setCommands[j].DeviceResource) {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's Set resource %s doesn't match any deivce resource", setCommands[j].DeviceResource), nil)
+			}
+		}
+	}
+	return nil
+}
+
+func deviceResourcesContains(resources []DeviceResource, resourceName string) bool {
+	contains := false
+	for i := 0; i < len(resources); i++ {
+		if resources[i].Name == resourceName {
+			contains = true
+			break
+		}
+	}
+	return contains
 }
