@@ -26,14 +26,6 @@ type MultiEventsResponse struct {
 	Events              []dtos.Event `json:"events"`
 }
 
-// UpdateEventPushedByIdResponse defines the Response Content for PUT event as pushed DTO.
-// This object and its properties correspond to the UpdateEventPushedByIdResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/UpdateEventPushedByIdResponse
-type UpdateEventPushedByIdResponse struct {
-	common.BaseResponse `json:",inline"`
-	Id                  string `json:"id"`
-}
-
 func NewEventResponse(requestId string, message string, statusCode int, event dtos.Event) EventResponse {
 	return EventResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
@@ -45,12 +37,5 @@ func NewMultiEventsResponse(requestId string, message string, statusCode int, ev
 	return MultiEventsResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
 		Events:       events,
-	}
-}
-
-func NewUpdateEventPushedByIdResponse(requestId string, message string, statusCode int, id string) UpdateEventPushedByIdResponse {
-	return UpdateEventPushedByIdResponse{
-		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
-		Id:           id,
 	}
 }

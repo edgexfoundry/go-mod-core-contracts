@@ -41,16 +41,3 @@ func TestNewMultiEventsResponse(t *testing.T) {
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedEvents, actual.Events)
 }
-
-func TestNewUpdateEventPushedByIdResponse(t *testing.T) {
-	expectedRequestId := "123456"
-	expectedStatusCode := 200
-	expectedMessage := "unit test message"
-	expectedId := "11111111-2222-3333-4444-555555555555"
-	actual := NewUpdateEventPushedByIdResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedId)
-
-	assert.Equal(t, expectedRequestId, actual.RequestId)
-	assert.Equal(t, expectedStatusCode, actual.StatusCode)
-	assert.Equal(t, expectedMessage, actual.Message)
-	assert.Equal(t, expectedId, actual.Id)
-}

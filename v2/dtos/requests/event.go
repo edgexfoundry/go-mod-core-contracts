@@ -23,14 +23,6 @@ type AddEventRequest struct {
 	Event              dtos.Event `json:"event" validate:"required"`
 }
 
-// UpdateEventPushedByIdRequest defines the Request Content for PUT event as pushed DTO.
-// This object and its properties correspond to the UpdateEventPushedByIdRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/UpdateEventPushedByIdRequest
-type UpdateEventPushedByIdRequest struct {
-	common.BaseRequest `json:",inline"`
-	Id                 string `json:"id" validate:"required,uuid"`
-}
-
 // Validate satisfies the Validator interface
 func (a AddEventRequest) Validate() error {
 	if err := v2.Validate(a); err != nil {
