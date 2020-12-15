@@ -142,6 +142,21 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 			}
 		})
 	}
+
+	profileNameWithUnreservedChars := profileData()
+	profileNameWithUnreservedChars.Profile.Name = nameWithUnreservedChars
+
+	err := profileNameWithUnreservedChars.Validate()
+	assert.Nil(t, err, fmt.Sprintf("DeviceProfileRequest with profile name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
+
+	// Following tests verify if profile name containing reserved characters should be detected with an error
+	for _, n := range namesWithReservedChar {
+		profileNameWithReservedChar := profileData()
+		profileNameWithReservedChar.Profile.Name = n
+
+		err := profileNameWithReservedChar.Validate()
+		assert.Error(t, err, fmt.Sprintf("DeviceProfileRequest with profile name containing reserved char %s should return error during validation", n))
+	}
 }
 
 func TestAddDeviceProfile_UnmarshalJSON(t *testing.T) {

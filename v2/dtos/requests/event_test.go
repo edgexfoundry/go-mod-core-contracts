@@ -7,6 +7,7 @@ package requests
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
@@ -123,6 +124,65 @@ func TestAddEventRequest_Validate(t *testing.T) {
 				require.Error(t, err)
 			} else {
 				require.NoError(t, err)
+			}
+		})
+	}
+
+	type testForNameField struct {
+		name        string
+		event       AddEventRequest
+		expectError bool
+	}
+
+	deviceNameWithUnreservedChar := eventRequestData()
+	deviceNameWithUnreservedChar.Event.DeviceName = nameWithUnreservedChars
+	profileNameWithUnreservedChar := eventRequestData()
+	profileNameWithUnreservedChar.Event.ProfileName = nameWithUnreservedChars
+	readingDeviceNameWithUnreservedChar := eventRequestData()
+	readingDeviceNameWithUnreservedChar.Event.Readings[0].DeviceName = nameWithUnreservedChars
+	readingResourceNameWithUnreservedChar := eventRequestData()
+	readingResourceNameWithUnreservedChar.Event.Readings[0].ResourceName = nameWithUnreservedChars
+	readingProfileNameWithUnreservedChar := eventRequestData()
+	readingProfileNameWithUnreservedChar.Event.Readings[0].ProfileName = nameWithUnreservedChars
+
+	// Following tests verify if name fields containing unreserved characters should pass edgex-dto-rfc3986-unreserved-chars check
+	testsForNameFields := []testForNameField{
+		{"Valid AddEventRequest with device name containing unreserved chars", deviceNameWithUnreservedChar, false},
+		{"Valid AddEventRequest with profile name containing unreserved chars", profileNameWithUnreservedChar, false},
+		{"Valid AddEventRequest with reading device name containing unreserved chars", readingDeviceNameWithUnreservedChar, false},
+		{"Valid AddEventRequest with reading resource name containing unreserved chars", readingResourceNameWithUnreservedChar, false},
+		{"Valid AddEventRequest with reading profile name containing unreserved chars", readingProfileNameWithUnreservedChar, false},
+	}
+
+	// Following tests verify if name fields containing reserved characters should be detected with an error
+	for _, n := range namesWithReservedChar {
+		deviceNameWithReservedChar := eventRequestData()
+		deviceNameWithReservedChar.Event.DeviceName = n
+		profileNameWithReservedChar := eventRequestData()
+		profileNameWithReservedChar.Event.ProfileName = n
+		readingDeviceNameWithReservedChar := eventRequestData()
+		readingDeviceNameWithReservedChar.Event.Readings[0].DeviceName = n
+		readingResourceNameWithReservedChar := eventRequestData()
+		readingResourceNameWithReservedChar.Event.Readings[0].ResourceName = n
+		readingProfileNameWithReservedChar := eventRequestData()
+		readingProfileNameWithReservedChar.Event.Readings[0].ProfileName = n
+
+		testsForNameFields = append(testsForNameFields,
+			testForNameField{"Invalid AddEventRequest with device name containing reserved char", deviceNameWithReservedChar, true},
+			testForNameField{"Invalid AddEventRequest with profile name containing reserved char", profileNameWithReservedChar, true},
+			testForNameField{"Invalid AddEventRequest with reading device name containing reserved char", readingDeviceNameWithReservedChar, true},
+			testForNameField{"Invalid AddEventRequest with reading resource name containing reserved char", readingResourceNameWithReservedChar, true},
+			testForNameField{"Invalid AddEventRequest with reading profile name containing reserved char", readingProfileNameWithReservedChar, true},
+		)
+	}
+
+	for _, tt := range testsForNameFields {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.event.Validate()
+			if tt.expectError {
+				assert.Error(t, err, fmt.Sprintf("expect error but not : %s", tt.name))
+			} else {
+				assert.Nil(t, err, fmt.Sprintf("unexpected error occurs : %s", tt.name))
 			}
 		})
 	}
