@@ -27,7 +27,10 @@ type DeviceProfileRequest struct {
 // Validate satisfies the Validator interface
 func (dp DeviceProfileRequest) Validate() error {
 	err := v2.Validate(dp)
-	return err
+	if err != nil {
+		return err
+	}
+	return dtos.ValidateDeviceProfileDTO(dp.Profile)
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the DeviceProfileRequest type
