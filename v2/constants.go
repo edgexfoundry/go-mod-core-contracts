@@ -13,13 +13,11 @@ const (
 	ApiEventRoute              = ApiBase + "/event"
 	ApiAllEventRoute           = ApiEventRoute + "/" + All
 	ApiEventIdRoute            = ApiEventRoute + "/" + Id + "/{" + Id + "}"
-	ApiEventPushRoute          = ApiEventRoute + "/" + Pushed
 	ApiEventCountRoute         = ApiEventRoute + "/" + Count
 	ApiEventCountByDeviceRoute = ApiEventCountRoute + "/" + Device + "/{" + DeviceName + "}"
 	ApiEventByDeviceNameRoute  = ApiEventRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
 	ApiEventByTimeRangeRoute   = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
 	ApiEventByAgeRoute         = ApiEventRoute + "/" + Age + "/{" + Age + "}"
-	ApiEventScrubRoute         = ApiEventRoute + "/" + Scrub
 
 	ApiReadingRoute             = ApiBase + "/reading"
 	ApiAllReadingRoute          = ApiReadingRoute + "/" + All

@@ -10,7 +10,6 @@ package models
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Event struct {
 	Id          string
-	Pushed      int64
 	DeviceName  string
 	ProfileName string
 	Created     int64

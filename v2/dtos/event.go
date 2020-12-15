@@ -20,7 +20,6 @@ import (
 type Event struct {
 	common.Versionable `json:",inline"`
 	Id                 string            `json:"id" validate:"required,uuid"`
-	Pushed             int64             `json:"pushed,omitempty"`
 	DeviceName         string            `json:"deviceName" validate:"required"`
 	ProfileName        string            `json:"profileName" validate:"required"`
 	Created            int64             `json:"created"`
@@ -44,7 +43,6 @@ func FromEventModelToDTO(event models.Event) Event {
 	return Event{
 		Versionable: common.Versionable{ApiVersion: v2.ApiVersion},
 		Id:          event.Id,
-		Pushed:      event.Pushed,
 		DeviceName:  event.DeviceName,
 		ProfileName: event.ProfileName,
 		Created:     event.Created,
