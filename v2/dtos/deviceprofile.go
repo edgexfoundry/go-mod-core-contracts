@@ -60,70 +60,69 @@ func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfi
 
 func ValidateDeviceProfileDTO(profile DeviceProfile) error {
 	// deviceResources should not duplicated
-	for i := 0; i < len(profile.DeviceResources); i++ {
-		for j := i + 1; j < len(profile.DeviceResources); j++ {
-			if profile.DeviceResources[i].Name == profile.DeviceResources[j].Name {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device resource %s is duplicated", profile.DeviceResources[j].Name), nil)
-			}
+	dupCheck := make(map[string]bool)
+	for _, resource := range profile.DeviceResources {
+		if dupCheck[resource.Name] {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device resource %s is duplicated", resource.Name), nil)
 		}
+		dupCheck[resource.Name] = true
 	}
 	// deviceCommands should not duplicated
-	for i := 0; i < len(profile.DeviceCommands); i++ {
-		for j := i + 1; j < len(profile.DeviceCommands); j++ {
-			if profile.DeviceCommands[i].Name == profile.DeviceCommands[j].Name {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command %s is duplicated", profile.DeviceCommands[j].Name), nil)
-			}
+	dupCheck = make(map[string]bool)
+	for _, command := range profile.DeviceCommands {
+		if dupCheck[command.Name] {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command %s is duplicated", command.Name), nil)
 		}
+		dupCheck[command.Name] = true
 	}
 	// coreCommands should not duplicated
-	for i := 0; i < len(profile.CoreCommands); i++ {
-		for j := i + 1; j < len(profile.CoreCommands); j++ {
-			if profile.CoreCommands[i].Name == profile.CoreCommands[j].Name {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("core command %s is duplicated", profile.CoreCommands[j].Name), nil)
-			}
+	dupCheck = make(map[string]bool)
+	for _, command := range profile.CoreCommands {
+		if dupCheck[command.Name] {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("core command %s is duplicated", command.Name), nil)
 		}
+		dupCheck[command.Name] = true
 	}
 	// coreCommands should match the one of deviceResources and deviceCommands
-	for i := 0; i < len(profile.CoreCommands); i++ {
-		match := false
-		for j := 0; j < len(profile.DeviceCommands); j++ {
-			if profile.CoreCommands[i].Name == profile.DeviceCommands[j].Name {
-				match = true
-				break
-			}
-		}
-		for j := 0; j < len(profile.DeviceResources); j++ {
-			if profile.CoreCommands[i].Name == profile.DeviceResources[j].Name {
-				match = true
-				break
-			}
-		}
-		if !match {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("core command %s doesn't match any deivce command or resource", profile.CoreCommands[i].Name), nil)
+	for _, command := range profile.CoreCommands {
+		if !deviceCommandsContains(profile.DeviceCommands, command.Name) &&
+			!deviceResourcesContains(profile.DeviceResources, command.Name) {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("core command %s doesn't match any deivce command or resource", command.Name), nil)
 		}
 	}
 	// deviceResources referenced in deviceCommands must exist
-	for i := 0; i < len(profile.DeviceCommands); i++ {
-		getCommands := profile.DeviceCommands[i].Get
-		for j := 0; j < len(getCommands); j++ {
-			if !deviceResourcesContains(profile.DeviceResources, getCommands[j].DeviceResource) {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's Get resource %s doesn't match any deivce resource", getCommands[j].DeviceResource), nil)
+	for _, command := range profile.DeviceCommands {
+		getCommands := command.Get
+		for _, getCommand := range getCommands {
+			if !deviceResourcesContains(profile.DeviceResources, getCommand.DeviceResource) {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's Get resource %s doesn't match any deivce resource", getCommand.DeviceResource), nil)
 			}
 		}
-		setCommands := profile.DeviceCommands[i].Set
-		for j := 0; j < len(setCommands); j++ {
-			if !deviceResourcesContains(profile.DeviceResources, setCommands[j].DeviceResource) {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's Set resource %s doesn't match any deivce resource", setCommands[j].DeviceResource), nil)
+		setCommands := command.Set
+		for _, setCommand := range setCommands {
+			if !deviceResourcesContains(profile.DeviceResources, setCommand.DeviceResource) {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's Set resource %s doesn't match any deivce resource", setCommand.DeviceResource), nil)
 			}
 		}
 	}
 	return nil
 }
 
-func deviceResourcesContains(resources []DeviceResource, resourceName string) bool {
+func deviceResourcesContains(resources []DeviceResource, name string) bool {
 	contains := false
-	for i := 0; i < len(resources); i++ {
-		if resources[i].Name == resourceName {
+	for _, resource := range resources {
+		if resource.Name == name {
+			contains = true
+			break
+		}
+	}
+	return contains
+}
+
+func deviceCommandsContains(resources []ProfileResource, name string) bool {
+	contains := false
+	for _, resource := range resources {
+		if resource.Name == name {
 			contains = true
 			break
 		}
