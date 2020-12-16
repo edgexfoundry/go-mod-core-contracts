@@ -11,6 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
@@ -24,45 +25,46 @@ var testAttributes = map[string]string{
 	"TestAttribute": "TestAttributeValue",
 }
 
-var testDeviceResources = []dtos.DeviceResource{{
-	Name:        TestDeviceResourceName,
-	Description: TestDescription,
-	Tag:         TestTag,
-	Attributes:  testAttributes,
-	Properties: dtos.PropertyValue{
-		Type:      "INT16",
-		ReadWrite: "RW",
-	},
-}}
-var testDeviceCommands = []dtos.ProfileResource{{
-	Name: TestProfileResourceName,
-	Get: []dtos.ResourceOperation{{
-		DeviceResource: TestDeviceResourceName,
-	}},
-	Set: []dtos.ResourceOperation{{
-		DeviceResource: TestDeviceResourceName,
-	}},
-}}
-var testCoreCommands = []dtos.Command{{
-	Name: TestProfileResourceName,
-	Get:  true,
-	Put:  true,
-}}
-
-var testAddDeviceProfileReq = DeviceProfileRequest{
-	BaseRequest: common.BaseRequest{
-		RequestId: ExampleUUID,
-	},
-	Profile: dtos.DeviceProfile{
-		Name:            TestDeviceProfileName,
-		Manufacturer:    TestManufacturer,
-		Description:     TestDescription,
-		Model:           TestModel,
-		Labels:          testLabels,
-		DeviceResources: testDeviceResources,
-		DeviceCommands:  testDeviceCommands,
-		CoreCommands:    testCoreCommands,
-	},
+func profileData() DeviceProfileRequest {
+	var testDeviceResources = []dtos.DeviceResource{{
+		Name:        TestDeviceResourceName,
+		Description: TestDescription,
+		Tag:         TestTag,
+		Attributes:  testAttributes,
+		Properties: dtos.PropertyValue{
+			Type:      v2.ValueTypeInt16,
+			ReadWrite: "RW",
+		},
+	}}
+	var testDeviceCommands = []dtos.ProfileResource{{
+		Name: TestProfileResourceName,
+		Get: []dtos.ResourceOperation{{
+			DeviceResource: TestDeviceResourceName,
+		}},
+		Set: []dtos.ResourceOperation{{
+			DeviceResource: TestDeviceResourceName,
+		}},
+	}}
+	var testCoreCommands = []dtos.Command{{
+		Name: TestProfileResourceName,
+		Get:  true,
+		Put:  true,
+	}}
+	return DeviceProfileRequest{
+		BaseRequest: common.BaseRequest{
+			RequestId: ExampleUUID,
+		},
+		Profile: dtos.DeviceProfile{
+			Name:            TestDeviceProfileName,
+			Manufacturer:    TestManufacturer,
+			Description:     TestDescription,
+			Model:           TestModel,
+			Labels:          testLabels,
+			DeviceResources: testDeviceResources,
+			DeviceCommands:  testDeviceCommands,
+			CoreCommands:    testCoreCommands,
+		},
+	}
 }
 
 var expectedDeviceProfile = models.DeviceProfile{
@@ -77,7 +79,7 @@ var expectedDeviceProfile = models.DeviceProfile{
 		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: models.PropertyValue{
-			Type:      "INT16",
+			Type:      v2.ValueTypeInt16,
 			ReadWrite: "RW",
 		},
 	}},
@@ -97,51 +99,24 @@ var expectedDeviceProfile = models.DeviceProfile{
 	}},
 }
 
-func TestAddDeviceProfileRequest_Validate(t *testing.T) {
+func TestDeviceProfileRequest_Validate(t *testing.T) {
 	emptyString := " "
-	valid := testAddDeviceProfileReq
-	noName := testAddDeviceProfileReq
+	valid := profileData()
+	noName := profileData()
 	noName.Profile.Name = emptyString
-	noDeviceResource := testAddDeviceProfileReq
+	noDeviceResource := profileData()
 	noDeviceResource.Profile.DeviceResources = []dtos.DeviceResource{}
-	noDeviceResourceName := testAddDeviceProfileReq
-	noDeviceResourceName.Profile.DeviceResources = []dtos.DeviceResource{{
-		Name:        emptyString,
-		Description: TestDescription,
-		Tag:         TestTag,
-		Attributes:  testAttributes,
-		Properties: dtos.PropertyValue{
-			Type:      "INT16",
-			ReadWrite: "RW",
-		},
-	}}
-	noDeviceResourcePropertyType := testAddDeviceProfileReq
-	noDeviceResourcePropertyType.Profile.DeviceResources = []dtos.DeviceResource{{
-		Name:        TestDeviceResourceName,
-		Description: TestDescription,
-		Tag:         TestTag,
-		Attributes:  testAttributes,
-		Properties: dtos.PropertyValue{
-			Type:      emptyString,
-			ReadWrite: "RW",
-		},
-	}}
-	noCommandName := testAddDeviceProfileReq
-	noCommandName.Profile.CoreCommands = []dtos.Command{{
-		Name: emptyString,
-		Get:  true,
-		Put:  true,
-	}}
-	noCommandGet := testAddDeviceProfileReq
-	noCommandGet.Profile.CoreCommands = []dtos.Command{{
-		Name: TestProfileResourceName,
-		Get:  false,
-	}}
-	noCommandPut := testAddDeviceProfileReq
-	noCommandPut.Profile.CoreCommands = []dtos.Command{{
-		Name: TestProfileResourceName,
-		Put:  false,
-	}}
+	noDeviceResourceName := profileData()
+	noDeviceResourceName.Profile.DeviceResources[0].Name = emptyString
+	noDeviceResourcePropertyType := profileData()
+	noDeviceResourcePropertyType.Profile.DeviceResources[0].Properties.Type = emptyString
+	invalidDeviceResourcePropertyType := profileData()
+	invalidDeviceResourcePropertyType.Profile.DeviceResources[0].Properties.Type = "BadType"
+	noCommandName := profileData()
+	noCommandName.Profile.CoreCommands[0].Name = emptyString
+	noEnabledCommand := profileData()
+	noEnabledCommand.Profile.CoreCommands[0].Get = false
+	noEnabledCommand.Profile.CoreCommands[0].Put = false
 
 	tests := []struct {
 		name          string
@@ -153,52 +128,63 @@ func TestAddDeviceProfileRequest_Validate(t *testing.T) {
 		{"invalid DeviceProfileRequest, no deviceResource", noDeviceResource, true},
 		{"invalid DeviceProfileRequest, no deviceResource name", noDeviceResourceName, true},
 		{"invalid DeviceProfileRequest, no deviceResource property type", noDeviceResourcePropertyType, true},
+		{"invalid DeviceProfileRequest, invalid deviceResource property type", invalidDeviceResourcePropertyType, true},
 		{"invalid DeviceProfileRequest, no command name", noCommandName, true},
-		{"invalid DeviceProfileRequest, no command Get", noCommandGet, true},
-		{"invalid DeviceProfileRequest, no command Put", noCommandPut, true},
+		{"invalid DeviceProfileRequest, no enabled command ", noEnabledCommand, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.DeviceProfile.Validate()
-			assert.Equal(t, tt.expectError, err != nil, "Unexpected addDeviceProfileRequest validation result.", err)
+			if tt.expectError {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+			}
 		})
 	}
 }
 
 func TestAddDeviceProfile_UnmarshalJSON(t *testing.T) {
-	valid := testAddDeviceProfileReq
-	resultTestBytes, _ := json.Marshal(testAddDeviceProfileReq)
-	type args struct {
-		data []byte
-	}
+	expected := profileData()
+	validData, err := json.Marshal(profileData())
+	require.NoError(t, err)
+	validValueTypeLowerCase := profileData()
+	validValueTypeLowerCase.Profile.DeviceResources[0].Properties.Type = "int16"
+	validValueTypeLowerCaseData, err := json.Marshal(validValueTypeLowerCase)
+	require.NoError(t, err)
+	validValueTypeUpperCase := profileData()
+	validValueTypeUpperCase.Profile.DeviceResources[0].Properties.Type = "INT16"
+	validValueTypeUpperCaseData, err := json.Marshal(validValueTypeUpperCase)
+	require.NoError(t, err)
+
 	tests := []struct {
-		name     string
-		expected DeviceProfileRequest
-		args     args
-		wantErr  bool
+		name    string
+		data    []byte
+		wantErr bool
 	}{
-		{"unmarshal DeviceProfileRequest with success", valid, args{resultTestBytes}, false},
-		{"unmarshal invalid DeviceProfileRequest, empty data", DeviceProfileRequest{}, args{[]byte{}}, true},
-		{"unmarshal invalid DeviceProfileRequest, string data", DeviceProfileRequest{}, args{[]byte("Invalid DeviceProfileRequest")}, true},
+		{"unmarshal DeviceProfileRequest with success", validData, false},
+		{"unmarshal DeviceProfileRequest with success, valid value type int16", validValueTypeLowerCaseData, false},
+		{"unmarshal DeviceProfileRequest with success, valid value type INT16", validValueTypeUpperCaseData, false},
+		{"unmarshal invalid DeviceProfileRequest, empty data", []byte{}, true},
+		{"unmarshal invalid DeviceProfileRequest, string data", []byte("Invalid DeviceProfileRequest"), true},
 	}
-	fmt.Println(string(resultTestBytes))
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var dp DeviceProfileRequest
-			err := dp.UnmarshalJSON(tt.args.data)
+			err := dp.UnmarshalJSON(tt.data)
 			if tt.wantErr {
 				require.Error(t, err)
 			} else {
 				require.NoError(t, err)
-				assert.Equal(t, tt.expected, dp, "Unmarshal did not result in expected DeviceProfileRequest.")
+				assert.Equal(t, expected, dp, "Unmarshal did not result in expected DeviceProfileRequest.")
 			}
 		})
 	}
 }
 
 func TestAddDeviceProfile_UnmarshalYAML(t *testing.T) {
-	valid := testAddDeviceProfileReq
-	resultTestBytes, _ := yaml.Marshal(testAddDeviceProfileReq)
+	valid := profileData()
+	resultTestBytes, _ := yaml.Marshal(profileData())
 	type args struct {
 		data []byte
 	}
@@ -228,7 +214,7 @@ func TestAddDeviceProfile_UnmarshalYAML(t *testing.T) {
 }
 
 func TestAddDeviceProfileReqToDeviceProfileModels(t *testing.T) {
-	requests := []DeviceProfileRequest{testAddDeviceProfileReq}
+	requests := []DeviceProfileRequest{profileData()}
 	expectedDeviceProfileModels := []models.DeviceProfile{expectedDeviceProfile}
 	resultModels := DeviceProfileReqToDeviceProfileModels(requests)
 	assert.Equal(t, expectedDeviceProfileModels, resultModels, "DeviceProfileReqToDeviceProfileModels did not result in expected DeviceProfile model.")

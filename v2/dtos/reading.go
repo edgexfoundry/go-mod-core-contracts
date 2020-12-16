@@ -6,39 +6,9 @@
 package dtos
 
 import (
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
-)
-
-// Constants related to Reading ValueTypes
-const (
-	ValueTypeBool         = "Bool"
-	ValueTypeString       = "String"
-	ValueTypeUint8        = "Uint8"
-	ValueTypeUint16       = "Uint16"
-	ValueTypeUint32       = "Uint32"
-	ValueTypeUint64       = "Uint64"
-	ValueTypeInt8         = "Int8"
-	ValueTypeInt16        = "Int16"
-	ValueTypeInt32        = "Int32"
-	ValueTypeInt64        = "Int64"
-	ValueTypeFloat32      = "Float32"
-	ValueTypeFloat64      = "Float64"
-	ValueTypeBinary       = "Binary"
-	ValueTypeBoolArray    = "BoolArray"
-	ValueTypeStringArray  = "StringArray"
-	ValueTypeUint8Array   = "Uint8Array"
-	ValueTypeUint16Array  = "Uint16Array"
-	ValueTypeUint32Array  = "Uint32Array"
-	ValueTypeUint64Array  = "Uint64Array"
-	ValueTypeInt8Array    = "Int8Array"
-	ValueTypeInt16Array   = "Int16Array"
-	ValueTypeInt32Array   = "Int32Array"
-	ValueTypeInt64Array   = "Int64Array"
-	ValueTypeFloat32Array = "Float32Array"
-	ValueTypeFloat64Array = "Float64Array"
 )
 
 // BaseReading and its properties are defined in the APIv2 specification:
@@ -51,7 +21,7 @@ type BaseReading struct {
 	DeviceName         string `json:"deviceName" validate:"required"`
 	ResourceName       string `json:"resourceName" validate:"required"`
 	ProfileName        string `json:"profileName" validate:"required"`
-	ValueType          string `json:"valueType" validate:"required"`
+	ValueType          string `json:"valueType" validate:"required,edgex-dto-value-type"`
 	BinaryReading      `json:",inline" validate:"-"`
 	SimpleReading      `json:",inline" validate:"-"`
 }
@@ -71,10 +41,7 @@ type SimpleReading struct {
 
 // Validate satisfies the Validator interface
 func (b BaseReading) Validate() error {
-	if !validateValueType(b.ValueType) {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid valueType.", nil)
-	}
-	if b.ValueType == ValueTypeBinary {
+	if b.ValueType == v2.ValueTypeBinary {
 		// validate the inner BinaryReading struct
 		binaryReading := b.BinaryReading
 		if err := v2.Validate(binaryReading); err != nil {
@@ -91,39 +58,6 @@ func (b BaseReading) Validate() error {
 	return nil
 }
 
-func validateValueType(valueType string) bool {
-	switch valueType {
-	case ValueTypeBool:
-	case ValueTypeString:
-	case ValueTypeUint8:
-	case ValueTypeUint16:
-	case ValueTypeUint32:
-	case ValueTypeUint64:
-	case ValueTypeInt8:
-	case ValueTypeInt16:
-	case ValueTypeInt32:
-	case ValueTypeInt64:
-	case ValueTypeFloat32:
-	case ValueTypeFloat64:
-	case ValueTypeBinary:
-	case ValueTypeBoolArray:
-	case ValueTypeStringArray:
-	case ValueTypeUint8Array:
-	case ValueTypeUint16Array:
-	case ValueTypeUint32Array:
-	case ValueTypeUint64Array:
-	case ValueTypeInt8Array:
-	case ValueTypeInt16Array:
-	case ValueTypeInt32Array:
-	case ValueTypeInt64Array:
-	case ValueTypeFloat32Array:
-	case ValueTypeFloat64Array:
-	default:
-		return false
-	}
-	return true
-}
-
 // Convert Reading DTO to Reading model
 func ToReadingModel(r BaseReading) models.Reading {
 	var readingModel models.Reading
@@ -134,7 +68,7 @@ func ToReadingModel(r BaseReading) models.Reading {
 		ProfileName:  r.ProfileName,
 		ValueType:    r.ValueType,
 	}
-	if r.ValueType == ValueTypeBinary {
+	if r.ValueType == v2.ValueTypeBinary {
 		readingModel = models.BinaryReading{
 			BaseReading: br,
 			BinaryValue: r.BinaryValue,

@@ -49,6 +49,15 @@ func (dp *DeviceProfileRequest) UnmarshalJSON(b []byte) error {
 	if err := dp.Validate(); err != nil {
 		return err
 	}
+
+	// Normalize resource's value type
+	for i, resource := range dp.Profile.DeviceResources {
+		valueType, err := v2.NormalizeValueType(resource.Properties.Type)
+		if err != nil {
+			return errors.NewCommonEdgeXWrapper(err)
+		}
+		dp.Profile.DeviceResources[i].Properties.Type = valueType
+	}
 	return nil
 }
 
@@ -67,6 +76,15 @@ func (dp *DeviceProfileRequest) UnmarshalYAML(b []byte) error {
 	// validate DeviceProfileRequest DTO
 	if err := dp.Validate(); err != nil {
 		return err
+	}
+
+	// Normalize resource's value type
+	for i, resource := range dp.Profile.DeviceResources {
+		valueType, err := v2.NormalizeValueType(resource.Properties.Type)
+		if err != nil {
+			return errors.NewCommonEdgeXWrapper(err)
+		}
+		dp.Profile.DeviceResources[i].Properties.Type = valueType
 	}
 	return nil
 }

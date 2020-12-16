@@ -56,6 +56,15 @@ func (a *AddEventRequest) UnmarshalJSON(b []byte) error {
 	if err := a.Validate(); err != nil {
 		return err
 	}
+
+	// Normalize reading's value type
+	for i, r := range a.Event.Readings {
+		valueType, err := v2.NormalizeValueType(r.ValueType)
+		if err != nil {
+			return errors.NewCommonEdgeXWrapper(err)
+		}
+		a.Event.Readings[i].ValueType = valueType
+	}
 	return nil
 }
 

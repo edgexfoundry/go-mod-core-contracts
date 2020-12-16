@@ -10,7 +10,7 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 // PropertyValue and its properties care defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/PropertyValue
 type PropertyValue struct {
-	Type         string `json:"type" yaml:"type" validate:"required,edgex-dto-none-empty-string"`
+	Type         string `json:"type" yaml:"type" validate:"required,edgex-dto-value-type"`
 	ReadWrite    string `json:"readWrite,omitempty" yaml:"readWrite,omitempty"`
 	Units        string `json:"units,omitempty" yaml:"units,omitempty"`
 	Minimum      string `json:"minimum,omitempty" yaml:"minimum,omitempty"`
