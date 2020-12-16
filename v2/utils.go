@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package dtos
+package v2
 
 import (
 	"fmt"
@@ -24,15 +24,7 @@ var valueTypes = []string{
 	ValueTypeFloat32Array, ValueTypeFloat64Array,
 }
 
-func ValidateValueType(valueType string) bool {
-	for _, v := range valueTypes {
-		if strings.ToLower(valueType) == strings.ToLower(v) {
-			return true
-		}
-	}
-	return false
-}
-
+// // NormalizeValueType normalizes the valueType to upper camel case
 func NormalizeValueType(valueType string) (string, error) {
 	for _, v := range valueTypes {
 		if strings.ToLower(valueType) == strings.ToLower(v) {

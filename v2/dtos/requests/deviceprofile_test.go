@@ -11,6 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
@@ -31,7 +32,7 @@ func profileData() DeviceProfileRequest {
 		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: dtos.PropertyValue{
-			Type:      dtos.ValueTypeInt16,
+			Type:      v2.ValueTypeInt16,
 			ReadWrite: "RW",
 		},
 	}}
@@ -78,7 +79,7 @@ var expectedDeviceProfile = models.DeviceProfile{
 		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: models.PropertyValue{
-			Type:      dtos.ValueTypeInt16,
+			Type:      v2.ValueTypeInt16,
 			ReadWrite: "RW",
 		},
 	}},

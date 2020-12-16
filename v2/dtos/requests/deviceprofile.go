@@ -26,11 +26,6 @@ type DeviceProfileRequest struct {
 
 // Validate satisfies the Validator interface
 func (dp DeviceProfileRequest) Validate() error {
-	for _, resource := range dp.Profile.DeviceResources {
-		if !dtos.ValidateValueType(resource.Properties.Type) {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid valueType.", nil)
-		}
-	}
 	err := v2.Validate(dp)
 	if err != nil {
 		return err
@@ -55,9 +50,9 @@ func (dp *DeviceProfileRequest) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	// Normalize reading's value type
+	// Normalize resource's value type
 	for i, resource := range dp.Profile.DeviceResources {
-		valueType, err := dtos.NormalizeValueType(resource.Properties.Type)
+		valueType, err := v2.NormalizeValueType(resource.Properties.Type)
 		if err != nil {
 			return errors.NewCommonEdgeXWrapper(err)
 		}
@@ -83,9 +78,9 @@ func (dp *DeviceProfileRequest) UnmarshalYAML(b []byte) error {
 		return err
 	}
 
-	// Normalize reading's value type
+	// Normalize resource's value type
 	for i, resource := range dp.Profile.DeviceResources {
-		valueType, err := dtos.NormalizeValueType(resource.Properties.Type)
+		valueType, err := v2.NormalizeValueType(resource.Properties.Type)
 		if err != nil {
 			return errors.NewCommonEdgeXWrapper(err)
 		}

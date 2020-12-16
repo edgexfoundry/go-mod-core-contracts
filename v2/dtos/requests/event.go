@@ -59,7 +59,7 @@ func (a *AddEventRequest) UnmarshalJSON(b []byte) error {
 
 	// Normalize reading's value type
 	for i, r := range a.Event.Readings {
-		valueType, err := dtos.NormalizeValueType(r.ValueType)
+		valueType, err := v2.NormalizeValueType(r.ValueType)
 		if err != nil {
 			return errors.NewCommonEdgeXWrapper(err)
 		}

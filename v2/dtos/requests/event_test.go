@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
@@ -32,7 +33,7 @@ func eventRequestData() AddEventRequest {
 				ResourceName: TestDeviceResourceName,
 				ProfileName:  TestDeviceProfileName,
 				Origin:       TestOriginTime,
-				ValueType:    dtos.ValueTypeUint8,
+				ValueType:    v2.ValueTypeUint8,
 				SimpleReading: dtos.SimpleReading{
 					Value: TestReadingValue,
 				},
@@ -82,12 +83,12 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	invalidSimpleReadingNoValue.Event.Readings[0].SimpleReading.Value = ""
 
 	invalidBinaryReadingNoValue := eventRequestData()
-	invalidBinaryReadingNoValue.Event.Readings[0].ValueType = dtos.ValueTypeBinary
+	invalidBinaryReadingNoValue.Event.Readings[0].ValueType = v2.ValueTypeBinary
 	invalidBinaryReadingNoValue.Event.Readings[0].BinaryReading.MediaType = TestBinaryReadingMediaType
 	invalidBinaryReadingNoValue.Event.Readings[0].BinaryReading.BinaryValue = []byte{}
 
 	invalidBinaryReadingNoMedia := eventRequestData()
-	invalidBinaryReadingNoMedia.Event.Readings[0].ValueType = dtos.ValueTypeBinary
+	invalidBinaryReadingNoMedia.Event.Readings[0].ValueType = v2.ValueTypeBinary
 	invalidBinaryReadingNoMedia.Event.Readings[0].BinaryReading.MediaType = ""
 	invalidBinaryReadingNoMedia.Event.Readings[0].BinaryReading.BinaryValue = []byte(TestReadingBinaryValue)
 
@@ -174,7 +175,7 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 			ResourceName: TestDeviceResourceName,
 			ProfileName:  TestDeviceProfileName,
 			Origin:       TestOriginTime,
-			ValueType:    dtos.ValueTypeUint8,
+			ValueType:    v2.ValueTypeUint8,
 		},
 		Value: TestReadingValue,
 	}

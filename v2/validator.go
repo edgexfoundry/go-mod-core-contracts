@@ -23,6 +23,7 @@ const (
 	autoEventFrequencyTag = "edgex-dto-autoevent-frequency"
 	dtoUuidTag            = "edgex-dto-uuid"
 	dtoNoneEmptyStringTag = "edgex-dto-none-empty-string"
+	dtoValueType          = "edgex-dto-value-type"
 )
 
 func init() {
@@ -30,6 +31,7 @@ func init() {
 	val.RegisterValidation(autoEventFrequencyTag, ValidateAutoEventFrequency)
 	val.RegisterValidation(dtoUuidTag, ValidateDtoUuid)
 	val.RegisterValidation(dtoNoneEmptyStringTag, ValidateDtoNoneEmptyString)
+	val.RegisterValidation(dtoValueType, ValidateValueType)
 }
 
 // Validate function will use the validator package to validate the struct annotation
@@ -110,4 +112,15 @@ func ValidateDtoNoneEmptyString(fl validator.FieldLevel) bool {
 	} else {
 		return false
 	}
+}
+
+// ValidateValueType checks whether the valueType is valid
+func ValidateValueType(fl validator.FieldLevel) bool {
+	valueType := fl.Field().String()
+	for _, v := range valueTypes {
+		if strings.ToLower(valueType) == strings.ToLower(v) {
+			return true
+		}
+	}
+	return false
 }
