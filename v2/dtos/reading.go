@@ -71,7 +71,7 @@ type SimpleReading struct {
 
 // Validate satisfies the Validator interface
 func (b BaseReading) Validate() error {
-	if !validateValueType(b.ValueType) {
+	if !ValidateValueType(b.ValueType) {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid valueType.", nil)
 	}
 	if b.ValueType == ValueTypeBinary {
@@ -89,39 +89,6 @@ func (b BaseReading) Validate() error {
 	}
 
 	return nil
-}
-
-func validateValueType(valueType string) bool {
-	switch valueType {
-	case ValueTypeBool:
-	case ValueTypeString:
-	case ValueTypeUint8:
-	case ValueTypeUint16:
-	case ValueTypeUint32:
-	case ValueTypeUint64:
-	case ValueTypeInt8:
-	case ValueTypeInt16:
-	case ValueTypeInt32:
-	case ValueTypeInt64:
-	case ValueTypeFloat32:
-	case ValueTypeFloat64:
-	case ValueTypeBinary:
-	case ValueTypeBoolArray:
-	case ValueTypeStringArray:
-	case ValueTypeUint8Array:
-	case ValueTypeUint16Array:
-	case ValueTypeUint32Array:
-	case ValueTypeUint64Array:
-	case ValueTypeInt8Array:
-	case ValueTypeInt16Array:
-	case ValueTypeInt32Array:
-	case ValueTypeInt64Array:
-	case ValueTypeFloat32Array:
-	case ValueTypeFloat64Array:
-	default:
-		return false
-	}
-	return true
 }
 
 // Convert Reading DTO to Reading model
