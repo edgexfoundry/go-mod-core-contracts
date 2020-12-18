@@ -89,13 +89,19 @@ func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 		})
 	}
 
-	// Following tests varify if service name containing reserved characters should be detected with an error
+	serviceNameWithUnreservedChars := testAddDeviceService
+	serviceNameWithUnreservedChars.Service.Name = nameWithUnreservedChars
+
+	err := serviceNameWithUnreservedChars.Validate()
+	assert.NoError(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
+
+	// Following tests verify if service name containing reserved characters should be detected with an error
 	for _, n := range namesWithReservedChar {
 		serviceNameWithReservedChar := testAddDeviceService
 		serviceNameWithReservedChar.Service.Name = n
 
 		err := serviceNameWithReservedChar.Validate()
-		assert.NotNil(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))
+		assert.Error(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))
 	}
 }
 
@@ -239,7 +245,7 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 	serviceNameWithUnreservedChars.Service.Name = &nameWithUnreservedChars
 
 	err := serviceNameWithUnreservedChars.Validate()
-	assert.Nil(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
+	assert.NoError(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
 
 	// Following tests verify if service name containing reserved characters should be detected with an error
 	for _, n := range namesWithReservedChar {
@@ -247,7 +253,7 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 		serviceNameWithReservedChar.Service.Name = &n
 
 		err := serviceNameWithReservedChar.Validate()
-		assert.Error(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))
+		assert.Error(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))
 	}
 }
 

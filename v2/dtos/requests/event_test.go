@@ -182,7 +182,7 @@ func TestAddEventRequest_Validate(t *testing.T) {
 			if tt.expectError {
 				assert.Error(t, err, fmt.Sprintf("expect error but not : %s", tt.name))
 			} else {
-				assert.Nil(t, err, fmt.Sprintf("unexpected error occurs : %s", tt.name))
+				assert.NoError(t, err, fmt.Sprintf("unexpected error occurs : %s", tt.name))
 			}
 		})
 	}

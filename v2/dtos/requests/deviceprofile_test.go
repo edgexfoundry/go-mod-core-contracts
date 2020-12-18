@@ -147,7 +147,7 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 	profileNameWithUnreservedChars.Profile.Name = nameWithUnreservedChars
 
 	err := profileNameWithUnreservedChars.Validate()
-	assert.Nil(t, err, fmt.Sprintf("DeviceProfileRequest with profile name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
+	assert.NoError(t, err, fmt.Sprintf("DeviceProfileRequest with profile name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
 
 	// Following tests verify if profile name containing reserved characters should be detected with an error
 	for _, n := range namesWithReservedChar {
