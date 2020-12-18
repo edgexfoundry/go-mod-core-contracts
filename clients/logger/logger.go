@@ -51,6 +51,16 @@ type LoggingClient interface {
 	Trace(msg string, args ...interface{})
 	// Warn logs a message at the WARN severity level
 	Warn(msg string, args ...interface{})
+	// Debugf logs a formatted message at the DEBUG severity level
+	Debugf(msg string, args ...interface{})
+	// Errorf logs a formatted message at the ERROR severity level
+	Errorf(msg string, args ...interface{})
+	// Infof logs a formatted message at the INFO severity level
+	Infof(msg string, args ...interface{})
+	// Tracef logs a formatted message at the TRACE severity level
+	Tracef(msg string, args ...interface{})
+	// Warnf logs a formatted message at the WARN severity level
+	Warnf(msg string, args ...interface{})
 }
 
 type edgeXLogger struct {

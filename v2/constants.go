@@ -56,6 +56,16 @@ const (
 	ApiMetricsRoute = ApiBase + "/metrics"
 	ApiPingRoute    = ApiBase + "/ping"
 	ApiVersionRoute = ApiBase + "/version"
+
+	ApiDeviceCallbackRoute    = ApiBase + "/callback/device"
+	ApiDeviceCallbackIdRoute  = ApiBase + "/callback/device/id/{id}"
+	ApiProfileCallbackRoute   = ApiBase + "/callback/profile"
+	ApiProfileCallbackIdRoute = ApiBase + "/callback/profile/id/{id}"
+	ApiWatcherCallbackRoute   = ApiBase + "/callback/watcher"
+	ApiWatcherCallbackIdRoute = ApiBase + "/callback/watcher/id/{id}"
+	ApiDiscoveryRoute         = ApiBase + "/discovery"
+	ApiIdCommandRoute         = ApiBase + "/device/{id}/{command}"
+	ApiNameCommandRoute       = ApiBase + "/device/name/{name}/{command}"
 )
 
 // Constants related to defined url path names and parameters in the v2 service APIs

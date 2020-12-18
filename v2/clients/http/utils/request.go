@@ -8,9 +8,10 @@ package utils
 import (
 	"context"
 	"encoding/json"
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
 	"net/http"
 	"net/url"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/errors"
 )
 
 // Helper method to make the get request and return the body
@@ -127,8 +128,13 @@ func PutByFileRequest(
 }
 
 // Helper method to make the delete request and return the body
-func DeleteRequest(ctx context.Context, returnValuePointer interface{}, url string) errors.EdgeX {
-	req, err := createRequest(ctx, http.MethodDelete, url)
+func DeleteRequest(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string) errors.EdgeX {
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return errors.NewCommonEdgeX(errors.KindClientError, "fail to parse baseUrl", err)
+	}
+	u.Path = requestPath
+	req, err := createRequest(ctx, http.MethodDelete, u.String())
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
