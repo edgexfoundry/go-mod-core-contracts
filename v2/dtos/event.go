@@ -20,8 +20,8 @@ import (
 type Event struct {
 	common.Versionable `json:",inline"`
 	Id                 string            `json:"id" validate:"required,uuid"`
-	DeviceName         string            `json:"deviceName" validate:"required"`
-	ProfileName        string            `json:"profileName" validate:"required"`
+	DeviceName         string            `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName        string            `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	Created            int64             `json:"created"`
 	Origin             int64             `json:"origin" validate:"required"`
 	Readings           []BaseReading     `json:"readings" validate:"gt=0,dive,required"`

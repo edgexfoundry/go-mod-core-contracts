@@ -8,6 +8,7 @@ package v2
 import (
 	"fmt"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 
@@ -20,10 +21,20 @@ import (
 var val *validator.Validate
 
 const (
-	autoEventFrequencyTag = "edgex-dto-autoevent-frequency"
-	dtoUuidTag            = "edgex-dto-uuid"
-	dtoNoneEmptyStringTag = "edgex-dto-none-empty-string"
-	dtoValueType          = "edgex-dto-value-type"
+	autoEventFrequencyTag       = "edgex-dto-autoevent-frequency"
+	dtoUuidTag                  = "edgex-dto-uuid"
+	dtoNoneEmptyStringTag       = "edgex-dto-none-empty-string"
+	dtoValueType                = "edgex-dto-value-type"
+	dtoRFC3986UnreservedCharTag = "edgex-dto-rfc3986-unreserved-chars"
+)
+
+const (
+	// Per https://tools.ietf.org/html/rfc3986#section-2.3, unreserved characters= ALPHA / DIGIT / "-" / "." / "_" / "~"
+	rFC3986UnreservedCharsRegexString = "^[a-zA-Z0-9-_.~]+$"
+)
+
+var (
+	rFC3986UnreservedCharsRegex = regexp.MustCompile(rFC3986UnreservedCharsRegexString)
 )
 
 func init() {
@@ -32,6 +43,7 @@ func init() {
 	val.RegisterValidation(dtoUuidTag, ValidateDtoUuid)
 	val.RegisterValidation(dtoNoneEmptyStringTag, ValidateDtoNoneEmptyString)
 	val.RegisterValidation(dtoValueType, ValidateValueType)
+	val.RegisterValidation(dtoRFC3986UnreservedCharTag, ValidateDtoRFC3986UnreservedChars)
 }
 
 // Validate function will use the validator package to validate the struct annotation
@@ -74,6 +86,8 @@ func getErrorMessage(e validator.FieldError) string {
 		msg = fmt.Sprintf("%s field needs a uuid", fieldName)
 	case dtoNoneEmptyStringTag:
 		msg = fmt.Sprintf("%s field should not be empty string", fieldName)
+	case dtoRFC3986UnreservedCharTag:
+		msg = fmt.Sprintf("%s field only allows unreserved characters as defined in https://tools.ietf.org/html/rfc3986#section-2.3, which should be ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~", fieldName)
 	default:
 		msg = fmt.Sprintf("%s field validation failed on the %s tag", fieldName, tag)
 	}
@@ -123,4 +137,16 @@ func ValidateValueType(fl validator.FieldLevel) bool {
 		}
 	}
 	return false
+}
+
+// ValidateDtoRFC3986UnreservedChars used to check if DTO's name pointer value only contains unreserved characters as
+// defined in https://tools.ietf.org/html/rfc3986#section-2.3
+func ValidateDtoRFC3986UnreservedChars(fl validator.FieldLevel) bool {
+	val := fl.Field()
+	// Skip the validation if the pointer value is nil
+	if val.Kind() == reflect.Ptr && val.IsNil() {
+		return true
+	} else {
+		return rFC3986UnreservedCharsRegex.MatchString(val.String())
+	}
 }

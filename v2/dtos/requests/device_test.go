@@ -131,6 +131,53 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 			assert.Equal(t, tt.expectError, err != nil, "Unexpected addDeviceRequest validation result.", err)
 		})
 	}
+
+	type testForNameField struct {
+		name        string
+		Device      AddDeviceRequest
+		expectError bool
+	}
+
+	deviceNameWithUnreservedChars := testAddDevice
+	deviceNameWithUnreservedChars.Device.Name = nameWithUnreservedChars
+	profileNameWithUnreservedChars := testAddDevice
+	profileNameWithUnreservedChars.Device.ProfileName = nameWithUnreservedChars
+	serviceNameWithUnreservedChars := testAddDevice
+	serviceNameWithUnreservedChars.Device.ServiceName = nameWithUnreservedChars
+
+	// Following tests verify if name fields containing unreserved characters should pass edgex-dto-rfc3986-unreserved-chars check
+	testsForNameFields := []testForNameField{
+		{"Valid AddDeviceRequest with device name containing unreserved chars", deviceNameWithUnreservedChars, false},
+		{"Valid AddDeviceRequest with profile name containing unreserved chars", profileNameWithUnreservedChars, false},
+		{"Valid AddDeviceRequest with service name containing unreserved chars", serviceNameWithUnreservedChars, false},
+	}
+
+	// Following tests verify if name fields containing reserved characters should be detected with an error
+	for _, n := range namesWithReservedChar {
+		deviceNameWithReservedChar := testAddDevice
+		deviceNameWithReservedChar.Device.Name = n
+		profileNameWithReservedChar := testAddDevice
+		profileNameWithReservedChar.Device.ProfileName = n
+		serviceNameWithReservedChar := testAddDevice
+		serviceNameWithReservedChar.Device.ServiceName = n
+
+		testsForNameFields = append(testsForNameFields,
+			testForNameField{"Invalid AddDeviceRequest with device name containing reserved char", deviceNameWithReservedChar, true},
+			testForNameField{"Invalid AddDeviceRequest with device name containing reserved char", profileNameWithReservedChar, true},
+			testForNameField{"Invalid AddDeviceRequest with device name containing reserved char", serviceNameWithReservedChar, true},
+		)
+	}
+
+	for _, tt := range testsForNameFields {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.Device.Validate()
+			if tt.expectError {
+				assert.Error(t, err, fmt.Sprintf("expect error but not : %s", tt.name))
+			} else {
+				assert.NoError(t, err, fmt.Sprintf("unexpected error occurs : %s", tt.name))
+			}
+		})
+	}
 }
 
 func TestAddDevice_UnmarshalJSON(t *testing.T) {
@@ -314,7 +361,7 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"device":{"name":"test device"}
+		"device":{"name":"TestDevice"}
 	}`
 	var req UpdateDeviceRequest
 
@@ -340,7 +387,7 @@ func TestUpdateDeviceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"device":{
-			"name":"test device",
+			"name":"TestDevice",
 			"labels":[],
 			"autoEvents":[]
 		}

@@ -34,3 +34,28 @@ const (
 	testUser     = "edgexer"
 	testPassword = "password"
 )
+
+var namesWithReservedChar = []string{
+	"name!.~_001",
+	"name#.~_001",
+	"name$.~_001",
+	"name&.~_001",
+	"name`.~_001",
+	"name'.~_001",
+	"name(.~_001",
+	"name).~_001",
+	"name*.~_001",
+	"name,.~_001",
+	"name/.~_001",
+	"name:.~_001",
+	"name;.~_001",
+	"name=.~_001",
+	"name?.~_001",
+	"name@.~_001",
+	"name[.~_001",
+	"name].~_001",
+	"name%.~_001",
+	"name .~_001",
+}
+
+var nameWithUnreservedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~"
