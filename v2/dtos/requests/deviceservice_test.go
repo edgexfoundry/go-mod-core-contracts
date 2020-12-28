@@ -88,6 +88,21 @@ func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 			assert.Equal(t, tt.expectError, err != nil, "Unexpected addDeviceServiceRequest validation result.", err)
 		})
 	}
+
+	serviceNameWithUnreservedChars := testAddDeviceService
+	serviceNameWithUnreservedChars.Service.Name = nameWithUnreservedChars
+
+	err := serviceNameWithUnreservedChars.Validate()
+	assert.NoError(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
+
+	// Following tests verify if service name containing reserved characters should be detected with an error
+	for _, n := range namesWithReservedChar {
+		serviceNameWithReservedChar := testAddDeviceService
+		serviceNameWithReservedChar.Service.Name = n
+
+		err := serviceNameWithReservedChar.Validate()
+		assert.Error(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))
+	}
 }
 
 func TestAddDeviceService_UnmarshalJSON(t *testing.T) {
@@ -225,6 +240,21 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 			assert.Equal(t, tt.expectError, err != nil, "Unexpected updateDeviceServiceRequest validation result.", err)
 		})
 	}
+
+	serviceNameWithUnreservedChars := testUpdateDeviceService
+	serviceNameWithUnreservedChars.Service.Name = &nameWithUnreservedChars
+
+	err := serviceNameWithUnreservedChars.Validate()
+	assert.NoError(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
+
+	// Following tests verify if service name containing reserved characters should be detected with an error
+	for _, n := range namesWithReservedChar {
+		serviceNameWithReservedChar := testUpdateDeviceService
+		serviceNameWithReservedChar.Service.Name = &n
+
+		err := serviceNameWithReservedChar.Validate()
+		assert.Error(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))
+	}
 }
 
 func TestUpdateDeviceServiceRequest_UnmarshalJSON_NilField(t *testing.T) {
@@ -249,7 +279,7 @@ func TestUpdateDeviceServiceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"service":{
-			"name":"test device",
+			"name":"TestDevice",
 			"labels":[]
 		}
 	}`
