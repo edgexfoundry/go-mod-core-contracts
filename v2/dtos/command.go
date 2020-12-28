@@ -10,7 +10,7 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 // Command and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Command
 type Command struct {
-	Name string `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string"`
+	Name string `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Get  bool   `json:"get" yaml:"get,omitempty" validate:"required_without=Put"`
 	Put  bool   `json:"put" yaml:"put,omitempty" validate:"required_without=Get"`
 }

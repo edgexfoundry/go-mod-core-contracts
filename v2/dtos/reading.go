@@ -18,9 +18,9 @@ type BaseReading struct {
 	Id                 string `json:"id"`
 	Created            int64  `json:"created"`
 	Origin             int64  `json:"origin" validate:"required"`
-	DeviceName         string `json:"deviceName" validate:"required"`
-	ResourceName       string `json:"resourceName" validate:"required"`
-	ProfileName        string `json:"profileName" validate:"required"`
+	DeviceName         string `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ResourceName       string `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName        string `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ValueType          string `json:"valueType" validate:"required,edgex-dto-value-type"`
 	BinaryReading      `json:",inline" validate:"-"`
 	SimpleReading      `json:",inline" validate:"-"`

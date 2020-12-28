@@ -83,6 +83,28 @@ func PutRequest(
 	return nil
 }
 
+// PatchRequest makes a PATCH request and unmarshals the response to the returnValuePointer
+func PatchRequest(
+	ctx context.Context,
+	returnValuePointer interface{},
+	url string,
+	data interface{}) errors.EdgeX {
+
+	req, err := createRequestWithRawData(ctx, http.MethodPatch, url, data)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}
+
 // Helper method to make the post file request and return the body
 func PostByFileRequest(
 	ctx context.Context,

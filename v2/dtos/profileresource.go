@@ -10,7 +10,7 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 // ProfileResource and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ProfileResource
 type ProfileResource struct {
-	Name string              `json:"name,omitempty" yaml:"name,omitempty" validate:"required,edgex-dto-none-empty-string"`
+	Name string              `json:"name,omitempty" yaml:"name,omitempty" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Get  []ResourceOperation `json:"get,omitempty" yaml:"get,omitempty" validate:"required_without=Set"`
 	Set  []ResourceOperation `json:"set,omitempty" yaml:"set,omitempty" validate:"required_without=Get"`
 }

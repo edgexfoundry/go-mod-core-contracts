@@ -15,7 +15,7 @@ import (
 type DeviceService struct {
 	common.Versionable `json:",inline"`
 	Id                 string   `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name               string   `json:"name" validate:"required,edgex-dto-none-empty-string"`
+	Name               string   `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Created            int64    `json:"created,omitempty"`
 	Modified           int64    `json:"modified,omitempty"`
 	Description        string   `json:"description,omitempty"`
@@ -30,7 +30,7 @@ type DeviceService struct {
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceService
 type UpdateDeviceService struct {
 	Id          *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name        *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
+	Name        *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	BaseAddress *string  `json:"baseAddress" validate:"omitempty,uri"`
 	Labels      []string `json:"labels"`
 	AdminState  *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
