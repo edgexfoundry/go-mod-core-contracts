@@ -47,3 +47,23 @@ func (lc MockLogger) Trace(msg string, args ...interface{}) {
 // Warn simulates logging an entry at the WARN severity level
 func (lc MockLogger) Warn(msg string, args ...interface{}) {
 }
+
+// Infof simulates logging an formatted message at the INFO severity level
+func (lc MockLogger) Infof(msg string, args ...interface{}) {
+}
+
+// Debugf simulates logging an formatted message at the DEBUG severity level
+func (lc MockLogger) Debugf(msg string, args ...interface{}) {
+}
+
+// Errorf simulates logging an formatted message at the ERROR severity level
+func (lc MockLogger) Errorf(msg string, args ...interface{}) {
+}
+
+// Tracef simulates logging an formatted message at the TRACE severity level
+func (lc MockLogger) Tracef(msg string, args ...interface{}) {
+}
+
+// Warnf simulates logging an formatted message at the WARN severity level
+func (lc MockLogger) Warnf(msg string, args ...interface{}) {
+}
