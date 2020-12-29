@@ -16,15 +16,7 @@ import (
 
 // Helper method to make the get request and return the body
 func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, requestParams url.Values) errors.EdgeX {
-	u, err := url.Parse(baseUrl)
-	if err != nil {
-		return errors.NewCommonEdgeX(errors.KindClientError, "fail to parse baseUrl", err)
-	}
-	u.Path = requestPath
-	if requestParams != nil {
-		u.RawQuery = requestParams.Encode()
-	}
-	req, err := createRequest(ctx, http.MethodGet, u.String())
+	req, err := createRequest(ctx, http.MethodGet, baseUrl, requestPath, requestParams)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -151,12 +143,7 @@ func PutByFileRequest(
 
 // Helper method to make the delete request and return the body
 func DeleteRequest(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string) errors.EdgeX {
-	u, err := url.Parse(baseUrl)
-	if err != nil {
-		return errors.NewCommonEdgeX(errors.KindClientError, "fail to parse baseUrl", err)
-	}
-	u.Path = requestPath
-	req, err := createRequest(ctx, http.MethodDelete, u.String())
+	req, err := createRequest(ctx, http.MethodDelete, baseUrl, requestPath, nil)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}

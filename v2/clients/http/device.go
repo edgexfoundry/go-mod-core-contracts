@@ -77,7 +77,7 @@ func (dc DeviceClient) DeviceByName(ctx context.Context, name string) (res respo
 
 func (dc DeviceClient) DeleteDeviceByName(ctx context.Context, name string) (res common.BaseResponse, err errors.EdgeX) {
 	path := path.Join(v2.ApiDeviceRoute, v2.Name, url.QueryEscape(name))
-	err = utils.DeleteRequest(ctx, &res, dc.baseUrl+path)
+	err = utils.DeleteRequest(ctx, &res, dc.baseUrl, path)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
