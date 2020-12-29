@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"path/filepath"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/clients"
@@ -62,8 +63,16 @@ func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
 	return resp, nil
 }
 
-func createRequest(ctx context.Context, httpMethod string, url string) (*http.Request, errors.EdgeX) {
-	req, err := http.NewRequest(httpMethod, url, nil)
+func createRequest(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values) (*http.Request, errors.EdgeX) {
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, "fail to parse baseUrl", err)
+	}
+	u.Path = requestPath
+	if requestParams != nil {
+		u.RawQuery = requestParams.Encode()
+	}
+	req, err := http.NewRequest(httpMethod, u.String(), nil)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}

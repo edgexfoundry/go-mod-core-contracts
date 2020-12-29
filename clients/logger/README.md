@@ -1,17 +1,17 @@
 # README #
-This package contains the logging client written in the Go programming language.  The logging client is used by Go services or other Go code to communicate with the EdgeX support-logging microservice (regardless of underlying implemenation type) by sending REST requests to the service's API endpoints.
+This package contains the logging client written in the Go programming language.  The logging client is used by Go services or other Go code to log messages to STDOUT.
 
 ### How To Use ###
-To use the support-logging client package you first need to import the library into your project:
+To use the logging client package you first need to import the library into your project:
 ```
 import "github.com/edgexfoundry/go-mod-core-contracts/clients/logging"
 ```
-To send a log message to the centralized logging service, you first need to get a LoggingClient and then you can send logging messages into the service (indicating the level with the various log function call.
+To send a log message to STDOUT, you first need to create a LoggingClient with desired Log Level and then you can send log messages (indicating the log level of the message using one of the various log function calls).
 ```
-  logTarget := setLoggingTarget(*configuration)
-	loggingClient = logger.NewClient(internal.CoreDataServiceKey, configuration.EnableRemoteLogging, logTarget)
+loggingClient = logger.NewClient(internal.CoreDataServiceKey,configuration.Writable.LogLevel) 
 
-  loggingClient.Info(consulMsg)
-	loggingClient.Info(fmt.Sprintf("Starting %s %s ", internal.CoreDataServiceKey, edgex.Version))
+loggingClient.Info("Something interesting")
+loggingClient.Infof("Starting %s %s ", internal.CoreDataServiceKey, edgex.Version)
+loggingClient.Errorf("Something bad happened: %s", err.Error())
 ```
-Log messages can be logged as Info, Error, Debug, or Warn.
+Log messages can be logged as Info, Debug, Trace, Warn, or Error

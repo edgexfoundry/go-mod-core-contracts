@@ -30,7 +30,7 @@ func TestIsValidLogLevel(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.level, func(t *testing.T) {
-			r := IsValidLogLevel(tt.level)
+			r := isValidLogLevel(tt.level)
 			if r != tt.res {
 				t.Errorf("Level %s labeled as %v and should be %v",
 					tt.level, r, tt.res)
@@ -41,6 +41,6 @@ func TestIsValidLogLevel(t *testing.T) {
 
 func TestLogLevel(t *testing.T) {
 	expectedLogLevel := models.DebugLog
-	lc := newClient("testService", false, "", expectedLogLevel)
+	lc := NewClient("testService", expectedLogLevel)
 	assert.Equal(t, expectedLogLevel, lc.LogLevel())
 }
