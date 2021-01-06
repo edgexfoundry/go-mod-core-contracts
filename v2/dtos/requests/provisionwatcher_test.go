@@ -78,6 +78,8 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 	invalidReqId.RequestId = "abc"
 	noProvisionWatcherName := testAddProvisionWatcher
 	noProvisionWatcherName.ProvisionWatcher.Name = emptyString
+	provisionWatcherNameWithReservedChar := testAddProvisionWatcher
+	provisionWatcherNameWithReservedChar.ProvisionWatcher.Name = namesWithReservedChar[0]
 	noIdentifiers := testAddProvisionWatcher
 	noIdentifiers.ProvisionWatcher.Identifiers = emptyMap
 	missingIdentifiersKey := testAddProvisionWatcher
@@ -114,6 +116,7 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 		{"valid AddProvisionWatcherRequest, no Request Id", noReqId, false},
 		{"invalid AddProvisionWatcherRequest, Request Id is not an uuid", invalidReqId, true},
 		{"invalid AddProvisionWatcherRequest, no ProvisionWatcherName", noProvisionWatcherName, true},
+		{"invalid AddProvisionWatcherRequest, ProvisionWatcherName with reserved chars", provisionWatcherNameWithReservedChar, true},
 		{"invalid AddProvisionWatcherRequest, no Identifiers", noIdentifiers, true},
 		{"invalid AddProvisionWatcherRequest, missing Identifiers key", missingIdentifiersKey, true},
 		{"invalid AddProvisionWatcherRequest, missing Identifiers value", missingIdentifiersValue, true},
@@ -208,6 +211,8 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 	validOnlyName.ProvisionWatcher.Id = nil
 	invalidEmptyName := valid
 	invalidEmptyName.ProvisionWatcher.Name = &emptyString
+	invalidReservedName := valid
+	invalidReservedName.ProvisionWatcher.Name = &namesWithReservedChar[0]
 	// no id and name
 	noIdAndName := valid
 	noIdAndName.ProvisionWatcher.Id = nil
@@ -247,6 +252,7 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 		{"invalid, invalid Id", invalidId, true},
 		{"valid, only name", validOnlyName, false},
 		{"invalid, empty name", invalidEmptyName, true},
+		{"invalid, name with reserved chars", invalidReservedName, true},
 
 		{"invalid, no Id and name", noIdAndName, true},
 
@@ -273,7 +279,7 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 func TestUpdateProvisionWatcherRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"provisionWatcher":{"name":"test watcher"}
+		"provisionWatcher":{"name":"test-watcher"}
 	}`
 	var req UpdateProvisionWatcherRequest
 
@@ -294,7 +300,7 @@ func TestUpdateProvisionWatcherRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"provisionWatcher":{
-			"name":"test watcher",
+			"name":"test-watcher",
 			"labels":[],
 			"autoEvents":[]
 		}
