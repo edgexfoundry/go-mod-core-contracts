@@ -10,14 +10,15 @@ const (
 	ApiVersion = "v2"
 	ApiBase    = "/api/v2"
 
-	ApiEventRoute                  = ApiBase + "/event"
-	ApiAllEventRoute               = ApiEventRoute + "/" + All
-	ApiEventIdRoute                = ApiEventRoute + "/" + Id + "/{" + Id + "}"
-	ApiEventCountRoute             = ApiEventRoute + "/" + Count
-	ApiEventCountByDeviceNameRoute = ApiEventCountRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiEventByDeviceNameRoute      = ApiEventRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiEventByTimeRangeRoute       = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiEventByAgeRoute             = ApiEventRoute + "/" + Age + "/{" + Age + "}"
+	ApiEventRoute                      = ApiBase + "/event"
+	ApiEventProfileNameDeviceNameRoute = ApiEventRoute + "/{" + ProfileName + "}" + "/{" + DeviceName + "}"
+	ApiAllEventRoute                   = ApiEventRoute + "/" + All
+	ApiEventIdRoute                    = ApiEventRoute + "/" + Id + "/{" + Id + "}"
+	ApiEventCountRoute                 = ApiEventRoute + "/" + Count
+	ApiEventCountByDeviceNameRoute     = ApiEventCountRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
+	ApiEventByDeviceNameRoute          = ApiEventRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
+	ApiEventByTimeRangeRoute           = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiEventByAgeRoute                 = ApiEventRoute + "/" + Age + "/{" + Age + "}"
 
 	ApiReadingRoute                  = ApiBase + "/reading"
 	ApiAllReadingRoute               = ApiReadingRoute + "/" + All
