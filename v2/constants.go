@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,14 +10,15 @@ const (
 	ApiVersion = "v2"
 	ApiBase    = "/api/v2"
 
-	ApiEventRoute                  = ApiBase + "/event"
-	ApiAllEventRoute               = ApiEventRoute + "/" + All
-	ApiEventIdRoute                = ApiEventRoute + "/" + Id + "/{" + Id + "}"
-	ApiEventCountRoute             = ApiEventRoute + "/" + Count
-	ApiEventCountByDeviceNameRoute = ApiEventCountRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiEventByDeviceNameRoute      = ApiEventRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiEventByTimeRangeRoute       = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiEventByAgeRoute             = ApiEventRoute + "/" + Age + "/{" + Age + "}"
+	ApiEventRoute                      = ApiBase + "/event"
+	ApiEventProfileNameDeviceNameRoute = ApiEventRoute + "/{" + ProfileName + "}" + "/{" + DeviceName + "}"
+	ApiAllEventRoute                   = ApiEventRoute + "/" + All
+	ApiEventIdRoute                    = ApiEventRoute + "/" + Id + "/{" + Id + "}"
+	ApiEventCountRoute                 = ApiEventRoute + "/" + Count
+	ApiEventCountByDeviceNameRoute     = ApiEventCountRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
+	ApiEventByDeviceNameRoute          = ApiEventRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
+	ApiEventByTimeRangeRoute           = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiEventByAgeRoute                 = ApiEventRoute + "/" + Age + "/{" + Age + "}"
 
 	ApiReadingRoute                  = ApiBase + "/reading"
 	ApiAllReadingRoute               = ApiReadingRoute + "/" + All
@@ -51,6 +52,13 @@ const (
 	ApiDeviceByProfileNameRoute = ApiDeviceRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
 	ApiDeviceByServiceIdRoute   = ApiDeviceRoute + "/" + Service + "/" + Id + "/{" + Id + "}"
 	ApiDeviceByServiceNameRoute = ApiDeviceRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
+
+	ApiProvisionWatcherRoute              = ApiBase + "/provisionwatcher"
+	ApiAllProvisionWatcherRoute           = ApiProvisionWatcherRoute + "/" + All
+	ApiProvisionWatcherByIdRoute          = ApiProvisionWatcherRoute + "/" + Id + "/{" + Id + "}"
+	ApiProvisionWatcherByNameRoute        = ApiProvisionWatcherRoute + "/" + Name + "/{" + Name + "}"
+	ApiProvisionWatcherByProfileNameRoute = ApiProvisionWatcherRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
+	ApiProvisionWatcherByServiceNameRoute = ApiProvisionWatcherRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
 
 	ApiConfigRoute  = ApiBase + "/config"
 	ApiMetricsRoute = ApiBase + "/metrics"
