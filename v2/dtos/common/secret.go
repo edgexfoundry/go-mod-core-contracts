@@ -23,44 +23,44 @@ import (
 	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
 )
 
-// SecretsKeyValue is a secret key/value pair to be stored in the Secret Store
+// SecretDataKeyValue is a key/value pair to be stored in the Secret Store as part of the Secret Data
 // See detail specified by the V2 API swagger in openapi/v2
-type SecretsKeyValue struct {
+type SecretDataKeyValue struct {
 	Key   string `json:"key" validate:"required"`
 	Value string `json:"value" validate:"required"`
 }
 
-// SecretsRequest is the request DTO for storing supplied secrets at specified Path in the Secret Store
+// SecretRequest is the request DTO for storing supplied secret at specified Path in the Secret Store
 // See detail specified by the V2 API swagger in openapi/v2
-type SecretsRequest struct {
+type SecretRequest struct {
 	BaseRequest `json:",inline"`
-	Path        string            `json:"path" validate:"required"`
-	Secrets     []SecretsKeyValue `json:"secrets" validate:"required,gt=0,dive"`
+	Path        string               `json:"path" validate:"required"`
+	SecretData  []SecretDataKeyValue `json:"secretData" validate:"required,gt=0,dive"`
 }
 
 // Validate satisfies the Validator interface
-func (sr SecretsRequest) Validate() error {
+func (sr *SecretRequest) Validate() error {
 	err := v2.Validate(sr)
 	return err
 }
 
-// UnmarshalJSON implements the Unmarshaler interface for the SecretsRequest type
-func (sr *SecretsRequest) UnmarshalJSON(b []byte) error {
+// UnmarshalJSON implements the Unmarshaler interface for the SecretRequest type
+func (sr *SecretRequest) UnmarshalJSON(b []byte) error {
 	var alias struct {
 		BaseRequest
-		Path    string
-		Secrets []SecretsKeyValue
+		Path       string
+		SecretData []SecretDataKeyValue
 	}
 
 	if err := json.Unmarshal(b, &alias); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal SecretsRequest body as JSON.", err)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal SecretRequest body as JSON.", err)
 	}
 
-	*sr = SecretsRequest(alias)
+	*sr = SecretRequest(alias)
 
-	// validate SecretsRequest DTO
+	// validate SecretRequest DTO
 	if err := sr.Validate(); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "SecretsRequest validation failed.", err)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "SecretRequest validation failed.", err)
 	}
 	return nil
 }
