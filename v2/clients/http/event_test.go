@@ -8,6 +8,7 @@ package http
 import (
 	"context"
 	"net/http"
+	"net/url"
 	"path"
 	"strconv"
 	"testing"
@@ -22,11 +23,14 @@ import (
 )
 
 func TestAddEvent(t *testing.T) {
-	ts := newTestServer(http.MethodPost, v2.ApiEventRoute, []common.BaseWithIdResponse{})
+	profileName := "profileName"
+	deviceName := "deviceName"
+	apiRoute := path.Join(v2.ApiEventRoute, url.QueryEscape(profileName), url.QueryEscape(deviceName))
+	ts := newTestServer(http.MethodPost, apiRoute, []common.BaseWithIdResponse{})
 	defer ts.Close()
 
 	client := NewEventClient(ts.URL)
-	res, err := client.Add(context.Background(), []requests.AddEventRequest{})
+	res, err := client.Add(context.Background(), profileName, deviceName, []requests.AddEventRequest{})
 	require.NoError(t, err)
 	assert.IsType(t, []common.BaseWithIdResponse{}, res)
 }

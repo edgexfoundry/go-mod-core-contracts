@@ -16,8 +16,8 @@ import (
 
 // EventClient defines the interface for interactions with the Event endpoint on the EdgeX Foundry core-data service.
 type EventClient interface {
-	// Add adds new events.
-	Add(ctx context.Context, reqs []requests.AddEventRequest) ([]common.BaseWithIdResponse, errors.EdgeX)
+	// Add adds new events. The given deviceName and profileName must match to the deviceName and profileName of Events.
+	Add(ctx context.Context, profileName, deviceName string, reqs []requests.AddEventRequest) ([]common.BaseWithIdResponse, errors.EdgeX)
 	// AllEvents returns all events sorted in descending order of created time.
 	// The result can be limited in a certain range by specifying the offset and limit parameters.
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
