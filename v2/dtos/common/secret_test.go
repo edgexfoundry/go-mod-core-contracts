@@ -30,19 +30,20 @@ const (
 	TestUUID = "82eb2e26-0f24-48aa-ae4c-de9dac3fb9bc"
 )
 
-var validRequest = SecretsRequest{
+var validRequest = SecretRequest{
 	BaseRequest: BaseRequest{RequestId: TestUUID},
 	Path:        "something",
-	Secrets: []SecretsKeyValue{
+	SecretData: []SecretDataKeyValue{
+		{Key: "username", Value: "User1"},
 		{Key: "password", Value: "password"},
 	},
 }
 
-var missingKeySecrets = []SecretsKeyValue{
+var missingKeySecretData = []SecretDataKeyValue{
 	{Key: "", Value: "password"},
 }
 
-var missingValueSecrets = []SecretsKeyValue{
+var missingValueSecretData = []SecretDataKeyValue{
 	{Key: "password", Value: ""},
 }
 
@@ -55,15 +56,15 @@ func TestSecretsRequest_Validate(t *testing.T) {
 	badRequestId := validRequest
 	badRequestId.RequestId = "Bad Request Id"
 	noSecrets := validRequest
-	noSecrets.Secrets = []SecretsKeyValue{}
+	noSecrets.SecretData = []SecretDataKeyValue{}
 	missingSecretKey := validRequest
-	missingSecretKey.Secrets = missingKeySecrets
+	missingSecretKey.SecretData = missingKeySecretData
 	missingSecretValue := validRequest
-	missingSecretValue.Secrets = missingValueSecrets
+	missingSecretValue.SecretData = missingValueSecretData
 
 	tests := []struct {
 		Name          string
-		Request       SecretsRequest
+		Request       SecretRequest
 		ErrorExpected bool
 	}{
 		{"valid - with with path", validWithPath, false},
@@ -92,19 +93,19 @@ func TestSecretsRequest_UnmarshalJSON(t *testing.T) {
 
 	tests := []struct {
 		Name          string
-		Expected      SecretsRequest
+		Expected      SecretRequest
 		Data          []byte
 		ErrorExpected bool
 		ErrorKind     errors.ErrKind
 	}{
 		{"unmarshal with success", validRequest, resultTestBytes, false, ""},
-		{"unmarshal invalid, empty data", SecretsRequest{}, []byte{}, true, errors.KindContractInvalid},
-		{"unmarshal invalid, non-json data", SecretsRequest{}, []byte("Invalid SecretsRequest"), true, errors.KindContractInvalid},
+		{"unmarshal invalid, empty data", SecretRequest{}, []byte{}, true, errors.KindContractInvalid},
+		{"unmarshal invalid, non-json data", SecretRequest{}, []byte("Invalid SecretRequest"), true, errors.KindContractInvalid},
 	}
 
 	for _, testCase := range tests {
 		t.Run(testCase.Name, func(t *testing.T) {
-			actual := SecretsRequest{}
+			actual := SecretRequest{}
 			err := actual.UnmarshalJSON(testCase.Data)
 			if testCase.ErrorExpected {
 				require.Error(t, err)
@@ -113,7 +114,7 @@ func TestSecretsRequest_UnmarshalJSON(t *testing.T) {
 			}
 
 			require.NoError(t, err)
-			assert.Equal(t, testCase.Expected, actual, "Unmarshal did not result in expected SecretsRequest.")
+			assert.Equal(t, testCase.Expected, actual, "Unmarshal did not result in expected SecretRequest.")
 		})
 	}
 }
