@@ -33,6 +33,12 @@ const (
 	testPort     = 48089
 	testUser     = "edgexer"
 	testPassword = "password"
+
+	TestIntervalName      = "TestInterval"
+	TestIntervalStart     = "20190102T150405"
+	TestIntervalEnd       = "20190802T150405"
+	TestIntervalFrequency = "30ms"
+	TestIntervalRunOnce   = false
 )
 
 var namesWithReservedChar = []string{

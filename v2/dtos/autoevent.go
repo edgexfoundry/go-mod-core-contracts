@@ -12,7 +12,7 @@ import (
 // AutoEvent and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AutoEvent
 type AutoEvent struct {
-	Frequency string `json:"frequency" validate:"required,edgex-dto-autoevent-frequency"`
+	Frequency string `json:"frequency" validate:"required,edgex-dto-frequency"`
 	OnChange  bool   `json:"onChange,omitempty"`
 	Resource  string `json:"resource" validate:"required"`
 }
