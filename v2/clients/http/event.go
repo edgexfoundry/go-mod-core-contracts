@@ -31,11 +31,11 @@ func NewEventClient(baseUrl string) interfaces.EventClient {
 	}
 }
 
-func (ec *eventClient) Add(ctx context.Context, profileName, deviceName string, reqs []requests.AddEventRequest) (
-	[]common.BaseWithIdResponse, errors.EdgeX) {
+func (ec *eventClient) Add(ctx context.Context, profileName, deviceName string, req requests.AddEventRequest) (
+	common.BaseWithIdResponse, errors.EdgeX) {
 	path := path.Join(v2.ApiEventRoute, url.QueryEscape(profileName), url.QueryEscape(deviceName))
-	var br []common.BaseWithIdResponse
-	err := utils.PostRequest(ctx, &br, ec.baseUrl+path, reqs)
+	var br common.BaseWithIdResponse
+	err := utils.PostRequest(ctx, &br, ec.baseUrl+path, req)
 	if err != nil {
 		return br, errors.NewCommonEdgeXWrapper(err)
 	}
