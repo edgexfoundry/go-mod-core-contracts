@@ -228,7 +228,7 @@ func TestAddEvent_UnmarshalJSON(t *testing.T) {
 }
 
 func Test_AddEventReqToEventModels(t *testing.T) {
-	valid := []AddEventRequest{eventRequestData()}
+	valid := eventRequestData()
 	s := models.SimpleReading{
 		BaseReading: models.BaseReading{
 			DeviceName:   TestDeviceName,
@@ -239,7 +239,7 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 		},
 		Value: TestReadingValue,
 	}
-	expectedEventModel := []models.Event{{
+	expectedEventModel := models.Event{
 		Id:          ExampleUUID,
 		DeviceName:  TestDeviceName,
 		ProfileName: TestDeviceProfileName,
@@ -248,18 +248,18 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 		Tags: map[string]string{
 			"GatewayId": "Houston-0001",
 		},
-	}}
+	}
 
 	tests := []struct {
-		name      string
-		addEvents []AddEventRequest
+		name        string
+		addEventReq AddEventRequest
 	}{
 		{"valid AddEventRequest", valid},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			eventModel := AddEventReqToEventModels(tt.addEvents)
-			assert.Equal(t, expectedEventModel, eventModel, "AddEventReqToEventModels did not result in expected Event model.")
+			eventModel := AddEventReqToEventModel(tt.addEventReq)
+			assert.Equal(t, expectedEventModel, eventModel, "AddEventReqToEventModel did not result in expected Event model.")
 		})
 	}
 }
