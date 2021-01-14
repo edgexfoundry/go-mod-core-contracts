@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func addIntervalRequestDate() AddIntervalRequest {
+func addIntervalRequestData() AddIntervalRequest {
 	return AddIntervalRequest{
 		BaseRequest: common.BaseRequest{
 			RequestId: ExampleUUID,
@@ -37,11 +37,11 @@ func updateIntervalRequestData() UpdateIntervalRequest {
 		BaseRequest: common.BaseRequest{
 			RequestId: ExampleUUID,
 		},
-		Interval: updateIntervalDate(),
+		Interval: updateIntervalData(),
 	}
 }
 
-func updateIntervalDate() dtos.UpdateInterval {
+func updateIntervalData() dtos.UpdateInterval {
 	testId := ExampleUUID
 	testName := TestIntervalName
 	testStart := TestIntervalStart
@@ -60,22 +60,24 @@ func updateIntervalDate() dtos.UpdateInterval {
 
 func TestAddIntervalRequest_Validate(t *testing.T) {
 	emptyString := " "
-	valid := addIntervalRequestDate()
-	noReqId := addIntervalRequestDate()
+	valid := addIntervalRequestData()
+	noReqId := addIntervalRequestData()
 	noReqId.RequestId = ""
-	invalidReqId := addIntervalRequestDate()
+	invalidReqId := addIntervalRequestData()
 	invalidReqId.RequestId = "abc"
 
-	noIntervalName := addIntervalRequestDate()
+	noIntervalName := addIntervalRequestData()
 	noIntervalName.Interval.Name = emptyString
-	intervalNameWithUnreservedChars := addIntervalRequestDate()
+	intervalNameWithUnreservedChars := addIntervalRequestData()
 	intervalNameWithUnreservedChars.Interval.Name = nameWithUnreservedChars
+	intervalNameWithReservedChars := addIntervalRequestData()
+	intervalNameWithReservedChars.Interval.Name = "name!.~_001"
 
-	invalidFrequency := addIntervalRequestDate()
+	invalidFrequency := addIntervalRequestData()
 	invalidFrequency.Interval.Frequency = "300"
-	invalidStartDatetime := addIntervalRequestDate()
+	invalidStartDatetime := addIntervalRequestData()
 	invalidStartDatetime.Interval.Start = "20190802150405"
-	invalidEndDatetime := addIntervalRequestDate()
+	invalidEndDatetime := addIntervalRequestData()
 	invalidEndDatetime.Interval.End = "20190802150405"
 
 	tests := []struct {
@@ -85,9 +87,10 @@ func TestAddIntervalRequest_Validate(t *testing.T) {
 	}{
 		{"valid AddIntervalRequest", valid, false},
 		{"valid AddIntervalRequest, no Request Id", noReqId, false},
+		{"valid AddIntervalRequest, interval name containing unreserved chars", intervalNameWithUnreservedChars, false},
+		{"invalid AddIntervalRequest, interval name containing reserved chars", intervalNameWithReservedChars, true},
 		{"invalid AddIntervalRequest, Request Id is not an uuid", invalidReqId, true},
 		{"invalid AddIntervalRequest, no IntervalName", noIntervalName, true},
-		{"invalid AddIntervalRequest, interval name containing unreserved chars", noIntervalName, true},
 		{"invalid AddIntervalRequest, invalid frequency", invalidFrequency, true},
 		{"invalid AddIntervalRequest, invalid start datetime", invalidStartDatetime, true},
 		{"invalid AddIntervalRequest, invalid end datetime", invalidEndDatetime, true},
@@ -102,8 +105,8 @@ func TestAddIntervalRequest_Validate(t *testing.T) {
 }
 
 func TestAddInterval_UnmarshalJSON(t *testing.T) {
-	valid := addIntervalRequestDate()
-	jsonData, _ := json.Marshal(addIntervalRequestDate())
+	valid := addIntervalRequestData()
+	jsonData, _ := json.Marshal(addIntervalRequestData())
 	tests := []struct {
 		name     string
 		expected AddIntervalRequest
@@ -129,7 +132,7 @@ func TestAddInterval_UnmarshalJSON(t *testing.T) {
 }
 
 func TestAddIntervalReqToIntervalModels(t *testing.T) {
-	requests := []AddIntervalRequest{addIntervalRequestDate()}
+	requests := []AddIntervalRequest{addIntervalRequestData()}
 	expectedIntervalModel := []models.Interval{
 		{
 			Name:      TestIntervalName,
@@ -246,7 +249,7 @@ func TestReplaceIntervalModelFieldsWithDTO(t *testing.T) {
 		Id:   "7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		Name: TestIntervalName,
 	}
-	patch := updateIntervalDate()
+	patch := updateIntervalData()
 
 	ReplaceIntervalModelFieldsWithDTO(&interval, patch)
 
