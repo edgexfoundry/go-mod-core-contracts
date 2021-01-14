@@ -8,12 +8,12 @@ package http
 import (
 	"context"
 	"net/http"
-	"net/url"
 	"path"
 	"strconv"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses"
@@ -23,14 +23,13 @@ import (
 )
 
 func TestAddEvent(t *testing.T) {
-	profileName := "profileName"
-	deviceName := "deviceName"
-	apiRoute := path.Join(v2.ApiEventRoute, url.QueryEscape(profileName), url.QueryEscape(deviceName))
+	event := dtos.Event{ProfileName: "profileName", DeviceName: "deviceName"}
+	apiRoute := path.Join(v2.ApiEventRoute, event.ProfileName, event.DeviceName)
 	ts := newTestServer(http.MethodPost, apiRoute, common.BaseWithIdResponse{})
 	defer ts.Close()
 
 	client := NewEventClient(ts.URL)
-	res, err := client.Add(context.Background(), profileName, deviceName, requests.AddEventRequest{})
+	res, err := client.Add(context.Background(), requests.AddEventRequest{Event: event})
 	require.NoError(t, err)
 	assert.IsType(t, common.BaseWithIdResponse{}, res)
 }
