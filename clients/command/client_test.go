@@ -20,8 +20,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/urlclient/local"
 )
 
 func TestGetDeviceCommandById(t *testing.T) {

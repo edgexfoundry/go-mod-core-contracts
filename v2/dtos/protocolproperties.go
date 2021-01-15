@@ -5,7 +5,7 @@
 
 package dtos
 
-import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 // ProtocolProperties contains the device connection information in key/value pair
 type ProtocolProperties map[string]string

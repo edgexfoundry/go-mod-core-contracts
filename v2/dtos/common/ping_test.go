@@ -12,7 +12,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
+	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 )
 
 func TestNewPingResponse(t *testing.T) {

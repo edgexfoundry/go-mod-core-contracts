@@ -17,7 +17,7 @@ package models
 import (
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 )
 
 var TestMediaType = clients.ContentTypeCBOR

@@ -19,10 +19,10 @@ import (
 	"context"
 	"strings"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/models"
-	"github.com/edgexfoundry/go-mod-core-contracts/requests/configuration"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/requests/configuration"
 )
 
 type restClient struct {

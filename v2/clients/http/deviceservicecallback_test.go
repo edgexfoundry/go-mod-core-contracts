@@ -11,9 +11,9 @@ import (
 	"path"
 	"testing"
 
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
+	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/requests"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"

@@ -9,12 +9,12 @@ import (
 	"context"
 	"path"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/http/utils"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/requests"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/requests"
 )
 
 type deviceServiceCallbackClient struct {

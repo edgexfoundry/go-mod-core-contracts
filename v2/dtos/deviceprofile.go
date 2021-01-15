@@ -8,9 +8,9 @@ package dtos
 import (
 	"fmt"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
 
 // DeviceProfile and its properties are defined in the APIv2 specification:

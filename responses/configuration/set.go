@@ -3,7 +3,7 @@ package configuration
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/edgexfoundry/go-mod-core-contracts/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
 //SetConfigResponse is for SMA to use when responding to an incoming request to PUT (i.e. UPDATE) a resource.

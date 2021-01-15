@@ -5,7 +5,7 @@ The system management agent client is used by Go services or other Go code to co
 ### How To Use ###
 To use the management agent client package you first need to import the library into your project:
 ```
-import "github.com/edgexfoundry/go-mod-core-contracts/clients/agent"
+import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/agent"
 ```
 As an example of use, to find the health of a service using the management agent client:
 ```

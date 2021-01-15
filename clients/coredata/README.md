@@ -4,7 +4,7 @@ This package contains the core data client written in the Go programming languag
 ### How To Use ###
 To use the core-data client package you first need to import the library into your project:
 ```
-import "github.com/edgexfoundry/go-mod-core-contracts/clients/coredata"
+import "github.com/edgexfoundry/go-mod-core-contracts/v2/clients/coredata"
 ```
 As an example of use, to find a Value Descriptor using the Core Data client, first create a new device client 
 ```
