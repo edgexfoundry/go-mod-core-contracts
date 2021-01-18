@@ -64,7 +64,8 @@ func Validate(a interface{}) error {
 // Internal: generate representative validation error messages
 func getErrorMessage(e validator.FieldError) string {
 	tag := e.Tag()
-	fieldName := e.Field()
+	// StructNamespace returns the namespace for the field error, with the field's actual name.
+	fieldName := e.StructNamespace()
 	fieldValue := e.Param()
 	var msg string
 	switch tag {
