@@ -65,15 +65,14 @@ const (
 	ApiPingRoute    = ApiBase + "/ping"
 	ApiVersionRoute = ApiBase + "/version"
 
-	ApiDeviceCallbackRoute    = ApiBase + "/callback/device"
-	ApiDeviceCallbackIdRoute  = ApiBase + "/callback/device/id/{id}"
-	ApiProfileCallbackRoute   = ApiBase + "/callback/profile"
-	ApiProfileCallbackIdRoute = ApiBase + "/callback/profile/id/{id}"
-	ApiWatcherCallbackRoute   = ApiBase + "/callback/watcher"
-	ApiWatcherCallbackIdRoute = ApiBase + "/callback/watcher/id/{id}"
-	ApiDiscoveryRoute         = ApiBase + "/discovery"
-	ApiIdCommandRoute         = ApiBase + "/device/{id}/{command}"
-	ApiNameCommandRoute       = ApiBase + "/device/name/{name}/{command}"
+	ApiDeviceCallbackRoute      = ApiBase + "/callback/device"
+	ApiDeviceCallbackNameRoute  = ApiBase + "/callback/device/name/{name}"
+	ApiProfileCallbackRoute     = ApiBase + "/callback/profile"
+	ApiProfileCallbackNameRoute = ApiBase + "/callback/profile/name/{name}"
+	ApiWatcherCallbackRoute     = ApiBase + "/callback/watcher"
+	ApiWatcherCallbackNameRoute = ApiBase + "/callback/watcher/name/{name}"
+	ApiDiscoveryRoute           = ApiBase + "/discovery"
+	ApiNameCommandRoute         = ApiBase + "/device/name/{name}/{command}"
 )
 
 // Constants related to defined url path names and parameters in the v2 service APIs
