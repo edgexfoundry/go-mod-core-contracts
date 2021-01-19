@@ -19,8 +19,8 @@ package common
 import (
 	"encoding/json"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 )
 
 // SecretDataKeyValue is a key/value pair to be stored in the Secret Store as part of the Secret Data

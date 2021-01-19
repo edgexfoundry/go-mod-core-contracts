@@ -20,8 +20,8 @@ package command
 import (
 	"context"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/interfaces"
 )
 
 // CommandClient interface defines interactions with the EdgeX Core Command microservice.

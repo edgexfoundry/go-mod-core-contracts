@@ -8,11 +8,11 @@ package requests
 import (
 	"encoding/json"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
 
 // AddProvisionWatcherRequest defines the Request Content for POST ProvisionWatcher DTO.

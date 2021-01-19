@@ -6,8 +6,8 @@
 package responses
 
 import (
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 )
 
 // DeviceResponse defines the Response Content for GET Device DTOs.

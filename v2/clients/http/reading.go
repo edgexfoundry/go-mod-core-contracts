@@ -11,12 +11,12 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/http/utils"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/responses"
 )
 
 type readingCLient struct {

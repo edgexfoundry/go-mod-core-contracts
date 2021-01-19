@@ -18,7 +18,7 @@ package configuration
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/edgexfoundry/go-mod-core-contracts/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
 type Key string

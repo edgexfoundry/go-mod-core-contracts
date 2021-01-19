@@ -17,8 +17,8 @@ package metadata
 import (
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/clients"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/urlclient/local"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/urlclient/local"
 )
 
 func TestNewCommandClientWithConsul(t *testing.T) {

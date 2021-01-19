@@ -5,7 +5,7 @@
 
 package common
 
-import v2 "github.com/edgexfoundry/go-mod-core-contracts/v2"
+import v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 
 // Request defines the base content for request DTOs (data transfer objects).
 // This object and its properties correspond to the BaseRequest object in the APIv2 specification:

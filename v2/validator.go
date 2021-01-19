@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"

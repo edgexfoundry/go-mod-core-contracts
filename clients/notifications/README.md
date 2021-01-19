@@ -4,7 +4,7 @@ This package contains the notifications client written in the Go programming lan
 ### How To Use ###
 To use the support-notifications client package you first need to import the library into your project:
 ```
-import "github.com/edgexfoundry/go-mod-core-contracts/clients/notifications"
+import "github.com/edgexfoundry/go-mod-core-contracts/v2/clients/notifications"
 ```
 To send a notification you first need to get a NotificationsClient and then send a Notification struct:
 ```

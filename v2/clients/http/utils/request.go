@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 )
 
 // Helper method to make the get request and return the body
