@@ -213,3 +213,35 @@ func codeMapping(kind ErrKind) int {
 		return http.StatusInternalServerError
 	}
 }
+
+// KindMapping determines the correct EdgeX error kind for the given HTTP response code.
+func KindMapping(code int) ErrKind {
+	switch code {
+	case http.StatusInternalServerError:
+		return KindServerError
+	case http.StatusBadGateway:
+		return KindCommunicationError
+	case http.StatusNotFound:
+		return KindEntityDoesNotExist
+	case http.StatusBadRequest:
+		return KindContractInvalid
+	case http.StatusConflict:
+		return KindDuplicateName
+	case http.StatusRequestEntityTooLarge:
+		return KindLimitExceeded
+	case http.StatusServiceUnavailable:
+		return KindServiceUnavailable
+	case http.StatusLocked:
+		return KindServiceLocked
+	case http.StatusNotImplemented:
+		return KindNotImplemented
+	case http.StatusMethodNotAllowed:
+		return KindNotAllowed
+	case http.StatusRequestedRangeNotSatisfiable:
+		return KindRangeNotSatisfiable
+	case ClientErrorCode:
+		return KindClientError
+	default:
+		return KindUnknown
+	}
+}
