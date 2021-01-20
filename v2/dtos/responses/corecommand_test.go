@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
 	"github.com/stretchr/testify/assert"
 )
 
