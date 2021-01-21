@@ -72,6 +72,7 @@ const (
 	ApiProfileCallbackNameRoute = ApiBase + "/callback/profile/name/{name}"
 	ApiWatcherCallbackRoute     = ApiBase + "/callback/watcher"
 	ApiWatcherCallbackNameRoute = ApiBase + "/callback/watcher/name/{name}"
+	ApiServiceCallbackRoute     = ApiBase + "/callback/service"
 	ApiDiscoveryRoute           = ApiBase + "/discovery"
 )
 
