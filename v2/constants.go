@@ -42,16 +42,17 @@ const (
 	ApiDeviceServiceByNameRoute = ApiDeviceServiceRoute + "/" + Name + "/{" + Name + "}"
 	ApiDeviceServiceByIdRoute   = ApiDeviceServiceRoute + "/" + Id + "/{" + Id + "}"
 
-	ApiDeviceRoute              = ApiBase + "/device"
-	ApiAllDeviceRoute           = ApiDeviceRoute + "/" + All
-	ApiDeviceIdExistsRoute      = ApiDeviceRoute + "/" + Check + "/" + Id + "/{" + Id + "}"
-	ApiDeviceNameExistsRoute    = ApiDeviceRoute + "/" + Check + "/" + Name + "/{" + Name + "}"
-	ApiDeviceByIdRoute          = ApiDeviceRoute + "/" + Id + "/{" + Id + "}"
-	ApiDeviceByNameRoute        = ApiDeviceRoute + "/" + Name + "/{" + Name + "}"
-	ApiDeviceByProfileIdRoute   = ApiDeviceRoute + "/" + Profile + "/" + Id + "/{" + Id + "}"
-	ApiDeviceByProfileNameRoute = ApiDeviceRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
-	ApiDeviceByServiceIdRoute   = ApiDeviceRoute + "/" + Service + "/" + Id + "/{" + Id + "}"
-	ApiDeviceByServiceNameRoute = ApiDeviceRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
+	ApiDeviceRoute                = ApiBase + "/device"
+	ApiAllDeviceRoute             = ApiDeviceRoute + "/" + All
+	ApiDeviceIdExistsRoute        = ApiDeviceRoute + "/" + Check + "/" + Id + "/{" + Id + "}"
+	ApiDeviceNameExistsRoute      = ApiDeviceRoute + "/" + Check + "/" + Name + "/{" + Name + "}"
+	ApiDeviceByIdRoute            = ApiDeviceRoute + "/" + Id + "/{" + Id + "}"
+	ApiDeviceByNameRoute          = ApiDeviceRoute + "/" + Name + "/{" + Name + "}"
+	ApiDeviceByProfileIdRoute     = ApiDeviceRoute + "/" + Profile + "/" + Id + "/{" + Id + "}"
+	ApiDeviceByProfileNameRoute   = ApiDeviceRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
+	ApiDeviceByServiceIdRoute     = ApiDeviceRoute + "/" + Service + "/" + Id + "/{" + Id + "}"
+	ApiDeviceByServiceNameRoute   = ApiDeviceRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
+	ApiDeviceNameCommandNameRoute = ApiDeviceRoute + "/" + Name + "/{" + DeviceName + "}" + "/" + Command + "/{" + CommandName + "}"
 
 	ApiProvisionWatcherRoute              = ApiBase + "/provisionwatcher"
 	ApiAllProvisionWatcherRoute           = ApiProvisionWatcherRoute + "/" + All
@@ -71,8 +72,8 @@ const (
 	ApiProfileCallbackNameRoute = ApiBase + "/callback/profile/name/{name}"
 	ApiWatcherCallbackRoute     = ApiBase + "/callback/watcher"
 	ApiWatcherCallbackNameRoute = ApiBase + "/callback/watcher/name/{name}"
+	ApiServiceCallbackRoute     = ApiBase + "/callback/service"
 	ApiDiscoveryRoute           = ApiBase + "/discovery"
-	ApiNameCommandRoute         = ApiBase + "/device/name/{name}/{command}"
 )
 
 // Constants related to defined url path names and parameters in the v2 service APIs
@@ -89,9 +90,11 @@ const (
 	Check        = "check"
 	Profile      = "profile"
 	Service      = "service"
+	Command      = "command"
 	ProfileName  = "profileName"
 	ServiceName  = "serviceName"
 	ResourceName = "resourceName"
+	CommandName  = "commandName"
 	Start        = "start"
 	End          = "end"
 	Age          = "age"
