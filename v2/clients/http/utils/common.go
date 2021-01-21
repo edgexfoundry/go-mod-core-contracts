@@ -155,9 +155,6 @@ func sendRequest(ctx context.Context, req *http.Request) ([]byte, errors.EdgeX) 
 		return nil, errors.NewCommonEdgeXWrapper(err)
 	}
 	msg := fmt.Sprintf("request failed, status code: %d, err: %s", res.StatusCode, res.Message)
-	if resp.StatusCode == http.StatusBadRequest {
-		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, msg, nil)
-	} else {
-		return nil, errors.NewCommonEdgeX(errors.KindServerError, msg, nil)
-	}
+	errKind := errors.KindMapping(res.StatusCode)
+	return nil, errors.NewCommonEdgeX(errKind, msg, nil)
 }
