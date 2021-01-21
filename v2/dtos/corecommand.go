@@ -10,8 +10,8 @@ package dtos
 type CoreCommand struct {
 	Name       string `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	DeviceName string `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	Get        bool   `json:"get,omitempty" validate:"required_without=Put"`
-	Put        bool   `json:"put,omitempty" validate:"required_without=Get"`
+	Get        bool   `json:"get" validate:"required_without=Put"`
+	Put        bool   `json:"put" validate:"required_without=Get"`
 	Path       string `json:"path,omitempty"`
 	Url        string `json:"url,omitempty"`
 }
