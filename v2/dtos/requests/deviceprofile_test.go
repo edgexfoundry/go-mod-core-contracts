@@ -8,7 +8,7 @@ package requests
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
