@@ -28,3 +28,18 @@ func TestNewMultiCoreCommandsResponse(t *testing.T) {
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedCommands, actual.CoreCommands)
 }
+
+func TestNewIssueCommandResponse(t *testing.T) {
+	expectedRequestId := "123456"
+	expectedStatusCode := http.StatusOK
+	expectedMessage := "unit test message"
+	expectedDeviceName := "deviceName"
+	expectedCommandName := "commandName"
+	actual := NewIssueCommandResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDeviceName, expectedCommandName)
+
+	assert.Equal(t, expectedRequestId, actual.RequestId)
+	assert.Equal(t, expectedStatusCode, actual.StatusCode)
+	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
+	assert.Equal(t, expectedCommandName, actual.CommandName)
+}

@@ -24,3 +24,20 @@ func NewMultiCoreCommandsResponse(requestId string, message string, statusCode i
 		CoreCommands: commands,
 	}
 }
+
+// IssueCommandResponse defines the Response Content for issuing CoreCommands through Command V2 API.
+// This object and its properties correspond to the IssueCommandResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.x#/IssueCommandResponse
+type IssueCommandResponse struct {
+	common.BaseResponse `json:",inline"`
+	DeviceName          string `json:"deviceName"`
+	CommandName         string `json:"commandName"`
+}
+
+func NewIssueCommandResponse(requestId string, message string, statusCode int, deviceName string, commandName string) IssueCommandResponse {
+	return IssueCommandResponse{
+		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
+		DeviceName:   deviceName,
+		CommandName:  commandName,
+	}
+}
