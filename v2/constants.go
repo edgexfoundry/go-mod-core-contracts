@@ -52,7 +52,7 @@ const (
 	ApiDeviceByProfileNameRoute   = ApiDeviceRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
 	ApiDeviceByServiceIdRoute     = ApiDeviceRoute + "/" + Service + "/" + Id + "/{" + Id + "}"
 	ApiDeviceByServiceNameRoute   = ApiDeviceRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
-	ApiDeviceNameCommandNameRoute = ApiDeviceRoute + "/" + Name + "/{" + DeviceName + "}" + "/" + Command + "/{" + CommandName + "}"
+	ApiDeviceNameCommandNameRoute = ApiDeviceByNameRoute + "/{" + Command + "}"
 
 	ApiProvisionWatcherRoute              = ApiBase + "/provisionwatcher"
 	ApiAllProvisionWatcherRoute           = ApiProvisionWatcherRoute + "/" + All
@@ -94,7 +94,6 @@ const (
 	ProfileName  = "profileName"
 	ServiceName  = "serviceName"
 	ResourceName = "resourceName"
-	CommandName  = "commandName"
 	Start        = "start"
 	End          = "end"
 	Age          = "age"
