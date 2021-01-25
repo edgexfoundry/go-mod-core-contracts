@@ -94,7 +94,6 @@ const (
 	ProfileName  = "profileName"
 	ServiceName  = "serviceName"
 	ResourceName = "resourceName"
-	CommandName  = "commandName"
 	Start        = "start"
 	End          = "end"
 	Age          = "age"
