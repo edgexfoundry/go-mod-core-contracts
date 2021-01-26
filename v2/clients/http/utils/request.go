@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,8 +10,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"reflect"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 )
 
 // Helper method to make the get request and return the body
@@ -31,13 +33,33 @@ func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl str
 	return nil
 }
 
+func setApiVersion(data interface{}) {
+	val := reflect.ValueOf(data).Elem()
+	switch val.Kind() {
+	case reflect.Struct:
+		for i := 0; i < val.NumField(); i++ {
+			if val.Type().Field(i).Name == v2.ApiVersionField {
+				val.Field(i).SetString(v2.ApiVersion)
+			} else {
+				field := val.Field(i).Addr().Interface()
+				setApiVersion(field)
+			}
+		}
+	case reflect.Slice:
+		for i := 0; i < val.Len(); i += 1 {
+			ele := val.Index(i).Addr().Interface()
+			setApiVersion(ele)
+		}
+	}
+}
+
 // Helper method to make the post JSON request and return the body
 func PostRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
 	url string,
 	data interface{}) errors.EdgeX {
-
+	setApiVersion(data)
 	req, err := createRequestWithRawData(ctx, http.MethodPost, url, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
@@ -59,7 +81,7 @@ func PutRequest(
 	returnValuePointer interface{},
 	url string,
 	data interface{}) errors.EdgeX {
-
+	setApiVersion(data)
 	req, err := createRequestWithRawData(ctx, http.MethodPut, url, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
@@ -81,7 +103,7 @@ func PatchRequest(
 	returnValuePointer interface{},
 	url string,
 	data interface{}) errors.EdgeX {
-
+	setApiVersion(data)
 	req, err := createRequestWithRawData(ctx, http.MethodPatch, url, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)

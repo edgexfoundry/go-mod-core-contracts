@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2021 IOTech Ltd
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package http
 
 import (
@@ -29,7 +34,7 @@ func NewDeviceServiceClient(baseUrl string) interfaces.DeviceServiceClient {
 
 func (dsc DeviceServiceClient) Add(ctx context.Context, reqs []requests.AddDeviceServiceRequest) (
 	res []common.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequest(ctx, &res, dsc.baseUrl+v2.ApiDeviceServiceRoute, reqs)
+	err = utils.PostRequest(ctx, &res, dsc.baseUrl+v2.ApiDeviceServiceRoute, &reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -38,7 +43,7 @@ func (dsc DeviceServiceClient) Add(ctx context.Context, reqs []requests.AddDevic
 
 func (dsc DeviceServiceClient) Update(ctx context.Context, reqs []requests.UpdateDeviceServiceRequest) (
 	res []common.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, dsc.baseUrl+v2.ApiDeviceServiceRoute, reqs)
+	err = utils.PatchRequest(ctx, &res, dsc.baseUrl+v2.ApiDeviceServiceRoute, &reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -87,5 +87,16 @@ func AddEventReqToEventModel(addEventReq AddEventRequest) (event models.Event) {
 		Origin:      addEventReq.Event.Origin,
 		Readings:    readings,
 		Tags:        tags,
+	}
+}
+
+func NewAddEventRequest(requestId string, event dtos.Event) AddEventRequest {
+	event.Versionable = common.NewVersionable()
+	for _, reading := range event.Readings {
+		reading.Versionable = common.NewVersionable()
+	}
+	return AddEventRequest{
+		common.NewBaseRequest(requestId),
+		event,
 	}
 }

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,20 +34,21 @@ type Device struct {
 // UpdateDevice and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDevice
 type UpdateDevice struct {
-	Id             *string                       `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name           *string                       `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Description    *string                       `json:"description" validate:"omitempty,edgex-dto-none-empty-string"`
-	AdminState     *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
-	OperatingState *string                       `json:"operatingState" validate:"omitempty,oneof='UP' 'DOWN' 'UNKNOWN'"`
-	LastConnected  *int64                        `json:"lastConnected"`
-	LastReported   *int64                        `json:"lastReported"`
-	ServiceName    *string                       `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ProfileName    *string                       `json:"profileName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Labels         []string                      `json:"labels"`
-	Location       interface{}                   `json:"location"`
-	AutoEvents     []AutoEvent                   `json:"autoEvents" validate:"dive"`
-	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"omitempty,gt=0"`
-	Notify         *bool                         `json:"notify"`
+	common.Versionable `json:",inline"`
+	Id                 *string                       `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name               *string                       `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Description        *string                       `json:"description" validate:"omitempty,edgex-dto-none-empty-string"`
+	AdminState         *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	OperatingState     *string                       `json:"operatingState" validate:"omitempty,oneof='UP' 'DOWN' 'UNKNOWN'"`
+	LastConnected      *int64                        `json:"lastConnected"`
+	LastReported       *int64                        `json:"lastReported"`
+	ServiceName        *string                       `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName        *string                       `json:"profileName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Labels             []string                      `json:"labels"`
+	Location           interface{}                   `json:"location"`
+	AutoEvents         []AutoEvent                   `json:"autoEvents" validate:"dive"`
+	Protocols          map[string]ProtocolProperties `json:"protocols" validate:"omitempty,gt=0"`
+	Notify             *bool                         `json:"notify"`
 }
 
 // ToDeviceModel transforms the Device DTO to the Device Model

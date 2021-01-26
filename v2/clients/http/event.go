@@ -35,7 +35,7 @@ func (ec *eventClient) Add(ctx context.Context, req requests.AddEventRequest) (
 	common.BaseWithIdResponse, errors.EdgeX) {
 	path := path.Join(v2.ApiEventRoute, url.QueryEscape(req.Event.ProfileName), url.QueryEscape(req.Event.DeviceName))
 	var br common.BaseWithIdResponse
-	err := utils.PostRequest(ctx, &br, ec.baseUrl+path, req)
+	err := utils.PostRequest(ctx, &br, ec.baseUrl+path, &req)
 	if err != nil {
 		return br, errors.NewCommonEdgeXWrapper(err)
 	}

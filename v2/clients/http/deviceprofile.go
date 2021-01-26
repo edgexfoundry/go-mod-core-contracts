@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,7 +34,7 @@ func NewDeviceProfileClient(baseUrl string) interfaces.DeviceProfileClient {
 
 func (client *DeviceProfileClient) Add(ctx context.Context, reqs []requests.DeviceProfileRequest) ([]common.BaseWithIdResponse, errors.EdgeX) {
 	var responses []common.BaseWithIdResponse
-	err := utils.PostRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileRoute, reqs)
+	err := utils.PostRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileRoute, &reqs)
 	if err != nil {
 		return responses, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -43,7 +43,7 @@ func (client *DeviceProfileClient) Add(ctx context.Context, reqs []requests.Devi
 
 func (client *DeviceProfileClient) Update(ctx context.Context, reqs []requests.DeviceProfileRequest) ([]common.BaseResponse, errors.EdgeX) {
 	var responses []common.BaseResponse
-	err := utils.PutRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileRoute, reqs)
+	err := utils.PutRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileRoute, &reqs)
 	if err != nil {
 		return responses, errors.NewCommonEdgeXWrapper(err)
 	}

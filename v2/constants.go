@@ -7,8 +7,9 @@ package v2
 
 // Constants related to defined routes in the v2 service APIs
 const (
-	ApiVersion = "v2"
-	ApiBase    = "/api/v2"
+	ApiVersion      = "v2"
+	ApiVersionField = "ApiVersion"
+	ApiBase         = "/api/v2"
 
 	ApiEventRoute                      = ApiBase + "/event"
 	ApiEventProfileNameDeviceNameRoute = ApiEventRoute + "/{" + ProfileName + "}" + "/{" + DeviceName + "}"
