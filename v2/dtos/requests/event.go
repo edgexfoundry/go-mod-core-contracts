@@ -92,8 +92,8 @@ func AddEventReqToEventModel(addEventReq AddEventRequest) (event models.Event) {
 
 func NewAddEventRequest(requestId string, event dtos.Event) AddEventRequest {
 	event.Versionable = common.NewVersionable()
-	for _, reading := range event.Readings {
-		reading.Versionable = common.NewVersionable()
+	for i, _ := range event.Readings {
+		event.Readings[i].Versionable = common.NewVersionable()
 	}
 	return AddEventRequest{
 		common.NewBaseRequest(requestId),
