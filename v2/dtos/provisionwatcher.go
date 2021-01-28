@@ -70,3 +70,19 @@ func FromProvisionWatcherModelToDTO(pw models.ProvisionWatcher) ProvisionWatcher
 		AutoEvents:          FromAutoEventModelsToDTOs(pw.AutoEvents),
 	}
 }
+
+// FromProvisionWatcherModelToUpdateDTO transforms the ProvisionWatcher Model to the UpdateProvisionWatcher DTO
+func FromProvisionWatcherModelToUpdateDTO(pw models.ProvisionWatcher) UpdateProvisionWatcher {
+	adminState := string(pw.AdminState)
+	return UpdateProvisionWatcher{
+		Id:                  &pw.Id,
+		Name:                &pw.Name,
+		Labels:              pw.Labels,
+		Identifiers:         pw.Identifiers,
+		BlockingIdentifiers: pw.BlockingIdentifiers,
+		ProfileName:         &pw.ProfileName,
+		ServiceName:         &pw.ServiceName,
+		AdminState:          &adminState,
+		AutoEvents:          FromAutoEventModelsToDTOs(pw.AutoEvents),
+	}
+}

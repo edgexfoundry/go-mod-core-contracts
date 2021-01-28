@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -62,4 +62,16 @@ func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 	dto.Labels = ds.Labels
 	dto.AdminState = string(ds.AdminState)
 	return dto
+}
+
+// FromDeviceServiceModelToUpdateDTO transforms the DeviceService Model to the UpdateDeviceService DTO
+func FromDeviceServiceModelToUpdateDTO(ds models.DeviceService) UpdateDeviceService {
+	adminState := string(ds.AdminState)
+	return UpdateDeviceService{
+		Id:          &ds.Id,
+		Name:        &ds.Name,
+		BaseAddress: &ds.BaseAddress,
+		Labels:      ds.Labels,
+		AdminState:  &adminState,
+	}
 }
