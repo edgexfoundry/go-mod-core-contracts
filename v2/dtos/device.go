@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -86,4 +86,26 @@ func FromDeviceModelToDTO(d models.Device) Device {
 	dto.AutoEvents = FromAutoEventModelsToDTOs(d.AutoEvents)
 	dto.Protocols = FromProtocolModelsToDTOs(d.Protocols)
 	return dto
+}
+
+// FromDeviceModelToUpdateDTO transforms the Device Model to the UpdateDevice DTO
+func FromDeviceModelToUpdateDTO(d models.Device) UpdateDevice {
+	adminState := string(d.AdminState)
+	operatingState := string(d.OperatingState)
+	return UpdateDevice{
+		Id:             &d.Id,
+		Name:           &d.Name,
+		Description:    &d.Description,
+		AdminState:     &adminState,
+		OperatingState: &operatingState,
+		LastConnected:  &d.LastConnected,
+		LastReported:   &d.LastReported,
+		ServiceName:    &d.ServiceName,
+		ProfileName:    &d.ProfileName,
+		Labels:         d.Labels,
+		Location:       d.Location,
+		AutoEvents:     FromAutoEventModelsToDTOs(d.AutoEvents),
+		Protocols:      FromProtocolModelsToDTOs(d.Protocols),
+		Notify:         &d.Notify,
+	}
 }
