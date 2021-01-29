@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
@@ -71,4 +73,83 @@ func TestEvent_ToXML(t *testing.T) {
 	for _, item := range contains {
 		assert.Contains(t, actual, item, fmt.Sprintf("Missing item '%s'", item))
 	}
+}
+
+func TestNewEvent(t *testing.T) {
+	expectedApiVersion := v2.ApiVersion
+	expectedDeviceName := TestDeviceName
+	expectedProfileName := TestDeviceProfileName
+
+	actual := NewEvent(expectedProfileName, expectedDeviceName)
+
+	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+	assert.NotEmpty(t, actual.Id)
+	assert.Equal(t, expectedProfileName, actual.ProfileName)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
+	assert.Zero(t, len(actual.Readings))
+	assert.Zero(t, actual.Created)
+	assert.NotZero(t, actual.Origin)
+}
+
+func TestEvent_AddSimpleReading(t *testing.T) {
+	expectedApiVersion := v2.ApiVersion
+	expectedDeviceName := TestDeviceName
+	expectedProfileName := TestDeviceProfileName
+	expectedReadingDetails := []struct {
+		inputValue   interface{}
+		resourceName string
+		valueType    string
+		value        string
+	}{
+		{int32(12345), "myInt32", v2.ValueTypeInt32, "12345"},
+		{float32(12345.4567), "myFloat32", v2.ValueTypeFloat32, "RkDl1A=="},
+		{[]bool{false, true, false}, "myBoolArray", v2.ValueTypeBoolArray, "[false, true, false]"},
+	}
+	expectedReadingsCount := len(expectedReadingDetails)
+
+	target := NewEvent(expectedProfileName, expectedDeviceName)
+	for _, expected := range expectedReadingDetails {
+		err := target.AddSimpleReading(expected.resourceName, expected.valueType, expected.inputValue)
+		require.NoError(t, err)
+	}
+
+	require.Equal(t, expectedReadingsCount, len(target.Readings))
+
+	for index, actual := range target.Readings {
+		assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+		assert.NotEmpty(t, actual.Id)
+		assert.Equal(t, expectedProfileName, actual.ProfileName)
+		assert.Equal(t, expectedDeviceName, actual.DeviceName)
+		assert.Equal(t, expectedReadingDetails[index].resourceName, actual.ResourceName)
+		assert.Equal(t, expectedReadingDetails[index].valueType, actual.ValueType)
+		assert.Equal(t, expectedReadingDetails[index].value, actual.Value)
+		assert.Zero(t, actual.Created)
+		assert.NotZero(t, actual.Origin)
+	}
+}
+
+func TestEvent_AddBinaryReading(t *testing.T) {
+	expectedApiVersion := v2.ApiVersion
+	expectedDeviceName := TestDeviceName
+	expectedProfileName := TestDeviceProfileName
+	expectedResourceName := TestDeviceResourceName
+	expectedValueType := v2.ValueTypeBinary
+	expectedValue := []byte("Hello World")
+	expectedMediaType := "application/text"
+	expectedReadingsCount := 1
+
+	target := NewEvent(expectedProfileName, expectedDeviceName)
+	target.AddBinaryReading(expectedResourceName, expectedValue, expectedMediaType)
+
+	require.Equal(t, expectedReadingsCount, len(target.Readings))
+	actual := target.Readings[0]
+	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+	assert.NotEmpty(t, actual.Id)
+	assert.Equal(t, expectedProfileName, actual.ProfileName)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
+	assert.Equal(t, expectedResourceName, actual.ResourceName)
+	assert.Equal(t, expectedValueType, actual.ValueType)
+	assert.Equal(t, expectedValue, actual.BinaryValue)
+	assert.Zero(t, actual.Created)
+	assert.NotZero(t, actual.Origin)
 }

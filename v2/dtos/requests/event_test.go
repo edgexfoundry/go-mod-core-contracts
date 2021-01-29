@@ -263,3 +263,20 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 		})
 	}
 }
+
+func TestNewAddRequest(t *testing.T) {
+	expectedProfileName := TestDeviceProfileName
+	expectedDeviceName := TestDeviceName
+	expectedApiVersion := v2.ApiVersion
+
+	actual := NewAddRequest(expectedProfileName, expectedDeviceName)
+
+	assert.NotEmpty(t, actual.RequestId)
+	assert.Equal(t, expectedApiVersion, actual.Event.ApiVersion)
+	assert.NotEmpty(t, actual.Event.Id)
+	assert.Equal(t, expectedProfileName, actual.Event.ProfileName)
+	assert.Equal(t, expectedDeviceName, actual.Event.DeviceName)
+	assert.Zero(t, len(actual.Event.Readings))
+	assert.Zero(t, actual.Event.Created)
+	assert.NotZero(t, actual.Event.Origin)
+}
