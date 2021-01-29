@@ -74,6 +74,10 @@ const (
 	ApiWatcherCallbackNameRoute = ApiBase + "/callback/watcher/name/{name}"
 	ApiServiceCallbackRoute     = ApiBase + "/callback/service"
 	ApiDiscoveryRoute           = ApiBase + "/discovery"
+
+	ApiIntervalRoute       = ApiBase + "/interval"
+	ApiAllIntervalRoute    = ApiIntervalRoute + "/" + All
+	ApiIntervalByNameRoute = ApiIntervalRoute + "/" + Name + "/{" + Name + "}"
 )
 
 // Constants related to defined url path names and parameters in the v2 service APIs

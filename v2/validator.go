@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,16 +21,18 @@ import (
 var val *validator.Validate
 
 const (
-	autoEventFrequencyTag       = "edgex-dto-autoevent-frequency"
+	dtoFrequencyTag             = "edgex-dto-frequency"
 	dtoUuidTag                  = "edgex-dto-uuid"
 	dtoNoneEmptyStringTag       = "edgex-dto-none-empty-string"
 	dtoValueType                = "edgex-dto-value-type"
 	dtoRFC3986UnreservedCharTag = "edgex-dto-rfc3986-unreserved-chars"
+	dtoInterDatetimeTag         = "edgex-dto-interval-datetime"
 )
 
 const (
 	// Per https://tools.ietf.org/html/rfc3986#section-2.3, unreserved characters= ALPHA / DIGIT / "-" / "." / "_" / "~"
 	rFC3986UnreservedCharsRegexString = "^[a-zA-Z0-9-_.~]+$"
+	intervalDatetimeLayout            = "20060102T150405"
 )
 
 var (
@@ -39,11 +41,12 @@ var (
 
 func init() {
 	val = validator.New()
-	val.RegisterValidation(autoEventFrequencyTag, ValidateAutoEventFrequency)
+	val.RegisterValidation(dtoFrequencyTag, ValidateFrequency)
 	val.RegisterValidation(dtoUuidTag, ValidateDtoUuid)
 	val.RegisterValidation(dtoNoneEmptyStringTag, ValidateDtoNoneEmptyString)
 	val.RegisterValidation(dtoValueType, ValidateValueType)
 	val.RegisterValidation(dtoRFC3986UnreservedCharTag, ValidateDtoRFC3986UnreservedChars)
+	val.RegisterValidation(dtoInterDatetimeTag, ValidateIntervalDatetime)
 }
 
 // Validate function will use the validator package to validate the struct annotation
@@ -81,7 +84,7 @@ func getErrorMessage(e validator.FieldError) string {
 		msg = fmt.Sprintf("%s field should be one of %s", fieldName, fieldValue)
 	case "gt":
 		msg = fmt.Sprintf("%s field should greater than %s", fieldName, fieldValue)
-	case autoEventFrequencyTag:
+	case dtoFrequencyTag:
 		msg = fmt.Sprintf("%s field should follows the ISO 8601 Durations format. Eg,100ms, 24h", fieldName)
 	case dtoUuidTag:
 		msg = fmt.Sprintf("%s field needs a uuid", fieldName)
@@ -95,8 +98,8 @@ func getErrorMessage(e validator.FieldError) string {
 	return msg
 }
 
-// ValidateAutoEventFrequency validate AutoEvent's Frequency field which should follow the ISO 8601 Durations format
-func ValidateAutoEventFrequency(fl validator.FieldLevel) bool {
+// ValidateFrequency validate AutoEvent's Frequency field which should follow the ISO 8601 Durations format
+func ValidateFrequency(fl validator.FieldLevel) bool {
 	_, err := time.ParseDuration(fl.Field().String())
 	return err == nil
 }
@@ -150,4 +153,10 @@ func ValidateDtoRFC3986UnreservedChars(fl validator.FieldLevel) bool {
 	} else {
 		return rFC3986UnreservedCharsRegex.MatchString(val.String())
 	}
+}
+
+// ValidateIntervalDatetime validate Interval's datetime field which should follow the ISO 8601 format YYYYMMDD'T'HHmmss
+func ValidateIntervalDatetime(fl validator.FieldLevel) bool {
+	_, err := time.Parse(intervalDatetimeLayout, fl.Field().String())
+	return err == nil
 }
