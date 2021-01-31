@@ -24,6 +24,7 @@ const (
 	KindContractInvalid     ErrKind = "ContractInvalid"
 	KindServerError         ErrKind = "UnexpectedServerError"
 	KindLimitExceeded       ErrKind = "LimitExceeded"
+	KindStatusConflict      ErrKind = "StatusConflict"
 	KindDuplicateName       ErrKind = "DuplicateName"
 	KindInvalidId           ErrKind = "InvalidId"
 	KindServiceUnavailable  ErrKind = "ServiceUnavailable"
@@ -193,7 +194,7 @@ func codeMapping(kind ErrKind) int {
 		return http.StatusNotFound
 	case KindContractInvalid, KindInvalidId:
 		return http.StatusBadRequest
-	case KindDuplicateName:
+	case KindStatusConflict, KindDuplicateName:
 		return http.StatusConflict
 	case KindLimitExceeded:
 		return http.StatusRequestEntityTooLarge
@@ -226,7 +227,7 @@ func KindMapping(code int) ErrKind {
 	case http.StatusBadRequest:
 		return KindContractInvalid
 	case http.StatusConflict:
-		return KindDuplicateName
+		return KindStatusConflict
 	case http.StatusRequestEntityTooLarge:
 		return KindLimitExceeded
 	case http.StatusServiceUnavailable:
