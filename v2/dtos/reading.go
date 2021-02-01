@@ -52,7 +52,7 @@ type BinaryReading struct {
 func newBaseReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
 	return BaseReading{
 		Versionable:  common.NewVersionable(),
-		Id:           uuid.New().String(),
+		Id:           uuid.NewString(),
 		Origin:       time.Now().UnixNano(),
 		DeviceName:   deviceName,
 		ResourceName: resourceName,

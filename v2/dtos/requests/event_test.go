@@ -271,6 +271,7 @@ func TestNewAddRequest(t *testing.T) {
 
 	actual := NewAddRequest(expectedProfileName, expectedDeviceName)
 
+	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
 	assert.NotEmpty(t, actual.RequestId)
 	assert.Equal(t, expectedApiVersion, actual.Event.ApiVersion)
 	assert.NotEmpty(t, actual.Event.Id)

@@ -35,7 +35,7 @@ type Event struct {
 func NewEvent(profileName string, deviceName string) Event {
 	return Event{
 		Versionable: common.NewVersionable(),
-		Id:          uuid.New().String(),
+		Id:          uuid.NewString(),
 		DeviceName:  deviceName,
 		ProfileName: profileName,
 		Origin:      time.Now().UnixNano(),
