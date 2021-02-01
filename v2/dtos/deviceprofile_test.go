@@ -3,6 +3,7 @@ package dtos
 import (
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
@@ -48,6 +49,7 @@ var testDeviceProfile = models.DeviceProfile{
 
 func profileData() DeviceProfile {
 	return DeviceProfile{
+		Versionable:  common.NewVersionable(),
 		Name:         TestDeviceProfileName,
 		Manufacturer: TestManufacturer,
 		Description:  TestDescription,

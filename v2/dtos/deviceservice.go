@@ -53,6 +53,7 @@ func ToDeviceServiceModel(dto DeviceService) models.DeviceService {
 // FromDeviceServiceModelToDTO transforms the DeviceService Model to the DeviceService DTO
 func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 	var dto DeviceService
+	dto.Versionable = common.NewVersionable()
 	dto.Id = ds.Id
 	dto.Name = ds.Name
 	dto.Description = ds.Description

@@ -46,6 +46,7 @@ func ToDeviceProfileModel(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 // FromDeviceProfileModelToDTO transforms the DeviceProfile Model to the DeviceProfile DTO
 func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfile {
 	return DeviceProfile{
+		Versionable:     common.NewVersionable(),
 		Id:              deviceProfile.Id,
 		Name:            deviceProfile.Name,
 		Description:     deviceProfile.Description,
