@@ -23,6 +23,17 @@ type AddEventRequest struct {
 	Event              dtos.Event `json:"event" validate:"required"`
 }
 
+// NewAddRequest creates, initializes and returns an AddEventRequest which has no readings
+// Sample usage:
+//    request := NewAddRequest("myProfile", "myDevice")
+//    request.Event.AddSimpleReading("myInt32Resource", v2.ValueTypeInt32, int32(1234))
+func NewAddRequest(profileName string, deviceName string) AddEventRequest {
+	return AddEventRequest{
+		BaseRequest: common.NewBaseRequest(),
+		Event:       dtos.NewEvent(profileName, deviceName),
+	}
+}
+
 // Validate satisfies the Validator interface
 func (a AddEventRequest) Validate() error {
 	if err := v2.Validate(a); err != nil {

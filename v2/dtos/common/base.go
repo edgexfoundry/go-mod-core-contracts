@@ -5,13 +5,25 @@
 
 package common
 
-import v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+import (
+	"github.com/google/uuid"
+
+	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+)
 
 // Request defines the base content for request DTOs (data transfer objects).
 // This object and its properties correspond to the BaseRequest object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseRequest
 type BaseRequest struct {
-	RequestId string `json:"requestId" validate:"len=0|uuid"`
+	Versionable `json:",inline"`
+	RequestId   string `json:"requestId" validate:"len=0|uuid"`
+}
+
+func NewBaseRequest() BaseRequest {
+	return BaseRequest{
+		Versionable: NewVersionable(),
+		RequestId:   uuid.NewString(),
+	}
 }
 
 // BaseResponse defines the base content for response DTOs (data transfer objects).
@@ -26,7 +38,7 @@ type BaseResponse struct {
 
 // Versionable shows the API version in DTOs
 type Versionable struct {
-	ApiVersion string `json:"apiVersion,omitempty"`
+	ApiVersion string `json:"apiVersion" validate:"required"`
 }
 
 // BaseWithIdResponse defines the base content for response DTOs (data transfer objects).
