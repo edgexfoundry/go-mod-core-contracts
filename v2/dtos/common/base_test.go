@@ -14,6 +14,12 @@ import (
 	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 )
 
+func TestNewBaseRequest(t *testing.T) {
+	actual := NewBaseRequest()
+	assert.Equal(t, v2.ApiVersion, actual.ApiVersion)
+	assert.NotEmpty(t, actual.RequestId)
+}
+
 func TestNewBaseResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200

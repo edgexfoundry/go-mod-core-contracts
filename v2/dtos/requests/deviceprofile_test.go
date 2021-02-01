@@ -52,9 +52,11 @@ func profileData() DeviceProfileRequest {
 	}}
 	return DeviceProfileRequest{
 		BaseRequest: common.BaseRequest{
-			RequestId: ExampleUUID,
+			RequestId:   ExampleUUID,
+			Versionable: common.NewVersionable(),
 		},
 		Profile: dtos.DeviceProfile{
+			Versionable:     common.NewVersionable(),
 			Name:            TestDeviceProfileName,
 			Manufacturer:    TestManufacturer,
 			Description:     TestDescription,
