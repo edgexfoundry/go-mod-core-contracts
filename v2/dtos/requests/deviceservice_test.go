@@ -20,9 +20,11 @@ import (
 
 var testAddDeviceService = AddDeviceServiceRequest{
 	BaseRequest: common.BaseRequest{
-		RequestId: ExampleUUID,
+		RequestId:   ExampleUUID,
+		Versionable: common.NewVersionable(),
 	},
 	Service: dtos.DeviceService{
+		Versionable: common.NewVersionable(),
 		Name:        TestDeviceServiceName,
 		BaseAddress: TestBaseAddress,
 		Labels:      []string{"MODBUS", "TEMP"},
@@ -32,7 +34,8 @@ var testAddDeviceService = AddDeviceServiceRequest{
 
 var testUpdateDeviceService = UpdateDeviceServiceRequest{
 	BaseRequest: common.BaseRequest{
-		RequestId: ExampleUUID,
+		RequestId:   ExampleUUID,
+		Versionable: common.NewVersionable(),
 	},
 	Service: mockDeviceServiceDTO(),
 }
@@ -277,6 +280,7 @@ func TestUpdateDeviceServiceRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 func TestUpdateDeviceServiceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
+		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"service":{
 			"name":"TestDevice",

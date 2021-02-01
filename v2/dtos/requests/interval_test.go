@@ -20,14 +20,16 @@ import (
 func addIntervalRequestData() AddIntervalRequest {
 	return AddIntervalRequest{
 		BaseRequest: common.BaseRequest{
-			RequestId: ExampleUUID,
+			RequestId:   ExampleUUID,
+			Versionable: common.NewVersionable(),
 		},
 		Interval: dtos.Interval{
-			Name:      TestIntervalName,
-			Start:     TestIntervalStart,
-			End:       TestIntervalEnd,
-			Frequency: TestIntervalFrequency,
-			RunOnce:   TestIntervalRunOnce,
+			Versionable: common.NewVersionable(),
+			Name:        TestIntervalName,
+			Start:       TestIntervalStart,
+			End:         TestIntervalEnd,
+			Frequency:   TestIntervalFrequency,
+			RunOnce:     TestIntervalRunOnce,
 		},
 	}
 }
@@ -35,7 +37,8 @@ func addIntervalRequestData() AddIntervalRequest {
 func updateIntervalRequestData() UpdateIntervalRequest {
 	return UpdateIntervalRequest{
 		BaseRequest: common.BaseRequest{
-			RequestId: ExampleUUID,
+			RequestId:   ExampleUUID,
+			Versionable: common.NewVersionable(),
 		},
 		Interval: updateIntervalData(),
 	}
@@ -229,6 +232,7 @@ func TestUpdateIntervalRequest_Validate(t *testing.T) {
 
 func TestUpdateIntervalRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
+		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"interval":{"name":"TestInterval"}
 	}`

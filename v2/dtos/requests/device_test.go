@@ -36,9 +36,11 @@ var testProtocols = map[string]dtos.ProtocolProperties{
 }
 var testAddDevice = AddDeviceRequest{
 	BaseRequest: common.BaseRequest{
-		RequestId: ExampleUUID,
+		RequestId:   ExampleUUID,
+		Versionable: common.NewVersionable(),
 	},
 	Device: dtos.Device{
+		Versionable:    common.NewVersionable(),
 		Name:           TestDeviceName,
 		ServiceName:    TestDeviceServiceName,
 		ProfileName:    TestDeviceProfileName,
@@ -54,7 +56,8 @@ var testAddDevice = AddDeviceRequest{
 var testNowTime = time.Now().Unix()
 var testUpdateDevice = UpdateDeviceRequest{
 	BaseRequest: common.BaseRequest{
-		RequestId: ExampleUUID,
+		RequestId:   ExampleUUID,
+		Versionable: common.NewVersionable(),
 	},
 	Device: mockUpdateDevice(),
 }
@@ -360,6 +363,7 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 
 func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
+		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"device":{"name":"TestDevice"}
 	}`
@@ -385,6 +389,7 @@ func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 func TestUpdateDeviceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
+		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"device":{
 			"name":"TestDevice",

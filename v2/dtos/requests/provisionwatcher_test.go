@@ -28,9 +28,11 @@ var testBlockingIdentifiers = map[string][]string{
 }
 var testAddProvisionWatcher = AddProvisionWatcherRequest{
 	BaseRequest: common.BaseRequest{
-		RequestId: ExampleUUID,
+		RequestId:   ExampleUUID,
+		Versionable: common.NewVersionable(),
 	},
 	ProvisionWatcher: dtos.ProvisionWatcher{
+		Versionable:         common.NewVersionable(),
 		Name:                testProvisionWatcherName,
 		Labels:              testProvisionWatcherLabels,
 		Identifiers:         testIdentifiers,
@@ -44,7 +46,8 @@ var testAddProvisionWatcher = AddProvisionWatcherRequest{
 
 var testUpdateProvisionWatcher = UpdateProvisionWatcherRequest{
 	BaseRequest: common.BaseRequest{
-		RequestId: ExampleUUID,
+		RequestId:   ExampleUUID,
+		Versionable: common.NewVersionable(),
 	},
 	ProvisionWatcher: mockUpdateProvisionWatcher(),
 }
@@ -56,6 +59,7 @@ func mockUpdateProvisionWatcher() dtos.UpdateProvisionWatcher {
 	testDeviceServiceName := TestDeviceServiceName
 	testProfileName := TestDeviceProfileName
 	d := dtos.UpdateProvisionWatcher{}
+	d.Versionable = common.NewVersionable()
 	d.Id = &testId
 	d.Name = &testName
 	d.Labels = testProvisionWatcherLabels
@@ -278,8 +282,9 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 
 func TestUpdateProvisionWatcherRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
+		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"provisionWatcher":{"name":"test-watcher"}
+		"provisionWatcher":{"apiVersion" : "v2","name":"test-watcher"}
 	}`
 	var req UpdateProvisionWatcherRequest
 
@@ -298,8 +303,10 @@ func TestUpdateProvisionWatcherRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 func TestUpdateProvisionWatcherRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
+		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"provisionWatcher":{
+			"apiVersion" : "v2",
 			"name":"test-watcher",
 			"labels":[],
 			"autoEvents":[]

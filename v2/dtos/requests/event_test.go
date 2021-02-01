@@ -8,11 +8,10 @@ package requests
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
@@ -20,30 +19,20 @@ import (
 )
 
 func eventRequestData() AddEventRequest {
-	return AddEventRequest{
-		BaseRequest: common.BaseRequest{
-			RequestId: ExampleUUID,
-		},
-		Event: dtos.Event{
-			Id:          ExampleUUID,
-			DeviceName:  TestDeviceName,
-			ProfileName: TestDeviceProfileName,
-			Origin:      TestOriginTime,
-			Readings: []dtos.BaseReading{{
-				DeviceName:   TestDeviceName,
-				ResourceName: TestDeviceResourceName,
-				ProfileName:  TestDeviceProfileName,
-				Origin:       TestOriginTime,
-				ValueType:    v2.ValueTypeUint8,
-				SimpleReading: dtos.SimpleReading{
-					Value: TestReadingValue,
-				},
-			}},
-			Tags: map[string]string{
-				"GatewayId": "Houston-0001",
-			},
-		},
+	request := NewAddRequest(TestDeviceProfileName, TestDeviceName)
+	request.RequestId = ExampleUUID
+	request.Event.Id = ExampleUUID
+	request.Event.Origin = TestOriginTime
+	request.Event.Tags = map[string]string{
+		"GatewayId": "Houston-0001",
 	}
+
+	value, _ := strconv.ParseUint(TestReadingValue, 10, 8)
+	_ = request.Event.AddSimpleReading(TestDeviceResourceName, v2.ValueTypeUint8, uint8(value))
+	request.Event.Readings[0].Id = ExampleUUID
+	request.Event.Readings[0].Origin = TestOriginTime
+
+	return request
 }
 
 func TestAddEventRequest_Validate(t *testing.T) {

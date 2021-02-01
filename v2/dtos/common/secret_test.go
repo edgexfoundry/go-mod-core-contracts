@@ -31,8 +31,11 @@ const (
 )
 
 var validRequest = SecretRequest{
-	BaseRequest: BaseRequest{RequestId: TestUUID},
-	Path:        "something",
+	BaseRequest: BaseRequest{
+		RequestId:   TestUUID,
+		Versionable: NewVersionable(),
+	},
+	Path: "something",
 	SecretData: []SecretDataKeyValue{
 		{Key: "username", Value: "User1"},
 		{Key: "password", Value: "password"},
