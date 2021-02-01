@@ -300,7 +300,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	switch r := reading.(type) {
 	case models.BinaryReading:
 		baseReading = BaseReading{
-			Versionable:   common.Versionable{ApiVersion: v2.ApiVersion},
+			Versionable:   common.NewVersionable(),
 			Id:            r.Id,
 			Created:       r.Created,
 			Origin:        r.Origin,

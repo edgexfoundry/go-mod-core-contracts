@@ -50,6 +50,7 @@ func ToIntervalModel(dto Interval) models.Interval {
 // FromIntervalModelToDTO transforms the Interval Model to the Interval DTO
 func FromIntervalModelToDTO(model models.Interval) Interval {
 	var dto Interval
+	dto.Versionable = common.NewVersionable()
 	dto.Id = model.Id
 	dto.Name = model.Name
 	dto.Start = model.Start
