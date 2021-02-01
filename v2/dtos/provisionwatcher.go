@@ -19,8 +19,8 @@ type ProvisionWatcher struct {
 	Labels              []string            `json:"labels,omitempty"`
 	Identifiers         map[string]string   `json:"identifiers" validate:"gt=0,dive,keys,required,endkeys,required"`
 	BlockingIdentifiers map[string][]string `json:"blockingIdentifiers,omitempty"`
-	ProfileName         string              `json:"profile" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ServiceName         string              `json:"service" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName         string              `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ServiceName         string              `json:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	AdminState          string              `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 	AutoEvents          []AutoEvent         `json:"autoEvents,omitempty" validate:"dive"`
 }
