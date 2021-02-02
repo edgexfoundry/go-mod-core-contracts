@@ -193,3 +193,13 @@ deviceCommands:
 		})
 	}
 }
+
+func TestNewDeviceProfile(t *testing.T) {
+	expectedApiVersion := v2.ApiVersion
+	expectedDeviceProfileName := TestDeviceProfileName
+
+	actual := NewDeviceProfile(expectedDeviceProfileName)
+
+	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+	assert.Equal(t, expectedDeviceProfileName, actual.Name)
+}

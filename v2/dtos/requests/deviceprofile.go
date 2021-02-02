@@ -102,3 +102,10 @@ func DeviceProfileReqToDeviceProfileModels(addRequests []DeviceProfileRequest) (
 	}
 	return DeviceProfiles
 }
+
+func NewDeviceProfileRequest(name string) DeviceProfileRequest {
+	return DeviceProfileRequest{
+		BaseRequest: common.NewBaseRequest(),
+		Profile:     dtos.NewDeviceProfile(name),
+	}
+}
