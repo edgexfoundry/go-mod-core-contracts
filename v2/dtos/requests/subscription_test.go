@@ -35,9 +35,11 @@ var (
 func addSubscriptionRequestData() AddSubscriptionRequest {
 	return AddSubscriptionRequest{
 		BaseRequest: common.BaseRequest{
-			RequestId: ExampleUUID,
+			RequestId:   ExampleUUID,
+			Versionable: common.NewVersionable(),
 		},
 		Subscription: dtos.Subscription{
+			Versionable:    common.NewVersionable(),
 			Name:           testSubscriptionName,
 			Categories:     testSubscriptionCategories,
 			Labels:         testSubscriptionLabels,
@@ -53,7 +55,8 @@ func addSubscriptionRequestData() AddSubscriptionRequest {
 func updateSubscriptionRequestData() UpdateSubscriptionRequest {
 	return UpdateSubscriptionRequest{
 		BaseRequest: common.BaseRequest{
-			RequestId: ExampleUUID,
+			RequestId:   ExampleUUID,
+			Versionable: common.NewVersionable(),
 		},
 		Subscription: updateSubscriptionData(),
 	}
@@ -70,6 +73,7 @@ func updateSubscriptionData() dtos.UpdateSubscription {
 	resendLimit := testSubscriptionResendLimit
 	resendInterval := testSubscriptionResendInterval
 	return dtos.UpdateSubscription{
+		Versionable:    common.NewVersionable(),
 		Id:             &id,
 		Name:           &name,
 		Categories:     categories,
