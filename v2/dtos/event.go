@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
@@ -55,7 +54,7 @@ func FromEventModelToDTO(event models.Event) Event {
 	}
 
 	return Event{
-		Versionable: common.Versionable{ApiVersion: v2.ApiVersion},
+		Versionable: common.NewVersionable(),
 		Id:          event.Id,
 		DeviceName:  event.DeviceName,
 		ProfileName: event.ProfileName,
