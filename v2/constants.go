@@ -61,6 +61,13 @@ const (
 	ApiProvisionWatcherByProfileNameRoute = ApiProvisionWatcherRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
 	ApiProvisionWatcherByServiceNameRoute = ApiProvisionWatcherRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
 
+	ApiSubscriptionRoute           = ApiBase + "/subscription"
+	ApiAllSubscriptionRoute        = ApiSubscriptionRoute + "/" + All
+	ApiSubscriptionByNameRoute     = ApiSubscriptionRoute + "/" + Name + "/{" + Name + "}"
+	ApiSubscriptionByCategoryRoute = ApiSubscriptionRoute + "/" + Category + "/{" + Category + "}"
+	ApiSubscriptionByLabelRoute    = ApiSubscriptionRoute + "/" + Label + "/{" + Label + "}"
+	ApiSubscriptionByReceiverRoute = ApiSubscriptionRoute + "/" + Receiver + "/{" + Receiver + "}"
+
 	ApiConfigRoute  = ApiBase + "/config"
 	ApiMetricsRoute = ApiBase + "/metrics"
 	ApiPingRoute    = ApiBase + "/ping"
@@ -108,11 +115,15 @@ const (
 	Manufacturer = "manufacturer"
 	Model        = "model"
 	ValueType    = "valueType"
-	Offset       = "offset"         //query string to specify the number of items to skip before starting to collect the result set.
-	Limit        = "limit"          //query string to specify the numbers of items to return
-	Labels       = "labels"         //query string to specify associated user-defined labels for querying a given object. More than one label may be specified via a comma-delimited list
-	PushEvent    = "ds-pushevent"   //query string to specify if an event should be pushed to the EdgeX system
-	ReturnEvent  = "ds-returnevent" //query string to specify if an event should be returned from device service
+	Category     = "category"
+	Receiver     = "receiver"
+	Subscription = "subscription"
+
+	Offset      = "offset"         //query string to specify the number of items to skip before starting to collect the result set.
+	Limit       = "limit"          //query string to specify the numbers of items to return
+	Labels      = "labels"         //query string to specify associated user-defined labels for querying a given object. More than one label may be specified via a comma-delimited list
+	PushEvent   = "ds-pushevent"   //query string to specify if an event should be pushed to the EdgeX system
+	ReturnEvent = "ds-returnevent" //query string to specify if an event should be returned from device service
 )
 
 // Constants related to the default value of query strings in the v2 service APIs
