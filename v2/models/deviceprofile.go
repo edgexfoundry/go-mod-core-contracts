@@ -17,6 +17,6 @@ type DeviceProfile struct {
 	Model           string
 	Labels          []string
 	DeviceResources []DeviceResource
-	DeviceCommands  []ProfileResource
+	DeviceCommands  []DeviceCommand
 	CoreCommands    []Command
 }
