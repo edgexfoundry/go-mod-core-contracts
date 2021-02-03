@@ -13,10 +13,10 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/responses"
 )
 
-// DeviceServiceCommandClient defines the interface for interactions with the device command endpoints on the EdgeX Foundry device service.
+// DeviceServiceCommandClient defines the interface for interactions with the device command endpoints on the EdgeX Foundry device services.
 type DeviceServiceCommandClient interface {
-	// ReadCommand invokes device service's command API for issuing read command
-	ReadCommand(ctx context.Context, deviceName string, commandName string, pushEvent string, returnEvent string) (responses.EventResponse, errors.EdgeX)
-	// WriteCommand invokes device service's command API for issuing write command
-	WriteCommand(ctx context.Context, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX)
+	// GetCommand invokes device service's command API for issuing get(read) command
+	GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, pushEvent string, returnEvent string) (responses.EventResponse, errors.EdgeX)
+	// SetCommand invokes device service's command API for issuing set(write) command
+	SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX)
 }

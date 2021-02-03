@@ -19,20 +19,20 @@ type DeviceServiceCommandClient struct {
 	mock.Mock
 }
 
-// ReadCommand provides a mock function with given fields: ctx, deviceName, commandName, pushEvent, returnEvent
-func (_m *DeviceServiceCommandClient) ReadCommand(ctx context.Context, deviceName string, commandName string, pushEvent string, returnEvent string) (responses.EventResponse, errors.EdgeX) {
-	ret := _m.Called(ctx, deviceName, commandName, pushEvent, returnEvent)
+// GetCommand provides a mock function with given fields: ctx, baseUrl, deviceName, commandName, pushEvent, returnEvent
+func (_m *DeviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, pushEvent string, returnEvent string) (responses.EventResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, baseUrl, deviceName, commandName, pushEvent, returnEvent)
 
 	var r0 responses.EventResponse
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, string, string) responses.EventResponse); ok {
-		r0 = rf(ctx, deviceName, commandName, pushEvent, returnEvent)
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, string, string, string) responses.EventResponse); ok {
+		r0 = rf(ctx, baseUrl, deviceName, commandName, pushEvent, returnEvent)
 	} else {
 		r0 = ret.Get(0).(responses.EventResponse)
 	}
 
 	var r1 errors.EdgeX
-	if rf, ok := ret.Get(1).(func(context.Context, string, string, string, string) errors.EdgeX); ok {
-		r1 = rf(ctx, deviceName, commandName, pushEvent, returnEvent)
+	if rf, ok := ret.Get(1).(func(context.Context, string, string, string, string, string) errors.EdgeX); ok {
+		r1 = rf(ctx, baseUrl, deviceName, commandName, pushEvent, returnEvent)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(errors.EdgeX)
@@ -42,20 +42,20 @@ func (_m *DeviceServiceCommandClient) ReadCommand(ctx context.Context, deviceNam
 	return r0, r1
 }
 
-// WriteCommand provides a mock function with given fields: ctx, deviceName, commandName, settings
-func (_m *DeviceServiceCommandClient) WriteCommand(ctx context.Context, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX) {
-	ret := _m.Called(ctx, deviceName, commandName, settings)
+// SetCommand provides a mock function with given fields: ctx, baseUrl, deviceName, commandName, settings
+func (_m *DeviceServiceCommandClient) SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, baseUrl, deviceName, commandName, settings)
 
 	var r0 common.BaseResponse
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, map[string]string) common.BaseResponse); ok {
-		r0 = rf(ctx, deviceName, commandName, settings)
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, string, map[string]string) common.BaseResponse); ok {
+		r0 = rf(ctx, baseUrl, deviceName, commandName, settings)
 	} else {
 		r0 = ret.Get(0).(common.BaseResponse)
 	}
 
 	var r1 errors.EdgeX
-	if rf, ok := ret.Get(1).(func(context.Context, string, string, map[string]string) errors.EdgeX); ok {
-		r1 = rf(ctx, deviceName, commandName, settings)
+	if rf, ok := ret.Get(1).(func(context.Context, string, string, string, map[string]string) errors.EdgeX); ok {
+		r1 = rf(ctx, baseUrl, deviceName, commandName, settings)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(errors.EdgeX)
