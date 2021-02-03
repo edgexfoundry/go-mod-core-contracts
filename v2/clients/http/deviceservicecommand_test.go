@@ -42,27 +42,27 @@ var testEventDTO = dtos.Event{
 	},
 }
 
-func TestReadCommand(t *testing.T) {
+func TestGetCommand(t *testing.T) {
 	requestId := uuid.New().String()
 	expectedResponse := responses.NewEventResponse(requestId, "", http.StatusOK, testEventDTO)
 	ts := newTestServer(http.MethodGet, v2.ApiDeviceRoute+"/"+v2.Name+"/"+TestDeviceName+"/"+TestCommandName, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCommandClient(ts.URL)
-	res, err := client.ReadCommand(context.Background(), TestDeviceName, TestCommandName, v2.ValueNo, v2.ValueYes)
+	client := NewDeviceServiceCommandClient()
+	res, err := client.GetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, v2.ValueNo, v2.ValueYes)
 
 	require.NoError(t, err)
 	assert.Equal(t, expectedResponse, res)
 }
 
-func TestWriteCommand(t *testing.T) {
+func TestSetCommand(t *testing.T) {
 	requestId := uuid.New().String()
 	expectedResponse := common.NewBaseResponse(requestId, "", http.StatusOK)
 	ts := newTestServer(http.MethodPut, v2.ApiDeviceRoute+"/"+v2.Name+"/"+TestDeviceName+"/"+TestCommandName, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCommandClient(ts.URL)
-	res, err := client.WriteCommand(context.Background(), TestDeviceName, TestCommandName, nil)
+	client := NewDeviceServiceCommandClient()
+	res, err := client.SetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, nil)
 
 	require.NoError(t, err)
 	assert.Equal(t, requestId, res.RequestId)
