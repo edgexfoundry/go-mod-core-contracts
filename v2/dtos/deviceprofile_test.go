@@ -31,8 +31,8 @@ var testDeviceProfile = models.DeviceProfile{
 			ReadWrite: "RW",
 		},
 	}},
-	DeviceCommands: []models.ProfileResource{{
-		Name: TestProfileResourceName,
+	DeviceCommands: []models.DeviceCommand{{
+		Name: TestDeviceCommandName,
 		Get: []models.ResourceOperation{{
 			DeviceResource: TestDeviceResourceName,
 		}},
@@ -41,7 +41,7 @@ var testDeviceProfile = models.DeviceProfile{
 		}},
 	}},
 	CoreCommands: []models.Command{{
-		Name: TestProfileResourceName,
+		Name: TestDeviceCommandName,
 		Get:  true,
 		Put:  true,
 	}},
@@ -65,8 +65,8 @@ func profileData() DeviceProfile {
 				ReadWrite: "RW",
 			},
 		}},
-		DeviceCommands: []ProfileResource{{
-			Name: TestProfileResourceName,
+		DeviceCommands: []DeviceCommand{{
+			Name: TestDeviceCommandName,
 			Get: []ResourceOperation{{
 				DeviceResource: TestDeviceResourceName,
 			}},
@@ -75,7 +75,7 @@ func profileData() DeviceProfile {
 			}},
 		}},
 		CoreCommands: []Command{{
-			Name: TestProfileResourceName,
+			Name: TestDeviceCommandName,
 			Get:  true,
 			Put:  true,
 		}},
@@ -94,10 +94,10 @@ func TestValidateDeviceProfileDTO(t *testing.T) {
 		duplicatedDeviceResource.DeviceResources, DeviceResource{Name: TestDeviceResourceName})
 	duplicatedDeviceCommand := profileData()
 	duplicatedDeviceCommand.DeviceCommands = append(
-		duplicatedDeviceCommand.DeviceCommands, ProfileResource{Name: TestProfileResourceName})
+		duplicatedDeviceCommand.DeviceCommands, DeviceCommand{Name: TestDeviceCommandName})
 	duplicatedCoreCommand := profileData()
 	duplicatedCoreCommand.CoreCommands = append(
-		duplicatedCoreCommand.CoreCommands, Command{Name: TestProfileResourceName})
+		duplicatedCoreCommand.CoreCommands, Command{Name: TestDeviceCommandName})
 	mismatchedCoreCommand := profileData()
 	mismatchedCoreCommand.CoreCommands = append(
 		mismatchedCoreCommand.CoreCommands, Command{Name: "missMatchedCoreCommand"})

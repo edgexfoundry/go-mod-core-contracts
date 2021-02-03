@@ -21,7 +21,7 @@ const (
 	TestDeviceResourceName = "TestDeviceResourceName"
 	TestTag                = "TestTag"
 
-	TestProfileResourceName = "TestProfileResource"
+	TestDeviceCommandName = "TestDeviceCommand"
 
 	TestReadingValue           = "45"
 	TestReadingFloatValue      = "3.14"

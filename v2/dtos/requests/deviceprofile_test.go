@@ -36,8 +36,8 @@ func profileData() DeviceProfileRequest {
 			ReadWrite: "RW",
 		},
 	}}
-	var testDeviceCommands = []dtos.ProfileResource{{
-		Name: TestProfileResourceName,
+	var testDeviceCommands = []dtos.DeviceCommand{{
+		Name: TestDeviceCommandName,
 		Get: []dtos.ResourceOperation{{
 			DeviceResource: TestDeviceResourceName,
 		}},
@@ -46,7 +46,7 @@ func profileData() DeviceProfileRequest {
 		}},
 	}}
 	var testCoreCommands = []dtos.Command{{
-		Name: TestProfileResourceName,
+		Name: TestDeviceCommandName,
 		Get:  true,
 		Put:  true,
 	}}
@@ -85,8 +85,8 @@ var expectedDeviceProfile = models.DeviceProfile{
 			ReadWrite: "RW",
 		},
 	}},
-	DeviceCommands: []models.ProfileResource{{
-		Name: TestProfileResourceName,
+	DeviceCommands: []models.DeviceCommand{{
+		Name: TestDeviceCommandName,
 		Get: []models.ResourceOperation{{
 			DeviceResource: TestDeviceResourceName,
 		}},
@@ -95,7 +95,7 @@ var expectedDeviceProfile = models.DeviceProfile{
 		}},
 	}},
 	CoreCommands: []models.Command{{
-		Name: TestProfileResourceName,
+		Name: TestDeviceCommandName,
 		Get:  true,
 		Put:  true,
 	}},

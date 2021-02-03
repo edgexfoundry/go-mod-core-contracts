@@ -17,15 +17,15 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceProfile
 type DeviceProfile struct {
 	common.Versionable `json:",inline"`
-	Id                 string            `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name               string            `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Manufacturer       string            `json:"manufacturer,omitempty" yaml:"manufacturer,omitempty"`
-	Description        string            `json:"description,omitempty" yaml:"description,omitempty"`
-	Model              string            `json:"model,omitempty" yaml:"model,omitempty"`
-	Labels             []string          `json:"labels,omitempty" yaml:"labels,flow,omitempty"`
-	DeviceResources    []DeviceResource  `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
-	DeviceCommands     []ProfileResource `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
-	CoreCommands       []Command         `json:"coreCommands,omitempty" yaml:"coreCommands,omitempty" validate:"dive"`
+	Id                 string           `json:"id,omitempty" validate:"omitempty,uuid"`
+	Name               string           `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Manufacturer       string           `json:"manufacturer,omitempty" yaml:"manufacturer,omitempty"`
+	Description        string           `json:"description,omitempty" yaml:"description,omitempty"`
+	Model              string           `json:"model,omitempty" yaml:"model,omitempty"`
+	Labels             []string         `json:"labels,omitempty" yaml:"labels,flow,omitempty"`
+	DeviceResources    []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
+	DeviceCommands     []DeviceCommand  `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
+	CoreCommands       []Command        `json:"coreCommands,omitempty" yaml:"coreCommands,omitempty" validate:"dive"`
 }
 
 // ToDeviceProfileModel transforms the DeviceProfile DTO to the DeviceProfile model
@@ -38,7 +38,7 @@ func ToDeviceProfileModel(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 		Model:           deviceProfileDTO.Model,
 		Labels:          deviceProfileDTO.Labels,
 		DeviceResources: ToDeviceResourceModels(deviceProfileDTO.DeviceResources),
-		DeviceCommands:  ToProfileResourceModels(deviceProfileDTO.DeviceCommands),
+		DeviceCommands:  ToDeviceCommandModels(deviceProfileDTO.DeviceCommands),
 		CoreCommands:    ToCommandModels(deviceProfileDTO.CoreCommands),
 	}
 }
@@ -54,7 +54,7 @@ func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfi
 		Model:           deviceProfile.Model,
 		Labels:          deviceProfile.Labels,
 		DeviceResources: FromDeviceResourceModelsToDTOs(deviceProfile.DeviceResources),
-		DeviceCommands:  FromProfileResourceModelsToDTOs(deviceProfile.DeviceCommands),
+		DeviceCommands:  FromDeviceCommandModelsToDTOs(deviceProfile.DeviceCommands),
 		CoreCommands:    FromCommandModelsToDTOs(deviceProfile.CoreCommands),
 	}
 }
@@ -121,7 +121,7 @@ func deviceResourcesContains(resources []DeviceResource, name string) bool {
 	return contains
 }
 
-func deviceCommandsContains(resources []ProfileResource, name string) bool {
+func deviceCommandsContains(resources []DeviceCommand, name string) bool {
 	contains := false
 	for _, resource := range resources {
 		if resource.Name == name {
