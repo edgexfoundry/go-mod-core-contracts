@@ -25,13 +25,14 @@ func NewDeviceServiceCommandClient() interfaces.DeviceServiceCommandClient {
 	return &deviceServiceCommandClient{}
 }
 
-func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, pushEvent string, returnEvent string) (responses.EventResponse, errors.EdgeX) {
+func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string) (responses.EventResponse, errors.EdgeX) {
 	var response responses.EventResponse
 	requestPath := path.Join(v2.ApiDeviceRoute, v2.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
-	queryParams := url.Values{}
-	queryParams.Set(v2.PushEvent, pushEvent)
-	queryParams.Set(v2.ReturnEvent, returnEvent)
-	err := utils.GetRequest(ctx, &response, baseUrl, requestPath, queryParams)
+	params, err := url.ParseQuery(queryParams)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &response, baseUrl, requestPath, params)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
