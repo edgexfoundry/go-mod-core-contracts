@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,7 +38,7 @@ type BaseResponse struct {
 
 // Versionable shows the API version in DTOs
 type Versionable struct {
-	ApiVersion string `json:"apiVersion" validate:"required"`
+	ApiVersion string `json:"apiVersion" yaml:"apiVersion" validate:"required"`
 }
 
 // BaseWithIdResponse defines the base content for response DTOs (data transfer objects).
