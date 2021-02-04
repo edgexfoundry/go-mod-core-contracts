@@ -1,8 +1,15 @@
+//
+// Copyright (C) 2021 IOTech Ltd
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package dtos
 
 import (
+	"gopkg.in/yaml.v2"
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
@@ -126,6 +133,59 @@ func TestValidateDeviceProfileDTO(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateDeviceProfileDTO(tt.profile)
 			if tt.expectError {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestDeviceProfileYaml_ValidateInlineApiVersion(t *testing.T) {
+	valid := `
+apiVersion: "v2"
+name: "Sample-Profile"
+deviceResources:
+  -  
+    name: "DeviceValue_Boolean_RW"
+    properties:
+      { type: "BOOL"}
+deviceCommands:
+  -  
+    name: "GenerateDeviceValue_Boolean_RW"
+    get:
+      - { deviceResource: "DeviceValue_Boolean_RW" }
+`
+	inValid := `
+name: "Sample-Profile"
+deviceResources:
+  -  
+    name: "DeviceValue_Boolean_RW"
+    properties:
+      { type: "BOOL"}
+deviceCommands:
+  -  
+    name: "GenerateDeviceValue_Boolean_RW"
+    get:
+      - { deviceResource: "DeviceValue_Boolean_RW" }
+`
+
+	tests := []struct {
+		name    string
+		data    []byte
+		wantErr bool
+	}{
+		{"valid device profile", []byte(valid), false},
+		{"without api version", []byte(inValid), true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var dp DeviceProfile
+			err := yaml.Unmarshal(tt.data, &dp)
+			require.NoError(t, err)
+			err = v2.Validate(dp)
+			if tt.wantErr {
 				require.Error(t, err)
 			} else {
 				require.NoError(t, err)

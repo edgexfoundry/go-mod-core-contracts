@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ import (
 // DeviceProfile and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceProfile
 type DeviceProfile struct {
-	common.Versionable `json:",inline"`
+	common.Versionable `json:",inline" yaml:",inline"`
 	Id                 string           `json:"id,omitempty" validate:"omitempty,uuid"`
 	Name               string           `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Manufacturer       string           `json:"manufacturer,omitempty" yaml:"manufacturer,omitempty"`
