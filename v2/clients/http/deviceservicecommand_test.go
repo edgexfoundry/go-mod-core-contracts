@@ -49,7 +49,7 @@ func TestGetCommand(t *testing.T) {
 	defer ts.Close()
 
 	client := NewDeviceServiceCommandClient()
-	res, err := client.GetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, v2.ValueNo, v2.ValueYes)
+	res, err := client.GetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, "")
 
 	require.NoError(t, err)
 	assert.Equal(t, expectedResponse, res)
@@ -62,7 +62,7 @@ func TestSetCommand(t *testing.T) {
 	defer ts.Close()
 
 	client := NewDeviceServiceCommandClient()
-	res, err := client.SetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, nil)
+	res, err := client.SetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, "", nil)
 
 	require.NoError(t, err)
 	assert.Equal(t, requestId, res.RequestId)
