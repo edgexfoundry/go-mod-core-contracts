@@ -62,7 +62,7 @@ func TestSetCommand(t *testing.T) {
 	defer ts.Close()
 
 	client := NewDeviceServiceCommandClient()
-	res, err := client.SetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, nil)
+	res, err := client.SetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, "", nil)
 
 	require.NoError(t, err)
 	assert.Equal(t, requestId, res.RequestId)

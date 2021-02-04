@@ -18,5 +18,5 @@ type DeviceServiceCommandClient interface {
 	// GetCommand invokes device service's command API for issuing get(read) command
 	GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string) (responses.EventResponse, errors.EdgeX)
 	// SetCommand invokes device service's command API for issuing set(write) command
-	SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX)
+	SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]string) (common.BaseResponse, errors.EdgeX)
 }

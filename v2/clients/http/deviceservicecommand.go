@@ -39,10 +39,10 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 	return response, nil
 }
 
-func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX) {
+func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]string) (common.BaseResponse, errors.EdgeX) {
 	var response common.BaseResponse
 	requestPath := path.Join(v2.ApiDeviceRoute, v2.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
-	err := utils.PutRequest(ctx, &response, baseUrl+requestPath, settings)
+	err := utils.PutRequest(ctx, &response, baseUrl+requestPath+"?"+queryParams, settings)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
