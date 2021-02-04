@@ -131,10 +131,3 @@ func deviceCommandsContains(resources []DeviceCommand, name string) bool {
 	}
 	return contains
 }
-
-func NewDeviceProfile(name string) DeviceProfile {
-	return DeviceProfile{
-		Versionable: common.NewVersionable(),
-		Name:        name,
-	}
-}

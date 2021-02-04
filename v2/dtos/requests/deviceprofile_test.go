@@ -239,11 +239,9 @@ func TestAddDeviceProfileReqToDeviceProfileModels(t *testing.T) {
 
 func TestNewDeviceProfileRequest(t *testing.T) {
 	expectedApiVersion := v2.ApiVersion
-	expectedDeviceProfileName := TestDeviceProfileName
 
-	actual := NewDeviceProfileRequest(expectedDeviceProfileName)
+	actual := NewDeviceProfileRequest(dtos.DeviceProfile{})
 
 	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
 	assert.Equal(t, expectedApiVersion, actual.Profile.ApiVersion)
-	assert.Equal(t, expectedDeviceProfileName, actual.Profile.Name)
 }

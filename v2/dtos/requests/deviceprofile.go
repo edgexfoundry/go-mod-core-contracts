@@ -103,9 +103,10 @@ func DeviceProfileReqToDeviceProfileModels(addRequests []DeviceProfileRequest) (
 	return DeviceProfiles
 }
 
-func NewDeviceProfileRequest(name string) DeviceProfileRequest {
+func NewDeviceProfileRequest(dto dtos.DeviceProfile) DeviceProfileRequest {
+	dto.Versionable = common.NewVersionable()
 	return DeviceProfileRequest{
 		BaseRequest: common.NewBaseRequest(),
-		Profile:     dtos.NewDeviceProfile(name),
+		Profile:     dto,
 	}
 }
