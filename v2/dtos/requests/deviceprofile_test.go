@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,6 @@ package requests
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
@@ -32,7 +31,7 @@ func profileData() DeviceProfileRequest {
 		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: dtos.PropertyValue{
-			Type:      v2.ValueTypeInt16,
+			ValueType: v2.ValueTypeInt16,
 			ReadWrite: "RW",
 		},
 	}}
@@ -81,7 +80,7 @@ var expectedDeviceProfile = models.DeviceProfile{
 		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: models.PropertyValue{
-			Type:      v2.ValueTypeInt16,
+			ValueType: v2.ValueTypeInt16,
 			ReadWrite: "RW",
 		},
 	}},
@@ -111,9 +110,9 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 	noDeviceResourceName := profileData()
 	noDeviceResourceName.Profile.DeviceResources[0].Name = emptyString
 	noDeviceResourcePropertyType := profileData()
-	noDeviceResourcePropertyType.Profile.DeviceResources[0].Properties.Type = emptyString
+	noDeviceResourcePropertyType.Profile.DeviceResources[0].Properties.ValueType = emptyString
 	invalidDeviceResourcePropertyType := profileData()
-	invalidDeviceResourcePropertyType.Profile.DeviceResources[0].Properties.Type = "BadType"
+	invalidDeviceResourcePropertyType.Profile.DeviceResources[0].Properties.ValueType = "BadType"
 	noCommandName := profileData()
 	noCommandName.Profile.CoreCommands[0].Name = emptyString
 	noEnabledCommand := profileData()
@@ -166,11 +165,11 @@ func TestAddDeviceProfile_UnmarshalJSON(t *testing.T) {
 	validData, err := json.Marshal(profileData())
 	require.NoError(t, err)
 	validValueTypeLowerCase := profileData()
-	validValueTypeLowerCase.Profile.DeviceResources[0].Properties.Type = "int16"
+	validValueTypeLowerCase.Profile.DeviceResources[0].Properties.ValueType = "int16"
 	validValueTypeLowerCaseData, err := json.Marshal(validValueTypeLowerCase)
 	require.NoError(t, err)
 	validValueTypeUpperCase := profileData()
-	validValueTypeUpperCase.Profile.DeviceResources[0].Properties.Type = "INT16"
+	validValueTypeUpperCase.Profile.DeviceResources[0].Properties.ValueType = "INT16"
 	validValueTypeUpperCaseData, err := json.Marshal(validValueTypeUpperCase)
 	require.NoError(t, err)
 
@@ -194,37 +193,6 @@ func TestAddDeviceProfile_UnmarshalJSON(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				assert.Equal(t, expected, dp, "Unmarshal did not result in expected DeviceProfileRequest.")
-			}
-		})
-	}
-}
-
-func TestAddDeviceProfile_UnmarshalYAML(t *testing.T) {
-	valid := profileData()
-	resultTestBytes, _ := yaml.Marshal(profileData())
-	type args struct {
-		data []byte
-	}
-	tests := []struct {
-		name     string
-		expected DeviceProfileRequest
-		args     args
-		wantErr  bool
-	}{
-		{"unmarshal DeviceProfileRequest with success", valid, args{resultTestBytes}, false},
-		{"unmarshal invalid DeviceProfileRequest, empty data", DeviceProfileRequest{}, args{[]byte{}}, true},
-		{"unmarshal invalid DeviceProfileRequest, string data", DeviceProfileRequest{}, args{[]byte("Invalid DeviceProfileRequest")}, true},
-	}
-	fmt.Println(string(resultTestBytes))
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			var dp DeviceProfileRequest
-			err := dp.UnmarshalYAML(tt.args.data)
-			if tt.wantErr {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-				assert.Equal(t, tt.expected, dp, "Unmarshal did not result in expected DeviceProfileRequest.")
 			}
 		})
 	}

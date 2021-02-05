@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,7 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 // PropertyValue and its properties care defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/PropertyValue
 type PropertyValue struct {
-	Type         string `json:"type" yaml:"type" validate:"required,edgex-dto-value-type"`
+	ValueType    string `json:"valueType" yaml:"valueType" validate:"required,edgex-dto-value-type"`
 	ReadWrite    string `json:"readWrite,omitempty" yaml:"readWrite,omitempty"`
 	Units        string `json:"units,omitempty" yaml:"units,omitempty"`
 	Minimum      string `json:"minimum,omitempty" yaml:"minimum,omitempty"`
@@ -28,7 +28,7 @@ type PropertyValue struct {
 // ToPropertyValueModel transforms the PropertyValue DTO to the PropertyValue model
 func ToPropertyValueModel(p PropertyValue) models.PropertyValue {
 	return models.PropertyValue{
-		Type:         p.Type,
+		ValueType:    p.ValueType,
 		ReadWrite:    p.ReadWrite,
 		Units:        p.Units,
 		Minimum:      p.Minimum,
@@ -47,7 +47,7 @@ func ToPropertyValueModel(p PropertyValue) models.PropertyValue {
 // FromPropertyValueModelToDTO transforms the PropertyValue Model to the PropertyValue DTO
 func FromPropertyValueModelToDTO(p models.PropertyValue) PropertyValue {
 	return PropertyValue{
-		Type:         p.Type,
+		ValueType:    p.ValueType,
 		ReadWrite:    p.ReadWrite,
 		Units:        p.Units,
 		Minimum:      p.Minimum,

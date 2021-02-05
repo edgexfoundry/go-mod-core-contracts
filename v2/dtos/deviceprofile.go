@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
@@ -26,6 +27,49 @@ type DeviceProfile struct {
 	DeviceResources    []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
 	DeviceCommands     []DeviceCommand  `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
 	CoreCommands       []Command        `json:"coreCommands,omitempty" yaml:"coreCommands,omitempty" validate:"dive"`
+}
+
+// Validate satisfies the Validator interface
+func (dp *DeviceProfile) Validate() error {
+	err := v2.Validate(dp)
+	if err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid DeviceProfile.", err)
+	}
+	return nil
+}
+
+// UnmarshalYAML implements the Unmarshaler interface for the DeviceProfile type
+func (dp *DeviceProfile) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var alias struct {
+		common.Versionable `yaml:",inline"`
+		Id                 string           `yaml:"id"`
+		Name               string           `yaml:"name"`
+		Manufacturer       string           `yaml:"manufacturer"`
+		Description        string           `yaml:"description"`
+		Model              string           `yaml:"model"`
+		Labels             []string         `yaml:"labels"`
+		DeviceResources    []DeviceResource `yaml:"deviceResources"`
+		DeviceCommands     []DeviceCommand  `yaml:"deviceCommands"`
+		CoreCommands       []Command        `yaml:"coreCommands"`
+	}
+	if err := unmarshal(&alias); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to unmarshal request body as YAML.", err)
+	}
+	*dp = DeviceProfile(alias)
+
+	if err := dp.Validate(); err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	// Normalize resource's value type
+	for i, resource := range dp.DeviceResources {
+		valueType, err := v2.NormalizeValueType(resource.Properties.ValueType)
+		if err != nil {
+			return errors.NewCommonEdgeXWrapper(err)
+		}
+		dp.DeviceResources[i].Properties.ValueType = valueType
+	}
+	return nil
 }
 
 // ToDeviceProfileModel transforms the DeviceProfile DTO to the DeviceProfile model

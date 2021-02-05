@@ -34,7 +34,7 @@ var testDeviceProfile = models.DeviceProfile{
 		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: models.PropertyValue{
-			Type:      "INT16",
+			ValueType: v2.ValueTypeInt16,
 			ReadWrite: "RW",
 		},
 	}},
@@ -68,7 +68,7 @@ func profileData() DeviceProfile {
 			Tag:         TestTag,
 			Attributes:  testAttributes,
 			Properties: PropertyValue{
-				Type:      "INT16",
+				ValueType: v2.ValueTypeInt16,
 				ReadWrite: "RW",
 			},
 		}},
@@ -149,7 +149,7 @@ deviceResources:
   -  
     name: "DeviceValue_Boolean_RW"
     properties:
-      { type: "BOOL"}
+      { valueType: "Bool"}
 deviceCommands:
   -  
     name: "GenerateDeviceValue_Boolean_RW"
@@ -162,7 +162,7 @@ deviceResources:
   -  
     name: "DeviceValue_Boolean_RW"
     properties:
-      { type: "BOOL"}
+      { valueType: "Bool"}
 deviceCommands:
   -  
     name: "GenerateDeviceValue_Boolean_RW"
@@ -183,12 +183,39 @@ deviceCommands:
 		t.Run(tt.name, func(t *testing.T) {
 			var dp DeviceProfile
 			err := yaml.Unmarshal(tt.data, &dp)
-			require.NoError(t, err)
-			err = v2.Validate(dp)
 			if tt.wantErr {
 				require.Error(t, err)
 			} else {
 				require.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestAddDeviceProfile_UnmarshalYAML(t *testing.T) {
+	valid := profileData()
+	resultTestBytes, _ := yaml.Marshal(profileData())
+	type args struct {
+		data []byte
+	}
+	tests := []struct {
+		name     string
+		expected DeviceProfile
+		args     args
+		wantErr  bool
+	}{
+		{"valid", valid, args{resultTestBytes}, false},
+		{"invalid", DeviceProfile{}, args{[]byte("Invalid DeviceProfile")}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var dp DeviceProfile
+			err := yaml.Unmarshal(tt.args.data, &dp)
+			if tt.wantErr {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				assert.Equal(t, tt.expected, dp, "Unmarshal did not result in expected DeviceProfileRequest.")
 			}
 		})
 	}
