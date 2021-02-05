@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ const (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/PropertyValue
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type PropertyValue struct {
-	Type         string
+	ValueType    string
 	ReadWrite    string
 	Units        string
 	Minimum      string
