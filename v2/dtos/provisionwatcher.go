@@ -59,6 +59,7 @@ func ToProvisionWatcherModel(dto ProvisionWatcher) models.ProvisionWatcher {
 // FromProvisionWatcherModelToDTO transforms the ProvisionWatcher Model to the ProvisionWatcher DTO
 func FromProvisionWatcherModelToDTO(pw models.ProvisionWatcher) ProvisionWatcher {
 	return ProvisionWatcher{
+		Versionable:         common.NewVersionable(),
 		Id:                  pw.Id,
 		Name:                pw.Name,
 		Labels:              pw.Labels,
@@ -75,6 +76,7 @@ func FromProvisionWatcherModelToDTO(pw models.ProvisionWatcher) ProvisionWatcher
 func FromProvisionWatcherModelToUpdateDTO(pw models.ProvisionWatcher) UpdateProvisionWatcher {
 	adminState := string(pw.AdminState)
 	return UpdateProvisionWatcher{
+		Versionable:         common.NewVersionable(),
 		Id:                  &pw.Id,
 		Name:                &pw.Name,
 		Labels:              pw.Labels,

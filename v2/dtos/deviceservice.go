@@ -70,6 +70,7 @@ func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 func FromDeviceServiceModelToUpdateDTO(ds models.DeviceService) UpdateDeviceService {
 	adminState := string(ds.AdminState)
 	return UpdateDeviceService{
+		Versionable: common.NewVersionable(),
 		Id:          &ds.Id,
 		Name:        &ds.Name,
 		BaseAddress: &ds.BaseAddress,

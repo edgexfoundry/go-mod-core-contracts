@@ -95,6 +95,7 @@ func FromDeviceModelToUpdateDTO(d models.Device) UpdateDevice {
 	adminState := string(d.AdminState)
 	operatingState := string(d.OperatingState)
 	return UpdateDevice{
+		Versionable:    common.NewVersionable(),
 		Id:             &d.Id,
 		Name:           &d.Name,
 		Description:    &d.Description,
