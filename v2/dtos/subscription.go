@@ -14,31 +14,31 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Subscription
 type Subscription struct {
 	common.Versionable `json:",inline"`
-	Id                 string    `json:"id" validate:"omitempty,uuid"`
+	Id                 string    `json:"id,omitempty" validate:"omitempty,uuid"`
 	Name               string    `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Channels           []Channel `json:"channels" validate:"required,gt=0,dive"`
 	Receiver           string    `json:"receiver" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Categories         []string  `json:"categories" validate:"omitempty,required_without=Labels,gt=0,dive,oneof='SECURITY' 'SW_HEALTH' 'HW_HEALTH'"`
-	Labels             []string  `json:"labels" validate:"omitempty,required_without=Categories,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Categories         []string  `json:"categories,omitempty" validate:"required_without=Labels,gt=0,dive,oneof='SECURITY' 'SW_HEALTH' 'HW_HEALTH'"`
+	Labels             []string  `json:"labels,omitempty" validate:"required_without=Categories,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Created            int64     `json:"created,omitempty"`
 	Modified           int64     `json:"modified,omitempty"`
 	Description        string    `json:"description,omitempty"`
 	ResendLimit        int64     `json:"resendLimit,omitempty"`
-	ResendInterval     string    `json:"resendInterval" validate:"omitempty,edgex-dto-frequency"`
+	ResendInterval     string    `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
 }
 
 // UpdateSubscription and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/UpdateSubscription
 type UpdateSubscription struct {
 	common.Versionable `json:",inline"`
-	Id                 *string   `json:"id" validate:"omitempty,required_without=Name,uuid"`
-	Name               *string   `json:"name" validate:"omitempty,required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Id                 *string   `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name               *string   `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Channels           []Channel `json:"channels" validate:"omitempty,dive"`
 	Receiver           *string   `json:"receiver" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Categories         []string  `json:"categories" validate:"omitempty,dive,oneof='SECURITY' 'SW_HEALTH' 'HW_HEALTH'"`
 	Labels             []string  `json:"labels" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Description        *string   `json:"description" validate:"omitempty"`
-	ResendLimit        *int64    `json:"resendLimit" validate:"omitempty"`
+	Description        *string   `json:"description"`
+	ResendLimit        *int64    `json:"resendLimit"`
 	ResendInterval     *string   `json:"resendInterval" validate:"omitempty,edgex-dto-frequency"`
 }
 
