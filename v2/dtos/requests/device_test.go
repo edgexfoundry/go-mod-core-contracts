@@ -71,6 +71,7 @@ func mockUpdateDevice() dtos.UpdateDevice {
 	testDeviceServiceName := TestDeviceServiceName
 	testProfileName := TestDeviceProfileName
 	d := dtos.UpdateDevice{}
+	d.Versionable = common.NewVersionable()
 	d.Id = &testId
 	d.Name = &testName
 	d.Description = &testDescription
@@ -365,7 +366,7 @@ func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
 		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"device":{"name":"TestDevice"}
+		"device":{"apiVersion":"v2", "name":"TestDevice"}
 	}`
 	var req UpdateDeviceRequest
 
@@ -392,6 +393,7 @@ func TestUpdateDeviceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"device":{
+			"apiVersion":"v2",
 			"name":"TestDevice",
 			"labels":[],
 			"autoEvents":[]

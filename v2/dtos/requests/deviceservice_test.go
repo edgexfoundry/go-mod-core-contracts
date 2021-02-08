@@ -46,6 +46,7 @@ func mockDeviceServiceDTO() dtos.UpdateDeviceService {
 	testBaseAddress := TestBaseAddress
 	testAdminState := models.Locked
 	ds := dtos.UpdateDeviceService{}
+	ds.Versionable = common.NewVersionable()
 	ds.Id = &testUUID
 	ds.Name = &testName
 	ds.BaseAddress = &testBaseAddress
@@ -283,6 +284,7 @@ func TestUpdateDeviceServiceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"service":{
+			"apiVersion":"v2",
 			"name":"TestDevice",
 			"labels":[]
 		}
