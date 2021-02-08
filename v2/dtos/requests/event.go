@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,14 +23,11 @@ type AddEventRequest struct {
 	Event              dtos.Event `json:"event" validate:"required"`
 }
 
-// NewAddRequest creates, initializes and returns an AddEventRequest which has no readings
-// Sample usage:
-//    request := NewAddRequest("myProfile", "myDevice")
-//    request.Event.AddSimpleReading("myInt32Resource", v2.ValueTypeInt32, int32(1234))
-func NewAddRequest(profileName string, deviceName string) AddEventRequest {
+// NewAddEventRequest creates, initializes and returns an AddEventRequests
+func NewAddEventRequest(event dtos.Event) AddEventRequest {
 	return AddEventRequest{
 		BaseRequest: common.NewBaseRequest(),
-		Event:       dtos.NewEvent(profileName, deviceName),
+		Event:       event,
 	}
 }
 
