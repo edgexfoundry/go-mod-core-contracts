@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
@@ -71,6 +72,7 @@ func mockUpdateDevice() dtos.UpdateDevice {
 	testDeviceServiceName := TestDeviceServiceName
 	testProfileName := TestDeviceProfileName
 	d := dtos.UpdateDevice{}
+	d.Versionable = common.NewVersionable()
 	d.Id = &testId
 	d.Name = &testName
 	d.Description = &testDescription
@@ -365,7 +367,7 @@ func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
 		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"device":{"name":"TestDevice"}
+		"device":{"apiVersion":"v2", "name":"TestDevice"}
 	}`
 	var req UpdateDeviceRequest
 
@@ -392,6 +394,7 @@ func TestUpdateDeviceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"device":{
+			"apiVersion":"v2",
 			"name":"TestDevice",
 			"labels":[],
 			"autoEvents":[]
@@ -427,4 +430,22 @@ func TestReplaceDeviceModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, testDeviceLocation, device.Location)
 	assert.Equal(t, dtos.ToAutoEventModels(testAutoEvents), device.AutoEvents)
 	assert.Equal(t, dtos.ToProtocolModels(testProtocols), device.Protocols)
+}
+
+func TestNewAddDeviceRequest(t *testing.T) {
+	expectedApiVersion := v2.ApiVersion
+
+	actual := NewAddDeviceRequest(dtos.Device{})
+
+	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+	assert.Equal(t, expectedApiVersion, actual.Device.ApiVersion)
+}
+
+func TestNewUpdateDeviceRequest(t *testing.T) {
+	expectedApiVersion := v2.ApiVersion
+
+	actual := NewUpdateDeviceRequest(dtos.UpdateDevice{})
+
+	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+	assert.Equal(t, expectedApiVersion, actual.Device.ApiVersion)
 }
