@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -100,5 +100,21 @@ func ReplaceDeviceServiceModelFieldsWithDTO(ds *models.DeviceService, patch dtos
 	}
 	if patch.BaseAddress != nil {
 		ds.BaseAddress = *patch.BaseAddress
+	}
+}
+
+func NewAddDeviceServiceRequest(dto dtos.DeviceService) AddDeviceServiceRequest {
+	dto.Versionable = common.NewVersionable()
+	return AddDeviceServiceRequest{
+		BaseRequest: common.NewBaseRequest(),
+		Service:     dto,
+	}
+}
+
+func NewUpdateDeviceServiceRequest(dto dtos.UpdateDeviceService) UpdateDeviceServiceRequest {
+	dto.Versionable = common.NewVersionable()
+	return UpdateDeviceServiceRequest{
+		BaseRequest: common.NewBaseRequest(),
+		Service:     dto,
 	}
 }

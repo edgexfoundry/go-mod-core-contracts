@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
@@ -429,4 +430,22 @@ func TestReplaceDeviceModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, testDeviceLocation, device.Location)
 	assert.Equal(t, dtos.ToAutoEventModels(testAutoEvents), device.AutoEvents)
 	assert.Equal(t, dtos.ToProtocolModels(testProtocols), device.Protocols)
+}
+
+func TestNewAddDeviceRequest(t *testing.T) {
+	expectedApiVersion := v2.ApiVersion
+
+	actual := NewAddDeviceRequest(dtos.Device{})
+
+	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+	assert.Equal(t, expectedApiVersion, actual.Device.ApiVersion)
+}
+
+func TestNewUpdateDeviceRequest(t *testing.T) {
+	expectedApiVersion := v2.ApiVersion
+
+	actual := NewUpdateDeviceRequest(dtos.UpdateDevice{})
+
+	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+	assert.Equal(t, expectedApiVersion, actual.Device.ApiVersion)
 }
