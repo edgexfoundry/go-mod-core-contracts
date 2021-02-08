@@ -52,6 +52,7 @@ func updateIntervalData() dtos.UpdateInterval {
 	testFrequency := TestIntervalFrequency
 	testRunOnce := TestIntervalRunOnce
 	dto := dtos.UpdateInterval{}
+	dto.Versionable = common.NewVersionable()
 	dto.Id = &testId
 	dto.Name = &testName
 	dto.Start = &testStart
@@ -234,7 +235,7 @@ func TestUpdateIntervalRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
 		"apiVersion" : "v2",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"interval":{"name":"TestInterval"}
+		"interval":{"apiVersion":"v2", "name":"TestInterval"}
 	}`
 	var req UpdateIntervalRequest
 

@@ -108,3 +108,19 @@ func ReplaceSubscriptionModelFieldsWithDTO(s *models.Subscription, patch dtos.Up
 		s.Receiver = *patch.Receiver
 	}
 }
+
+func NewAddSubscriptionRequest(dto dtos.Subscription) AddSubscriptionRequest {
+	dto.Versionable = common.NewVersionable()
+	return AddSubscriptionRequest{
+		BaseRequest:  common.NewBaseRequest(),
+		Subscription: dto,
+	}
+}
+
+func NewUpdateSubscriptionRequest(dto dtos.UpdateSubscription) UpdateSubscriptionRequest {
+	dto.Versionable = common.NewVersionable()
+	return UpdateSubscriptionRequest{
+		BaseRequest:  common.NewBaseRequest(),
+		Subscription: dto,
+	}
+}
