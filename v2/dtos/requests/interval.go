@@ -105,3 +105,19 @@ func ReplaceIntervalModelFieldsWithDTO(interval *models.Interval, patch dtos.Upd
 		interval.RunOnce = *patch.RunOnce
 	}
 }
+
+func NewAddIntervalRequest(dto dtos.Interval) AddIntervalRequest {
+	dto.Versionable = common.NewVersionable()
+	return AddIntervalRequest{
+		BaseRequest: common.NewBaseRequest(),
+		Interval:    dto,
+	}
+}
+
+func NewUpdateIntervalRequest(dto dtos.UpdateInterval) UpdateIntervalRequest {
+	dto.Versionable = common.NewVersionable()
+	return UpdateIntervalRequest{
+		BaseRequest: common.NewBaseRequest(),
+		Interval:    dto,
+	}
+}
