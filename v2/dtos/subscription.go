@@ -79,6 +79,7 @@ func ToSubscriptionModels(subs []Subscription) []models.Subscription {
 // FromSubscriptionModelToDTO transforms the Subscription Model to the Subscription DTO
 func FromSubscriptionModelToDTO(s models.Subscription) Subscription {
 	return Subscription{
+		Versionable:    common.NewVersionable(),
 		Categories:     FromCategoryModelsToStrings(s.Categories),
 		Labels:         s.Labels,
 		Channels:       FromChannelModelsToDTOs(s.Channels),
