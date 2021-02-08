@@ -11,5 +11,5 @@ package models
 type Command struct {
 	Name string
 	Get  bool
-	Put  bool
+	Set  bool
 }
