@@ -47,7 +47,7 @@ func profileData() DeviceProfileRequest {
 	var testCoreCommands = []dtos.Command{{
 		Name: TestDeviceCommandName,
 		Get:  true,
-		Put:  true,
+		Set:  true,
 	}}
 	return DeviceProfileRequest{
 		BaseRequest: common.BaseRequest{
@@ -96,7 +96,7 @@ var expectedDeviceProfile = models.DeviceProfile{
 	CoreCommands: []models.Command{{
 		Name: TestDeviceCommandName,
 		Get:  true,
-		Put:  true,
+		Set:  true,
 	}},
 }
 
@@ -117,7 +117,7 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 	noCommandName.Profile.CoreCommands[0].Name = emptyString
 	noEnabledCommand := profileData()
 	noEnabledCommand.Profile.CoreCommands[0].Get = false
-	noEnabledCommand.Profile.CoreCommands[0].Put = false
+	noEnabledCommand.Profile.CoreCommands[0].Set = false
 
 	tests := []struct {
 		name          string

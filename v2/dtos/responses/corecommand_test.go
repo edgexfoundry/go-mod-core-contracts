@@ -18,8 +18,8 @@ func TestNewMultiCoreCommandsResponse(t *testing.T) {
 	expectedStatusCode := http.StatusOK
 	expectedMessage := "unit test message"
 	expectedCommands := []dtos.CoreCommand{
-		{Name: "testCommand1", DeviceName: "testDevice1", Get: true, Put: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
-		{Name: "testCommand2", DeviceName: "testDevice1", Get: false, Put: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
+		{Name: "testCommand1", DeviceName: "testDevice1", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
+		{Name: "testCommand2", DeviceName: "testDevice1", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
 	}
 	actual := NewMultiCoreCommandsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedCommands)
 

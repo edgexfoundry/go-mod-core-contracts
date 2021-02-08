@@ -50,7 +50,7 @@ var testDeviceProfile = models.DeviceProfile{
 	CoreCommands: []models.Command{{
 		Name: TestDeviceCommandName,
 		Get:  true,
-		Put:  true,
+		Set:  true,
 	}},
 }
 
@@ -84,7 +84,7 @@ func profileData() DeviceProfile {
 		CoreCommands: []Command{{
 			Name: TestDeviceCommandName,
 			Get:  true,
-			Put:  true,
+			Set:  true,
 		}},
 	}
 }
