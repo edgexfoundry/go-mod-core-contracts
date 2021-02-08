@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,26 +12,30 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func eventRequestData() AddEventRequest {
-	request := NewAddRequest(TestDeviceProfileName, TestDeviceName)
-	request.RequestId = ExampleUUID
-	request.Event.Id = ExampleUUID
-	request.Event.Origin = TestOriginTime
-	request.Event.Tags = map[string]string{
+func eventData() dtos.Event {
+	event := dtos.NewEvent(TestDeviceProfileName, TestDeviceName)
+	event.Id = ExampleUUID
+	event.Origin = TestOriginTime
+	event.Tags = map[string]string{
 		"GatewayId": "Houston-0001",
 	}
-
 	value, _ := strconv.ParseUint(TestReadingValue, 10, 8)
-	_ = request.Event.AddSimpleReading(TestDeviceResourceName, v2.ValueTypeUint8, uint8(value))
-	request.Event.Readings[0].Id = ExampleUUID
-	request.Event.Readings[0].Origin = TestOriginTime
+	_ = event.AddSimpleReading(TestDeviceResourceName, v2.ValueTypeUint8, uint8(value))
+	event.Readings[0].Id = ExampleUUID
+	event.Readings[0].Origin = TestOriginTime
 
+	return event
+}
+
+func eventRequestData() AddEventRequest {
+	request := NewAddEventRequest(eventData())
 	return request
 }
 
@@ -179,13 +183,18 @@ func TestAddEventRequest_Validate(t *testing.T) {
 
 func TestAddEvent_UnmarshalJSON(t *testing.T) {
 	expected := eventRequestData()
-	validData, err := json.Marshal(eventRequestData())
+	expected.RequestId = ExampleUUID
+	validData, err := json.Marshal(expected)
 	require.NoError(t, err)
+
 	validValueTypeLowerCase := eventRequestData()
+	validValueTypeLowerCase.RequestId = ExampleUUID
 	validValueTypeLowerCase.Event.Readings[0].ValueType = "uint8"
 	validValueTypeLowerCaseData, err := json.Marshal(validValueTypeLowerCase)
 	require.NoError(t, err)
+
 	validValueTypeUpperCase := eventRequestData()
+	validValueTypeUpperCase.RequestId = ExampleUUID
 	validValueTypeUpperCase.Event.Readings[0].ValueType = "UINT8"
 	validValueTypeUpperCaseData, err := json.Marshal(validValueTypeUpperCase)
 	require.NoError(t, err)
@@ -253,12 +262,12 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 	}
 }
 
-func TestNewAddRequest(t *testing.T) {
+func TestNewAddEventRequest(t *testing.T) {
 	expectedProfileName := TestDeviceProfileName
 	expectedDeviceName := TestDeviceName
 	expectedApiVersion := v2.ApiVersion
 
-	actual := NewAddRequest(expectedProfileName, expectedDeviceName)
+	actual := NewAddEventRequest(eventData())
 
 	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
 	assert.NotEmpty(t, actual.RequestId)
@@ -266,7 +275,7 @@ func TestNewAddRequest(t *testing.T) {
 	assert.NotEmpty(t, actual.Event.Id)
 	assert.Equal(t, expectedProfileName, actual.Event.ProfileName)
 	assert.Equal(t, expectedDeviceName, actual.Event.DeviceName)
-	assert.Zero(t, len(actual.Event.Readings))
+	assert.NotZero(t, len(actual.Event.Readings))
 	assert.Zero(t, actual.Event.Created)
 	assert.NotZero(t, actual.Event.Origin)
 }
