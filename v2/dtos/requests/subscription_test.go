@@ -300,3 +300,21 @@ func TestUpdateSubscriptionRequest_UnmarshalJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestReplaceSubscriptionModelFieldsWithDTO(t *testing.T) {
+	subscription := models.Subscription{
+		Id:   "7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
+		Name: "name",
+	}
+	patch := updateSubscriptionData()
+
+	ReplaceSubscriptionModelFieldsWithDTO(&subscription, patch)
+
+	assert.Equal(t, dtos.ToCategoryModels(testSubscriptionCategories), subscription.Categories)
+	assert.Equal(t, testSubscriptionLabels, subscription.Labels)
+	assert.Equal(t, dtos.ToChannelModels(testSubscriptionChannels), subscription.Channels)
+	assert.Equal(t, testSubscriptionDescription, subscription.Description)
+	assert.Equal(t, testSubscriptionReceiver, subscription.Receiver)
+	assert.Equal(t, testSubscriptionResendLimit, subscription.ResendLimit)
+	assert.Equal(t, testSubscriptionResendInterval, subscription.ResendInterval)
+}
