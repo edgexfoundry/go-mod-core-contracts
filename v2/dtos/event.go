@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,7 @@ type Event struct {
 	Id                 string            `json:"id" validate:"required,uuid"`
 	DeviceName         string            `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ProfileName        string            `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	Created            int64             `json:"created"`
+	Created            int64             `json:"created,omitempty"`
 	Origin             int64             `json:"origin" validate:"required"`
 	Readings           []BaseReading     `json:"readings" validate:"gt=0,dive,required"`
 	Tags               map[string]string `json:"tags,omitempty" xml:"-"` // Have to ignore since map not supported for XML

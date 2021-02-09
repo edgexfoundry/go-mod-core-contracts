@@ -20,7 +20,7 @@ type Interval struct {
 	Name               string `json:"name" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Start              string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	End                string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
-	Frequency          string `json:"frequency,omitempty" validate:"required,edgex-dto-frequency"`
+	Frequency          string `json:"frequency" validate:"required,edgex-dto-frequency"`
 	RunOnce            bool   `json:"runOnce,omitempty"`
 }
 
@@ -30,10 +30,10 @@ type UpdateInterval struct {
 	common.Versionable `json:",inline"`
 	Id                 *string `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name               *string `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Start              *string `json:"start" validate:"omitempty,edgex-dto-interval-datetime"`
-	End                *string `json:"end" validate:"omitempty,edgex-dto-interval-datetime"`
-	Frequency          *string `json:"frequency" validate:"omitempty,edgex-dto-frequency"`
-	RunOnce            *bool   `json:"runOnce" validate:"omitempty"`
+	Start              *string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
+	End                *string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
+	Frequency          *string `json:"frequency,omitempty" validate:"omitempty,edgex-dto-frequency"`
+	RunOnce            *bool   `json:"runOnce,omitempty"`
 }
 
 // ToIntervalModel transforms the Interval DTO to the Interval Model

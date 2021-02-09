@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,8 +25,8 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseReading
 type BaseReading struct {
 	common.Versionable `json:",inline"`
-	Id                 string `json:"id"`
-	Created            int64  `json:"created"`
+	Id                 string `json:"id,omitempty"`
+	Created            int64  `json:"created,omitempty"`
 	Origin             int64  `json:"origin" validate:"required"`
 	DeviceName         string `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ResourceName       string `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`

@@ -28,7 +28,7 @@ type Device struct {
 	ServiceName        string                        `json:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	ProfileName        string                        `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	AutoEvents         []AutoEvent                   `json:"autoEvents,omitempty" validate:"dive"`
-	Protocols          map[string]ProtocolProperties `json:"protocols,omitempty" validate:"required,gt=0"`
+	Protocols          map[string]ProtocolProperties `json:"protocols" validate:"required,gt=0"`
 }
 
 // UpdateDevice and its properties are defined in the APIv2 specification:
@@ -37,18 +37,18 @@ type UpdateDevice struct {
 	common.Versionable `json:",inline"`
 	Id                 *string                       `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name               *string                       `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Description        *string                       `json:"description" validate:"omitempty,edgex-dto-none-empty-string"`
-	AdminState         *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
-	OperatingState     *string                       `json:"operatingState" validate:"omitempty,oneof='UP' 'DOWN' 'UNKNOWN'"`
-	LastConnected      *int64                        `json:"lastConnected"`
-	LastReported       *int64                        `json:"lastReported"`
-	ServiceName        *string                       `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ProfileName        *string                       `json:"profileName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Labels             []string                      `json:"labels"`
-	Location           interface{}                   `json:"location"`
-	AutoEvents         []AutoEvent                   `json:"autoEvents" validate:"dive"`
-	Protocols          map[string]ProtocolProperties `json:"protocols" validate:"omitempty,gt=0"`
-	Notify             *bool                         `json:"notify"`
+	Description        *string                       `json:"description,omitempty" validate:"omitempty,edgex-dto-none-empty-string"`
+	AdminState         *string                       `json:"adminState,omitempty" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	OperatingState     *string                       `json:"operatingState,omitempty" validate:"omitempty,oneof='UP' 'DOWN' 'UNKNOWN'"`
+	LastConnected      *int64                        `json:"lastConnected,omitempty"`
+	LastReported       *int64                        `json:"lastReported,omitempty"`
+	ServiceName        *string                       `json:"serviceName,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName        *string                       `json:"profileName,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Labels             []string                      `json:"labels,omitempty"`
+	Location           interface{}                   `json:"location,omitempty"`
+	AutoEvents         []AutoEvent                   `json:"autoEvents,omitempty" validate:"dive"`
+	Protocols          map[string]ProtocolProperties `json:"protocols,omitempty" validate:"omitempty,gt=0"`
+	Notify             *bool                         `json:"notify,omitempty"`
 }
 
 // ToDeviceModel transforms the Device DTO to the Device Model
