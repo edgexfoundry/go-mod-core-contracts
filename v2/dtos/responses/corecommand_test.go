@@ -13,18 +13,52 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewMultiCoreCommandsResponse(t *testing.T) {
+func TestNewDeviceCoreCommandResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := http.StatusOK
 	expectedMessage := "unit test message"
-	expectedCommands := []dtos.CoreCommand{
-		{Name: "testCommand1", DeviceName: "testDevice1", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
-		{Name: "testCommand2", DeviceName: "testDevice1", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
+	expectedDeviceCoreCommand := dtos.DeviceCoreCommand{
+		DeviceName:  "testDevice1",
+		ProfileName: "testProfile",
+		CoreCommands: []dtos.CoreCommand{
+			{Name: "testCommand1", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
+			{Name: "testCommand2", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
+		},
 	}
-	actual := NewMultiCoreCommandsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedCommands)
+	actual := NewDeviceCoreCommandResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDeviceCoreCommand)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
-	assert.Equal(t, expectedCommands, actual.CoreCommands)
+	assert.Equal(t, expectedDeviceCoreCommand, actual.DeviceCoreCommand)
+}
+
+func TestNewMultiDeviceCoreCommandsResponse(t *testing.T) {
+	expectedRequestId := "123456"
+	expectedStatusCode := http.StatusOK
+	expectedMessage := "unit test message"
+	expectedDeviceCoreCommands := []dtos.DeviceCoreCommand{
+		dtos.DeviceCoreCommand{
+			DeviceName:  "testDevice1",
+			ProfileName: "testProfile",
+			CoreCommands: []dtos.CoreCommand{
+				{Name: "testCommand1", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
+				{Name: "testCommand2", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
+			},
+		},
+		dtos.DeviceCoreCommand{
+			DeviceName:  "testDevice2",
+			ProfileName: "testProfile",
+			CoreCommands: []dtos.CoreCommand{
+				{Name: "testCommand3", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
+				{Name: "testCommand4", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
+			},
+		},
+	}
+	actual := NewMultiDeviceCoreCommandsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDeviceCoreCommands)
+
+	assert.Equal(t, expectedRequestId, actual.RequestId)
+	assert.Equal(t, expectedStatusCode, actual.StatusCode)
+	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedDeviceCoreCommands, actual.DeviceCoreCommands)
 }

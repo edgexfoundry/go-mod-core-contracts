@@ -10,17 +10,32 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 )
 
-// MultiCoreCommandsResponse defines the Response Content for GET multiple CoreCommand DTOs.
-// This object and its properties correspond to the MultiCoreCommandsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.x#/MultiCoreCommandsResponse
-type MultiCoreCommandsResponse struct {
+// DeviceCoreCommandResponse defines the Response Content for GET DeviceCoreCommand DTO.
+// This object and its properties correspond to the DeviceCoreCommandResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.x#/DeviceCoreCommandResponse
+type DeviceCoreCommandResponse struct {
 	common.BaseResponse `json:",inline"`
-	CoreCommands        []dtos.CoreCommand `json:"coreCommands"`
+	DeviceCoreCommand   dtos.DeviceCoreCommand `json:"deviceCoreCommand"`
 }
 
-func NewMultiCoreCommandsResponse(requestId string, message string, statusCode int, commands []dtos.CoreCommand) MultiCoreCommandsResponse {
-	return MultiCoreCommandsResponse{
-		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
-		CoreCommands: commands,
+func NewDeviceCoreCommandResponse(requestId string, message string, statusCode int, deviceCoreCommand dtos.DeviceCoreCommand) DeviceCoreCommandResponse {
+	return DeviceCoreCommandResponse{
+		BaseResponse:      common.NewBaseResponse(requestId, message, statusCode),
+		DeviceCoreCommand: deviceCoreCommand,
+	}
+}
+
+// MultiDeviceCoreCommandsResponse defines the Response Content for GET multiple DeviceCoreCommand DTOs.
+// This object and its properties correspond to the MultiDeviceCoreCommandsResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.x#/MultiDeviceCoreCommandsResponse
+type MultiDeviceCoreCommandsResponse struct {
+	common.BaseResponse `json:",inline"`
+	DeviceCoreCommands  []dtos.DeviceCoreCommand `json:"deviceCoreCommands"`
+}
+
+func NewMultiDeviceCoreCommandsResponse(requestId string, message string, statusCode int, commands []dtos.DeviceCoreCommand) MultiDeviceCoreCommandsResponse {
+	return MultiDeviceCoreCommandsResponse{
+		BaseResponse:       common.NewBaseResponse(requestId, message, statusCode),
+		DeviceCoreCommands: commands,
 	}
 }
