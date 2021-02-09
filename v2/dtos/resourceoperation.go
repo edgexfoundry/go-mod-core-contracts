@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,8 +11,8 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ResourceOperation
 type ResourceOperation struct {
 	DeviceResource string            `json:"deviceResource" yaml:"deviceResource" validate:"required"` // The replacement of Object field
-	Parameter      string            `json:"parameter" yaml:"parameter,omitempty"`
-	Mappings       map[string]string `json:"mappings" yaml:"mappings,omitempty"`
+	Parameter      string            `json:"parameter,omitempty" yaml:"parameter,omitempty"`
+	Mappings       map[string]string `json:"mappings,omitempty" yaml:"mappings,omitempty"`
 }
 
 // ToResourceOperationModel transforms the ResourceOperation DTO to the ResourceOperation model

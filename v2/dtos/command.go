@@ -11,8 +11,8 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Command
 type Command struct {
 	Name string `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Get  bool   `json:"get" yaml:"get,omitempty" validate:"required_without=Set"`
-	Set  bool   `json:"set" yaml:"set,omitempty" validate:"required_without=Get"`
+	Get  bool   `json:"get,omitempty" yaml:"get,omitempty" validate:"required_without=Set"`
+	Set  bool   `json:"set,omitempty" yaml:"set,omitempty" validate:"required_without=Get"`
 }
 
 // ToCommandModel transforms the Command DTO to the Command model
