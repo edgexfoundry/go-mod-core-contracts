@@ -107,6 +107,12 @@ func ReplaceSubscriptionModelFieldsWithDTO(s *models.Subscription, patch dtos.Up
 	if patch.Receiver != nil {
 		s.Receiver = *patch.Receiver
 	}
+	if patch.ResendLimit != nil {
+		s.ResendLimit = *patch.ResendLimit
+	}
+	if patch.ResendInterval != nil {
+		s.ResendInterval = *patch.ResendInterval
+	}
 }
 
 func NewAddSubscriptionRequest(dto dtos.Subscription) AddSubscriptionRequest {
