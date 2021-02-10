@@ -6,9 +6,6 @@
 package dtos
 
 import (
-	"bytes"
-	"encoding/base64"
-	"encoding/binary"
 	"fmt"
 	"reflect"
 	"strings"
@@ -171,11 +168,7 @@ func convertFloatValue(valueType string, kind reflect.Kind, value interface{}) (
 		return "", err
 	}
 
-	buf := new(bytes.Buffer)
-	if err := binary.Write(buf, binary.BigEndian, value); err != nil {
-		return "", err
-	}
-	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
+	return fmt.Sprintf("%e", value), nil
 }
 
 func convertSimpleArrayValue(valueType string, kind reflect.Kind, value interface{}) (string, error) {

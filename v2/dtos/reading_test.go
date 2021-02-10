@@ -118,8 +118,8 @@ func TestNewSimpleReading(t *testing.T) {
 		{"Simple int16", v2.ValueTypeInt16, int16(-12345), "-12345"},
 		{"Simple int32", v2.ValueTypeInt32, int32(-1234567890), "-1234567890"},
 		{"Simple int64", v2.ValueTypeInt64, int64(-1234567890987654321), "-1234567890987654321"},
-		{"Simple Float32", v2.ValueTypeFloat32, float32(123.456), "QvbpeQ=="},
-		{"Simple Float64", v2.ValueTypeFloat64, float64(123456789.0987654321), "QZ1vNFRlIsQ="},
+		{"Simple Float32", v2.ValueTypeFloat32, float32(123.456), "1.234560e+02"},
+		{"Simple Float64", v2.ValueTypeFloat64, float64(123456789.0987654321), "1.234568e+08"},
 		{"Simple Boolean Array", v2.ValueTypeBoolArray, []bool{true, false}, "[true, false]"},
 		{"Simple String Array", v2.ValueTypeStringArray, []string{"hello", "world"}, "[hello, world]"},
 		{"Simple Uint8 Array", v2.ValueTypeUint8Array, []uint8{123, 21}, "[123, 21]"},
@@ -130,8 +130,8 @@ func TestNewSimpleReading(t *testing.T) {
 		{"Simple Int16 Array", v2.ValueTypeInt16Array, []int16{-12345, 12345}, "[-12345, 12345]"},
 		{"Simple Int32 Array", v2.ValueTypeInt32Array, []int32{-1234567890, 1234567890}, "[-1234567890, 1234567890]"},
 		{"Simple Int64 Array", v2.ValueTypeInt64Array, []int64{-1234567890987654321, 1234567890987654321}, "[-1234567890987654321, 1234567890987654321]"},
-		{"Simple Float32 Array", v2.ValueTypeFloat32Array, []float32{123.456, -654.321}, "[QvbpeQ==, xCOUiw=="},
-		{"Simple Float64 Array", v2.ValueTypeFloat64Array, []float64{123456789.0987654321, -987654321.123456789}, "[QZ1vNFRlIsQ=, wc1vNFiPzW8="},
+		{"Simple Float32 Array", v2.ValueTypeFloat32Array, []float32{123.456, -654.321}, "[1.234560e+02, -6.543210e+02"},
+		{"Simple Float64 Array", v2.ValueTypeFloat64Array, []float64{123456789.0987654321, -987654321.123456789}, "[1.234568e+08, -9.876543e+08"},
 	}
 
 	for _, tt := range tests {
