@@ -102,7 +102,7 @@ func TestEvent_AddSimpleReading(t *testing.T) {
 		value        string
 	}{
 		{int32(12345), "myInt32", v2.ValueTypeInt32, "12345"},
-		{float32(12345.4567), "myFloat32", v2.ValueTypeFloat32, "RkDl1A=="},
+		{float32(12345.4567), "myFloat32", v2.ValueTypeFloat32, "1.234546e+04"},
 		{[]bool{false, true, false}, "myBoolArray", v2.ValueTypeBoolArray, "[false, true, false]"},
 	}
 	expectedReadingsCount := len(expectedReadingDetails)
