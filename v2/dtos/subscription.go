@@ -18,8 +18,8 @@ type Subscription struct {
 	Name               string    `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Channels           []Channel `json:"channels" validate:"required,gt=0,dive"`
 	Receiver           string    `json:"receiver" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Categories         []string  `json:"categories,omitempty" validate:"required_without=Labels,gt=0,dive,oneof='SECURITY' 'SW_HEALTH' 'HW_HEALTH'"`
-	Labels             []string  `json:"labels,omitempty" validate:"required_without=Categories,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Categories         []string  `json:"categories,omitempty" validate:"required_without=Labels,omitempty,gt=0,dive,oneof='SECURITY' 'SW_HEALTH' 'HW_HEALTH'"`
+	Labels             []string  `json:"labels,omitempty" validate:"required_without=Categories,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Created            int64     `json:"created,omitempty"`
 	Modified           int64     `json:"modified,omitempty"`
 	Description        string    `json:"description,omitempty"`
