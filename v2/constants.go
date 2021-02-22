@@ -79,6 +79,14 @@ const (
 	ApiNotificationByStatusRoute           = ApiNotificationRoute + "/" + Status + "/{" + Status + "}"
 	ApiNotificationBySubscriptionNameRoute = ApiNotificationRoute + "/" + Subscription + "/" + Name + "/{" + Name + "}"
 
+	ApiTransmissionRoute                   = ApiBase + "/transmission"
+	ApiTransmissionByIdRoute               = ApiTransmissionRoute + "/" + Id + "/{" + Id + "}"
+	ApiTransmissionByAgeRoute              = ApiTransmissionRoute + "/" + "/" + Age + "/{" + Age + "}"
+	ApiAllTransmissionRoute                = ApiTransmissionRoute + "/" + All
+	ApiTransmissionBySubscriptionNameRoute = ApiTransmissionRoute + "/" + Subscription + "/" + Name + "/{" + Name + "}"
+	ApiTransmissionByTimeRangeRoute        = ApiTransmissionRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiTransmissionByStatusRoute           = ApiTransmissionRoute + "/" + Status + "/{" + Status + "}"
+
 	ApiConfigRoute  = ApiBase + "/config"
 	ApiMetricsRoute = ApiBase + "/metrics"
 	ApiPingRoute    = ApiBase + "/ping"
