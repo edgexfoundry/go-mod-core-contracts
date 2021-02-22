@@ -114,9 +114,13 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 		{Type: models.Rest, Url: "http127.0.0.1"},
 	}
 
+	noCategories := addSubscriptionRequestData()
+	noCategories.Subscription.Categories = nil
+	noLabels := addSubscriptionRequestData()
+	noLabels.Subscription.Labels = nil
 	noCategoriesAndLabels := addSubscriptionRequestData()
-	noCategoriesAndLabels.Subscription.Categories = []string{}
-	noCategoriesAndLabels.Subscription.Labels = []string{}
+	noCategoriesAndLabels.Subscription.Categories = nil
+	noCategoriesAndLabels.Subscription.Labels = nil
 	invalidCategory := addSubscriptionRequestData()
 	invalidCategory.Subscription.Categories = []string{unsupportedCategory}
 
@@ -135,6 +139,8 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 	}{
 		{"valid", valid, false},
 		{"valid, no request ID", noReqId, false},
+		{"valid, no categories specified", noCategories, false},
+		{"valid, no labels specified", noLabels, false},
 		{"invalid, request ID is not an UUID", invalidReqId, true},
 		{"invalid, no subscription name", noSubscriptionName, true},
 		{"invalid, subscription name containing reserved chars", subscriptionNameWithReservedChars, true},
