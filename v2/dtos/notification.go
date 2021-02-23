@@ -18,7 +18,7 @@ type Notification struct {
 	Created            int64    `json:"created,omitempty"`
 	Modified           int64    `json:"modified,omitempty"`
 	Category           string   `json:"category,omitempty" validate:"required_without=Labels,omitempty,oneof='SECURITY' 'SW_HEALTH' 'HW_HEALTH'"`
-	Labels             []string `json:"labels,omitempty" validate:"required_without=Category,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Labels             []string `json:"labels,omitempty" validate:"required_without=NotificationCategory,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Content            string   `json:"content" validate:"required,edgex-dto-none-empty-string"`
 	ContentType        string   `json:"contentType,omitempty"`
 	Description        string   `json:"description,omitempty"`
@@ -33,7 +33,7 @@ func ToNotificationModel(n Notification) models.Notification {
 	m.Id = n.Id
 	m.Created = n.Created
 	m.Modified = n.Modified
-	m.Category = models.Category(n.Category)
+	m.Category = models.NotificationCategory(n.Category)
 	m.Labels = n.Labels
 	m.Content = n.Content
 	m.ContentType = n.ContentType

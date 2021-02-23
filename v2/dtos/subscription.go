@@ -137,16 +137,16 @@ func FromChannelModelToDTO(c models.Channel) Channel {
 	}
 }
 
-func ToCategoryModels(categories []string) []models.Category {
-	categoryModels := make([]models.Category, len(categories))
+func ToCategoryModels(categories []string) []models.NotificationCategory {
+	categoryModels := make([]models.NotificationCategory, len(categories))
 	for i, c := range categories {
-		categoryModels[i] = models.Category(c)
+		categoryModels[i] = models.NotificationCategory(c)
 	}
 	return categoryModels
 }
 
-// FromCategoryModelsToDTOs transforms the Category model array to string array
-func FromCategoryModelsToStrings(cs []models.Category) []string {
+// FromCategoryModelsToDTOs transforms the NotificationCategory model array to string array
+func FromCategoryModelsToStrings(cs []models.NotificationCategory) []string {
 	s := make([]string, len(cs))
 	for i, c := range cs {
 		s[i] = string(c)

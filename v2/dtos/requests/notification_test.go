@@ -122,7 +122,7 @@ func TestAddNotificationReqToNotificationModels(t *testing.T) {
 	requests := []AddNotificationRequest{addNotificationRequest}
 	expectedNotificationModel := []models.Notification{
 		{
-			Category:    models.Category(testNotificationCategory),
+			Category:    models.NotificationCategory(testNotificationCategory),
 			Content:     testNotificationContent,
 			ContentType: testNotificationContentType,
 			Description: testNotificationDescription,

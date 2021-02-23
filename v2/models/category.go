@@ -5,8 +5,8 @@
 
 package models
 
-// ChannelType controls the range of values which constitute valid delivery types for channels
-type Category string
+// NotificationCategory categorizes the notification.
+type NotificationCategory string
 
 const (
 	Security       = "SECURITY"
