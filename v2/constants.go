@@ -82,9 +82,13 @@ const (
 	ApiServiceCallbackRoute     = ApiBase + "/callback/service"
 	ApiDiscoveryRoute           = ApiBase + "/discovery"
 
-	ApiIntervalRoute       = ApiBase + "/interval"
-	ApiAllIntervalRoute    = ApiIntervalRoute + "/" + All
-	ApiIntervalByNameRoute = ApiIntervalRoute + "/" + Name + "/{" + Name + "}"
+	ApiIntervalRoute               = ApiBase + "/interval"
+	ApiAllIntervalRoute            = ApiIntervalRoute + "/" + All
+	ApiIntervalByNameRoute         = ApiIntervalRoute + "/" + Name + "/{" + Name + "}"
+	ApiIntervalActionRoute         = ApiBase + "/intervalaction"
+	ApiAllIntervalActionRoute      = ApiIntervalActionRoute + "/" + All
+	ApiIntervalActionByNameRoute   = ApiIntervalActionRoute + "/" + Name + "/{" + Name + "}"
+	ApiIntervalActionByTargetRoute = ApiIntervalActionRoute + "/" + Target + "/{" + Target + "}"
 )
 
 // Constants related to defined url path names and parameters in the v2 service APIs
@@ -118,6 +122,7 @@ const (
 	Category     = "category"
 	Receiver     = "receiver"
 	Subscription = "subscription"
+	Target       = "target"
 
 	Offset      = "offset"         //query string to specify the number of items to skip before starting to collect the result set.
 	Limit       = "limit"          //query string to specify the numbers of items to return

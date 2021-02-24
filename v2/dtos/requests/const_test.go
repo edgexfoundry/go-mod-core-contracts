@@ -28,17 +28,24 @@ const (
 	TestBinaryReadingMediaType = "File"
 	TestReadingBinaryValue     = "testbinarydata"
 
-	testProtocol = "http"
-	testAddress  = "localhost"
-	testPort     = 48089
-	testUser     = "edgexer"
-	testPassword = "password"
-
 	TestIntervalName      = "TestInterval"
 	TestIntervalStart     = "20190102T150405"
 	TestIntervalEnd       = "20190802T150405"
 	TestIntervalFrequency = "30ms"
 	TestIntervalRunOnce   = false
+
+	TestIntervalActionName = "TestIntervalAction"
+	TestProtocol           = "http"
+	TestHost               = "localhost"
+	TestPort               = 48089
+	TestPath               = "testPath"
+	TestParameter          = "testParameters"
+	TestHTTPMethod         = "GET"
+	TestUser               = "edgexer"
+	TestPassword           = "password"
+	TestPublisher          = "testPublisher"
+	TestTarget             = "testTarget"
+	TestTopic              = "testTopic"
 )
 
 var namesWithReservedChar = []string{
