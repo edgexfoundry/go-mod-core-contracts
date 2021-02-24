@@ -41,11 +41,8 @@ const (
 	TestPath               = "testPath"
 	TestParameter          = "testParameters"
 	TestHTTPMethod         = "GET"
-	TestUser               = "edgexer"
-	TestPassword           = "password"
 	TestPublisher          = "testPublisher"
 	TestTarget             = "testTarget"
-	TestTopic              = "testTopic"
 )
 
 var namesWithReservedChar = []string{

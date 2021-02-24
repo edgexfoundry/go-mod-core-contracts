@@ -19,9 +19,6 @@ type IntervalAction struct {
 	Path         string
 	Parameters   string
 	HTTPMethod   string
-	User         string
-	Password     string
 	Publisher    string
 	Target       string
-	Topic        string
 }

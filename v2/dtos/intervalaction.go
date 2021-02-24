@@ -25,11 +25,8 @@ type IntervalAction struct {
 	Path               string `json:"path,omitempty"`
 	Parameters         string `json:"parameters,omitempty"`
 	HTTPMethod         string `json:"httpMethod,omitempty" validate:"omitempty,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
-	User               string `json:"user,omitempty"`
-	Password           string `json:"password,omitempty"`
 	Publisher          string `json:"publisher,omitempty"`
 	Target             string `json:"target" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Topic              string `json:"topic,omitempty"`
 }
 
 // UpdateIntervalAction and its properties are defined in the APIv2 specification:
@@ -45,11 +42,8 @@ type UpdateIntervalAction struct {
 	Path               *string `json:"path,omitempty"`
 	Parameters         *string `json:"parameters,omitempty"`
 	HTTPMethod         *string `json:"httpMethod,omitempty" validate:"omitempty,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
-	User               *string `json:"user,omitempty"`
-	Password           *string `json:"password,omitempty"`
 	Publisher          *string `json:"publisher,omitempty"`
 	Target             *string `json:"target,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Topic              *string `json:"topic,omitempty"`
 }
 
 // ToIntervalActionModel transforms the IntervalAction DTO to the IntervalAction Model
@@ -64,11 +58,8 @@ func ToIntervalActionModel(dto IntervalAction) models.IntervalAction {
 	model.Path = dto.Path
 	model.Parameters = dto.Parameters
 	model.HTTPMethod = dto.HTTPMethod
-	model.User = dto.User
-	model.Password = dto.Password
 	model.Publisher = dto.Publisher
 	model.Target = dto.Target
-	model.Topic = dto.Topic
 	return model
 }
 
@@ -85,10 +76,7 @@ func FromIntervalActionModelToDTO(model models.IntervalAction) IntervalAction {
 	dto.Path = model.Path
 	dto.Parameters = model.Parameters
 	dto.HTTPMethod = model.HTTPMethod
-	dto.User = model.User
-	dto.Password = model.Password
 	dto.Publisher = model.Publisher
 	dto.Target = model.Target
-	dto.Topic = model.Topic
 	return dto
 }

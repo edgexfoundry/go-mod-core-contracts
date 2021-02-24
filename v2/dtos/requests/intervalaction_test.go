@@ -52,11 +52,8 @@ func updateIntervalActionData() dtos.UpdateIntervalAction {
 	testPath := TestPath
 	testParameters := TestParameter
 	testHTTPMethod := TestHTTPMethod
-	testUser := TestUser
-	testPassword := TestPassword
 	testPublisher := TestPublisher
 	testTarget := TestTarget
-	testTopic := TestTopic
 
 	dto := dtos.UpdateIntervalAction{}
 	dto.Versionable = common.NewVersionable()
@@ -69,11 +66,8 @@ func updateIntervalActionData() dtos.UpdateIntervalAction {
 	dto.Path = &testPath
 	dto.Parameters = &testParameters
 	dto.HTTPMethod = &testHTTPMethod
-	dto.User = &testUser
-	dto.Password = &testPassword
 	dto.Publisher = &testPublisher
 	dto.Target = &testTarget
-	dto.Topic = &testTopic
 	return dto
 }
 
@@ -249,11 +243,8 @@ func TestUpdateIntervalActionRequest_UnmarshalJSON_NilField(t *testing.T) {
 	assert.Nil(t, req.Action.Path)
 	assert.Nil(t, req.Action.HTTPMethod)
 	assert.Nil(t, req.Action.Parameters)
-	assert.Nil(t, req.Action.User)
-	assert.Nil(t, req.Action.Password)
 	assert.Nil(t, req.Action.Publisher)
 	assert.Nil(t, req.Action.Target)
-	assert.Nil(t, req.Action.Topic)
 }
 
 func TestReplaceIntervalActionModelFieldsWithDTO(t *testing.T) {
@@ -273,9 +264,6 @@ func TestReplaceIntervalActionModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, TestPath, interval.Path)
 	assert.Equal(t, TestParameter, interval.Parameters)
 	assert.Equal(t, TestHTTPMethod, interval.HTTPMethod)
-	assert.Equal(t, TestUser, interval.User)
-	assert.Equal(t, TestPassword, interval.Password)
 	assert.Equal(t, TestPublisher, interval.Publisher)
 	assert.Equal(t, TestTarget, interval.Target)
-	assert.Equal(t, TestTopic, interval.Topic)
 }

@@ -113,20 +113,11 @@ func ReplaceIntervalActionModelFieldsWithDTO(action *models.IntervalAction, patc
 	if patch.HTTPMethod != nil {
 		action.HTTPMethod = *patch.HTTPMethod
 	}
-	if patch.User != nil {
-		action.User = *patch.User
-	}
-	if patch.Password != nil {
-		action.Password = *patch.Password
-	}
 	if patch.Publisher != nil {
 		action.Publisher = *patch.Publisher
 	}
 	if patch.Target != nil {
 		action.Target = *patch.Target
-	}
-	if patch.Topic != nil {
-		action.Topic = *patch.Topic
 	}
 }
 
