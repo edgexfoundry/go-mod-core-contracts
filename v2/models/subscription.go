@@ -10,7 +10,7 @@ package models
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Subscription struct {
 	Timestamps
-	Categories     []NotificationCategory
+	Categories     []string
 	Labels         []string
 	Channels       []Channel
 	Created        int64

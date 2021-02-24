@@ -96,7 +96,7 @@ func ReplaceSubscriptionModelFieldsWithDTO(s *models.Subscription, patch dtos.Up
 		s.Channels = dtos.ToChannelModels(patch.Channels)
 	}
 	if patch.Categories != nil {
-		s.Categories = dtos.ToCategoryModels(patch.Categories)
+		s.Categories = patch.Categories
 	}
 	if patch.Labels != nil {
 		s.Labels = patch.Labels

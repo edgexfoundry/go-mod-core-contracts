@@ -10,7 +10,7 @@ package models
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Notification struct {
 	Timestamps
-	Category    NotificationCategory
+	Category    string
 	Content     string
 	ContentType string
 	Description string

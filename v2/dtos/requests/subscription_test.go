@@ -19,7 +19,7 @@ import (
 
 var (
 	testSubscriptionName       = "subscriptionName"
-	testSubscriptionCategories = []string{models.SoftwareHealth}
+	testSubscriptionCategories = []string{"category1", "category2"}
 	testSubscriptionLabels     = []string{"label"}
 	testSubscriptionChannels   = []dtos.Channel{
 		{Type: models.Email, EmailAddresses: []string{"test@example.com"}},
@@ -29,7 +29,6 @@ var (
 	testSubscriptionResendLimit    = int64(5)
 	testSubscriptionResendInterval = "10s"
 	unsupportedChannelType         = "unsupportedChannelType"
-	unsupportedCategory            = "unsupportedCategory"
 )
 
 func addSubscriptionRequestData() AddSubscriptionRequest {
@@ -119,10 +118,10 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 	noLabels := addSubscriptionRequestData()
 	noLabels.Subscription.Labels = nil
 	noCategoriesAndLabels := addSubscriptionRequestData()
-	noCategoriesAndLabels.Subscription.Categories = nil
-	noCategoriesAndLabels.Subscription.Labels = nil
-	invalidCategory := addSubscriptionRequestData()
-	invalidCategory.Subscription.Categories = []string{unsupportedCategory}
+	noCategoriesAndLabels.Subscription.Categories = []string{}
+	noCategoriesAndLabels.Subscription.Labels = []string{}
+	categoryNameWithReservedChar := addSubscriptionRequestData()
+	categoryNameWithReservedChar.Subscription.Categories = []string{namesWithReservedChar[0]}
 
 	noReceiver := addSubscriptionRequestData()
 	noReceiver.Subscription.Receiver = emptyString
@@ -149,7 +148,7 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 		{"invalid, email address is invalid", invalidEmailAddress, true},
 		{"invalid, url is invalid", invalidUrl, true},
 		{"invalid, no categories and labels specified", noCategoriesAndLabels, true},
-		{"invalid, unsupported category type", invalidCategory, true},
+		{"invalid, unsupported category type", categoryNameWithReservedChar, true},
 		{"invalid, no receiver specified", noReceiver, true},
 		{"invalid, receiver name containing reserved chars", receiverNameWithReservedChars, true},
 		{"invalid, resendInterval is not specified in ISO8601 format", invalidResendInterval, true},
@@ -194,7 +193,7 @@ func TestAddSubscriptionReqToSubscriptionModels(t *testing.T) {
 	expectedSubscriptionModel := []models.Subscription{
 		{
 			Name:           testSubscriptionName,
-			Categories:     dtos.ToCategoryModels(testSubscriptionCategories),
+			Categories:     testSubscriptionCategories,
 			Labels:         testSubscriptionLabels,
 			Channels:       dtos.ToChannelModels(testSubscriptionChannels),
 			Description:    testSubscriptionDescription,
@@ -241,8 +240,8 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 		{Type: models.Rest, Url: "http127.0.0.1"},
 	}
 
-	invalidCategory := updateSubscriptionRequestData()
-	invalidCategory.Subscription.Categories = []string{unsupportedCategory}
+	categoryNameWithReservedChar := updateSubscriptionRequestData()
+	categoryNameWithReservedChar.Subscription.Categories = []string{namesWithReservedChar[0]}
 
 	receiverNameWithReservedChars := updateSubscriptionRequestData()
 	receiverNameWithReservedChars.Subscription.Receiver = &invalidReceiverName
@@ -268,7 +267,7 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 		{"invalid, unsupported channel type", invalidChannelType, true},
 		{"invalid, email address is invalid", invalidEmailAddress, true},
 		{"invalid, url is invalid", invalidUrl, true},
-		{"invalid, unsupported category type", invalidCategory, true},
+		{"invalid, category name containing reserved chars", categoryNameWithReservedChar, true},
 		{"invalid, receiver name containing reserved chars", receiverNameWithReservedChars, true},
 		{"invalid, resendInterval is not specified in ISO8601 format", invalidResendInterval, true},
 	}
@@ -316,7 +315,7 @@ func TestReplaceSubscriptionModelFieldsWithDTO(t *testing.T) {
 
 	ReplaceSubscriptionModelFieldsWithDTO(&subscription, patch)
 
-	assert.Equal(t, dtos.ToCategoryModels(testSubscriptionCategories), subscription.Categories)
+	assert.Equal(t, testSubscriptionCategories, subscription.Categories)
 	assert.Equal(t, testSubscriptionLabels, subscription.Labels)
 	assert.Equal(t, dtos.ToChannelModels(testSubscriptionChannels), subscription.Channels)
 	assert.Equal(t, testSubscriptionDescription, subscription.Description)

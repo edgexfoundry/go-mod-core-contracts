@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	testNotificationCategory    = models.SoftwareHealth
+	testNotificationCategory    = "category"
 	testNotificationLabels      = []string{"label1", "label2"}
 	testNotificationContent     = "content"
 	testNotificationContentType = "text/plain"
@@ -50,8 +50,8 @@ func TestAddNotification_Validate(t *testing.T) {
 	noCategoryAndLabel := NewAddNotificationRequest(testAddNotification)
 	noCategoryAndLabel.Notification.Category = ""
 	noCategoryAndLabel.Notification.Labels = nil
-	invalidCategory := NewAddNotificationRequest(testAddNotification)
-	invalidCategory.Notification.Category = "foo"
+	categoryNameWithReservedChar := NewAddNotificationRequest(testAddNotification)
+	categoryNameWithReservedChar.Notification.Category = namesWithReservedChar[0]
 
 	noContent := NewAddNotificationRequest(testAddNotification)
 	noContent.Notification.Content = ""
@@ -75,7 +75,7 @@ func TestAddNotification_Validate(t *testing.T) {
 		{"valid", NewAddNotificationRequest(testAddNotification), false},
 		{"invalid, request ID is not an UUID", invalidReqId, true},
 		{"invalid, no category and labels", noCategoryAndLabel, true},
-		{"invalid, unsupported category", invalidCategory, true},
+		{"invalid, category name containing reserved chars", categoryNameWithReservedChar, true},
 		{"invalid, no content", noContent, true},
 		{"invalid, no sender", noSender, true},
 		{"invalid, no severity", noSeverity, true},
@@ -122,7 +122,7 @@ func TestAddNotificationReqToNotificationModels(t *testing.T) {
 	requests := []AddNotificationRequest{addNotificationRequest}
 	expectedNotificationModel := []models.Notification{
 		{
-			Category:    models.NotificationCategory(testNotificationCategory),
+			Category:    testNotificationCategory,
 			Content:     testNotificationContent,
 			ContentType: testNotificationContentType,
 			Description: testNotificationDescription,

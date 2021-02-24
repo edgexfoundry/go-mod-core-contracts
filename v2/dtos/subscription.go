@@ -18,7 +18,7 @@ type Subscription struct {
 	Name               string    `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Channels           []Channel `json:"channels" validate:"required,gt=0,dive"`
 	Receiver           string    `json:"receiver" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Categories         []string  `json:"categories,omitempty" validate:"required_without=Labels,omitempty,gt=0,dive,oneof='SECURITY' 'SW_HEALTH' 'HW_HEALTH'"`
+	Categories         []string  `json:"categories,omitempty" validate:"required_without=Labels,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels             []string  `json:"labels,omitempty" validate:"required_without=Categories,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Created            int64     `json:"created,omitempty"`
 	Modified           int64     `json:"modified,omitempty"`
@@ -35,7 +35,7 @@ type UpdateSubscription struct {
 	Name               *string   `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Channels           []Channel `json:"channels,omitempty" validate:"omitempty,dive"`
 	Receiver           *string   `json:"receiver,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Categories         []string  `json:"categories,omitempty" validate:"omitempty,dive,oneof='SECURITY' 'SW_HEALTH' 'HW_HEALTH'"`
+	Categories         []string  `json:"categories,omitempty" validate:"omitempty,dive,gt=0,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels             []string  `json:"labels,omitempty" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Description        *string   `json:"description,omitempty"`
 	ResendLimit        *int64    `json:"resendLimit,omitempty"`
@@ -53,7 +53,7 @@ type Channel struct {
 // ToSubscriptionModel transforms the Subscription DTO to the Subscription Model
 func ToSubscriptionModel(s Subscription) models.Subscription {
 	var m models.Subscription
-	m.Categories = ToCategoryModels(s.Categories)
+	m.Categories = s.Categories
 	m.Labels = s.Labels
 	m.Channels = ToChannelModels(s.Channels)
 	m.Created = s.Created
@@ -80,7 +80,7 @@ func ToSubscriptionModels(subs []Subscription) []models.Subscription {
 func FromSubscriptionModelToDTO(s models.Subscription) Subscription {
 	return Subscription{
 		Versionable:    common.NewVersionable(),
-		Categories:     FromCategoryModelsToStrings(s.Categories),
+		Categories:     s.Categories,
 		Labels:         s.Labels,
 		Channels:       FromChannelModelsToDTOs(s.Channels),
 		Created:        s.Created,
@@ -135,21 +135,4 @@ func FromChannelModelToDTO(c models.Channel) Channel {
 		EmailAddresses: c.EmailAddresses,
 		Url:            c.Url,
 	}
-}
-
-func ToCategoryModels(categories []string) []models.NotificationCategory {
-	categoryModels := make([]models.NotificationCategory, len(categories))
-	for i, c := range categories {
-		categoryModels[i] = models.NotificationCategory(c)
-	}
-	return categoryModels
-}
-
-// FromCategoryModelsToDTOs transforms the NotificationCategory model array to string array
-func FromCategoryModelsToStrings(cs []models.NotificationCategory) []string {
-	s := make([]string, len(cs))
-	for i, c := range cs {
-		s[i] = string(c)
-	}
-	return s
 }
