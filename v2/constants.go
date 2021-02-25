@@ -68,6 +68,17 @@ const (
 	ApiSubscriptionByLabelRoute    = ApiSubscriptionRoute + "/" + Label + "/{" + Label + "}"
 	ApiSubscriptionByReceiverRoute = ApiSubscriptionRoute + "/" + Receiver + "/{" + Receiver + "}"
 
+	ApiNotificationCleanupRoute            = ApiBase + "/cleanup"
+	ApiNotificationCleanupByAgeRoute       = ApiBase + "/" + Cleanup + "/" + Age + "/{" + Age + "}"
+	ApiNotificationRoute                   = ApiBase + "/notification"
+	ApiNotificationByTimeRangeRoute        = ApiNotificationRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiNotificationByAgeRoute              = ApiNotificationRoute + "/" + Age + "/{" + Age + "}"
+	ApiNotificationByCategoryRoute         = ApiNotificationRoute + "/" + Category + "/{" + Category + "}"
+	ApiNotificationByLabelRoute            = ApiNotificationRoute + "/" + Label + "/{" + Label + "}"
+	ApiNotificationByIdRoute               = ApiNotificationRoute + "/" + Id + "/{" + Id + "}"
+	ApiNotificationByStatusRoute           = ApiNotificationRoute + "/" + Status + "/{" + Status + "}"
+	ApiNotificationBySubscriptionNameRoute = ApiNotificationRoute + "/" + Subscription + "/" + Name + "/{" + Name + "}"
+
 	ApiConfigRoute  = ApiBase + "/config"
 	ApiMetricsRoute = ApiBase + "/metrics"
 	ApiPingRoute    = ApiBase + "/ping"
@@ -123,6 +134,10 @@ const (
 	Receiver     = "receiver"
 	Subscription = "subscription"
 	Target       = "target"
+	Status       = "status"
+	Cleanup      = "cleanup"
+	Sender       = "sender"
+	Severity     = "severity"
 
 	Offset      = "offset"         //query string to specify the number of items to skip before starting to collect the result set.
 	Limit       = "limit"          //query string to specify the numbers of items to return
