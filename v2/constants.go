@@ -183,3 +183,9 @@ const (
 	ValueTypeFloat32Array = "Float32Array"
 	ValueTypeFloat64Array = "Float64Array"
 )
+
+// Constants related to configuration file's map key
+const (
+	Primary  = "Primary"
+	Password = "Password"
+)
