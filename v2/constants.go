@@ -190,3 +190,10 @@ const (
 	Primary  = "Primary"
 	Password = "Password"
 )
+
+// Constants for Addressable
+const (
+	// Type
+	REST = "REST"
+	MQTT = "MQTT"
+)
