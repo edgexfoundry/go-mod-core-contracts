@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,17 +12,17 @@ import (
 // AutoEvent and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AutoEvent
 type AutoEvent struct {
-	Frequency string `json:"frequency" validate:"required,edgex-dto-frequency"`
-	OnChange  bool   `json:"onChange,omitempty"`
-	Resource  string `json:"resource" validate:"required"`
+	Frequency  string `json:"frequency" validate:"required,edgex-dto-frequency"`
+	OnChange   bool   `json:"onChange,omitempty"`
+	SourceName string `json:"sourceName" validate:"required"`
 }
 
 // ToAutoEventModel transforms the AutoEvent DTO to the AutoEvent model
 func ToAutoEventModel(a AutoEvent) models.AutoEvent {
 	return models.AutoEvent{
-		Frequency: a.Frequency,
-		OnChange:  a.OnChange,
-		Resource:  a.Resource,
+		Frequency:  a.Frequency,
+		OnChange:   a.OnChange,
+		SourceName: a.SourceName,
 	}
 }
 
@@ -38,9 +38,9 @@ func ToAutoEventModels(autoEventDTOs []AutoEvent) []models.AutoEvent {
 // FromAutoEventModelToDTO transforms the AutoEvent model to the AutoEvent DTO
 func FromAutoEventModelToDTO(a models.AutoEvent) AutoEvent {
 	return AutoEvent{
-		Frequency: a.Frequency,
-		OnChange:  a.OnChange,
-		Resource:  a.Resource,
+		Frequency:  a.Frequency,
+		OnChange:   a.OnChange,
+		SourceName: a.SourceName,
 	}
 }
 

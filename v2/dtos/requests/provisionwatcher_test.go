@@ -100,11 +100,11 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 	noProfileName.ProvisionWatcher.ProfileName = emptyString
 	invalidFrequency := testAddProvisionWatcher
 	invalidFrequency.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
-		{Resource: "TestDevice", Frequency: "-1", OnChange: true},
+		{SourceName: "TestDevice", Frequency: "-1", OnChange: true},
 	}
 	noAutoEventFrequency := testAddProvisionWatcher
 	noAutoEventFrequency.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
-		{Resource: "TestDevice", OnChange: true},
+		{SourceName: "TestDevice", OnChange: true},
 	}
 	noAutoEventResource := testAddProvisionWatcher
 	noAutoEventResource.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
@@ -186,7 +186,7 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 			ProfileName: TestDeviceProfileName,
 			AdminState:  models.Locked,
 			AutoEvents: []models.AutoEvent{
-				{Resource: "TestDevice", Frequency: "300ms", OnChange: true},
+				{SourceName: "TestDevice", Frequency: "300ms", OnChange: true},
 			},
 		},
 	}
