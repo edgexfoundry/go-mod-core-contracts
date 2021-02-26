@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ package models
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AutoEvent
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type AutoEvent struct {
-	Frequency string
-	OnChange  bool
-	Resource  string
+	Frequency  string
+	OnChange   bool
+	SourceName string
 }
