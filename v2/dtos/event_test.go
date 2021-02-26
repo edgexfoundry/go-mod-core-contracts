@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
@@ -22,6 +22,7 @@ var valid = models.Event{
 	Id:          TestUUID,
 	DeviceName:  TestDeviceName,
 	ProfileName: TestDeviceProfileName,
+	SourceName:  TestSourceName,
 	Created:     TestTimestamp,
 	Origin:      TestTimestamp,
 	Tags: map[string]string{
@@ -36,6 +37,7 @@ var expectedDTO = Event{
 	Id:          TestUUID,
 	DeviceName:  TestDeviceName,
 	ProfileName: TestDeviceProfileName,
+	SourceName:  TestSourceName,
 	Created:     TestTimestamp,
 	Origin:      TestTimestamp,
 	Tags: map[string]string{
@@ -63,7 +65,7 @@ func TestFromEventModelToDTO(t *testing.T) {
 func TestEvent_ToXML(t *testing.T) {
 	// Since the order in map is random we have to verify the individual items exists without depending on order
 	contains := []string{
-		"<Event><ApiVersion>v2</ApiVersion><Id>7a1707f0-166f-4c4b-bc9d-1d54c74e0137</Id><DeviceName>TestDevice</DeviceName><ProfileName>TestDeviceProfileName</ProfileName><Created>1594963842</Created><Origin>1594963842</Origin><Tags>",
+		"<Event><ApiVersion>v2</ApiVersion><Id>7a1707f0-166f-4c4b-bc9d-1d54c74e0137</Id><DeviceName>TestDevice</DeviceName><ProfileName>TestDeviceProfileName</ProfileName><SourceName>TestSourceName</SourceName><Created>1594963842</Created><Origin>1594963842</Origin><Tags>",
 		"<GatewayID>Houston-0001</GatewayID>",
 		"<Latitude>29.630771</Latitude>",
 		"<Longitude>-95.377603</Longitude>",
@@ -79,11 +81,13 @@ func TestNewEvent(t *testing.T) {
 	expectedApiVersion := v2.ApiVersion
 	expectedDeviceName := TestDeviceName
 	expectedProfileName := TestDeviceProfileName
+	expectedSourceName := TestSourceName
 
-	actual := NewEvent(expectedProfileName, expectedDeviceName)
+	actual := NewEvent(expectedProfileName, expectedDeviceName, expectedSourceName)
 
 	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
 	assert.NotEmpty(t, actual.Id)
+	assert.Equal(t, expectedSourceName, actual.SourceName)
 	assert.Equal(t, expectedProfileName, actual.ProfileName)
 	assert.Equal(t, expectedDeviceName, actual.DeviceName)
 	assert.Zero(t, len(actual.Readings))
@@ -95,6 +99,7 @@ func TestEvent_AddSimpleReading(t *testing.T) {
 	expectedApiVersion := v2.ApiVersion
 	expectedDeviceName := TestDeviceName
 	expectedProfileName := TestDeviceProfileName
+	expectedSourceName := TestSourceName
 	expectedReadingDetails := []struct {
 		inputValue   interface{}
 		resourceName string
@@ -107,7 +112,7 @@ func TestEvent_AddSimpleReading(t *testing.T) {
 	}
 	expectedReadingsCount := len(expectedReadingDetails)
 
-	target := NewEvent(expectedProfileName, expectedDeviceName)
+	target := NewEvent(expectedProfileName, expectedDeviceName, expectedSourceName)
 	for _, expected := range expectedReadingDetails {
 		err := target.AddSimpleReading(expected.resourceName, expected.valueType, expected.inputValue)
 		require.NoError(t, err)
@@ -132,13 +137,14 @@ func TestEvent_AddBinaryReading(t *testing.T) {
 	expectedApiVersion := v2.ApiVersion
 	expectedDeviceName := TestDeviceName
 	expectedProfileName := TestDeviceProfileName
+	expectedSourceName := TestSourceName
 	expectedResourceName := TestDeviceResourceName
 	expectedValueType := v2.ValueTypeBinary
 	expectedValue := []byte("Hello World")
 	expectedMediaType := "application/text"
 	expectedReadingsCount := 1
 
-	target := NewEvent(expectedProfileName, expectedDeviceName)
+	target := NewEvent(expectedProfileName, expectedDeviceName, expectedSourceName)
 	target.AddBinaryReading(expectedResourceName, expectedValue, expectedMediaType)
 
 	require.Equal(t, expectedReadingsCount, len(target.Readings))

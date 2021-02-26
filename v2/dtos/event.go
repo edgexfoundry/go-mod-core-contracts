@@ -24,6 +24,7 @@ type Event struct {
 	Id                 string            `json:"id" validate:"required,uuid"`
 	DeviceName         string            `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ProfileName        string            `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	SourceName         string            `json:"sourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	Created            int64             `json:"created,omitempty"`
 	Origin             int64             `json:"origin" validate:"required"`
 	Readings           []BaseReading     `json:"readings" validate:"gt=0,dive,required"`
@@ -31,12 +32,13 @@ type Event struct {
 }
 
 // NewEvent creates and returns an initialized Event with no Readings
-func NewEvent(profileName string, deviceName string) Event {
+func NewEvent(profileName, deviceName, sourceName string) Event {
 	return Event{
 		Versionable: common.NewVersionable(),
 		Id:          uuid.NewString(),
 		DeviceName:  deviceName,
 		ProfileName: profileName,
+		SourceName:  sourceName,
 		Origin:      time.Now().UnixNano(),
 	}
 }
@@ -58,6 +60,7 @@ func FromEventModelToDTO(event models.Event) Event {
 		Id:          event.Id,
 		DeviceName:  event.DeviceName,
 		ProfileName: event.ProfileName,
+		SourceName:  event.SourceName,
 		Created:     event.Created,
 		Origin:      event.Origin,
 		Readings:    readings,
