@@ -24,12 +24,16 @@ type RESTAddressable struct {
 
 func (a RESTAddressable) GetBaseAddressable() BaseAddressable { return a.BaseAddressable }
 
-// MQTTAddressable is a MQTT specific struct
-type MQTTAddressable struct {
+// MqttPubAddressable is a MQTT specific struct
+type MqttPubAddressable struct {
 	BaseAddressable
-	Publisher string
-	Topic     string
-	QoS       int
+	Publisher      string
+	Topic          string
+	QoS            int
+	KeepAlive      int
+	Retained       bool
+	AutoReconnect  bool
+	ConnectTimeout int
 }
 
-func (a MQTTAddressable) GetBaseAddressable() BaseAddressable { return a.BaseAddressable }
+func (a MqttPubAddressable) GetBaseAddressable() BaseAddressable { return a.BaseAddressable }

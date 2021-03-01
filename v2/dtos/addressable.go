@@ -9,8 +9,8 @@ import (
 type Addressable struct {
 	common.Versionable `json:",inline"`
 
-	RESTAddressable `json:",inline"`
-	MQTTAddressable `json:",inline"`
+	RESTAddressable    `json:",inline"`
+	MqttPubAddressable `json:",inline"`
 }
 
 type BaseAddressable struct {
@@ -27,11 +27,15 @@ type RESTAddressable struct {
 	HTTPMethod      string `json:"httpMethod" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
 }
 
-type MQTTAddressable struct {
+type MqttPubAddressable struct {
 	BaseAddressable `json:",inline"`
 	Publisher       string `json:"publisher"`
 	Topic           string `json:"topic"`
 	QoS             int    `json:"qos,omitempty"`
+	KeepAlive       int    `json:"keepAlive,omitempty"`
+	Retained        bool   `json:"retained,omitempty"`
+	AutoReconnect   bool   `json:"autoReconnect,omitempty"`
+	ConnectTimeout  int    `json:"connectTimeout,omitempty"`
 }
 
 func ToAddressableModel(a Addressable) models.Addressable {
@@ -47,11 +51,15 @@ func ToAddressableModel(a Addressable) models.Addressable {
 		}
 		break
 	case v2.MQTT:
-		addressable = models.MQTTAddressable{
-			BaseAddressable: models.BaseAddressable(a.MQTTAddressable.BaseAddressable),
-			Publisher:       a.MQTTAddressable.Publisher,
-			Topic:           a.MQTTAddressable.Topic,
+		addressable = models.MqttPubAddressable{
+			BaseAddressable: models.BaseAddressable(a.MqttPubAddressable.BaseAddressable),
+			Publisher:       a.MqttPubAddressable.Publisher,
+			Topic:           a.MqttPubAddressable.Topic,
 			QoS:             a.QoS,
+			KeepAlive:       a.KeepAlive,
+			Retained:        a.Retained,
+			AutoReconnect:   a.AutoReconnect,
+			ConnectTimeout:  a.ConnectTimeout,
 		}
 		break
 	}
@@ -72,13 +80,18 @@ func FromAddressableModelToDTO(addressable models.Addressable) Addressable {
 		}
 		dto.RESTAddressable.BaseAddressable = base
 		break
-	case models.MQTTAddressable:
+	case models.MqttPubAddressable:
 		dto.Versionable = common.NewVersionable()
-		dto.MQTTAddressable = MQTTAddressable{
-			Publisher: a.Publisher,
-			Topic:     a.Topic,
+		dto.MqttPubAddressable = MqttPubAddressable{
+			Publisher:      a.Publisher,
+			Topic:          a.Topic,
+			QoS:            a.QoS,
+			KeepAlive:      a.KeepAlive,
+			Retained:       a.Retained,
+			AutoReconnect:  a.AutoReconnect,
+			ConnectTimeout: a.ConnectTimeout,
 		}
-		dto.MQTTAddressable.BaseAddressable = base
+		dto.MqttPubAddressable.BaseAddressable = base
 		break
 	}
 	return dto
