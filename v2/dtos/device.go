@@ -92,23 +92,48 @@ func FromDeviceModelToDTO(d models.Device) Device {
 
 // FromDeviceModelToUpdateDTO transforms the Device Model to the UpdateDevice DTO
 func FromDeviceModelToUpdateDTO(d models.Device) UpdateDevice {
-	adminState := string(d.AdminState)
-	operatingState := string(d.OperatingState)
-	return UpdateDevice{
-		Versionable:    common.NewVersionable(),
-		Id:             &d.Id,
-		Name:           &d.Name,
-		Description:    &d.Description,
-		AdminState:     &adminState,
-		OperatingState: &operatingState,
-		LastConnected:  &d.LastConnected,
-		LastReported:   &d.LastReported,
-		ServiceName:    &d.ServiceName,
-		ProfileName:    &d.ProfileName,
-		Labels:         d.Labels,
-		Location:       d.Location,
-		AutoEvents:     FromAutoEventModelsToDTOs(d.AutoEvents),
-		Protocols:      FromProtocolModelsToDTOs(d.Protocols),
-		Notify:         &d.Notify,
+	dto := UpdateDevice{
+		Versionable: common.NewVersionable(),
+		Labels:      d.Labels,
+		Notify:      &d.Notify,
 	}
+	if d.Id != "" {
+		dto.Id = &d.Id
+	}
+	if d.Name != "" {
+		dto.Name = &d.Name
+	}
+	if d.Description != "" {
+		dto.Description = &d.Description
+	}
+	if d.AdminState != "" {
+		adminState := string(d.AdminState)
+		dto.AdminState = &adminState
+	}
+	if d.OperatingState != "" {
+		operatingState := string(d.OperatingState)
+		dto.OperatingState = &operatingState
+	}
+	if d.LastConnected != 0 {
+		dto.LastConnected = &d.LastConnected
+	}
+	if d.LastReported != 0 {
+		dto.LastReported = &d.LastReported
+	}
+	if d.ServiceName != "" {
+		dto.ServiceName = &d.ServiceName
+	}
+	if d.ProfileName != "" {
+		dto.ProfileName = &d.ProfileName
+	}
+	if d.Location != nil {
+		dto.Location = d.Location
+	}
+	if d.AutoEvents != nil {
+		dto.AutoEvents = FromAutoEventModelsToDTOs(d.AutoEvents)
+	}
+	if d.Protocols != nil {
+		dto.Protocols = FromProtocolModelsToDTOs(d.Protocols)
+	}
+	return dto
 }

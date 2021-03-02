@@ -68,13 +68,22 @@ func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 
 // FromDeviceServiceModelToUpdateDTO transforms the DeviceService Model to the UpdateDeviceService DTO
 func FromDeviceServiceModelToUpdateDTO(ds models.DeviceService) UpdateDeviceService {
-	adminState := string(ds.AdminState)
-	return UpdateDeviceService{
+	dto := UpdateDeviceService{
 		Versionable: common.NewVersionable(),
-		Id:          &ds.Id,
-		Name:        &ds.Name,
-		BaseAddress: &ds.BaseAddress,
 		Labels:      ds.Labels,
-		AdminState:  &adminState,
 	}
+	if ds.Id != "" {
+		dto.Id = &ds.Id
+	}
+	if ds.Name != "" {
+		dto.Name = &ds.Name
+	}
+	if ds.BaseAddress != "" {
+		dto.BaseAddress = &ds.BaseAddress
+	}
+	if ds.AdminState != "" {
+		adminState := string(ds.AdminState)
+		dto.AdminState = &adminState
+	}
+	return dto
 }

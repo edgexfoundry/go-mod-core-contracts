@@ -150,6 +150,10 @@ func sendRequest(ctx context.Context, req *http.Request) ([]byte, errors.EdgeX) 
 	}
 
 	// Handle error response
+	if resp.StatusCode == http.StatusNotFound {
+		msg := fmt.Sprintf("request failed, status code: %d, err: %s", resp.StatusCode, string(bodyBytes))
+		return nil, errors.NewCommonEdgeX(errors.KindMapping(resp.StatusCode), msg, nil)
+	}
 	var res common.BaseResponse
 	if err := json.Unmarshal(bodyBytes, &res); err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
