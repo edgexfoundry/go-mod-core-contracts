@@ -14,6 +14,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
+	"github.com/fxamacker/cbor/v2"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -224,6 +225,50 @@ func TestAddEvent_UnmarshalJSON(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var addEvent AddEventRequest
 			err := addEvent.UnmarshalJSON(tt.data)
+			if tt.wantErr {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				assert.Equal(t, expected, addEvent, "Unmarshal did not result in expected AddEventRequest.")
+			}
+		})
+	}
+}
+
+func TestAddEvent_UnmarshalCBOR(t *testing.T) {
+	expected := eventRequestData()
+	expected.RequestId = ExampleUUID
+	validData, err := cbor.Marshal(expected)
+	require.NoError(t, err)
+
+	validValueTypeLowerCase := eventRequestData()
+	validValueTypeLowerCase.RequestId = ExampleUUID
+	validValueTypeLowerCase.Event.Readings[0].ValueType = "uint8"
+	validValueTypeLowerCaseData, err := cbor.Marshal(validValueTypeLowerCase)
+	require.NoError(t, err)
+
+	validValueTypeUpperCase := eventRequestData()
+	validValueTypeUpperCase.RequestId = ExampleUUID
+	validValueTypeUpperCase.Event.Readings[0].ValueType = "UINT8"
+	validValueTypeUpperCaseData, err := cbor.Marshal(validValueTypeUpperCase)
+	require.NoError(t, err)
+
+	tests := []struct {
+		name    string
+		data    []byte
+		wantErr bool
+	}{
+		{"unmarshal AddEventRequest with success", validData, false},
+		{"unmarshal AddEventRequest with success, valid value type uint8", validValueTypeLowerCaseData, false},
+		{"unmarshal AddEventRequest with success, valid value type UINT8", validValueTypeUpperCaseData, false},
+		{"unmarshal invalid AddEventRequest, empty data", []byte{}, true},
+		{"unmarshal invalid AddEventRequest, string data", []byte("Invalid AddEventRequest"), true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var addEvent AddEventRequest
+			err := addEvent.UnmarshalCBOR(tt.data)
 			if tt.wantErr {
 				require.Error(t, err)
 			} else {
