@@ -42,7 +42,7 @@ type SimpleReading struct {
 // BinaryReading and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BinaryReading
 type BinaryReading struct {
-	BinaryValue []byte `json:"binaryValue" validate:"gt=0,dive,required"`
+	BinaryValue []byte `json:"binaryValue" validate:"gt=0,required"`
 	MediaType   string `json:"mediaType" validate:"required"`
 }
 
