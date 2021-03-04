@@ -8,6 +8,8 @@ package dtos
 import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
+
+	"github.com/google/uuid"
 )
 
 // Notification and its properties are defined in the APIv2 specification:
@@ -25,6 +27,19 @@ type Notification struct {
 	Sender             string   `json:"sender" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Severity           string   `json:"severity" validate:"required,oneof='MINOR' 'NORMAL' 'CRITICAL'"`
 	Status             string   `json:"status,omitempty" validate:"omitempty,oneof='NEW' 'PROCESSED' 'ESCALATED'"`
+}
+
+// NewNotification creates and returns a Notification DTO
+func NewNotification(labels []string, category, content, sender, severity string) Notification {
+	return Notification{
+		Versionable: common.NewVersionable(),
+		Id:          uuid.NewString(),
+		Labels:      labels,
+		Category:    category,
+		Content:     content,
+		Sender:      sender,
+		Severity:    severity,
+	}
 }
 
 // ToNotificationModel transforms the Notification DTO to the Notification Model
