@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
@@ -28,43 +27,39 @@ var (
 	testNotificationStatus      = models.New
 )
 
-var testAddNotification = dtos.Notification{
-	Versionable: common.NewVersionable(),
-	Category:    testNotificationCategory,
-	Labels:      testNotificationLabels,
-	Content:     testNotificationContent,
-	ContentType: testNotificationContentType,
-	Description: testNotificationDescription,
-	Sender:      testNotificationSender,
-	Severity:    testNotificationSeverity,
-	Status:      testNotificationStatus,
+func buildTestAddNotificationRequest() AddNotificationRequest {
+	notification := dtos.NewNotification(testNotificationLabels, testNotificationCategory, testNotificationContent,
+		testNotificationSender, testNotificationSeverity)
+	notification.ContentType = testNotificationContentType
+	notification.Description = testNotificationDescription
+	notification.Status = testNotificationStatus
+	return NewAddNotificationRequest(notification)
 }
 
 func TestAddNotification_Validate(t *testing.T) {
-
-	noReqId := NewAddNotificationRequest(testAddNotification)
+	noReqId := buildTestAddNotificationRequest()
 	noReqId.RequestId = ""
-	invalidReqId := NewAddNotificationRequest(testAddNotification)
+	invalidReqId := buildTestAddNotificationRequest()
 	invalidReqId.RequestId = "abc"
 
-	noCategoryAndLabel := NewAddNotificationRequest(testAddNotification)
+	noCategoryAndLabel := buildTestAddNotificationRequest()
 	noCategoryAndLabel.Notification.Category = ""
 	noCategoryAndLabel.Notification.Labels = nil
-	categoryNameWithReservedChar := NewAddNotificationRequest(testAddNotification)
+	categoryNameWithReservedChar := buildTestAddNotificationRequest()
 	categoryNameWithReservedChar.Notification.Category = namesWithReservedChar[0]
 
-	noContent := NewAddNotificationRequest(testAddNotification)
+	noContent := buildTestAddNotificationRequest()
 	noContent.Notification.Content = ""
 
-	noSender := NewAddNotificationRequest(testAddNotification)
+	noSender := buildTestAddNotificationRequest()
 	noSender.Notification.Sender = ""
 
-	noSeverity := NewAddNotificationRequest(testAddNotification)
+	noSeverity := buildTestAddNotificationRequest()
 	noSeverity.Notification.Severity = ""
-	invalidSeverity := NewAddNotificationRequest(testAddNotification)
+	invalidSeverity := buildTestAddNotificationRequest()
 	invalidSeverity.Notification.Severity = "foo"
 
-	invalidStatus := NewAddNotificationRequest(testAddNotification)
+	invalidStatus := buildTestAddNotificationRequest()
 	invalidStatus.Notification.Status = "foo"
 
 	tests := []struct {
@@ -72,7 +67,7 @@ func TestAddNotification_Validate(t *testing.T) {
 		request     AddNotificationRequest
 		expectError bool
 	}{
-		{"valid", NewAddNotificationRequest(testAddNotification), false},
+		{"valid", buildTestAddNotificationRequest(), false},
 		{"invalid, request ID is not an UUID", invalidReqId, true},
 		{"invalid, no category and labels", noCategoryAndLabel, true},
 		{"invalid, category name containing reserved chars", categoryNameWithReservedChar, true},
@@ -91,7 +86,7 @@ func TestAddNotification_Validate(t *testing.T) {
 }
 
 func TestAddNotification_UnmarshalJSON(t *testing.T) {
-	addNotificationRequest := NewAddNotificationRequest(testAddNotification)
+	addNotificationRequest := buildTestAddNotificationRequest()
 	jsonData, _ := json.Marshal(addNotificationRequest)
 	tests := []struct {
 		name     string
@@ -118,10 +113,11 @@ func TestAddNotification_UnmarshalJSON(t *testing.T) {
 }
 
 func TestAddNotificationReqToNotificationModels(t *testing.T) {
-	addNotificationRequest := NewAddNotificationRequest(testAddNotification)
+	addNotificationRequest := buildTestAddNotificationRequest()
 	requests := []AddNotificationRequest{addNotificationRequest}
 	expectedNotificationModel := []models.Notification{
 		{
+			Id:          addNotificationRequest.Notification.Id,
 			Category:    testNotificationCategory,
 			Content:     testNotificationContent,
 			ContentType: testNotificationContentType,
