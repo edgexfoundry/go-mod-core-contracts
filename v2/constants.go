@@ -191,7 +191,7 @@ const (
 	Password = "Password"
 )
 
-// Constants for Addressable
+// Constants for Address
 const (
 	// Type
 	REST = "REST"
