@@ -26,7 +26,14 @@ type AddIntervalActionRequest struct {
 // Validate satisfies the Validator interface
 func (request AddIntervalActionRequest) Validate() error {
 	err := v2.Validate(request)
-	return err
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	err = request.Action.Address.Validate()
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	return nil
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the AddIntervalActionRequest type
@@ -43,7 +50,7 @@ func (request *AddIntervalActionRequest) UnmarshalJSON(b []byte) error {
 
 	// validate AddIntervalActionRequest DTO
 	if err := request.Validate(); err != nil {
-		return err
+		return errors.NewCommonEdgeXWrapper(err)
 	}
 	return nil
 }
@@ -68,7 +75,16 @@ type UpdateIntervalActionRequest struct {
 // Validate satisfies the Validator interface
 func (request UpdateIntervalActionRequest) Validate() error {
 	err := v2.Validate(request)
-	return err
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if request.Action.Address != nil {
+		err = request.Action.Address.Validate()
+		if err != nil {
+			return errors.NewCommonEdgeXWrapper(err)
+		}
+	}
+	return nil
 }
 
 // UnmarshalJSON implements the Unmarshaler interface for the UpdateIntervalActionRequest type
@@ -95,38 +111,8 @@ func ReplaceIntervalActionModelFieldsWithDTO(action *models.IntervalAction, patc
 	if patch.IntervalName != nil {
 		action.IntervalName = *patch.IntervalName
 	}
-	if patch.Protocol != nil {
-		action.Protocol = *patch.Protocol
-	}
-	if patch.Host != nil {
-		action.Host = *patch.Host
-	}
-	if patch.Port != nil {
-		action.Port = *patch.Port
-	}
-	if patch.Path != nil {
-		action.Path = *patch.Path
-	}
-	if patch.Parameters != nil {
-		action.Parameters = *patch.Parameters
-	}
-	if patch.HTTPMethod != nil {
-		action.HTTPMethod = *patch.HTTPMethod
-	}
-	if patch.User != nil {
-		action.User = *patch.User
-	}
-	if patch.Password != nil {
-		action.Password = *patch.Password
-	}
-	if patch.Publisher != nil {
-		action.Publisher = *patch.Publisher
-	}
-	if patch.Target != nil {
-		action.Target = *patch.Target
-	}
-	if patch.Topic != nil {
-		action.Topic = *patch.Topic
+	if patch.Address != nil {
+		action.Address = dtos.ToAddressModel(*patch.Address)
 	}
 }
 

@@ -13,15 +13,5 @@ type IntervalAction struct {
 	Id           string
 	Name         string
 	IntervalName string
-	Protocol     string
-	Host         string
-	Port         int
-	Path         string
-	Parameters   string
-	HTTPMethod   string
-	User         string
-	Password     string
-	Publisher    string
-	Target       string
-	Topic        string
+	Address      Address
 }

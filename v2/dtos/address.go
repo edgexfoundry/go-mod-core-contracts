@@ -50,6 +50,17 @@ type RESTAddress struct {
 	HTTPMethod      string `json:"httpMethod" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
 }
 
+func NewRESTAddress(host string, port int, httpMethod string) Address {
+	return Address{
+		Type: v2.REST,
+		Host: host,
+		Port: port,
+		RESTAddress: RESTAddress{
+			HTTPMethod: httpMethod,
+		},
+	}
+}
+
 type MQTTPubAddress struct {
 	Publisher      string `json:"publisher" validate:"required"`
 	Topic          string `json:"topic" validate:"required"`
@@ -58,6 +69,18 @@ type MQTTPubAddress struct {
 	Retained       bool   `json:"retained,omitempty"`
 	AutoReconnect  bool   `json:"autoReconnect,omitempty"`
 	ConnectTimeout int    `json:"connectTimeout,omitempty"`
+}
+
+func NewMQTTAddress(host string, port int, publisher string, topic string) Address {
+	return Address{
+		Type: v2.MQTT,
+		Host: host,
+		Port: port,
+		MQTTPubAddress: MQTTPubAddress{
+			Publisher: publisher,
+			Topic:     topic,
+		},
+	}
 }
 
 func ToAddressModel(a Address) models.Address {

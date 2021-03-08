@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
@@ -27,7 +28,12 @@ func addIntervalActionRequestData() AddIntervalActionRequest {
 			Versionable:  common.NewVersionable(),
 			Name:         TestIntervalActionName,
 			IntervalName: TestIntervalName,
-			Target:       TestTarget,
+			Address: dtos.Address{
+				Type:        v2.REST,
+				Host:        TestHost,
+				Port:        TestPort,
+				RESTAddress: dtos.RESTAddress{HTTPMethod: TestHTTPMethod},
+			},
 		},
 	}
 }
@@ -46,34 +52,18 @@ func updateIntervalActionData() dtos.UpdateIntervalAction {
 	testId := ExampleUUID
 	testName := TestIntervalActionName
 	testIntervalName := TestIntervalName
-	testProtocol := TestProtocol
-	testHost := TestHost
-	testPort := TestPort
-	testPath := TestPath
-	testParameters := TestParameter
-	testHTTPMethod := TestHTTPMethod
-	testUser := TestUser
-	testPassword := TestPassword
-	testPublisher := TestPublisher
-	testTarget := TestTarget
-	testTopic := TestTopic
 
 	dto := dtos.UpdateIntervalAction{}
 	dto.Versionable = common.NewVersionable()
 	dto.Id = &testId
 	dto.Name = &testName
 	dto.IntervalName = &testIntervalName
-	dto.Protocol = &testProtocol
-	dto.Host = &testHost
-	dto.Port = &testPort
-	dto.Path = &testPath
-	dto.Parameters = &testParameters
-	dto.HTTPMethod = &testHTTPMethod
-	dto.User = &testUser
-	dto.Password = &testPassword
-	dto.Publisher = &testPublisher
-	dto.Target = &testTarget
-	dto.Topic = &testTopic
+	dto.Address = &dtos.Address{
+		Type:        v2.REST,
+		Host:        TestHost,
+		Port:        TestPort,
+		RESTAddress: dtos.RESTAddress{HTTPMethod: TestHTTPMethod},
+	}
 	return dto
 }
 
@@ -89,12 +79,23 @@ func TestAddIntervalActionRequest_Validate(t *testing.T) {
 	noIntervalActionName.Action.Name = emptyString
 	noIntervalName := addIntervalActionRequestData()
 	noIntervalName.Action.IntervalName = emptyString
-	noTarget := addIntervalActionRequestData()
-	noTarget.Action.Target = emptyString
 	intervalNameWithUnreservedChars := addIntervalActionRequestData()
 	intervalNameWithUnreservedChars.Action.Name = nameWithUnreservedChars
 	intervalNameWithReservedChars := addIntervalActionRequestData()
 	intervalNameWithReservedChars.Action.Name = "name!.~_001"
+
+	invalidNoAddressType := addIntervalActionRequestData()
+	invalidNoAddressType.Action.Address.Type = ""
+	invalidNoAddressHTTPMethod := addIntervalActionRequestData()
+	invalidNoAddressHTTPMethod.Action.Address.HTTPMethod = ""
+	invalidNoAddressMQTTPublisher := addIntervalActionRequestData()
+	invalidNoAddressMQTTPublisher.Action.Address.Type = v2.MQTT
+	invalidNoAddressMQTTPublisher.Action.Address.Topic = TestTopic
+	invalidNoAddressMQTTPublisher.Action.Address.Publisher = ""
+	invalidNoAddressMQTTTopic := addIntervalActionRequestData()
+	invalidNoAddressMQTTTopic.Action.Address.Type = v2.MQTT
+	invalidNoAddressMQTTTopic.Action.Address.Publisher = TestPublisher
+	invalidNoAddressMQTTTopic.Action.Address.Topic = ""
 
 	tests := []struct {
 		name           string
@@ -108,7 +109,10 @@ func TestAddIntervalActionRequest_Validate(t *testing.T) {
 		{"invalid AddIntervalActionRequest, Request Id is not an uuid", invalidReqId, true},
 		{"invalid AddIntervalActionRequest, no IntervalActionName", noIntervalActionName, true},
 		{"invalid AddIntervalActionRequest, no IntervalActionName", noIntervalName, true},
-		{"invalid AddIntervalActionRequest, no Target", noTarget, true},
+		{"invalid AddIntervalActionRequest, no address type", invalidNoAddressType, true},
+		{"invalid AddIntervalActionRequest, no address http method", invalidNoAddressHTTPMethod, true},
+		{"invalid AddIntervalActionRequest, no address MQTT publisher", invalidNoAddressMQTTPublisher, true},
+		{"invalid AddIntervalActionRequest, no address MQTT topic", invalidNoAddressMQTTTopic, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -152,7 +156,7 @@ func TestAddIntervalActionReqToIntervalActionModels(t *testing.T) {
 		{
 			Name:         TestIntervalActionName,
 			IntervalName: TestIntervalName,
-			Target:       TestTarget,
+			Address:      dtos.ToAddressModel(requests[0].Action.Address),
 		},
 	}
 	resultModels := AddIntervalActionReqToIntervalActionModels(requests)
@@ -208,6 +212,19 @@ func TestUpdateIntervalActionRequest_Validate(t *testing.T) {
 	invalidEmptyIntervalName := valid
 	invalidEmptyIntervalName.Action.IntervalName = &emptyString
 
+	invalidNoAddressType := updateIntervalActionRequestData()
+	invalidNoAddressType.Action.Address.Type = ""
+	invalidNoAddressHttpMethod := updateIntervalActionRequestData()
+	invalidNoAddressHttpMethod.Action.Address.HTTPMethod = ""
+	invalidNoAddressMQTTPublisher := updateIntervalActionRequestData()
+	invalidNoAddressMQTTPublisher.Action.Address.Type = v2.MQTT
+	invalidNoAddressMQTTPublisher.Action.Address.Topic = TestTopic
+	invalidNoAddressMQTTPublisher.Action.Address.Publisher = ""
+	invalidNoAddressMQTTTopic := updateIntervalActionRequestData()
+	invalidNoAddressMQTTTopic.Action.Address.Type = v2.MQTT
+	invalidNoAddressMQTTTopic.Action.Address.Publisher = TestPublisher
+	invalidNoAddressMQTTTopic.Action.Address.Topic = ""
+
 	tests := []struct {
 		name        string
 		req         UpdateIntervalActionRequest
@@ -222,6 +239,11 @@ func TestUpdateIntervalActionRequest_Validate(t *testing.T) {
 		{"valid, only name", validOnlyName, false},
 		{"invalid, empty name", invalidEmptyName, true},
 		{"invalid, empty interval name", invalidEmptyIntervalName, true},
+
+		{"invalid, no address type", invalidNoAddressType, true},
+		{"invalid, no address HTTP method", invalidNoAddressHttpMethod, true},
+		{"invalid, no address MQTT publisher", invalidNoAddressMQTTPublisher, true},
+		{"invalid, no address MQTT Topic", invalidNoAddressMQTTPublisher, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -243,17 +265,7 @@ func TestUpdateIntervalActionRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 	require.NoError(t, err)
 	// Nil field checking is used to update with patch
-	assert.Nil(t, req.Action.Protocol)
-	assert.Nil(t, req.Action.Host)
-	assert.Nil(t, req.Action.Port)
-	assert.Nil(t, req.Action.Path)
-	assert.Nil(t, req.Action.HTTPMethod)
-	assert.Nil(t, req.Action.Parameters)
-	assert.Nil(t, req.Action.User)
-	assert.Nil(t, req.Action.Password)
-	assert.Nil(t, req.Action.Publisher)
-	assert.Nil(t, req.Action.Target)
-	assert.Nil(t, req.Action.Topic)
+	assert.Nil(t, req.Action.Address)
 }
 
 func TestReplaceIntervalActionModelFieldsWithDTO(t *testing.T) {
@@ -265,17 +277,8 @@ func TestReplaceIntervalActionModelFieldsWithDTO(t *testing.T) {
 
 	ReplaceIntervalActionModelFieldsWithDTO(&interval, patch)
 
+	expectedAddress := dtos.ToAddressModel(*patch.Address)
 	assert.Equal(t, TestIntervalActionName, interval.Name)
 	assert.Equal(t, TestIntervalName, interval.IntervalName)
-	assert.Equal(t, TestProtocol, interval.Protocol)
-	assert.Equal(t, TestHost, interval.Host)
-	assert.Equal(t, TestPort, interval.Port)
-	assert.Equal(t, TestPath, interval.Path)
-	assert.Equal(t, TestParameter, interval.Parameters)
-	assert.Equal(t, TestHTTPMethod, interval.HTTPMethod)
-	assert.Equal(t, TestUser, interval.User)
-	assert.Equal(t, TestPassword, interval.Password)
-	assert.Equal(t, TestPublisher, interval.Publisher)
-	assert.Equal(t, TestTarget, interval.Target)
-	assert.Equal(t, TestTopic, interval.Topic)
+	assert.Equal(t, expectedAddress, interval.Address)
 }
