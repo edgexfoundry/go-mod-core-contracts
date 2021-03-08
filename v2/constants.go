@@ -190,3 +190,10 @@ const (
 	Primary  = "Primary"
 	Password = "Password"
 )
+
+// Constants for Address
+const (
+	// Type
+	REST = "REST"
+	MQTT = "MQTT"
+)
