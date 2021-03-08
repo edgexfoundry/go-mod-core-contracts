@@ -60,7 +60,7 @@ func newBaseReading(profileName string, deviceName string, resourceName string, 
 
 // NewSimpleReading creates and returns a new initialized BaseReading with its SimpleReading initialized
 func NewSimpleReading(profileName string, deviceName string, resourceName string, valueType string, value interface{}) (BaseReading, error) {
-	stringValue, err := convertInterfaceValue(valueType, value)
+	stringValue, err := ConvertInterfaceValue(valueType, value)
 	if err != nil {
 		return BaseReading{}, err
 	}
@@ -82,7 +82,7 @@ func NewBinaryReading(profileName string, deviceName string, resourceName string
 	return reading
 }
 
-func convertInterfaceValue(valueType string, value interface{}) (string, error) {
+func ConvertInterfaceValue(valueType string, value interface{}) (string, error) {
 	switch valueType {
 	case v2.ValueTypeBool:
 		return convertSimpleValue(valueType, reflect.Bool, value)
@@ -156,7 +156,7 @@ func convertInterfaceValue(valueType string, value interface{}) (string, error) 
 }
 
 func convertSimpleValue(valueType string, kind reflect.Kind, value interface{}) (string, error) {
-	if err := validateType(valueType, kind, value); err != nil {
+	if err := ValidateType(valueType, kind, value); err != nil {
 		return "", err
 	}
 
@@ -164,7 +164,7 @@ func convertSimpleValue(valueType string, kind reflect.Kind, value interface{}) 
 }
 
 func convertFloatValue(valueType string, kind reflect.Kind, value interface{}) (string, error) {
-	if err := validateType(valueType, kind, value); err != nil {
+	if err := ValidateType(valueType, kind, value); err != nil {
 		return "", err
 	}
 
@@ -172,7 +172,7 @@ func convertFloatValue(valueType string, kind reflect.Kind, value interface{}) (
 }
 
 func convertSimpleArrayValue(valueType string, kind reflect.Kind, value interface{}) (string, error) {
-	if err := validateType(valueType, kind, value); err != nil {
+	if err := ValidateType(valueType, kind, value); err != nil {
 		return "", err
 	}
 
@@ -229,7 +229,7 @@ func convertFloat64ArrayValue(values []float64) (string, error) {
 	return result, nil
 }
 
-func validateType(valueType string, kind reflect.Kind, value interface{}) error {
+func ValidateType(valueType string, kind reflect.Kind, value interface{}) error {
 	if reflect.TypeOf(value).Kind() == reflect.Slice {
 		if kind != reflect.TypeOf(value).Elem().Kind() {
 			return fmt.Errorf("slice of type of value `%s` not a match for specified ValueType '%s", kind.String(), valueType)
