@@ -29,8 +29,8 @@ type RESTAddress struct {
 
 func (a RESTAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }
 
-// MqttPubAddress is a MQTT specific struct
-type MqttPubAddress struct {
+// MQTTPubAddress is a MQTT specific struct
+type MQTTPubAddress struct {
 	BaseAddress
 	Publisher      string
 	Topic          string
@@ -41,4 +41,4 @@ type MqttPubAddress struct {
 	ConnectTimeout int
 }
 
-func (a MqttPubAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }
+func (a MQTTPubAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }

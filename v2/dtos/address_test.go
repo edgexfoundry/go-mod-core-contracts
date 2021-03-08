@@ -37,11 +37,11 @@ var testRESTAddress = Address{
 	},
 }
 
-var testMqttPubAddress = Address{
+var testMQTTPubAddress = Address{
 	Type: v2.MQTT,
 	Host: testHost,
 	Port: testPort,
-	MqttPubAddress: MqttPubAddress{
+	MQTTPubAddress: MQTTPubAddress{
 		Publisher: testPublisher,
 		Topic:     testTopic,
 	},
@@ -55,8 +55,8 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 	)
 	mqttJsonStr := fmt.Sprintf(
 		`{"type":"%s","host":"%s","port":%d,"Publisher":"%s","Topic":"%s"}`,
-		testMqttPubAddress.Type, testMqttPubAddress.Host, testMqttPubAddress.Port,
-		testMqttPubAddress.Publisher, testMqttPubAddress.Topic,
+		testMQTTPubAddress.Type, testMQTTPubAddress.Host, testMQTTPubAddress.Port,
+		testMQTTPubAddress.Publisher, testMQTTPubAddress.Topic,
 	)
 
 	type args struct {
@@ -69,7 +69,7 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 		wantErr  bool
 	}{
 		{"unmarshal RESTAddress with success", testRESTAddress, []byte(restJsonStr), false},
-		{"unmarshal MqttPubAddress with success", testMqttPubAddress, []byte(mqttJsonStr), false},
+		{"unmarshal MQTTPubAddress with success", testMQTTPubAddress, []byte(mqttJsonStr), false},
 		{"unmarshal invalid Address, empty data", Address{}, []byte{}, true},
 		{"unmarshal invalid Address, string data", Address{}, []byte("Invalid address"), true},
 	}
@@ -93,11 +93,11 @@ func TestAddress_Validate(t *testing.T) {
 	noRestHttpMethod := testRESTAddress
 	noRestHttpMethod.HTTPMethod = ""
 
-	validMqtt := testMqttPubAddress
-	noMqttPublisher := testMqttPubAddress
-	noMqttPublisher.Publisher = ""
-	noMqttTopic := testMqttPubAddress
-	noMqttTopic.Topic = ""
+	validMQTT := testMQTTPubAddress
+	noMQTTPublisher := testMQTTPubAddress
+	noMQTTPublisher.Publisher = ""
+	noMQTTTopic := testMQTTPubAddress
+	noMQTTTopic.Topic = ""
 	tests := []struct {
 		name        string
 		dto         Address
@@ -105,9 +105,9 @@ func TestAddress_Validate(t *testing.T) {
 	}{
 		{"valid RESTAddress", validRest, false},
 		{"invalid RESTAddress, no HTTP method", noRestHttpMethod, true},
-		{"valid MqttPubAddress", validMqtt, false},
-		{"invalid MqttPubAddress, no MQTT publisher", noMqttPublisher, true},
-		{"invalid MqttPubAddress, no MQTT Topic", noMqttTopic, true},
+		{"valid MQTTPubAddress", validMQTT, false},
+		{"invalid MQTTPubAddress, no MQTT publisher", noMQTTPublisher, true},
+		{"invalid MQTTPubAddress, no MQTT Topic", noMQTTTopic, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -18,7 +18,7 @@ type Address struct {
 	Port int    `json:"port" validate:"required"`
 
 	RESTAddress    `json:",inline" validate:"-"`
-	MqttPubAddress `json:",inline" validate:"-"`
+	MQTTPubAddress `json:",inline" validate:"-"`
 }
 
 // Validate satisfies the Validator interface
@@ -35,9 +35,9 @@ func (a *Address) Validate() error {
 		}
 		break
 	case v2.MQTT:
-		err = v2.Validate(a.MqttPubAddress)
+		err = v2.Validate(a.MQTTPubAddress)
 		if err != nil {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid MqttPubAddress.", err)
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid MQTTPubAddress.", err)
 		}
 		break
 	}
@@ -50,7 +50,7 @@ type RESTAddress struct {
 	HTTPMethod      string `json:"httpMethod" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
 }
 
-type MqttPubAddress struct {
+type MQTTPubAddress struct {
 	Publisher      string `json:"publisher" validate:"required"`
 	Topic          string `json:"topic" validate:"required"`
 	QoS            int    `json:"qos,omitempty"`
@@ -75,12 +75,12 @@ func ToAddressModel(a Address) models.Address {
 		}
 		break
 	case v2.MQTT:
-		address = models.MqttPubAddress{
+		address = models.MQTTPubAddress{
 			BaseAddress: models.BaseAddress{
 				Type: a.Type, Host: a.Host, Port: a.Port,
 			},
-			Publisher:      a.MqttPubAddress.Publisher,
-			Topic:          a.MqttPubAddress.Topic,
+			Publisher:      a.MQTTPubAddress.Publisher,
+			Topic:          a.MQTTPubAddress.Topic,
 			QoS:            a.QoS,
 			KeepAlive:      a.KeepAlive,
 			Retained:       a.Retained,
@@ -107,8 +107,8 @@ func FromAddressModelToDTO(address models.Address) Address {
 			HTTPMethod:      a.HTTPMethod,
 		}
 		break
-	case models.MqttPubAddress:
-		dto.MqttPubAddress = MqttPubAddress{
+	case models.MQTTPubAddress:
+		dto.MQTTPubAddress = MQTTPubAddress{
 			Publisher:      a.Publisher,
 			Topic:          a.Topic,
 			QoS:            a.QoS,
