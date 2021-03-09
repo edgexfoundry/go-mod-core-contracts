@@ -19,23 +19,9 @@ import (
 )
 
 func addIntervalActionRequestData() AddIntervalActionRequest {
-	return AddIntervalActionRequest{
-		BaseRequest: common.BaseRequest{
-			RequestId:   ExampleUUID,
-			Versionable: common.NewVersionable(),
-		},
-		Action: dtos.IntervalAction{
-			Versionable:  common.NewVersionable(),
-			Name:         TestIntervalActionName,
-			IntervalName: TestIntervalName,
-			Address: dtos.Address{
-				Type:        v2.REST,
-				Host:        TestHost,
-				Port:        TestPort,
-				RESTAddress: dtos.RESTAddress{HTTPMethod: TestHTTPMethod},
-			},
-		},
-	}
+	address := dtos.NewRESTAddress(TestHost, TestPort, TestHTTPMethod)
+	dto := dtos.NewIntervalAction(TestIntervalActionName, TestIntervalName, address)
+	return NewAddIntervalActionRequest(dto)
 }
 
 func updateIntervalActionRequestData() UpdateIntervalActionRequest {
@@ -58,12 +44,8 @@ func updateIntervalActionData() dtos.UpdateIntervalAction {
 	dto.Id = &testId
 	dto.Name = &testName
 	dto.IntervalName = &testIntervalName
-	dto.Address = &dtos.Address{
-		Type:        v2.REST,
-		Host:        TestHost,
-		Port:        TestPort,
-		RESTAddress: dtos.RESTAddress{HTTPMethod: TestHTTPMethod},
-	}
+	address := dtos.NewRESTAddress(TestHost, TestPort, TestHTTPMethod)
+	dto.Address = &address
 	return dto
 }
 
@@ -125,7 +107,7 @@ func TestAddIntervalActionRequest_Validate(t *testing.T) {
 
 func TestAddIntervalAction_UnmarshalJSON(t *testing.T) {
 	valid := addIntervalActionRequestData()
-	jsonData, _ := json.Marshal(addIntervalActionRequestData())
+	jsonData, _ := json.Marshal(valid)
 	tests := []struct {
 		name     string
 		expected AddIntervalActionRequest
@@ -154,6 +136,7 @@ func TestAddIntervalActionReqToIntervalActionModels(t *testing.T) {
 	requests := []AddIntervalActionRequest{addIntervalActionRequestData()}
 	expectedIntervalActionModel := []models.IntervalAction{
 		{
+			Id:           requests[0].Action.Id,
 			Name:         TestIntervalActionName,
 			IntervalName: TestIntervalName,
 			Address:      dtos.ToAddressModel(requests[0].Action.Address),
