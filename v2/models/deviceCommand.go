@@ -9,7 +9,8 @@ package models
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceCommand
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type DeviceCommand struct {
-	Name string
-	Get  []ResourceOperation
-	Set  []ResourceOperation
+	Name               string
+	IsHidden           bool
+	ReadWrite          string
+	ResourceOperations []ResourceOperation
 }

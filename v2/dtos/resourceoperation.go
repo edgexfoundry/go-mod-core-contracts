@@ -11,7 +11,7 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ResourceOperation
 type ResourceOperation struct {
 	DeviceResource string            `json:"deviceResource" yaml:"deviceResource" validate:"required"` // The replacement of Object field
-	Parameter      string            `json:"parameter,omitempty" yaml:"parameter,omitempty"`
+	DefaultValue   string            `json:"defaultValue,omitempty" yaml:"defaultValue,omitempty"`
 	Mappings       map[string]string `json:"mappings,omitempty" yaml:"mappings,omitempty"`
 }
 
@@ -19,7 +19,7 @@ type ResourceOperation struct {
 func ToResourceOperationModel(ro ResourceOperation) models.ResourceOperation {
 	return models.ResourceOperation{
 		DeviceResource: ro.DeviceResource,
-		Parameter:      ro.Parameter,
+		DefaultValue:   ro.DefaultValue,
 		Mappings:       ro.Mappings,
 	}
 }
@@ -28,7 +28,7 @@ func ToResourceOperationModel(ro ResourceOperation) models.ResourceOperation {
 func FromResourceOperationModelToDTO(ro models.ResourceOperation) ResourceOperation {
 	return ResourceOperation{
 		DeviceResource: ro.DeviceResource,
-		Parameter:      ro.Parameter,
+		DefaultValue:   ro.DefaultValue,
 		Mappings:       ro.Mappings,
 	}
 }

@@ -12,6 +12,7 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 type DeviceResource struct {
 	Description string            `json:"description,omitempty" yaml:"description,omitempty"`
 	Name        string            `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	IsHidden    bool              `json:"isHidden" yaml:"isHidden"`
 	Tag         string            `json:"tag,omitempty" yaml:"tag,omitempty"`
 	Properties  PropertyValue     `json:"properties,omitempty" yaml:"properties,omitempty"`
 	Attributes  map[string]string `json:"attributes,omitempty" yaml:"attributes,omitempty"`
@@ -22,6 +23,7 @@ func ToDeviceResourceModel(d DeviceResource) models.DeviceResource {
 	return models.DeviceResource{
 		Description: d.Description,
 		Name:        d.Name,
+		IsHidden:    d.IsHidden,
 		Tag:         d.Tag,
 		Properties:  ToPropertyValueModel(d.Properties),
 		Attributes:  d.Attributes,
@@ -42,6 +44,7 @@ func FromDeviceResourceModelToDTO(d models.DeviceResource) DeviceResource {
 	return DeviceResource{
 		Description: d.Description,
 		Name:        d.Name,
+		IsHidden:    d.IsHidden,
 		Tag:         d.Tag,
 		Properties:  FromPropertyValueModelToDTO(d.Properties),
 		Attributes:  d.Attributes,
