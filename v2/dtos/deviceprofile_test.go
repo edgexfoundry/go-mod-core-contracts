@@ -33,7 +33,7 @@ var testDeviceProfile = models.DeviceProfile{
 		Description: TestDescription,
 		Tag:         TestTag,
 		Attributes:  testAttributes,
-		Properties: models.PropertyValue{
+		Properties: models.ResourceProperties{
 			ValueType: v2.ValueTypeInt16,
 			ReadWrite: v2.ReadWrite_RW,
 		},
@@ -60,7 +60,7 @@ func profileData() DeviceProfile {
 			Description: TestDescription,
 			Tag:         TestTag,
 			Attributes:  testAttributes,
-			Properties: PropertyValue{
+			Properties: ResourceProperties{
 				ValueType: v2.ValueTypeInt16,
 				ReadWrite: v2.ReadWrite_RW,
 			},
@@ -126,7 +126,7 @@ deviceResources:
   -  
     name: "DeviceValue_Boolean_RW"
     properties:
-      { valueType: "Bool"}
+      { valueType: "Bool", readWrite: "RW"}
 deviceCommands:
   -  
     name: "GenerateDeviceValue_Boolean_RW"
@@ -140,7 +140,7 @@ deviceResources:
   -  
     name: "DeviceValue_Boolean_RW"
     properties:
-      { valueType: "Bool"}
+      { valueType: "Bool", readWrite: "RW"}
 deviceCommands:
   -  
     name: "GenerateDeviceValue_Boolean_RW"
