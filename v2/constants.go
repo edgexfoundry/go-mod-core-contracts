@@ -197,3 +197,10 @@ const (
 	REST = "REST"
 	MQTT = "MQTT"
 )
+
+// Constants for DeviceProfile
+const (
+	ReadWrite_R  = "R"
+	ReadWrite_W  = "W"
+	ReadWrite_RW = "RW"
+)

@@ -26,7 +26,6 @@ type DeviceProfile struct {
 	Labels             []string         `json:"labels,omitempty" yaml:"labels,flow,omitempty"`
 	DeviceResources    []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
 	DeviceCommands     []DeviceCommand  `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
-	CoreCommands       []Command        `json:"coreCommands,omitempty" yaml:"coreCommands,omitempty" validate:"dive"`
 }
 
 // Validate satisfies the Validator interface
@@ -50,7 +49,6 @@ func (dp *DeviceProfile) UnmarshalYAML(unmarshal func(interface{}) error) error 
 		Labels             []string         `yaml:"labels"`
 		DeviceResources    []DeviceResource `yaml:"deviceResources"`
 		DeviceCommands     []DeviceCommand  `yaml:"deviceCommands"`
-		CoreCommands       []Command        `yaml:"coreCommands"`
 	}
 	if err := unmarshal(&alias); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to unmarshal request body as YAML.", err)
@@ -83,7 +81,6 @@ func ToDeviceProfileModel(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 		Labels:          deviceProfileDTO.Labels,
 		DeviceResources: ToDeviceResourceModels(deviceProfileDTO.DeviceResources),
 		DeviceCommands:  ToDeviceCommandModels(deviceProfileDTO.DeviceCommands),
-		CoreCommands:    ToCommandModels(deviceProfileDTO.CoreCommands),
 	}
 }
 
@@ -99,7 +96,6 @@ func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfi
 		Labels:          deviceProfile.Labels,
 		DeviceResources: FromDeviceResourceModelsToDTOs(deviceProfile.DeviceResources),
 		DeviceCommands:  FromDeviceCommandModelsToDTOs(deviceProfile.DeviceCommands),
-		CoreCommands:    FromCommandModelsToDTOs(deviceProfile.CoreCommands),
 	}
 }
 
@@ -122,33 +118,16 @@ func ValidateDeviceProfileDTO(profile DeviceProfile) error {
 		}
 		dupCheck[command.Name] = true
 
-		// deviceResources referenced in deviceCommands must exist
-		getCommands := command.Get
-		for _, getCommand := range getCommands {
-			if !deviceResourcesContains(profile.DeviceResources, getCommand.DeviceResource) {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's Get resource %s doesn't match any deivce resource", getCommand.DeviceResource), nil)
+		resourceOperations := command.ResourceOperations
+		for _, ro := range resourceOperations {
+			// ResourceOperations referenced in deviceCommands must exist
+			if !deviceResourcesContains(profile.DeviceResources, ro.DeviceResource) {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's resource %s doesn't match any deivce resource", ro.DeviceResource), nil)
 			}
-		}
-		setCommands := command.Set
-		for _, setCommand := range setCommands {
-			if !deviceResourcesContains(profile.DeviceResources, setCommand.DeviceResource) {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's Set resource %s doesn't match any deivce resource", setCommand.DeviceResource), nil)
+			// Check the ReadWrite whether is align to the deviceResource
+			if !validReadWritePermission(profile.DeviceResources, ro.DeviceResource, command.ReadWrite) {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's ReadWrite permission '%s' doesn't align the deivce resource", command.ReadWrite), nil)
 			}
-		}
-	}
-	// coreCommands validation
-	dupCheck = make(map[string]bool)
-	for _, command := range profile.CoreCommands {
-		// coreCommand name should not duplicated
-		if dupCheck[command.Name] {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("core command %s is duplicated", command.Name), nil)
-		}
-		dupCheck[command.Name] = true
-
-		// coreCommands name should match the one of deviceResources and deviceCommands
-		if !deviceCommandsContains(profile.DeviceCommands, command.Name) &&
-			!deviceResourcesContains(profile.DeviceResources, command.Name) {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("core command %s doesn't match any deivce command or resource", command.Name), nil)
 		}
 	}
 	return nil
@@ -165,13 +144,16 @@ func deviceResourcesContains(resources []DeviceResource, name string) bool {
 	return contains
 }
 
-func deviceCommandsContains(resources []DeviceCommand, name string) bool {
-	contains := false
+func validReadWritePermission(resources []DeviceResource, name string, readWrite string) bool {
+	valid := true
 	for _, resource := range resources {
 		if resource.Name == name {
-			contains = true
-			break
+			if resource.Properties.ReadWrite != v2.ReadWrite_RW &&
+				resource.Properties.ReadWrite != readWrite {
+				valid = false
+				break
+			}
 		}
 	}
-	return contains
+	return valid
 }

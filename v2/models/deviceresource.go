@@ -11,6 +11,7 @@ package models
 type DeviceResource struct {
 	Description string
 	Name        string
+	IsHidden    bool
 	Tag         string
 	Properties  PropertyValue
 	Attributes  map[string]string

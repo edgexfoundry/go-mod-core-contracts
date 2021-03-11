@@ -10,6 +10,6 @@ package models
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type ResourceOperation struct {
 	DeviceResource string
-	Parameter      string
+	DefaultValue   string
 	Mappings       map[string]string
 }

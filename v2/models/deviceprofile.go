@@ -18,5 +18,4 @@ type DeviceProfile struct {
 	Labels          []string
 	DeviceResources []DeviceResource
 	DeviceCommands  []DeviceCommand
-	CoreCommands    []Command
 }
