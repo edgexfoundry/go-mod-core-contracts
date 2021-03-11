@@ -12,7 +12,7 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 type DeviceResource struct {
 	Description string            `json:"description,omitempty" yaml:"description,omitempty"`
 	Name        string            `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	IsHidden    bool              `json:"isHidden" yaml:"isHidden"`
+	IsHidden    bool              `json:"isHidden,omitempty" yaml:"isHidden,omitempty"`
 	Tag         string            `json:"tag,omitempty" yaml:"tag,omitempty"`
 	Properties  PropertyValue     `json:"properties,omitempty" yaml:"properties,omitempty"`
 	Attributes  map[string]string `json:"attributes,omitempty" yaml:"attributes,omitempty"`
