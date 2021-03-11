@@ -7,11 +7,11 @@ package dtos
 
 import "github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
-// PropertyValue and its properties care defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/PropertyValue
-type PropertyValue struct {
+// ResourceProperties and its properties care defined in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ResourceProperties
+type ResourceProperties struct {
 	ValueType    string `json:"valueType" yaml:"valueType" validate:"required,edgex-dto-value-type"`
-	ReadWrite    string `json:"readWrite,omitempty" yaml:"readWrite,omitempty"`
+	ReadWrite    string `json:"readWrite" yaml:"readWrite" validate:"required,oneof='R' 'W' 'RW'"`
 	Units        string `json:"units,omitempty" yaml:"units,omitempty"`
 	Minimum      string `json:"minimum,omitempty" yaml:"minimum,omitempty"`
 	Maximum      string `json:"maximum,omitempty" yaml:"maximum,omitempty"`
@@ -25,9 +25,9 @@ type PropertyValue struct {
 	MediaType    string `json:"mediaType,omitempty" yaml:"mediaType,omitempty"`
 }
 
-// ToPropertyValueModel transforms the PropertyValue DTO to the PropertyValue model
-func ToPropertyValueModel(p PropertyValue) models.PropertyValue {
-	return models.PropertyValue{
+// ToResourcePropertiesModel transforms the ResourceProperties DTO to the ResourceProperties model
+func ToResourcePropertiesModel(p ResourceProperties) models.ResourceProperties {
+	return models.ResourceProperties{
 		ValueType:    p.ValueType,
 		ReadWrite:    p.ReadWrite,
 		Units:        p.Units,
@@ -44,9 +44,9 @@ func ToPropertyValueModel(p PropertyValue) models.PropertyValue {
 	}
 }
 
-// FromPropertyValueModelToDTO transforms the PropertyValue Model to the PropertyValue DTO
-func FromPropertyValueModelToDTO(p models.PropertyValue) PropertyValue {
-	return PropertyValue{
+// FromResourcePropertiesModelToDTO transforms the ResourceProperties Model to the ResourceProperties DTO
+func FromResourcePropertiesModelToDTO(p models.ResourceProperties) ResourceProperties {
+	return ResourceProperties{
 		ValueType:    p.ValueType,
 		ReadWrite:    p.ReadWrite,
 		Units:        p.Units,

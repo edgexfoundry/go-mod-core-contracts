@@ -30,7 +30,7 @@ func profileData() DeviceProfileRequest {
 		Description: TestDescription,
 		Tag:         TestTag,
 		Attributes:  testAttributes,
-		Properties: dtos.PropertyValue{
+		Properties: dtos.ResourceProperties{
 			ValueType: v2.ValueTypeInt16,
 			ReadWrite: v2.ReadWrite_RW,
 		},
@@ -71,7 +71,7 @@ var expectedDeviceProfile = models.DeviceProfile{
 		Description: TestDescription,
 		Tag:         TestTag,
 		Attributes:  testAttributes,
-		Properties: models.PropertyValue{
+		Properties: models.ResourceProperties{
 			ValueType: v2.ValueTypeInt16,
 			ReadWrite: v2.ReadWrite_RW,
 		},
@@ -98,6 +98,10 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 	noDeviceResourcePropertyType.Profile.DeviceResources[0].Properties.ValueType = emptyString
 	invalidDeviceResourcePropertyType := profileData()
 	invalidDeviceResourcePropertyType.Profile.DeviceResources[0].Properties.ValueType = "BadType"
+	noDeviceResourceReadWrite := profileData()
+	noDeviceResourceReadWrite.Profile.DeviceResources[0].Properties.ReadWrite = emptyString
+	invalidDeviceResourceReadWrite := profileData()
+	invalidDeviceResourceReadWrite.Profile.DeviceResources[0].Properties.ReadWrite = "invalid"
 
 	tests := []struct {
 		name          string
@@ -110,6 +114,8 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 		{"invalid DeviceProfileRequest, no deviceResource name", noDeviceResourceName, true},
 		{"invalid DeviceProfileRequest, no deviceResource property type", noDeviceResourcePropertyType, true},
 		{"invalid DeviceProfileRequest, invalid deviceResource property type", invalidDeviceResourcePropertyType, true},
+		{"invalid DeviceProfileRequest, no deviceResource property readWrite", noDeviceResourceReadWrite, true},
+		{"invalid DeviceProfileRequest, invalid deviceResource property readWrite", invalidDeviceResourcePropertyType, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
