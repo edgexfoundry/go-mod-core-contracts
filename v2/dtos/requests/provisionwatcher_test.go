@@ -32,7 +32,6 @@ var testAddProvisionWatcher = AddProvisionWatcherRequest{
 		Versionable: common.NewVersionable(),
 	},
 	ProvisionWatcher: dtos.ProvisionWatcher{
-		Versionable:         common.NewVersionable(),
 		Name:                testProvisionWatcherName,
 		Labels:              testProvisionWatcherLabels,
 		Identifiers:         testIdentifiers,

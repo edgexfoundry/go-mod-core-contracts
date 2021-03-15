@@ -38,7 +38,6 @@ func addSubscriptionRequestData() AddSubscriptionRequest {
 			Versionable: common.NewVersionable(),
 		},
 		Subscription: dtos.Subscription{
-			Versionable:    common.NewVersionable(),
 			Name:           testSubscriptionName,
 			Categories:     testSubscriptionCategories,
 			Labels:         testSubscriptionLabels,

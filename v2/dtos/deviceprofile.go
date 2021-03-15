@@ -10,22 +10,20 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
 
 // DeviceProfile and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceProfile
 type DeviceProfile struct {
-	common.Versionable `json:",inline" yaml:",inline"`
-	Id                 string           `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name               string           `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Manufacturer       string           `json:"manufacturer,omitempty" yaml:"manufacturer,omitempty"`
-	Description        string           `json:"description,omitempty" yaml:"description,omitempty"`
-	Model              string           `json:"model,omitempty" yaml:"model,omitempty"`
-	Labels             []string         `json:"labels,omitempty" yaml:"labels,flow,omitempty"`
-	DeviceResources    []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
-	DeviceCommands     []DeviceCommand  `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
+	Id              string           `json:"id,omitempty" validate:"omitempty,uuid"`
+	Name            string           `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Manufacturer    string           `json:"manufacturer,omitempty" yaml:"manufacturer,omitempty"`
+	Description     string           `json:"description,omitempty" yaml:"description,omitempty"`
+	Model           string           `json:"model,omitempty" yaml:"model,omitempty"`
+	Labels          []string         `json:"labels,omitempty" yaml:"labels,flow,omitempty"`
+	DeviceResources []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
+	DeviceCommands  []DeviceCommand  `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
 }
 
 // Validate satisfies the Validator interface
@@ -40,15 +38,14 @@ func (dp *DeviceProfile) Validate() error {
 // UnmarshalYAML implements the Unmarshaler interface for the DeviceProfile type
 func (dp *DeviceProfile) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var alias struct {
-		common.Versionable `yaml:",inline"`
-		Id                 string           `yaml:"id"`
-		Name               string           `yaml:"name"`
-		Manufacturer       string           `yaml:"manufacturer"`
-		Description        string           `yaml:"description"`
-		Model              string           `yaml:"model"`
-		Labels             []string         `yaml:"labels"`
-		DeviceResources    []DeviceResource `yaml:"deviceResources"`
-		DeviceCommands     []DeviceCommand  `yaml:"deviceCommands"`
+		Id              string           `yaml:"id"`
+		Name            string           `yaml:"name"`
+		Manufacturer    string           `yaml:"manufacturer"`
+		Description     string           `yaml:"description"`
+		Model           string           `yaml:"model"`
+		Labels          []string         `yaml:"labels"`
+		DeviceResources []DeviceResource `yaml:"deviceResources"`
+		DeviceCommands  []DeviceCommand  `yaml:"deviceCommands"`
 	}
 	if err := unmarshal(&alias); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to unmarshal request body as YAML.", err)
@@ -87,7 +84,6 @@ func ToDeviceProfileModel(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 // FromDeviceProfileModelToDTO transforms the DeviceProfile Model to the DeviceProfile DTO
 func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfile {
 	return DeviceProfile{
-		Versionable:     common.NewVersionable(),
 		Id:              deviceProfile.Id,
 		Name:            deviceProfile.Name,
 		Description:     deviceProfile.Description,

@@ -116,7 +116,6 @@ func ReplaceProvisionWatcherModelFieldsWithDTO(pw *models.ProvisionWatcher, patc
 }
 
 func NewAddProvisionWatcherRequest(dto dtos.ProvisionWatcher) AddProvisionWatcherRequest {
-	dto.Versionable = common.NewVersionable()
 	return AddProvisionWatcherRequest{
 		BaseRequest:      common.NewBaseRequest(),
 		ProvisionWatcher: dto,

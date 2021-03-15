@@ -116,7 +116,6 @@ func ReplaceSubscriptionModelFieldsWithDTO(s *models.Subscription, patch dtos.Up
 }
 
 func NewAddSubscriptionRequest(dto dtos.Subscription) AddSubscriptionRequest {
-	dto.Versionable = common.NewVersionable()
 	return AddSubscriptionRequest{
 		BaseRequest:  common.NewBaseRequest(),
 		Subscription: dto,

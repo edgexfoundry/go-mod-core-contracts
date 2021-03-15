@@ -48,7 +48,6 @@ func profileData() DeviceProfileRequest {
 			Versionable: common.NewVersionable(),
 		},
 		Profile: dtos.DeviceProfile{
-			Versionable:     common.NewVersionable(),
 			Name:            TestDeviceProfileName,
 			Manufacturer:    TestManufacturer,
 			Description:     TestDescription,
@@ -195,5 +194,4 @@ func TestNewDeviceProfileRequest(t *testing.T) {
 	actual := NewDeviceProfileRequest(dtos.DeviceProfile{})
 
 	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
-	assert.Equal(t, expectedApiVersion, actual.Profile.ApiVersion)
 }

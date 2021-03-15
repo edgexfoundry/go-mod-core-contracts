@@ -15,18 +15,16 @@ import (
 // IntervalAction and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/IntervalAction
 type IntervalAction struct {
-	common.Versionable `json:",inline"`
-	Created            int64   `json:"created,omitempty"`
-	Modified           int64   `json:"modified,omitempty"`
-	Id                 string  `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name               string  `json:"name" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	IntervalName       string  `json:"intervalName" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Address            Address `json:"address" validate:"required"`
+	Created      int64   `json:"created,omitempty"`
+	Modified     int64   `json:"modified,omitempty"`
+	Id           string  `json:"id,omitempty" validate:"omitempty,uuid"`
+	Name         string  `json:"name" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	IntervalName string  `json:"intervalName" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Address      Address `json:"address" validate:"required"`
 }
 
 func NewIntervalAction(name string, intervalName string, address Address) IntervalAction {
 	return IntervalAction{
-		Versionable:  common.NewVersionable(),
 		Id:           uuid.NewString(),
 		Name:         name,
 		IntervalName: intervalName,
@@ -57,7 +55,6 @@ func ToIntervalActionModel(dto IntervalAction) models.IntervalAction {
 // FromIntervalActionModelToDTO transforms the IntervalAction Model to the IntervalAction DTO
 func FromIntervalActionModelToDTO(model models.IntervalAction) IntervalAction {
 	var dto IntervalAction
-	dto.Versionable = common.NewVersionable()
 	dto.Id = model.Id
 	dto.Name = model.Name
 	dto.IntervalName = model.IntervalName

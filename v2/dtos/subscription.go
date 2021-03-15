@@ -13,18 +13,17 @@ import (
 // Subscription and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Subscription
 type Subscription struct {
-	common.Versionable `json:",inline"`
-	Id                 string    `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name               string    `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Channels           []Channel `json:"channels" validate:"required,gt=0,dive"`
-	Receiver           string    `json:"receiver" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Categories         []string  `json:"categories,omitempty" validate:"required_without=Labels,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Labels             []string  `json:"labels,omitempty" validate:"required_without=Categories,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Created            int64     `json:"created,omitempty"`
-	Modified           int64     `json:"modified,omitempty"`
-	Description        string    `json:"description,omitempty"`
-	ResendLimit        int64     `json:"resendLimit,omitempty"`
-	ResendInterval     string    `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
+	Id             string    `json:"id,omitempty" validate:"omitempty,uuid"`
+	Name           string    `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Channels       []Channel `json:"channels" validate:"required,gt=0,dive"`
+	Receiver       string    `json:"receiver" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Categories     []string  `json:"categories,omitempty" validate:"required_without=Labels,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Labels         []string  `json:"labels,omitempty" validate:"required_without=Categories,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Created        int64     `json:"created,omitempty"`
+	Modified       int64     `json:"modified,omitempty"`
+	Description    string    `json:"description,omitempty"`
+	ResendLimit    int64     `json:"resendLimit,omitempty"`
+	ResendInterval string    `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
 }
 
 // UpdateSubscription and its properties are defined in the APIv2 specification:
@@ -79,7 +78,6 @@ func ToSubscriptionModels(subs []Subscription) []models.Subscription {
 // FromSubscriptionModelToDTO transforms the Subscription Model to the Subscription DTO
 func FromSubscriptionModelToDTO(s models.Subscription) Subscription {
 	return Subscription{
-		Versionable:    common.NewVersionable(),
 		Categories:     s.Categories,
 		Labels:         s.Labels,
 		Channels:       FromChannelModelsToDTOs(s.Channels),

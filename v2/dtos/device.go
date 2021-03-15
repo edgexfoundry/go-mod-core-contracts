@@ -13,22 +13,21 @@ import (
 // Device and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Device
 type Device struct {
-	common.Versionable `json:",inline"`
-	Id                 string                        `json:"id,omitempty" validate:"omitempty,uuid"`
-	Created            int64                         `json:"created,omitempty"`
-	Modified           int64                         `json:"modified,omitempty"`
-	Name               string                        `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Description        string                        `json:"description,omitempty"`
-	AdminState         string                        `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
-	OperatingState     string                        `json:"operatingState" validate:"oneof='UP' 'DOWN' 'UNKNOWN'"`
-	LastConnected      int64                         `json:"lastConnected,omitempty"`
-	LastReported       int64                         `json:"lastReported,omitempty"`
-	Labels             []string                      `json:"labels,omitempty"`
-	Location           interface{}                   `json:"location,omitempty"`
-	ServiceName        string                        `json:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ProfileName        string                        `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	AutoEvents         []AutoEvent                   `json:"autoEvents,omitempty" validate:"dive"`
-	Protocols          map[string]ProtocolProperties `json:"protocols" validate:"required,gt=0"`
+	Id             string                        `json:"id,omitempty" validate:"omitempty,uuid"`
+	Created        int64                         `json:"created,omitempty"`
+	Modified       int64                         `json:"modified,omitempty"`
+	Name           string                        `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Description    string                        `json:"description,omitempty"`
+	AdminState     string                        `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
+	OperatingState string                        `json:"operatingState" validate:"oneof='UP' 'DOWN' 'UNKNOWN'"`
+	LastConnected  int64                         `json:"lastConnected,omitempty"`
+	LastReported   int64                         `json:"lastReported,omitempty"`
+	Labels         []string                      `json:"labels,omitempty"`
+	Location       interface{}                   `json:"location,omitempty"`
+	ServiceName    string                        `json:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName    string                        `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" validate:"dive"`
+	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"required,gt=0"`
 }
 
 // UpdateDevice and its properties are defined in the APIv2 specification:
@@ -73,7 +72,6 @@ func ToDeviceModel(dto Device) models.Device {
 // FromDeviceModelToDTO transforms the Device Model to the Device DTO
 func FromDeviceModelToDTO(d models.Device) Device {
 	var dto Device
-	dto.Versionable = common.NewVersionable()
 	dto.Id = d.Id
 	dto.Name = d.Name
 	dto.Description = d.Description

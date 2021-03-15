@@ -75,7 +75,6 @@ func DeviceProfileReqToDeviceProfileModels(addRequests []DeviceProfileRequest) (
 }
 
 func NewDeviceProfileRequest(dto dtos.DeviceProfile) DeviceProfileRequest {
-	dto.Versionable = common.NewVersionable()
 	return DeviceProfileRequest{
 		BaseRequest: common.NewBaseRequest(),
 		Profile:     dto,

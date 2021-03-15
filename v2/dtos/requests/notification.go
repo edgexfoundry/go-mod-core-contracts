@@ -58,7 +58,6 @@ func AddNotificationReqToNotificationModels(reqs []AddNotificationRequest) (n []
 }
 
 func NewAddNotificationRequest(dto dtos.Notification) AddNotificationRequest {
-	dto.Versionable = common.NewVersionable()
 	return AddNotificationRequest{
 		BaseRequest:  common.NewBaseRequest(),
 		Notification: dto,

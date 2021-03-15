@@ -41,7 +41,6 @@ var testAddDevice = AddDeviceRequest{
 		Versionable: common.NewVersionable(),
 	},
 	Device: dtos.Device{
-		Versionable:    common.NewVersionable(),
 		Name:           TestDeviceName,
 		ServiceName:    TestDeviceServiceName,
 		ProfileName:    TestDeviceProfileName,
@@ -438,7 +437,6 @@ func TestNewAddDeviceRequest(t *testing.T) {
 	actual := NewAddDeviceRequest(dtos.Device{})
 
 	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
-	assert.Equal(t, expectedApiVersion, actual.Device.ApiVersion)
 }
 
 func TestNewUpdateDeviceRequest(t *testing.T) {
