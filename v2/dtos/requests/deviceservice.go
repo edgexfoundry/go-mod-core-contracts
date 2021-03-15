@@ -104,7 +104,6 @@ func ReplaceDeviceServiceModelFieldsWithDTO(ds *models.DeviceService, patch dtos
 }
 
 func NewAddDeviceServiceRequest(dto dtos.DeviceService) AddDeviceServiceRequest {
-	dto.Versionable = common.NewVersionable()
 	return AddDeviceServiceRequest{
 		BaseRequest: common.NewBaseRequest(),
 		Service:     dto,

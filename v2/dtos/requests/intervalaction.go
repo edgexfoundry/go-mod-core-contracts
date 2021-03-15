@@ -117,7 +117,6 @@ func ReplaceIntervalActionModelFieldsWithDTO(action *models.IntervalAction, patc
 }
 
 func NewAddIntervalActionRequest(dto dtos.IntervalAction) AddIntervalActionRequest {
-	dto.Versionable = common.NewVersionable()
 	return AddIntervalActionRequest{
 		BaseRequest: common.NewBaseRequest(),
 		Action:      dto,

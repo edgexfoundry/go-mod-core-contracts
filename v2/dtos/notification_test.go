@@ -3,14 +3,12 @@ package dtos
 import (
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewNotification(t *testing.T) {
-	expectedApiVersion := v2.ApiVersion
 	expectedLabels := []string{"label1", "label2"}
 	expectedCategory := "category"
 	expectedContent := "content"
@@ -19,7 +17,6 @@ func TestNewNotification(t *testing.T) {
 
 	actual := NewNotification(expectedLabels, expectedCategory, expectedContent, expectedSender, expectedSeverity)
 
-	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
 	assert.NotEmpty(t, actual.Id)
 	assert.Equal(t, expectedLabels, actual.Labels)
 	assert.Equal(t, expectedCategory, actual.Category)

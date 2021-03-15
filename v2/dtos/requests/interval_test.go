@@ -24,12 +24,11 @@ func addIntervalRequestData() AddIntervalRequest {
 			Versionable: common.NewVersionable(),
 		},
 		Interval: dtos.Interval{
-			Versionable: common.NewVersionable(),
-			Name:        TestIntervalName,
-			Start:       TestIntervalStart,
-			End:         TestIntervalEnd,
-			Frequency:   TestIntervalFrequency,
-			RunOnce:     TestIntervalRunOnce,
+			Name:      TestIntervalName,
+			Start:     TestIntervalStart,
+			End:       TestIntervalEnd,
+			Frequency: TestIntervalFrequency,
+			RunOnce:   TestIntervalRunOnce,
 		},
 	}
 }
