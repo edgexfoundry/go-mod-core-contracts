@@ -6,7 +6,6 @@
 package dtos
 
 import (
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
 
@@ -29,16 +28,15 @@ type Subscription struct {
 // UpdateSubscription and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/UpdateSubscription
 type UpdateSubscription struct {
-	common.Versionable `json:",inline"`
-	Id                 *string   `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
-	Name               *string   `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Channels           []Channel `json:"channels,omitempty" validate:"omitempty,dive"`
-	Receiver           *string   `json:"receiver,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Categories         []string  `json:"categories,omitempty" validate:"omitempty,dive,gt=0,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Labels             []string  `json:"labels,omitempty" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Description        *string   `json:"description,omitempty"`
-	ResendLimit        *int64    `json:"resendLimit,omitempty"`
-	ResendInterval     *string   `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
+	Id             *string   `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
+	Name           *string   `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Channels       []Channel `json:"channels,omitempty" validate:"omitempty,dive"`
+	Receiver       *string   `json:"receiver,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Categories     []string  `json:"categories,omitempty" validate:"omitempty,dive,gt=0,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Labels         []string  `json:"labels,omitempty" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Description    *string   `json:"description,omitempty"`
+	ResendLimit    *int64    `json:"resendLimit,omitempty"`
+	ResendInterval *string   `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
 }
 
 // Channel and its properties are defined in the APIv2 specification:

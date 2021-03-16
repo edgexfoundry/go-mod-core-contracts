@@ -71,7 +71,6 @@ func mockUpdateDevice() dtos.UpdateDevice {
 	testDeviceServiceName := TestDeviceServiceName
 	testProfileName := TestDeviceProfileName
 	d := dtos.UpdateDevice{}
-	d.Versionable = common.NewVersionable()
 	d.Id = &testId
 	d.Name = &testName
 	d.Description = &testDescription
@@ -445,5 +444,4 @@ func TestNewUpdateDeviceRequest(t *testing.T) {
 	actual := NewUpdateDeviceRequest(dtos.UpdateDevice{})
 
 	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
-	assert.Equal(t, expectedApiVersion, actual.Device.ApiVersion)
 }

@@ -123,7 +123,6 @@ func NewAddSubscriptionRequest(dto dtos.Subscription) AddSubscriptionRequest {
 }
 
 func NewUpdateSubscriptionRequest(dto dtos.UpdateSubscription) UpdateSubscriptionRequest {
-	dto.Versionable = common.NewVersionable()
 	return UpdateSubscriptionRequest{
 		BaseRequest:  common.NewBaseRequest(),
 		Subscription: dto,

@@ -124,7 +124,6 @@ func NewAddIntervalActionRequest(dto dtos.IntervalAction) AddIntervalActionReque
 }
 
 func NewUpdateIntervalActionRequest(dto dtos.UpdateIntervalAction) UpdateIntervalActionRequest {
-	dto.Versionable = common.NewVersionable()
 	return UpdateIntervalActionRequest{
 		BaseRequest: common.NewBaseRequest(),
 		Action:      dto,

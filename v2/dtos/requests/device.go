@@ -138,7 +138,6 @@ func NewAddDeviceRequest(dto dtos.Device) AddDeviceRequest {
 }
 
 func NewUpdateDeviceRequest(dto dtos.UpdateDevice) UpdateDeviceRequest {
-	dto.Versionable = common.NewVersionable()
 	return UpdateDeviceRequest{
 		BaseRequest: common.NewBaseRequest(),
 		Device:      dto,

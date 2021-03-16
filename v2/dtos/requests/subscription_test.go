@@ -71,7 +71,6 @@ func updateSubscriptionData() dtos.UpdateSubscription {
 	resendLimit := testSubscriptionResendLimit
 	resendInterval := testSubscriptionResendInterval
 	return dtos.UpdateSubscription{
-		Versionable:    common.NewVersionable(),
 		Id:             &id,
 		Name:           &name,
 		Categories:     categories,

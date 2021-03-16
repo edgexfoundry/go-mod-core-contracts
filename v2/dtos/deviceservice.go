@@ -6,7 +6,6 @@
 package dtos
 
 import (
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
 
@@ -28,12 +27,11 @@ type DeviceService struct {
 // UpdateDeviceService and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceService
 type UpdateDeviceService struct {
-	common.Versionable `json:",inline"`
-	Id                 *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name               *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	BaseAddress        *string  `json:"baseAddress" validate:"omitempty,uri"`
-	Labels             []string `json:"labels"`
-	AdminState         *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Id          *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name        *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	BaseAddress *string  `json:"baseAddress" validate:"omitempty,uri"`
+	Labels      []string `json:"labels"`
+	AdminState  *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 }
 
 // ToDeviceServiceModel transforms the DeviceService DTO to the DeviceService Model
@@ -67,8 +65,7 @@ func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 // FromDeviceServiceModelToUpdateDTO transforms the DeviceService Model to the UpdateDeviceService DTO
 func FromDeviceServiceModelToUpdateDTO(ds models.DeviceService) UpdateDeviceService {
 	dto := UpdateDeviceService{
-		Versionable: common.NewVersionable(),
-		Labels:      ds.Labels,
+		Labels: ds.Labels,
 	}
 	if ds.Id != "" {
 		dto.Id = &ds.Id

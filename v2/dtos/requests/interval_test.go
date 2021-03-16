@@ -51,7 +51,6 @@ func updateIntervalData() dtos.UpdateInterval {
 	testFrequency := TestIntervalFrequency
 	testRunOnce := TestIntervalRunOnce
 	dto := dtos.UpdateInterval{}
-	dto.Versionable = common.NewVersionable()
 	dto.Id = &testId
 	dto.Name = &testName
 	dto.Start = &testStart

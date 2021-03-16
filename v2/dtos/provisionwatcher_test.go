@@ -8,7 +8,6 @@ package dtos
 import (
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
@@ -17,7 +16,6 @@ import (
 func TestFromProvisionWatcherModelToUpdateDTO(t *testing.T) {
 	model := models.ProvisionWatcher{}
 	dto := FromProvisionWatcherModelToUpdateDTO(model)
-	assert.Equal(t, v2.ApiVersion, dto.ApiVersion)
 	assert.Nil(t, dto.Id)
 	assert.Nil(t, dto.Name)
 	assert.Nil(t, dto.Labels)
