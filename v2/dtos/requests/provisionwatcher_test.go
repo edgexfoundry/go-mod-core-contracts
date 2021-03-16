@@ -58,7 +58,6 @@ func mockUpdateProvisionWatcher() dtos.UpdateProvisionWatcher {
 	testDeviceServiceName := TestDeviceServiceName
 	testProfileName := TestDeviceProfileName
 	d := dtos.UpdateProvisionWatcher{}
-	d.Versionable = common.NewVersionable()
 	d.Id = &testId
 	d.Name = &testName
 	d.Labels = testProvisionWatcherLabels

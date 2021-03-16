@@ -96,7 +96,6 @@ func TestNewEvent(t *testing.T) {
 }
 
 func TestEvent_AddSimpleReading(t *testing.T) {
-	expectedApiVersion := v2.ApiVersion
 	expectedDeviceName := TestDeviceName
 	expectedProfileName := TestDeviceProfileName
 	expectedSourceName := TestSourceName
@@ -121,7 +120,6 @@ func TestEvent_AddSimpleReading(t *testing.T) {
 	require.Equal(t, expectedReadingsCount, len(target.Readings))
 
 	for index, actual := range target.Readings {
-		assert.Equal(t, expectedApiVersion, actual.ApiVersion)
 		assert.NotEmpty(t, actual.Id)
 		assert.Equal(t, expectedProfileName, actual.ProfileName)
 		assert.Equal(t, expectedDeviceName, actual.DeviceName)
@@ -134,7 +132,6 @@ func TestEvent_AddSimpleReading(t *testing.T) {
 }
 
 func TestEvent_AddBinaryReading(t *testing.T) {
-	expectedApiVersion := v2.ApiVersion
 	expectedDeviceName := TestDeviceName
 	expectedProfileName := TestDeviceProfileName
 	expectedSourceName := TestSourceName
@@ -149,7 +146,6 @@ func TestEvent_AddBinaryReading(t *testing.T) {
 
 	require.Equal(t, expectedReadingsCount, len(target.Readings))
 	actual := target.Readings[0]
-	assert.Equal(t, expectedApiVersion, actual.ApiVersion)
 	assert.NotEmpty(t, actual.Id)
 	assert.Equal(t, expectedProfileName, actual.ProfileName)
 	assert.Equal(t, expectedDeviceName, actual.DeviceName)

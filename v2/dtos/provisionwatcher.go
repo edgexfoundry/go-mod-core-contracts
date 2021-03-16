@@ -6,7 +6,6 @@
 package dtos
 
 import (
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
 
@@ -27,7 +26,6 @@ type ProvisionWatcher struct {
 // UpdateProvisionWatcher and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateProvisionWatcher
 type UpdateProvisionWatcher struct {
-	common.Versionable  `json:",inline"`
 	Id                  *string             `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name                *string             `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels              []string            `json:"labels"`
@@ -73,7 +71,6 @@ func FromProvisionWatcherModelToDTO(pw models.ProvisionWatcher) ProvisionWatcher
 // FromProvisionWatcherModelToUpdateDTO transforms the ProvisionWatcher Model to the UpdateProvisionWatcher DTO
 func FromProvisionWatcherModelToUpdateDTO(pw models.ProvisionWatcher) UpdateProvisionWatcher {
 	dto := UpdateProvisionWatcher{
-		Versionable:         common.NewVersionable(),
 		Labels:              pw.Labels,
 		Identifiers:         pw.Identifiers,
 		BlockingIdentifiers: pw.BlockingIdentifiers,

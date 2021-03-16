@@ -14,23 +14,21 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
 
 // BaseReading and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseReading
 type BaseReading struct {
-	common.Versionable `json:",inline"`
-	Id                 string `json:"id,omitempty"`
-	Created            int64  `json:"created,omitempty"`
-	Origin             int64  `json:"origin" validate:"required"`
-	DeviceName         string `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	ResourceName       string `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	ProfileName        string `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	ValueType          string `json:"valueType" validate:"required,edgex-dto-value-type"`
-	BinaryReading      `json:",inline" validate:"-"`
-	SimpleReading      `json:",inline" validate:"-"`
+	Id            string `json:"id,omitempty"`
+	Created       int64  `json:"created,omitempty"`
+	Origin        int64  `json:"origin" validate:"required"`
+	DeviceName    string `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ResourceName  string `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName   string `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ValueType     string `json:"valueType" validate:"required,edgex-dto-value-type"`
+	BinaryReading `json:",inline" validate:"-"`
+	SimpleReading `json:",inline" validate:"-"`
 }
 
 // SimpleReading and its properties are defined in the APIv2 specification:
@@ -48,7 +46,6 @@ type BinaryReading struct {
 
 func newBaseReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
 	return BaseReading{
-		Versionable:  common.NewVersionable(),
 		Id:           uuid.NewString(),
 		Origin:       time.Now().UnixNano(),
 		DeviceName:   deviceName,
@@ -293,7 +290,6 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	switch r := reading.(type) {
 	case models.BinaryReading:
 		baseReading = BaseReading{
-			Versionable:   common.NewVersionable(),
 			Id:            r.Id,
 			Created:       r.Created,
 			Origin:        r.Origin,
@@ -305,7 +301,6 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 		}
 	case models.SimpleReading:
 		baseReading = BaseReading{
-			Versionable:   common.Versionable{ApiVersion: v2.ApiVersion},
 			Id:            r.Id,
 			Created:       r.Created,
 			Origin:        r.Origin,

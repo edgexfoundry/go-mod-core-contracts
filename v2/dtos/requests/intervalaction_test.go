@@ -40,7 +40,6 @@ func updateIntervalActionData() dtos.UpdateIntervalAction {
 	testIntervalName := TestIntervalName
 
 	dto := dtos.UpdateIntervalAction{}
-	dto.Versionable = common.NewVersionable()
 	dto.Id = &testId
 	dto.Name = &testName
 	dto.IntervalName = &testIntervalName

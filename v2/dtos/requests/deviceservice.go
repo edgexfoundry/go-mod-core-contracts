@@ -111,7 +111,6 @@ func NewAddDeviceServiceRequest(dto dtos.DeviceService) AddDeviceServiceRequest 
 }
 
 func NewUpdateDeviceServiceRequest(dto dtos.UpdateDeviceService) UpdateDeviceServiceRequest {
-	dto.Versionable = common.NewVersionable()
 	return UpdateDeviceServiceRequest{
 		BaseRequest: common.NewBaseRequest(),
 		Service:     dto,
