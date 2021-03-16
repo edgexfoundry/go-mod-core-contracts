@@ -78,7 +78,7 @@ func TestFromDeviceProfileModelToDTO(t *testing.T) {
 	assert.Equal(t, profileData(), result, "FromDeviceProfileModelToDTO did not result in expected device profile DTO.")
 }
 
-func TestValidateDeviceProfileDTO(t *testing.T) {
+func TestDeviceProfileDTOValidation(t *testing.T) {
 	valid := profileData()
 	duplicatedDeviceResource := profileData()
 	duplicatedDeviceResource.DeviceResources = append(
@@ -106,61 +106,8 @@ func TestValidateDeviceProfileDTO(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateDeviceProfileDTO(tt.profile)
+			err := tt.profile.Validate()
 			if tt.expectError {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-			}
-		})
-	}
-}
-
-func TestDeviceProfileYaml_ValidateInlineApiVersion(t *testing.T) {
-	valid := `
-apiVersion: "v2"
-name: "Sample-Profile"
-deviceResources:
-  -  
-    name: "DeviceValue_Boolean_RW"
-    properties:
-      { valueType: "Bool", readWrite: "RW"}
-deviceCommands:
-  -  
-    name: "GenerateDeviceValue_Boolean_RW"
-    readWrite: "RW"
-    resourceOperations:
-      - { deviceResource: "DeviceValue_Boolean_RW" }
-`
-	inValid := `
-name: "Sample-Profile"
-deviceResources:
-  -  
-    name: "DeviceValue_Boolean_RW"
-    properties:
-      { valueType: "Bool", readWrite: "RW"}
-deviceCommands:
-  -  
-    name: "GenerateDeviceValue_Boolean_RW"
-    readWrite: "RW",
-    get:
-      - { deviceResource: "DeviceValue_Boolean_RW" }
-`
-
-	tests := []struct {
-		name    string
-		data    []byte
-		wantErr bool
-	}{
-		{"valid device profile", []byte(valid), false},
-		{"without api version", []byte(inValid), true},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			var dp DeviceProfile
-			err := yaml.Unmarshal(tt.data, &dp)
-			if tt.wantErr {
 				require.Error(t, err)
 			} else {
 				require.NoError(t, err)

@@ -32,7 +32,7 @@ func (dp *DeviceProfile) Validate() error {
 	if err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid DeviceProfile.", err)
 	}
-	return nil
+	return ValidateDeviceProfileDTO(*dp)
 }
 
 // UnmarshalYAML implements the Unmarshaler interface for the DeviceProfile type
