@@ -12,10 +12,11 @@ import (
 )
 
 type Address struct {
-	Type string `json:"type" validate:"oneof='REST' 'MQTT'"`
+	Type string `json:"type" validate:"oneof='REST' 'MQTT' 'EMAIL'"`
 
-	Host string `json:"host" validate:"required"`
-	Port int    `json:"port" validate:"required"`
+	Host           string   `json:"host" validate:"required_without=EmailAddresses"`
+	Port           int      `json:"port" validate:"required_without=EmailAddresses"`
+	EmailAddresses []string `json:"emailAddresses,omitempty" validate:"omitempty,gt=0,dive,email"`
 
 	RESTAddress    `json:",inline" validate:"-"`
 	MQTTPubAddress `json:",inline" validate:"-"`
@@ -83,6 +84,13 @@ func NewMQTTAddress(host string, port int, publisher string, topic string) Addre
 	}
 }
 
+func NewEmailAddress(emailAddresses []string) Address {
+	return Address{
+		Type:           v2.EMAIL,
+		EmailAddresses: emailAddresses,
+	}
+}
+
 func ToAddressModel(a Address) models.Address {
 	var address models.Address
 
@@ -143,4 +151,20 @@ func FromAddressModelToDTO(address models.Address) Address {
 		break
 	}
 	return dto
+}
+
+func ToAddressModels(dtos []Address) []models.Address {
+	models := make([]models.Address, len(dtos))
+	for i, c := range dtos {
+		models[i] = ToAddressModel(c)
+	}
+	return models
+}
+
+func FromAddressModelsToDTOs(models []models.Address) []Address {
+	dtos := make([]Address, len(models))
+	for i, c := range models {
+		dtos[i] = FromAddressModelToDTO(c)
+	}
+	return dtos
 }

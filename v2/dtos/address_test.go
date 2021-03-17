@@ -24,6 +24,7 @@ const (
 	testHTTPMethod      = "GET"
 	testPublisher       = "testPublisher"
 	testTopic           = "testTopic"
+	testEmail           = "test@example.com"
 )
 
 var testRESTAddress = Address{
@@ -47,6 +48,8 @@ var testMQTTPubAddress = Address{
 	},
 }
 
+var testEmailAddress = NewEmailAddress([]string{testEmail})
+
 func TestAddress_UnmarshalJSON(t *testing.T) {
 	restJsonStr := fmt.Sprintf(
 		`{"type":"%s","host":"%s","port":%d,"path":"%s","queryParameters":"%s","httpMethod":"%s"}`,
@@ -58,10 +61,8 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 		testMQTTPubAddress.Type, testMQTTPubAddress.Host, testMQTTPubAddress.Port,
 		testMQTTPubAddress.Publisher, testMQTTPubAddress.Topic,
 	)
+	emailJsonStr := fmt.Sprintf(`{"type":"%s","EmailAddresses":["%s"]}`, testEmailAddress.Type, testEmail)
 
-	type args struct {
-		data []byte
-	}
 	tests := []struct {
 		name     string
 		expected Address
@@ -70,6 +71,7 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 	}{
 		{"unmarshal RESTAddress with success", testRESTAddress, []byte(restJsonStr), false},
 		{"unmarshal MQTTPubAddress with success", testMQTTPubAddress, []byte(mqttJsonStr), false},
+		{"unmarshal EmailAddress with success", testEmailAddress, []byte(emailJsonStr), false},
 		{"unmarshal invalid Address, empty data", Address{}, []byte{}, true},
 		{"unmarshal invalid Address, string data", Address{}, []byte("Invalid address"), true},
 	}
@@ -98,6 +100,11 @@ func TestAddress_Validate(t *testing.T) {
 	noMQTTPublisher.Publisher = ""
 	noMQTTTopic := testMQTTPubAddress
 	noMQTTTopic.Topic = ""
+
+	validEmail := testEmailAddress
+	invalidEmailAddress := testEmailAddress
+	invalidEmailAddress.EmailAddresses = []string{"test.example.com"}
+
 	tests := []struct {
 		name        string
 		dto         Address
@@ -108,6 +115,8 @@ func TestAddress_Validate(t *testing.T) {
 		{"valid MQTTPubAddress", validMQTT, false},
 		{"invalid MQTTPubAddress, no MQTT publisher", noMQTTPublisher, true},
 		{"invalid MQTTPubAddress, no MQTT Topic", noMQTTTopic, true},
+		{"valid EmailAddress", validEmail, false},
+		{"invalid EmailAddress", invalidEmailAddress, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

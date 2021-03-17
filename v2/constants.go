@@ -194,8 +194,9 @@ const (
 // Constants for Address
 const (
 	// Type
-	REST = "REST"
-	MQTT = "MQTT"
+	REST  = "REST"
+	MQTT  = "MQTT"
+	EMAIL = "EMAIL"
 )
 
 // Constants for DeviceProfile

@@ -12,7 +12,7 @@ type Subscription struct {
 	Timestamps
 	Categories     []string
 	Labels         []string
-	Channels       []Channel
+	Channels       []Address
 	Created        int64
 	Modified       int64
 	Description    string
@@ -21,12 +21,4 @@ type Subscription struct {
 	Name           string
 	ResendLimit    int64
 	ResendInterval string
-}
-
-// Channel and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Channel
-type Channel struct {
-	Type           ChannelType
-	EmailAddresses []string
-	Url            string
 }

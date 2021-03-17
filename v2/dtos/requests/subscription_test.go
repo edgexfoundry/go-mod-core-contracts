@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
@@ -21,8 +20,8 @@ var (
 	testSubscriptionName       = "subscriptionName"
 	testSubscriptionCategories = []string{"category1", "category2"}
 	testSubscriptionLabels     = []string{"label"}
-	testSubscriptionChannels   = []dtos.Channel{
-		{Type: models.Email, EmailAddresses: []string{"test@example.com"}},
+	testSubscriptionChannels   = []dtos.Address{
+		dtos.NewEmailAddress([]string{"test@example.com"}),
 	}
 	testSubscriptionDescription    = "description"
 	testSubscriptionReceiver       = "receiver"
@@ -32,32 +31,16 @@ var (
 )
 
 func addSubscriptionRequestData() AddSubscriptionRequest {
-	return AddSubscriptionRequest{
-		BaseRequest: common.BaseRequest{
-			RequestId:   ExampleUUID,
-			Versionable: common.NewVersionable(),
-		},
-		Subscription: dtos.Subscription{
-			Name:           testSubscriptionName,
-			Categories:     testSubscriptionCategories,
-			Labels:         testSubscriptionLabels,
-			Channels:       testSubscriptionChannels,
-			Description:    testSubscriptionDescription,
-			Receiver:       testSubscriptionReceiver,
-			ResendLimit:    testSubscriptionResendLimit,
-			ResendInterval: testSubscriptionResendInterval,
-		},
-	}
-}
-
-func updateSubscriptionRequestData() UpdateSubscriptionRequest {
-	return UpdateSubscriptionRequest{
-		BaseRequest: common.BaseRequest{
-			RequestId:   ExampleUUID,
-			Versionable: common.NewVersionable(),
-		},
-		Subscription: updateSubscriptionData(),
-	}
+	return NewAddSubscriptionRequest(dtos.Subscription{
+		Name:           testSubscriptionName,
+		Categories:     testSubscriptionCategories,
+		Labels:         testSubscriptionLabels,
+		Channels:       testSubscriptionChannels,
+		Description:    testSubscriptionDescription,
+		Receiver:       testSubscriptionReceiver,
+		ResendLimit:    testSubscriptionResendLimit,
+		ResendInterval: testSubscriptionResendInterval,
+	})
 }
 
 func updateSubscriptionData() dtos.UpdateSubscription {
@@ -97,18 +80,14 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 	subscriptionNameWithReservedChars.Subscription.Name = namesWithReservedChar[0]
 
 	noChannel := addSubscriptionRequestData()
-	noChannel.Subscription.Channels = []dtos.Channel{}
-	invalidChannelType := addSubscriptionRequestData()
-	invalidChannelType.Subscription.Channels = []dtos.Channel{
-		{Type: unsupportedChannelType, EmailAddresses: []string{"test@example.com"}},
-	}
+	noChannel.Subscription.Channels = []dtos.Address{}
 	invalidEmailAddress := addSubscriptionRequestData()
-	invalidEmailAddress.Subscription.Channels = []dtos.Channel{
-		{Type: models.Email, EmailAddresses: []string{"test.example.com"}},
+	invalidEmailAddress.Subscription.Channels = []dtos.Address{
+		dtos.NewEmailAddress([]string{"test.example.com"}),
 	}
-	invalidUrl := addSubscriptionRequestData()
-	invalidUrl.Subscription.Channels = []dtos.Channel{
-		{Type: models.Rest, Url: "http127.0.0.1"},
+	unsupportedChannelType := addSubscriptionRequestData()
+	unsupportedChannelType.Subscription.Channels = []dtos.Address{
+		dtos.NewMQTTAddress("host", 123, "publisher", "topic"),
 	}
 
 	noCategories := addSubscriptionRequestData()
@@ -142,9 +121,8 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 		{"invalid, no subscription name", noSubscriptionName, true},
 		{"invalid, subscription name containing reserved chars", subscriptionNameWithReservedChars, true},
 		{"invalid, no channels specified", noChannel, true},
-		{"invalid, unsupported channel type", invalidChannelType, true},
 		{"invalid, email address is invalid", invalidEmailAddress, true},
-		{"invalid, url is invalid", invalidUrl, true},
+		{"invalid, unsupported channel type", unsupportedChannelType, true},
 		{"invalid, no categories and labels specified", noCategoriesAndLabels, true},
 		{"invalid, unsupported category type", categoryNameWithReservedChar, true},
 		{"invalid, no receiver specified", noReceiver, true},
@@ -160,15 +138,15 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 }
 
 func TestAddSubscription_UnmarshalJSON(t *testing.T) {
-	valid := addSubscriptionRequestData()
-	jsonData, _ := json.Marshal(addSubscriptionRequestData())
+	validAddSubscriptionRequest := addSubscriptionRequestData()
+	jsonData, _ := json.Marshal(validAddSubscriptionRequest)
 	tests := []struct {
 		name     string
 		expected AddSubscriptionRequest
 		data     []byte
 		wantErr  bool
 	}{
-		{"unmarshal AddSubscriptionRequest with success", valid, jsonData, false},
+		{"unmarshal AddSubscriptionRequest with success", validAddSubscriptionRequest, jsonData, false},
 		{"unmarshal invalid AddSubscriptionRequest, empty data", AddSubscriptionRequest{}, []byte{}, true},
 		{"unmarshal invalid AddSubscriptionRequest, string data", AddSubscriptionRequest{}, []byte("Invalid AddSubscriptionRequest"), true},
 	}
@@ -193,7 +171,7 @@ func TestAddSubscriptionReqToSubscriptionModels(t *testing.T) {
 			Name:           testSubscriptionName,
 			Categories:     testSubscriptionCategories,
 			Labels:         testSubscriptionLabels,
-			Channels:       dtos.ToChannelModels(testSubscriptionChannels),
+			Channels:       dtos.ToAddressModels(testSubscriptionChannels),
 			Description:    testSubscriptionDescription,
 			Receiver:       testSubscriptionReceiver,
 			ResendLimit:    testSubscriptionResendLimit,
@@ -209,7 +187,7 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 	invalidUUID := "invalidUUID"
 	invalidReceiverName := namesWithReservedChar[0]
 
-	valid := updateSubscriptionRequestData()
+	valid := NewUpdateSubscriptionRequest(updateSubscriptionData())
 	noReqId := valid
 	noReqId.RequestId = ""
 	invalidReqId := valid
@@ -225,26 +203,22 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 	invalidEmptyName := valid
 	invalidEmptyName.Subscription.Name = &emptyString
 
-	invalidChannelType := updateSubscriptionRequestData()
-	invalidChannelType.Subscription.Channels = []dtos.Channel{
-		{Type: unsupportedChannelType, EmailAddresses: []string{"test@example.com"}},
+	invalidEmailAddress := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	invalidEmailAddress.Subscription.Channels = []dtos.Address{
+		dtos.NewEmailAddress([]string{"test.example.com"}),
 	}
-	invalidEmailAddress := updateSubscriptionRequestData()
-	invalidEmailAddress.Subscription.Channels = []dtos.Channel{
-		{Type: models.Email, EmailAddresses: []string{"test.example.com"}},
-	}
-	invalidUrl := updateSubscriptionRequestData()
-	invalidUrl.Subscription.Channels = []dtos.Channel{
-		{Type: models.Rest, Url: "http127.0.0.1"},
+	unsupportedChannelType := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	unsupportedChannelType.Subscription.Channels = []dtos.Address{
+		dtos.NewMQTTAddress("host", 123, "publisher", "topic"),
 	}
 
-	categoryNameWithReservedChar := updateSubscriptionRequestData()
+	categoryNameWithReservedChar := NewUpdateSubscriptionRequest(updateSubscriptionData())
 	categoryNameWithReservedChar.Subscription.Categories = []string{namesWithReservedChar[0]}
 
-	receiverNameWithReservedChars := updateSubscriptionRequestData()
+	receiverNameWithReservedChars := NewUpdateSubscriptionRequest(updateSubscriptionData())
 	receiverNameWithReservedChars.Subscription.Receiver = &invalidReceiverName
 
-	invalidResendInterval := updateSubscriptionRequestData()
+	invalidResendInterval := NewUpdateSubscriptionRequest(updateSubscriptionData())
 	invalidResendIntervalValue := "10"
 	invalidResendInterval.Subscription.ResendInterval = &invalidResendIntervalValue
 
@@ -256,15 +230,12 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 		{"valid", valid, false},
 		{"valid, no request ID", noReqId, false},
 		{"invalid, request ID is not an UUID", invalidReqId, true},
-
 		{"valid, only ID", validOnlyId, false},
 		{"invalid, invalid ID", invalidId, true},
 		{"valid, only name", validOnlyName, false},
 		{"invalid, empty name", invalidEmptyName, true},
-
-		{"invalid, unsupported channel type", invalidChannelType, true},
 		{"invalid, email address is invalid", invalidEmailAddress, true},
-		{"invalid, url is invalid", invalidUrl, true},
+		{"invalid, unsupported channel type", unsupportedChannelType, true},
 		{"invalid, category name containing reserved chars", categoryNameWithReservedChar, true},
 		{"invalid, receiver name containing reserved chars", receiverNameWithReservedChars, true},
 		{"invalid, resendInterval is not specified in ISO8601 format", invalidResendInterval, true},
@@ -278,15 +249,15 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 }
 
 func TestUpdateSubscriptionRequest_UnmarshalJSON(t *testing.T) {
-	valid := updateSubscriptionRequestData()
-	jsonData, _ := json.Marshal(updateSubscriptionRequestData())
+	validUpdateSubscriptionRequest := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	jsonData, _ := json.Marshal(validUpdateSubscriptionRequest)
 	tests := []struct {
 		name     string
 		expected UpdateSubscriptionRequest
 		data     []byte
 		wantErr  bool
 	}{
-		{"unmarshal UpdateSubscriptionRequest with success", valid, jsonData, false},
+		{"unmarshal UpdateSubscriptionRequest with success", validUpdateSubscriptionRequest, jsonData, false},
 		{"unmarshal invalid UpdateSubscriptionRequest, empty data", UpdateSubscriptionRequest{}, []byte{}, true},
 		{"unmarshal invalid UpdateSubscriptionRequest, string data", UpdateSubscriptionRequest{}, []byte("Invalid UpdateSubscriptionRequest"), true},
 	}
@@ -315,7 +286,7 @@ func TestReplaceSubscriptionModelFieldsWithDTO(t *testing.T) {
 
 	assert.Equal(t, testSubscriptionCategories, subscription.Categories)
 	assert.Equal(t, testSubscriptionLabels, subscription.Labels)
-	assert.Equal(t, dtos.ToChannelModels(testSubscriptionChannels), subscription.Channels)
+	assert.Equal(t, dtos.ToAddressModels(testSubscriptionChannels), subscription.Channels)
 	assert.Equal(t, testSubscriptionDescription, subscription.Description)
 	assert.Equal(t, testSubscriptionReceiver, subscription.Receiver)
 	assert.Equal(t, testSubscriptionResendLimit, subscription.ResendLimit)
