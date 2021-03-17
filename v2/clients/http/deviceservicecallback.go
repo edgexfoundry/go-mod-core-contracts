@@ -9,6 +9,7 @@ import (
 	"context"
 	"path"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
@@ -30,7 +31,7 @@ func NewDeviceServiceCallbackClient(baseUrl string) interfaces.DeviceServiceCall
 
 func (client *deviceServiceCallbackClient) AddDeviceCallback(ctx context.Context, request requests.AddDeviceRequest) (common.BaseResponse, errors.EdgeX) {
 	var response common.BaseResponse
-	err := utils.PostRequest(ctx, &response, client.baseUrl+v2.ApiDeviceCallbackRoute, request)
+	err := utils.PostRequest(ctx, &response, client.baseUrl+v2.ApiDeviceCallbackRoute, request, clients.ContentTypeJSON)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -67,7 +68,7 @@ func (client *deviceServiceCallbackClient) UpdateDeviceProfileCallback(ctx conte
 
 func (client *deviceServiceCallbackClient) AddProvisionWatcherCallback(ctx context.Context, request requests.AddProvisionWatcherRequest) (common.BaseResponse, errors.EdgeX) {
 	var response common.BaseResponse
-	err := utils.PostRequest(ctx, &response, client.baseUrl+v2.ApiWatcherCallbackRoute, request)
+	err := utils.PostRequest(ctx, &response, client.baseUrl+v2.ApiWatcherCallbackRoute, request, clients.ContentTypeJSON)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}

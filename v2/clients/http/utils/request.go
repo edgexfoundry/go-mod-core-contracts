@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 )
 
@@ -31,14 +32,15 @@ func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl str
 	return nil
 }
 
-// Helper method to make the post JSON request and return the body
+// Helper method to make the post JSON/CBOR request and return the body
 func PostRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
 	url string,
-	data interface{}) errors.EdgeX {
+	data interface{},
+	encoding string) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPost, url, data)
+	req, err := createRequestWithRawData(ctx, http.MethodPost, url, data, encoding)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -60,7 +62,7 @@ func PutRequest(
 	url string,
 	data interface{}) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPut, url, data)
+	req, err := createRequestWithRawData(ctx, http.MethodPut, url, data, clients.ContentTypeJSON)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -82,7 +84,7 @@ func PatchRequest(
 	url string,
 	data interface{}) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPatch, url, data)
+	req, err := createRequestWithRawData(ctx, http.MethodPatch, url, data, clients.ContentTypeJSON)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}

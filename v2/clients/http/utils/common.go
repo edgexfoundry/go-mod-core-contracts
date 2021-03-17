@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +16,8 @@ import (
 	"net/http"
 	"net/url"
 	"path/filepath"
+
+	"github.com/fxamacker/cbor/v2"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
@@ -79,18 +81,29 @@ func createRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 	return req, nil
 }
 
-func createRequestWithRawData(ctx context.Context, httpMethod string, url string, data interface{}) (*http.Request, errors.EdgeX) {
-	jsonEncodedData, err := json.Marshal(data)
-	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to JSON", err)
+func createRequestWithRawData(ctx context.Context, httpMethod string, url string, data interface{}, encoding string) (*http.Request, errors.EdgeX) {
+	var err error
+	var encodedData []byte
+
+	if encoding == clients.ContentTypeJSON || encoding == "" {
+		encoding = clients.ContentTypeJSON
+		encodedData, err = json.Marshal(data)
+		if err != nil {
+			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to JSON", err)
+		}
+	} else if encoding == clients.ContentTypeCBOR {
+		encodedData, err = cbor.Marshal(data)
+		if err != nil {
+			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to CBOR", err)
+		}
 	}
 
 	content := FromContext(ctx, clients.ContentType)
 	if content == "" {
-		content = clients.ContentTypeJSON
+		content = encoding
 	}
 
-	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(jsonEncodedData))
+	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(encodedData))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}
