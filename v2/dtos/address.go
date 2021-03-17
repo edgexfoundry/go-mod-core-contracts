@@ -153,17 +153,17 @@ func FromAddressModelToDTO(address models.Address) Address {
 	return dto
 }
 
-func ToAddressModels(channelDTOs []Address) []models.Address {
-	channelModels := make([]models.Address, len(channelDTOs))
-	for i, c := range channelDTOs {
-		channelModels[i] = ToAddressModel(c)
+func ToAddressModels(dtos []Address) []models.Address {
+	models := make([]models.Address, len(dtos))
+	for i, c := range dtos {
+		models[i] = ToAddressModel(c)
 	}
-	return channelModels
+	return models
 }
 
-func FromAddressModelsToDTOs(channelModels []models.Address) []Address {
-	dtos := make([]Address, len(channelModels))
-	for i, c := range channelModels {
+func FromAddressModelsToDTOs(models []models.Address) []Address {
+	dtos := make([]Address, len(models))
+	for i, c := range models {
 		dtos[i] = FromAddressModelToDTO(c)
 	}
 	return dtos
