@@ -85,6 +85,10 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 	invalidEmailAddress.Subscription.Channels = []dtos.Address{
 		dtos.NewEmailAddress([]string{"test.example.com"}),
 	}
+	unsupportedChannelType := addSubscriptionRequestData()
+	unsupportedChannelType.Subscription.Channels = []dtos.Address{
+		dtos.NewMQTTAddress("host", 123, "publisher", "topic"),
+	}
 
 	noCategories := addSubscriptionRequestData()
 	noCategories.Subscription.Categories = nil
@@ -118,6 +122,7 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 		{"invalid, subscription name containing reserved chars", subscriptionNameWithReservedChars, true},
 		{"invalid, no channels specified", noChannel, true},
 		{"invalid, email address is invalid", invalidEmailAddress, true},
+		{"invalid, unsupported channel type", unsupportedChannelType, true},
 		{"invalid, no categories and labels specified", noCategoriesAndLabels, true},
 		{"invalid, unsupported category type", categoryNameWithReservedChar, true},
 		{"invalid, no receiver specified", noReceiver, true},
@@ -202,6 +207,10 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 	invalidEmailAddress.Subscription.Channels = []dtos.Address{
 		dtos.NewEmailAddress([]string{"test.example.com"}),
 	}
+	unsupportedChannelType := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	unsupportedChannelType.Subscription.Channels = []dtos.Address{
+		dtos.NewMQTTAddress("host", 123, "publisher", "topic"),
+	}
 
 	categoryNameWithReservedChar := NewUpdateSubscriptionRequest(updateSubscriptionData())
 	categoryNameWithReservedChar.Subscription.Categories = []string{namesWithReservedChar[0]}
@@ -226,6 +235,7 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 		{"valid, only name", validOnlyName, false},
 		{"invalid, empty name", invalidEmptyName, true},
 		{"invalid, email address is invalid", invalidEmailAddress, true},
+		{"invalid, unsupported channel type", unsupportedChannelType, true},
 		{"invalid, category name containing reserved chars", categoryNameWithReservedChar, true},
 		{"invalid, receiver name containing reserved chars", receiverNameWithReservedChars, true},
 		{"invalid, resendInterval is not specified in ISO8601 format", invalidResendInterval, true},

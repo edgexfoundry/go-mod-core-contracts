@@ -15,6 +15,8 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 )
 
+var supportedChannelTypes = []string{v2.EMAIL, v2.REST}
+
 // AddSubscriptionRequest defines the Request Content for POST Subscription DTO.
 // This object and its properties correspond to the AddSubscriptionRequest object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/AddSubscriptionRequest
@@ -33,6 +35,8 @@ func (request AddSubscriptionRequest) Validate() error {
 		err = c.Validate()
 		if err != nil {
 			return errors.NewCommonEdgeXWrapper(err)
+		} else if !contains(supportedChannelTypes, c.Type) {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, "MQTT is not valid type for Channel", nil)
 		}
 	}
 	return nil
@@ -84,6 +88,8 @@ func (request UpdateSubscriptionRequest) Validate() error {
 		err = c.Validate()
 		if err != nil {
 			return errors.NewCommonEdgeXWrapper(err)
+		} else if !contains(supportedChannelTypes, c.Type) {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, "MQTT is not valid type for Channel", nil)
 		}
 	}
 	return nil
@@ -145,4 +151,13 @@ func NewUpdateSubscriptionRequest(dto dtos.UpdateSubscription) UpdateSubscriptio
 		BaseRequest:  common.NewBaseRequest(),
 		Subscription: dto,
 	}
+}
+
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+	return false
 }
