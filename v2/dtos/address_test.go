@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -128,4 +129,19 @@ func TestAddress_Validate(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestEmailAddressModelToDTO(t *testing.T) {
+	recipients := []string{"test@example.com"}
+	m := models.EmailAddress{Recipients: recipients}
+	dto := FromAddressModelToDTO(m)
+	assert.Equal(t, recipients, dto.EmailAddresses)
+}
+
+func TestEmailAddressDTOtoModel(t *testing.T) {
+	recipients := []string{"test@example.com"}
+	dto := NewEmailAddress(recipients)
+	m := ToAddressModel(dto)
+	require.IsType(t, models.EmailAddress{}, m)
+	assert.Equal(t, recipients, m.(models.EmailAddress).Recipients)
 }

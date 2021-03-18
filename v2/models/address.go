@@ -42,3 +42,11 @@ type MQTTPubAddress struct {
 }
 
 func (a MQTTPubAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }
+
+// EmailAddress is an Email specific struct
+type EmailAddress struct {
+	BaseAddress
+	Recipients []string
+}
+
+func (a EmailAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }

@@ -119,6 +119,10 @@ func ToAddressModel(a Address) models.Address {
 			ConnectTimeout: a.ConnectTimeout,
 		}
 		break
+	case v2.EMAIL:
+		address = models.EmailAddress{
+			Recipients: a.EmailAddresses,
+		}
 	}
 	return address
 }
@@ -148,6 +152,9 @@ func FromAddressModelToDTO(address models.Address) Address {
 			AutoReconnect:  a.AutoReconnect,
 			ConnectTimeout: a.ConnectTimeout,
 		}
+		break
+	case models.EmailAddress:
+		dto.EmailAddresses = a.Recipients
 		break
 	}
 	return dto
