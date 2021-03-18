@@ -154,6 +154,8 @@ const (
 	CommaSeparator = ","
 	ValueYes       = "yes"
 	ValueNo        = "no"
+	ValueTrue      = "true"
+	ValueFalse     = "false"
 )
 
 // Constants related to Reading ValueTypes
@@ -204,4 +206,9 @@ const (
 	ReadWrite_R  = "R"
 	ReadWrite_W  = "W"
 	ReadWrite_RW = "RW"
+)
+
+// Constants for Edgex Environment variable
+const (
+	EnvEncodeAllEvents = "EDGEX_ENCODE_ALL_EVENTS_CBOR"
 )
