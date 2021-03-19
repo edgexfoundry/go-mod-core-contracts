@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
@@ -33,7 +34,7 @@ func NewProvisionWatcherClient(baseUrl string) interfaces.ProvisionWatcherClient
 }
 
 func (pwc ProvisionWatcherClient) Add(ctx context.Context, reqs []requests.AddProvisionWatcherRequest) (res []common.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequest(ctx, &res, pwc.baseUrl+v2.ApiProvisionWatcherRoute, reqs)
+	err = utils.PostRequest(ctx, &res, pwc.baseUrl+v2.ApiProvisionWatcherRoute, reqs, clients.ContentTypeJSON)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
