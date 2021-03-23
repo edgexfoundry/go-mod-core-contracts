@@ -121,6 +121,9 @@ func ToAddressModel(a Address) models.Address {
 		break
 	case v2.EMAIL:
 		address = models.EmailAddress{
+			BaseAddress: models.BaseAddress{
+				Type: a.Type,
+			},
 			Recipients: a.EmailAddresses,
 		}
 	}

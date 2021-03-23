@@ -5,6 +5,12 @@
 
 package models
 
+import (
+	"encoding/json"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+)
+
 // Subscription and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Subscription
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
@@ -13,12 +19,50 @@ type Subscription struct {
 	Categories     []string
 	Labels         []string
 	Channels       []Address
-	Created        int64
-	Modified       int64
 	Description    string
 	Id             string
 	Receiver       string
 	Name           string
 	ResendLimit    int64
 	ResendInterval string
+}
+
+func (subscription *Subscription) UnmarshalJSON(b []byte) error {
+	var alias struct {
+		Timestamps
+		Categories     []string
+		Labels         []string
+		Channels       []interface{}
+		Description    string
+		Id             string
+		Receiver       string
+		Name           string
+		ResendLimit    int64
+		ResendInterval string
+	}
+	if err := json.Unmarshal(b, &alias); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal intervalAction.", err)
+	}
+	channels := make([]Address, len(alias.Channels))
+	for i, c := range alias.Channels {
+		address, err := instantiateAddress(c)
+		if err != nil {
+			return errors.NewCommonEdgeXWrapper(err)
+		}
+		channels[i] = address
+	}
+
+	*subscription = Subscription{
+		Timestamps:     alias.Timestamps,
+		Categories:     alias.Categories,
+		Labels:         alias.Labels,
+		Description:    alias.Description,
+		Id:             alias.Id,
+		Receiver:       alias.Receiver,
+		Name:           alias.Name,
+		ResendLimit:    alias.ResendLimit,
+		ResendInterval: alias.ResendInterval,
+		Channels:       channels,
+	}
+	return nil
 }
