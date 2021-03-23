@@ -5,8 +5,56 @@
 
 package models
 
+import (
+	"encoding/json"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+)
+
 type Address interface {
 	GetBaseAddress() BaseAddress
+}
+
+// FormatAddress convert the interface to the corresponding address type
+func FormatAddress(i interface{}) (address Address, err error) {
+	a, err := json.Marshal(i)
+	if err != nil {
+		return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to marshal address.", err)
+	}
+	return UnmarshalAddress(a)
+}
+
+func UnmarshalAddress(b []byte) (address Address, err error) {
+	var alias struct {
+		Type string
+	}
+	if err = json.Unmarshal(b, &alias); err != nil {
+		return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal address.", err)
+	}
+	switch alias.Type {
+	case v2.REST:
+		var rest RESTAddress
+		if err = json.Unmarshal(b, &rest); err != nil {
+			return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal REST address.", err)
+		}
+		address = rest
+	case v2.MQTT:
+		var mqtt MQTTPubAddress
+		if err = json.Unmarshal(b, &mqtt); err != nil {
+			return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal MQTT address.", err)
+		}
+		address = mqtt
+	case v2.EMAIL:
+		var mail EmailAddress
+		if err = json.Unmarshal(b, &mail); err != nil {
+			return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal Email address.", err)
+		}
+		address = mail
+	default:
+		return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Unsupported address type", err)
+	}
+	return address, nil
 }
 
 // BaseAddress is a base struct contains the common fields, such as type, host, port, and so on.

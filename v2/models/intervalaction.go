@@ -5,6 +5,12 @@
 
 package models
 
+import (
+	"encoding/json"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+)
+
 // IntervalAction and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/IntervalAction
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
@@ -14,4 +20,30 @@ type IntervalAction struct {
 	Name         string
 	IntervalName string
 	Address      Address
+}
+
+func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
+	var alias struct {
+		Timestamps
+		Id           string
+		Name         string
+		IntervalName string
+		Address      interface{}
+	}
+	if err := json.Unmarshal(b, &alias); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal intervalAction.", err)
+	}
+	address, err := FormatAddress(alias.Address)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	*intervalAction = IntervalAction{
+		Timestamps:   alias.Timestamps,
+		Id:           alias.Id,
+		Name:         alias.Name,
+		IntervalName: alias.IntervalName,
+		Address:      address,
+	}
+	return nil
 }
