@@ -45,7 +45,7 @@ func (subscription *Subscription) UnmarshalJSON(b []byte) error {
 	}
 	channels := make([]Address, len(alias.Channels))
 	for i, c := range alias.Channels {
-		address, err := FormatAddress(c)
+		address, err := instantiateAddress(c)
 		if err != nil {
 			return errors.NewCommonEdgeXWrapper(err)
 		}

@@ -16,16 +16,16 @@ type Address interface {
 	GetBaseAddress() BaseAddress
 }
 
-// FormatAddress convert the interface to the corresponding address type
-func FormatAddress(i interface{}) (address Address, err error) {
+// instantiateAddress instantiate the interface to the corresponding address type
+func instantiateAddress(i interface{}) (address Address, err error) {
 	a, err := json.Marshal(i)
 	if err != nil {
 		return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to marshal address.", err)
 	}
-	return UnmarshalAddress(a)
+	return unmarshalAddress(a)
 }
 
-func UnmarshalAddress(b []byte) (address Address, err error) {
+func unmarshalAddress(b []byte) (address Address, err error) {
 	var alias struct {
 		Type string
 	}
