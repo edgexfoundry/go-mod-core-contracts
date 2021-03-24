@@ -12,7 +12,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
@@ -35,7 +34,7 @@ func NewDeviceProfileClient(baseUrl string) interfaces.DeviceProfileClient {
 
 func (client *DeviceProfileClient) Add(ctx context.Context, reqs []requests.DeviceProfileRequest) ([]common.BaseWithIdResponse, errors.EdgeX) {
 	var responses []common.BaseWithIdResponse
-	err := utils.PostRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileRoute, reqs, clients.ContentTypeJSON)
+	err := utils.PostRequestWithRawData(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileRoute, reqs)
 	if err != nil {
 		return responses, errors.NewCommonEdgeXWrapper(err)
 	}

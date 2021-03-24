@@ -17,8 +17,6 @@ import (
 	"net/url"
 	"path/filepath"
 
-	"github.com/fxamacker/cbor/v2"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
@@ -81,29 +79,33 @@ func createRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 	return req, nil
 }
 
-func createRequestWithRawData(ctx context.Context, httpMethod string, url string, data interface{}, encoding string) (*http.Request, errors.EdgeX) {
-	var err error
-	var encodedData []byte
-
-	if encoding == clients.ContentTypeJSON || encoding == "" {
-		encoding = clients.ContentTypeJSON
-		encodedData, err = json.Marshal(data)
-		if err != nil {
-			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to JSON", err)
-		}
-	} else if encoding == clients.ContentTypeCBOR {
-		encodedData, err = cbor.Marshal(data)
-		if err != nil {
-			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to CBOR", err)
-		}
+func createRequestWithRawData(ctx context.Context, httpMethod string, url string, data interface{}) (*http.Request, errors.EdgeX) {
+	jsonEncodedData, err := json.Marshal(data)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to JSON", err)
 	}
 
 	content := FromContext(ctx, clients.ContentType)
 	if content == "" {
-		content = encoding
+		content = clients.ContentTypeJSON
 	}
 
-	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(encodedData))
+	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(jsonEncodedData))
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
+	}
+	req.Header.Set(clients.ContentType, content)
+	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
+	return req, nil
+}
+
+func createRequestWithEncodedData(ctx context.Context, httpMethod string, url string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
+	content := encoding
+	if content == "" {
+		content = FromContext(ctx, clients.ContentType)
+	}
+
+	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(data))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}

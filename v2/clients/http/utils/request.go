@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 )
 
@@ -32,15 +31,37 @@ func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl str
 	return nil
 }
 
-// Helper method to make the post JSON/CBOR request and return the body
+// Helper method to make the post request with encoded data and return the body
 func PostRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
 	url string,
-	data interface{},
+	data []byte,
 	encoding string) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPost, url, data, encoding)
+	req, err := createRequestWithEncodedData(ctx, http.MethodPost, url, data, encoding)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}
+
+// Helper method to make the post JSON request with raw data and return the body
+func PostRequestWithRawData(
+	ctx context.Context,
+	returnValuePointer interface{},
+	url string,
+	data interface{}) errors.EdgeX {
+
+	req, err := createRequestWithRawData(ctx, http.MethodPost, url, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -62,7 +83,7 @@ func PutRequest(
 	url string,
 	data interface{}) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPut, url, data, clients.ContentTypeJSON)
+	req, err := createRequestWithRawData(ctx, http.MethodPut, url, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -84,7 +105,7 @@ func PatchRequest(
 	url string,
 	data interface{}) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPatch, url, data, clients.ContentTypeJSON)
+	req, err := createRequestWithRawData(ctx, http.MethodPatch, url, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
