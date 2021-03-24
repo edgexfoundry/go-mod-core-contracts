@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
@@ -30,7 +29,7 @@ func NewDeviceServiceClient(baseUrl string) interfaces.DeviceServiceClient {
 
 func (dsc DeviceServiceClient) Add(ctx context.Context, reqs []requests.AddDeviceServiceRequest) (
 	res []common.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequest(ctx, &res, dsc.baseUrl+v2.ApiDeviceServiceRoute, reqs, clients.ContentTypeJSON)
+	err = utils.PostRequestWithRawData(ctx, &res, dsc.baseUrl+v2.ApiDeviceServiceRoute, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

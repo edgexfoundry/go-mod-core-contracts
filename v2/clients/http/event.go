@@ -8,11 +8,9 @@ package http
 import (
 	"context"
 	"net/url"
-	"os"
 	"path"
 	"strconv"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
@@ -37,20 +35,13 @@ func (ec *eventClient) Add(ctx context.Context, req requests.AddEventRequest) (
 	common.BaseWithIdResponse, errors.EdgeX) {
 	path := path.Join(v2.ApiEventRoute, url.QueryEscape(req.Event.ProfileName), url.QueryEscape(req.Event.DeviceName), url.QueryEscape(req.Event.SourceName))
 	var br common.BaseWithIdResponse
-	var encoding string
 
-	for _, r := range req.Event.Readings {
-		if r.ValueType == v2.ValueTypeBinary {
-			encoding = clients.ContentTypeCBOR
-			break
-		}
+	bytes, encoding, err := req.Encode()
+	if err != nil {
+		return br, errors.NewCommonEdgeXWrapper(err)
 	}
 
-	if v := os.Getenv(v2.EnvEncodeAllEvents); v == v2.ValueTrue {
-		encoding = clients.ContentTypeCBOR
-	}
-
-	err := utils.PostRequest(ctx, &br, ec.baseUrl+path, req, encoding)
+	err = utils.PostRequest(ctx, &br, ec.baseUrl+path, bytes, encoding)
 	if err != nil {
 		return br, errors.NewCommonEdgeXWrapper(err)
 	}

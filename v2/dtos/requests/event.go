@@ -7,13 +7,16 @@ package requests
 
 import (
 	"encoding/json"
+	"os"
 
+	"github.com/fxamacker/cbor/v2"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
-	"github.com/fxamacker/cbor/v2"
 )
 
 // AddEventRequest defines the Request Content for POST event DTO.
@@ -86,6 +89,37 @@ func (a *AddEventRequest) Unmarshal(b []byte, f unmarshal) error {
 		a.Event.Readings[i].ValueType = valueType
 	}
 	return nil
+}
+
+func (a *AddEventRequest) Encode() ([]byte, string, error) {
+	var encoding = clients.ContentTypeJSON
+
+	for _, r := range a.Event.Readings {
+		if r.ValueType == v2.ValueTypeBinary {
+			encoding = clients.ContentTypeCBOR
+			break
+		}
+	}
+	if v := os.Getenv(v2.EnvEncodeAllEvents); v == v2.ValueTrue {
+		encoding = clients.ContentTypeCBOR
+	}
+
+	var err error
+	var encodedData []byte
+	switch encoding {
+	case clients.ContentTypeCBOR:
+		encodedData, err = cbor.Marshal(a)
+		if err != nil {
+			return nil, "", errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode AddEventRequest to CBOR", err)
+		}
+	case clients.ContentTypeJSON:
+		encodedData, err = json.Marshal(a)
+		if err != nil {
+			return nil, "", errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode AddEventRequest to JSON", err)
+		}
+	}
+
+	return encodedData, encoding, nil
 }
 
 // AddEventReqToEventModel transforms the AddEventRequest DTO to the Event model
