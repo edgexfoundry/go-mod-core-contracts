@@ -49,7 +49,12 @@ var testMQTTPubAddress = Address{
 	},
 }
 
-var testEmailAddress = NewEmailAddress([]string{testEmail})
+var testEmailAddress = Address{
+	Type: v2.EMAIL,
+	EmailAddress: EmailAddress{
+		Recipients: []string{testEmail},
+	},
+}
 
 func TestAddress_UnmarshalJSON(t *testing.T) {
 	restJsonStr := fmt.Sprintf(
@@ -62,7 +67,7 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 		testMQTTPubAddress.Type, testMQTTPubAddress.Host, testMQTTPubAddress.Port,
 		testMQTTPubAddress.Publisher, testMQTTPubAddress.Topic,
 	)
-	emailJsonStr := fmt.Sprintf(`{"type":"%s","EmailAddresses":["%s"]}`, testEmailAddress.Type, testEmail)
+	emailJsonStr := fmt.Sprintf(`{"type":"%s","Recipients":["%s"]}`, testEmailAddress.Type, testEmail)
 
 	tests := []struct {
 		name     string
@@ -104,7 +109,7 @@ func TestAddress_Validate(t *testing.T) {
 
 	validEmail := testEmailAddress
 	invalidEmailAddress := testEmailAddress
-	invalidEmailAddress.EmailAddresses = []string{"test.example.com"}
+	invalidEmailAddress.Recipients = []string{"test.example.com"}
 
 	tests := []struct {
 		name        string
@@ -135,7 +140,7 @@ func TestEmailAddressModelToDTO(t *testing.T) {
 	recipients := []string{"test@example.com"}
 	m := models.EmailAddress{Recipients: recipients}
 	dto := FromAddressModelToDTO(m)
-	assert.Equal(t, recipients, dto.EmailAddresses)
+	assert.Equal(t, recipients, dto.Recipients)
 }
 
 func TestEmailAddressDTOtoModel(t *testing.T) {
@@ -144,4 +149,56 @@ func TestEmailAddressDTOtoModel(t *testing.T) {
 	m := ToAddressModel(dto)
 	require.IsType(t, models.EmailAddress{}, m)
 	assert.Equal(t, recipients, m.(models.EmailAddress).Recipients)
+}
+
+func TestAddress_marshalJSON(t *testing.T) {
+	restAddress := Address{
+		Type: v2.REST,
+		Host: testHost, Port: testPort,
+		RESTAddress: RESTAddress{HTTPMethod: testHTTPMethod},
+	}
+	expectedRESTJsonStr := fmt.Sprintf(
+		`{"type":"%s","host":"%s","port":%d,"httpMethod":"%s"}`,
+		restAddress.Type, restAddress.Host, restAddress.Port, restAddress.HTTPMethod,
+	)
+	mattAddress := Address{
+		Type: v2.MQTT,
+		Host: testHost, Port: testPort,
+		MQTTPubAddress: MQTTPubAddress{
+			Publisher: testPublisher,
+			Topic:     testTopic,
+		},
+	}
+	expectedMQTTJsonStr := fmt.Sprintf(
+		`{"type":"%s","host":"%s","port":%d,"publisher":"%s","topic":"%s"}`,
+		mattAddress.Type, mattAddress.Host, mattAddress.Port, mattAddress.Publisher, mattAddress.Topic,
+	)
+	emailAddress := Address{
+		Type: v2.EMAIL,
+		EmailAddress: EmailAddress{
+			Recipients: []string{testEmail},
+		},
+	}
+	expectedEmailJsonStr := fmt.Sprintf(
+		`{"type":"%s","recipients":["%s"]}`,
+		emailAddress.Type, emailAddress.Recipients[0],
+	)
+
+	tests := []struct {
+		name            string
+		address         Address
+		expectedJSONStr string
+	}{
+		{"marshal REST address", restAddress, expectedRESTJsonStr},
+		{"marshal MQTT address", mattAddress, expectedMQTTJsonStr},
+		{"marshal Email address", emailAddress, expectedEmailJsonStr},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			jsonBytes, err := json.Marshal(tt.address)
+			require.NoError(t, err)
+			assert.Equal(t, tt.expectedJSONStr, string(jsonBytes), "Unmarshal did not result in expected JSON string.", err)
+		})
+	}
 }

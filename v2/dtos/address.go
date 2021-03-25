@@ -14,12 +14,12 @@ import (
 type Address struct {
 	Type string `json:"type" validate:"oneof='REST' 'MQTT' 'EMAIL'"`
 
-	Host           string   `json:"host" validate:"required_without=EmailAddresses"`
-	Port           int      `json:"port" validate:"required_without=EmailAddresses"`
-	EmailAddresses []string `json:"emailAddresses,omitempty" validate:"omitempty,gt=0,dive,email"`
+	Host string `json:"host,omitempty" validate:"required_unless=Type EMAIL"`
+	Port int    `json:"port,omitempty" validate:"required_unless=Type EMAIL"`
 
 	RESTAddress    `json:",inline" validate:"-"`
 	MQTTPubAddress `json:",inline" validate:"-"`
+	EmailAddress   `json:",inline" validate:"-"`
 }
 
 // Validate satisfies the Validator interface
@@ -41,14 +41,21 @@ func (a *Address) Validate() error {
 			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid MQTTPubAddress.", err)
 		}
 		break
+	case v2.EMAIL:
+		err = v2.Validate(a.EmailAddress)
+		if err != nil {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid EmailAddress.", err)
+		}
+		break
 	}
+
 	return nil
 }
 
 type RESTAddress struct {
 	Path            string `json:"path,omitempty"`
 	QueryParameters string `json:"queryParameters,omitempty"`
-	HTTPMethod      string `json:"httpMethod" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
+	HTTPMethod      string `json:"httpMethod,omitempty" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
 }
 
 func NewRESTAddress(host string, port int, httpMethod string) Address {
@@ -63,8 +70,8 @@ func NewRESTAddress(host string, port int, httpMethod string) Address {
 }
 
 type MQTTPubAddress struct {
-	Publisher      string `json:"publisher" validate:"required"`
-	Topic          string `json:"topic" validate:"required"`
+	Publisher      string `json:"publisher,omitempty" validate:"required"`
+	Topic          string `json:"topic,omitempty" validate:"required"`
 	QoS            int    `json:"qos,omitempty"`
 	KeepAlive      int    `json:"keepAlive,omitempty"`
 	Retained       bool   `json:"retained,omitempty"`
@@ -84,10 +91,16 @@ func NewMQTTAddress(host string, port int, publisher string, topic string) Addre
 	}
 }
 
-func NewEmailAddress(emailAddresses []string) Address {
+type EmailAddress struct {
+	Recipients []string `json:"recipients,omitempty" validate:"gt=0,dive,email"`
+}
+
+func NewEmailAddress(recipients []string) Address {
 	return Address{
-		Type:           v2.EMAIL,
-		EmailAddresses: emailAddresses,
+		Type: v2.EMAIL,
+		EmailAddress: EmailAddress{
+			Recipients: recipients,
+		},
 	}
 }
 
@@ -124,7 +137,7 @@ func ToAddressModel(a Address) models.Address {
 			BaseAddress: models.BaseAddress{
 				Type: a.Type,
 			},
-			Recipients: a.EmailAddresses,
+			Recipients: a.EmailAddress.Recipients,
 		}
 	}
 	return address
@@ -157,7 +170,9 @@ func FromAddressModelToDTO(address models.Address) Address {
 		}
 		break
 	case models.EmailAddress:
-		dto.EmailAddresses = a.Recipients
+		dto.EmailAddress = EmailAddress{
+			Recipients: a.Recipients,
+		}
 		break
 	}
 	return dto
