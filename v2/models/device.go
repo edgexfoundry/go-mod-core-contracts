@@ -9,7 +9,7 @@ package models
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Device
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Device struct {
-	Timestamps
+	DBTimestamp
 	Id             string
 	Name           string
 	Description    string

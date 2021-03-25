@@ -12,10 +12,9 @@ import (
 // DeviceService and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceService
 type DeviceService struct {
+	DBTimestamp   `json:",inline"`
 	Id            string   `json:"id,omitempty" validate:"omitempty,uuid"`
 	Name          string   `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Created       int64    `json:"created,omitempty"`
-	Modified      int64    `json:"modified,omitempty"`
 	Description   string   `json:"description,omitempty"`
 	LastConnected int64    `json:"lastConnected,omitempty"`
 	LastReported  int64    `json:"lastReported,omitempty"`

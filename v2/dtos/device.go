@@ -12,9 +12,8 @@ import (
 // Device and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Device
 type Device struct {
+	DBTimestamp    `json:",inline"`
 	Id             string                        `json:"id,omitempty" validate:"omitempty,uuid"`
-	Created        int64                         `json:"created,omitempty"`
-	Modified       int64                         `json:"modified,omitempty"`
 	Name           string                        `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Description    string                        `json:"description,omitempty"`
 	AdminState     string                        `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`

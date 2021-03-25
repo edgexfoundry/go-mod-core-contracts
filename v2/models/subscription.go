@@ -15,7 +15,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Subscription
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Subscription struct {
-	Timestamps
+	DBTimestamp
 	Categories     []string
 	Labels         []string
 	Channels       []Address
@@ -29,7 +29,7 @@ type Subscription struct {
 
 func (subscription *Subscription) UnmarshalJSON(b []byte) error {
 	var alias struct {
-		Timestamps
+		DBTimestamp
 		Categories     []string
 		Labels         []string
 		Channels       []interface{}
@@ -53,7 +53,7 @@ func (subscription *Subscription) UnmarshalJSON(b []byte) error {
 	}
 
 	*subscription = Subscription{
-		Timestamps:     alias.Timestamps,
+		DBTimestamp:    alias.DBTimestamp,
 		Categories:     alias.Categories,
 		Labels:         alias.Labels,
 		Description:    alias.Description,

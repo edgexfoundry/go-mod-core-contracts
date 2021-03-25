@@ -12,14 +12,13 @@ import (
 // Subscription and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Subscription
 type Subscription struct {
+	DBTimestamp    `json:",inline"`
 	Id             string    `json:"id,omitempty" validate:"omitempty,uuid"`
 	Name           string    `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Channels       []Address `json:"channels" validate:"required,gt=0,dive"`
 	Receiver       string    `json:"receiver" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Categories     []string  `json:"categories,omitempty" validate:"required_without=Labels,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels         []string  `json:"labels,omitempty" validate:"required_without=Categories,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Created        int64     `json:"created,omitempty"`
-	Modified       int64     `json:"modified,omitempty"`
 	Description    string    `json:"description,omitempty"`
 	ResendLimit    int64     `json:"resendLimit,omitempty"`
 	ResendInterval string    `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
@@ -45,8 +44,7 @@ func ToSubscriptionModel(s Subscription) models.Subscription {
 	m.Categories = s.Categories
 	m.Labels = s.Labels
 	m.Channels = ToAddressModels(s.Channels)
-	m.Created = s.Created
-	m.Modified = s.Modified
+	m.DBTimestamp = models.DBTimestamp(s.DBTimestamp)
 	m.Description = s.Description
 	m.Id = s.Id
 	m.Receiver = s.Receiver
@@ -68,11 +66,10 @@ func ToSubscriptionModels(subs []Subscription) []models.Subscription {
 // FromSubscriptionModelToDTO transforms the Subscription Model to the Subscription DTO
 func FromSubscriptionModelToDTO(s models.Subscription) Subscription {
 	return Subscription{
+		DBTimestamp:    DBTimestamp(s.DBTimestamp),
 		Categories:     s.Categories,
 		Labels:         s.Labels,
 		Channels:       FromAddressModelsToDTOs(s.Channels),
-		Created:        s.Created,
-		Modified:       s.Modified,
 		Description:    s.Description,
 		Id:             s.Id,
 		Receiver:       s.Receiver,
