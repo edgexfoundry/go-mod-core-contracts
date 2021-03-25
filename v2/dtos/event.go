@@ -25,7 +25,6 @@ type Event struct {
 	DeviceName         string            `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ProfileName        string            `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	SourceName         string            `json:"sourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	Created            int64             `json:"created,omitempty"`
 	Origin             int64             `json:"origin" validate:"required"`
 	Readings           []BaseReading     `json:"readings" validate:"gt=0,dive,required"`
 	Tags               map[string]string `json:"tags,omitempty" xml:"-"` // Have to ignore since map not supported for XML
@@ -61,7 +60,6 @@ func FromEventModelToDTO(event models.Event) Event {
 		DeviceName:  event.DeviceName,
 		ProfileName: event.ProfileName,
 		SourceName:  event.SourceName,
-		Created:     event.Created,
 		Origin:      event.Origin,
 		Readings:    readings,
 		Tags:        tags,

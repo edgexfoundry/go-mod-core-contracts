@@ -23,7 +23,6 @@ var valid = models.Event{
 	DeviceName:  TestDeviceName,
 	ProfileName: TestDeviceProfileName,
 	SourceName:  TestSourceName,
-	Created:     TestTimestamp,
 	Origin:      TestTimestamp,
 	Tags: map[string]string{
 		"GatewayID": "Houston-0001",
@@ -38,7 +37,6 @@ var expectedDTO = Event{
 	DeviceName:  TestDeviceName,
 	ProfileName: TestDeviceProfileName,
 	SourceName:  TestSourceName,
-	Created:     TestTimestamp,
 	Origin:      TestTimestamp,
 	Tags: map[string]string{
 		"GatewayID": "Houston-0001",
@@ -65,7 +63,7 @@ func TestFromEventModelToDTO(t *testing.T) {
 func TestEvent_ToXML(t *testing.T) {
 	// Since the order in map is random we have to verify the individual items exists without depending on order
 	contains := []string{
-		"<Event><ApiVersion>v2</ApiVersion><Id>7a1707f0-166f-4c4b-bc9d-1d54c74e0137</Id><DeviceName>TestDevice</DeviceName><ProfileName>TestDeviceProfileName</ProfileName><SourceName>TestSourceName</SourceName><Created>1594963842</Created><Origin>1594963842</Origin><Tags>",
+		"<Event><ApiVersion>v2</ApiVersion><Id>7a1707f0-166f-4c4b-bc9d-1d54c74e0137</Id><DeviceName>TestDevice</DeviceName><ProfileName>TestDeviceProfileName</ProfileName><SourceName>TestSourceName</SourceName><Origin>1594963842</Origin><Tags>",
 		"<GatewayID>Houston-0001</GatewayID>",
 		"<Latitude>29.630771</Latitude>",
 		"<Longitude>-95.377603</Longitude>",
@@ -91,7 +89,6 @@ func TestNewEvent(t *testing.T) {
 	assert.Equal(t, expectedProfileName, actual.ProfileName)
 	assert.Equal(t, expectedDeviceName, actual.DeviceName)
 	assert.Zero(t, len(actual.Readings))
-	assert.Zero(t, actual.Created)
 	assert.NotZero(t, actual.Origin)
 }
 
@@ -126,7 +123,6 @@ func TestEvent_AddSimpleReading(t *testing.T) {
 		assert.Equal(t, expectedReadingDetails[index].resourceName, actual.ResourceName)
 		assert.Equal(t, expectedReadingDetails[index].valueType, actual.ValueType)
 		assert.Equal(t, expectedReadingDetails[index].value, actual.Value)
-		assert.Zero(t, actual.Created)
 		assert.NotZero(t, actual.Origin)
 	}
 }
@@ -152,6 +148,5 @@ func TestEvent_AddBinaryReading(t *testing.T) {
 	assert.Equal(t, expectedResourceName, actual.ResourceName)
 	assert.Equal(t, expectedValueType, actual.ValueType)
 	assert.Equal(t, expectedValue, actual.BinaryValue)
-	assert.Zero(t, actual.Created)
 	assert.NotZero(t, actual.Origin)
 }

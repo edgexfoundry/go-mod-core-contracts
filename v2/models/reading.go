@@ -10,7 +10,6 @@ package models
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type BaseReading struct {
 	Id           string
-	Created      int64
 	Origin       int64
 	DeviceName   string
 	ResourceName string

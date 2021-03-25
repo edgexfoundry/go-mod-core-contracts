@@ -13,7 +13,6 @@ type Event struct {
 	DeviceName  string
 	ProfileName string
 	SourceName  string
-	Created     int64
 	Origin      int64
 	Readings    []Reading
 	Tags        map[string]string

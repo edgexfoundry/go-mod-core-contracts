@@ -333,6 +333,5 @@ func TestNewAddEventRequest(t *testing.T) {
 	assert.Equal(t, expectedDeviceName, actual.Event.DeviceName)
 	assert.Equal(t, expectedSourceName, actual.Event.SourceName)
 	assert.NotZero(t, len(actual.Event.Readings))
-	assert.Zero(t, actual.Event.Created)
 	assert.NotZero(t, actual.Event.Origin)
 }
