@@ -9,7 +9,7 @@ package models
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Notification
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Notification struct {
-	Timestamps
+	DBTimestamp
 	Category    string
 	Content     string
 	ContentType string

@@ -17,7 +17,7 @@ import (
 
 func actionWithRESTAddressData() IntervalAction {
 	return IntervalAction{
-		Timestamps:   Timestamps{},
+		DBTimestamp:  DBTimestamp{},
 		Id:           ExampleUUID,
 		Name:         TestIntervalActionName,
 		IntervalName: TestIntervalName,
@@ -33,7 +33,7 @@ func actionWithRESTAddressData() IntervalAction {
 }
 func actionWithMQTTPubAddressData() IntervalAction {
 	return IntervalAction{
-		Timestamps:   Timestamps{},
+		DBTimestamp:  DBTimestamp{},
 		Id:           ExampleUUID,
 		Name:         TestIntervalActionName,
 		IntervalName: TestIntervalName,

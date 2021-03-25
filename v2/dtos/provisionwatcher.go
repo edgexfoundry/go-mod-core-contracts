@@ -12,6 +12,7 @@ import (
 // ProvisionWatcher and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ProvisionWatcher
 type ProvisionWatcher struct {
+	DBTimestamp         `json:",inline"`
 	Id                  string              `json:"id,omitempty" validate:"omitempty,uuid"`
 	Name                string              `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels              []string            `json:"labels,omitempty"`
@@ -40,7 +41,7 @@ type UpdateProvisionWatcher struct {
 // ToProvisionWatcherModel transforms the ProvisionWatcher DTO to the ProvisionWatcher model
 func ToProvisionWatcherModel(dto ProvisionWatcher) models.ProvisionWatcher {
 	return models.ProvisionWatcher{
-		Timestamps:          models.Timestamps{},
+		DBTimestamp:         models.DBTimestamp(dto.DBTimestamp),
 		Id:                  dto.Id,
 		Name:                dto.Name,
 		Labels:              dto.Labels,

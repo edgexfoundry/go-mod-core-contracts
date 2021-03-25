@@ -15,7 +15,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/IntervalAction
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type IntervalAction struct {
-	Timestamps
+	DBTimestamp
 	Id           string
 	Name         string
 	IntervalName string
@@ -24,7 +24,7 @@ type IntervalAction struct {
 
 func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
 	var alias struct {
-		Timestamps
+		DBTimestamp
 		Id           string
 		Name         string
 		IntervalName string
@@ -39,7 +39,7 @@ func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
 	}
 
 	*intervalAction = IntervalAction{
-		Timestamps:   alias.Timestamps,
+		DBTimestamp:  alias.DBTimestamp,
 		Id:           alias.Id,
 		Name:         alias.Name,
 		IntervalName: alias.IntervalName,

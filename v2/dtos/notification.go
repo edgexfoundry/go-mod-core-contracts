@@ -14,9 +14,8 @@ import (
 // Notification and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Notification
 type Notification struct {
+	DBTimestamp `json:",inline"`
 	Id          string   `json:"id,omitempty" validate:"omitempty,uuid"`
-	Created     int64    `json:"created,omitempty"`
-	Modified    int64    `json:"modified,omitempty"`
 	Category    string   `json:"category,omitempty" validate:"required_without=Labels,omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels      []string `json:"labels,omitempty" validate:"required_without=Category,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Content     string   `json:"content" validate:"required,edgex-dto-none-empty-string"`
@@ -43,8 +42,7 @@ func NewNotification(labels []string, category, content, sender, severity string
 func ToNotificationModel(n Notification) models.Notification {
 	var m models.Notification
 	m.Id = n.Id
-	m.Created = n.Created
-	m.Modified = n.Modified
+	m.DBTimestamp = models.DBTimestamp(n.DBTimestamp)
 	m.Category = n.Category
 	m.Labels = n.Labels
 	m.Content = n.Content
@@ -68,9 +66,8 @@ func ToNotificationModels(notifications []Notification) []models.Notification {
 // FromNotificationModelToDTO transforms the Notification Model to the Notification DTO
 func FromNotificationModelToDTO(n models.Notification) Notification {
 	return Notification{
+		DBTimestamp: DBTimestamp(n.DBTimestamp),
 		Id:          n.Id,
-		Created:     n.Created,
-		Modified:    n.Modified,
 		Category:    string(n.Category),
 		Labels:      n.Labels,
 		Content:     n.Content,
