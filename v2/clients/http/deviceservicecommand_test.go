@@ -33,7 +33,6 @@ var testEventDTO = dtos.Event{
 	Id:          TestUUID,
 	DeviceName:  TestDeviceName,
 	ProfileName: TestDeviceProfileName,
-	Created:     TestTimestamp,
 	Origin:      TestTimestamp,
 	Tags: map[string]string{
 		"GatewayID": "Houston-0001",

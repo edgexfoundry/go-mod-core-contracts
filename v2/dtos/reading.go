@@ -21,7 +21,6 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseReading
 type BaseReading struct {
 	Id            string `json:"id,omitempty"`
-	Created       int64  `json:"created,omitempty"`
 	Origin        int64  `json:"origin" validate:"required"`
 	DeviceName    string `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ResourceName  string `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
@@ -291,7 +290,6 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	case models.BinaryReading:
 		baseReading = BaseReading{
 			Id:            r.Id,
-			Created:       r.Created,
 			Origin:        r.Origin,
 			DeviceName:    r.DeviceName,
 			ResourceName:  r.ResourceName,
@@ -302,7 +300,6 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	case models.SimpleReading:
 		baseReading = BaseReading{
 			Id:            r.Id,
-			Created:       r.Created,
 			Origin:        r.Origin,
 			DeviceName:    r.DeviceName,
 			ResourceName:  r.ResourceName,

@@ -57,7 +57,6 @@ func TestFromReadingModelToDTO(t *testing.T) {
 	valid := models.SimpleReading{
 		BaseReading: models.BaseReading{
 			Id:           TestUUID,
-			Created:      TestTimestamp,
 			Origin:       TestTimestamp,
 			DeviceName:   TestDeviceName,
 			ResourceName: TestReadingName,
@@ -68,7 +67,6 @@ func TestFromReadingModelToDTO(t *testing.T) {
 	}
 	expectedDTO := BaseReading{
 		Id:           TestUUID,
-		Created:      TestTimestamp,
 		Origin:       TestTimestamp,
 		DeviceName:   TestDeviceName,
 		ResourceName: TestReadingName,
@@ -141,7 +139,6 @@ func TestNewSimpleReading(t *testing.T) {
 			assert.Equal(t, expectedResourceName, actual.ResourceName)
 			assert.Equal(t, tt.expectedValueType, actual.ValueType)
 			assert.Equal(t, tt.expectedValue, actual.Value)
-			assert.Zero(t, actual.Created)
 			assert.NotZero(t, actual.Origin)
 		})
 	}
@@ -204,6 +201,5 @@ func TestNewBinaryReading(t *testing.T) {
 	assert.Equal(t, expectedResourceName, actual.ResourceName)
 	assert.Equal(t, expectedValueType, actual.ValueType)
 	assert.Equal(t, expectedBinaryValue, actual.BinaryValue)
-	assert.Zero(t, actual.Created)
 	assert.NotZero(t, actual.Origin)
 }
