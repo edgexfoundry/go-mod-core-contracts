@@ -109,6 +109,7 @@ const (
 	Created      = "created"
 	Modified     = "modified"
 	Pushed       = "pushed"
+	Origin       = "origin"
 	Count        = "count"
 	Device       = "device"
 	DeviceId     = "deviceId"
