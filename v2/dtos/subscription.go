@@ -29,7 +29,7 @@ type Subscription struct {
 type UpdateSubscription struct {
 	Id             *string   `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
 	Name           *string   `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Channels       []Address `json:"channels,omitempty" validate:"omitempty,dive"`
+	Channels       []Address `json:"channels,omitempty" validate:"omitempty,gt=0,dive"`
 	Receiver       *string   `json:"receiver,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Categories     []string  `json:"categories,omitempty" validate:"omitempty,dive,gt=0,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels         []string  `json:"labels,omitempty" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`

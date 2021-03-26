@@ -211,6 +211,10 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 	unsupportedChannelType.Subscription.Channels = []dtos.Address{
 		dtos.NewMQTTAddress("host", 123, "publisher", "topic"),
 	}
+	validWithoutChannels := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	validWithoutChannels.Subscription.Channels = nil
+	invalidEmptyChannels := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	invalidEmptyChannels.Subscription.Channels = []dtos.Address{}
 
 	categoryNameWithReservedChar := NewUpdateSubscriptionRequest(updateSubscriptionData())
 	categoryNameWithReservedChar.Subscription.Categories = []string{namesWithReservedChar[0]}
@@ -239,6 +243,8 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 		{"invalid, category name containing reserved chars", categoryNameWithReservedChar, true},
 		{"invalid, receiver name containing reserved chars", receiverNameWithReservedChars, true},
 		{"invalid, resendInterval is not specified in ISO8601 format", invalidResendInterval, true},
+		{"valid, without channels", validWithoutChannels, false},
+		{"invalid, empty channels", invalidEmptyChannels, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
