@@ -31,9 +31,9 @@ func NewBaseRequest() BaseRequest {
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseResponse
 type BaseResponse struct {
 	Versionable `json:",inline"`
-	RequestId   string      `json:"requestId"`
-	Message     interface{} `json:"message,omitempty"`
-	StatusCode  int         `json:"statusCode"`
+	RequestId   string `json:"requestId,omitempty"`
+	Message     string `json:"message,omitempty"`
+	StatusCode  int    `json:"statusCode"`
 }
 
 // Versionable shows the API version in DTOs
