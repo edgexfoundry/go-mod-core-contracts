@@ -92,6 +92,10 @@ func (request UpdateSubscriptionRequest) Validate() error {
 			return errors.NewCommonEdgeX(errors.KindContractInvalid, "MQTT is not valid type for Channel", nil)
 		}
 	}
+	if request.Subscription.Categories != nil && request.Subscription.Labels != nil &&
+		len(request.Subscription.Categories) == 0 && len(request.Subscription.Labels) == 0 {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "categories and labels can not be both empty", nil)
+	}
 	return nil
 }
 
