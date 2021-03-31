@@ -226,6 +226,22 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 	invalidResendIntervalValue := "10"
 	invalidResendInterval.Subscription.ResendInterval = &invalidResendIntervalValue
 
+	noCategories := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	noCategories.Subscription.Categories = nil
+	noLabels := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	noLabels.Subscription.Labels = nil
+	noCategoriesAndLabels := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	noCategoriesAndLabels.Subscription.Categories = nil
+	noCategoriesAndLabels.Subscription.Labels = nil
+
+	emptyCategories := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	emptyCategories.Subscription.Categories = []string{}
+	emptyLabels := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	emptyLabels.Subscription.Labels = []string{}
+	emptyCategoriesAndLabels := NewUpdateSubscriptionRequest(updateSubscriptionData())
+	emptyCategoriesAndLabels.Subscription.Categories = []string{}
+	emptyCategoriesAndLabels.Subscription.Labels = []string{}
+
 	tests := []struct {
 		name        string
 		req         UpdateSubscriptionRequest
@@ -245,6 +261,12 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 		{"invalid, resendInterval is not specified in ISO8601 format", invalidResendInterval, true},
 		{"valid, without channels", validWithoutChannels, false},
 		{"invalid, empty channels", invalidEmptyChannels, true},
+		{"valid, no categories", noCategories, false},
+		{"valid, no labels", noLabels, false},
+		{"valid, no categories and labels", noCategoriesAndLabels, false},
+		{"valid, empty categories", emptyCategories, false},
+		{"valid, empty labels", emptyLabels, false},
+		{"invalid, empty categories and labels", emptyCategoriesAndLabels, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
