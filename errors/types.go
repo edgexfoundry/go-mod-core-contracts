@@ -96,7 +96,11 @@ func (ce CommonEdgeX) Error() string {
 
 	// ce.err.Error functionality gets the error message of the nested error and which will handle both CommonEdgeX
 	// types and Go standard errors(both wrapped and non-wrapped).
-	return ce.message + " -> " + ce.err.Error()
+	if ce.message != "" {
+		return ce.message + " -> " + ce.err.Error()
+	} else {
+		return ce.err.Error()
+	}
 }
 
 // DebugMessages returns a string taking all nested and wrapped operations and errors into account.
