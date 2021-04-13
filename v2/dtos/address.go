@@ -53,9 +53,9 @@ func (a *Address) Validate() error {
 }
 
 type RESTAddress struct {
-	Path            string `json:"path,omitempty"`
-	QueryParameters string `json:"queryParameters,omitempty"`
-	HTTPMethod      string `json:"httpMethod,omitempty" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
+	Path        string `json:"path,omitempty"`
+	RequestBody string `json:"requestBody,omitempty"`
+	HTTPMethod  string `json:"httpMethod,omitempty" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
 }
 
 func NewRESTAddress(host string, port int, httpMethod string) Address {
@@ -113,9 +113,9 @@ func ToAddressModel(a Address) models.Address {
 			BaseAddress: models.BaseAddress{
 				Type: a.Type, Host: a.Host, Port: a.Port,
 			},
-			Path:            a.RESTAddress.Path,
-			QueryParameters: a.RESTAddress.QueryParameters,
-			HTTPMethod:      a.RESTAddress.HTTPMethod,
+			Path:        a.RESTAddress.Path,
+			RequestBody: a.RESTAddress.RequestBody,
+			HTTPMethod:  a.RESTAddress.HTTPMethod,
 		}
 		break
 	case v2.MQTT:
@@ -153,9 +153,9 @@ func FromAddressModelToDTO(address models.Address) Address {
 	switch a := address.(type) {
 	case models.RESTAddress:
 		dto.RESTAddress = RESTAddress{
-			Path:            a.Path,
-			QueryParameters: a.QueryParameters,
-			HTTPMethod:      a.HTTPMethod,
+			Path:        a.Path,
+			RequestBody: a.RequestBody,
+			HTTPMethod:  a.HTTPMethod,
 		}
 		break
 	case models.MQTTPubAddress:
