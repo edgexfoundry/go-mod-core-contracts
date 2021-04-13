@@ -33,9 +33,9 @@ var testRESTAddress = Address{
 	Host: testHost,
 	Port: testPort,
 	RESTAddress: RESTAddress{
-		Path:            testPath,
-		QueryParameters: testQueryParameters,
-		HTTPMethod:      testHTTPMethod,
+		Path:        testPath,
+		RequestBody: testQueryParameters,
+		HTTPMethod:  testHTTPMethod,
 	},
 }
 
@@ -58,9 +58,9 @@ var testEmailAddress = Address{
 
 func TestAddress_UnmarshalJSON(t *testing.T) {
 	restJsonStr := fmt.Sprintf(
-		`{"type":"%s","host":"%s","port":%d,"path":"%s","queryParameters":"%s","httpMethod":"%s"}`,
+		`{"type":"%s","host":"%s","port":%d,"path":"%s","requestBody":"%s","httpMethod":"%s"}`,
 		testRESTAddress.Type, testRESTAddress.Host, testRESTAddress.Port,
-		testRESTAddress.Path, testRESTAddress.QueryParameters, testRESTAddress.HTTPMethod,
+		testRESTAddress.Path, testRESTAddress.RequestBody, testRESTAddress.HTTPMethod,
 	)
 	mqttJsonStr := fmt.Sprintf(
 		`{"type":"%s","host":"%s","port":%d,"Publisher":"%s","Topic":"%s"}`,
