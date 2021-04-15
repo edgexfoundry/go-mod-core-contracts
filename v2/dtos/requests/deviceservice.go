@@ -92,6 +92,15 @@ func (ds *UpdateDeviceServiceRequest) UnmarshalJSON(b []byte) error {
 
 // ReplaceDeviceServiceModelFieldsWithDTO replace existing DeviceService's fields with DTO patch
 func ReplaceDeviceServiceModelFieldsWithDTO(ds *models.DeviceService, patch dtos.UpdateDeviceService) {
+	if patch.Description != nil {
+		ds.Description = *patch.Description
+	}
+	if patch.LastConnected != nil {
+		ds.LastConnected = *patch.LastConnected
+	}
+	if patch.LastReported != nil {
+		ds.LastReported = *patch.LastReported
+	}
 	if patch.AdminState != nil {
 		ds.AdminState = models.AdminState(*patch.AdminState)
 	}
