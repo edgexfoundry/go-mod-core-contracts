@@ -27,6 +27,9 @@ type Subscription struct {
 	ResendInterval string
 }
 
+// ChannelType controls the range of values which constitute valid delivery types for channels
+type ChannelType string
+
 func (subscription *Subscription) UnmarshalJSON(b []byte) error {
 	var alias struct {
 		DBTimestamp

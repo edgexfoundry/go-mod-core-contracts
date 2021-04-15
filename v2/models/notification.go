@@ -20,3 +20,9 @@ type Notification struct {
 	Severity    NotificationSeverity
 	Status      NotificationStatus
 }
+
+// NotificationSeverity indicates the level of severity for the notification.
+type NotificationSeverity string
+
+// NotificationStatus indicates the current processing status of the notification.
+type NotificationStatus string
