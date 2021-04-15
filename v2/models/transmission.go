@@ -18,3 +18,6 @@ type Transmission struct {
 	ResendCount      int64
 	Status           TransmissionStatus
 }
+
+// TransmissionStatus indicates the most recent success/failure of a given transmission attempt.
+type TransmissionStatus string
