@@ -24,8 +24,8 @@ type Interval struct {
 // UpdateInterval and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/UpdateInterval
 type UpdateInterval struct {
-	Id        *string `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name      *string `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Id        *string `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
+	Name      *string `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Start     *string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	End       *string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	Frequency *string `json:"frequency,omitempty" validate:"omitempty,edgex-dto-frequency"`
