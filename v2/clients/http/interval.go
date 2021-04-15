@@ -31,6 +31,7 @@ func NewIntervalClient(baseUrl string) interfaces.IntervalClient {
 	}
 }
 
+// Add adds new intervals
 func (client IntervalClient) Add(ctx context.Context, reqs []requests.AddIntervalRequest) (
 	res []common.BaseWithIdResponse, err errors.EdgeX) {
 	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl+v2.ApiIntervalRoute, reqs)
@@ -40,6 +41,7 @@ func (client IntervalClient) Add(ctx context.Context, reqs []requests.AddInterva
 	return res, nil
 }
 
+// Update updates intervals
 func (client IntervalClient) Update(ctx context.Context, reqs []requests.UpdateIntervalRequest) (
 	res []common.BaseResponse, err errors.EdgeX) {
 	err = utils.PatchRequest(ctx, &res, client.baseUrl+v2.ApiIntervalRoute, reqs)
@@ -49,6 +51,7 @@ func (client IntervalClient) Update(ctx context.Context, reqs []requests.UpdateI
 	return res, nil
 }
 
+// AllIntervals query the intervals with offset, limit
 func (client IntervalClient) AllIntervals(ctx context.Context, offset int, limit int) (
 	res responses.MultiIntervalsResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
@@ -61,6 +64,7 @@ func (client IntervalClient) AllIntervals(ctx context.Context, offset int, limit
 	return res, nil
 }
 
+// IntervalByName query the interval by name
 func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 	res responses.IntervalResponse, err errors.EdgeX) {
 	path := path.Join(v2.ApiIntervalRoute, v2.Name, url.QueryEscape(name))
@@ -71,6 +75,7 @@ func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 	return res, nil
 }
 
+// DeleteIntervalByName delete the interval by name
 func (client IntervalClient) DeleteIntervalByName(ctx context.Context, name string) (
 	res common.BaseResponse, err errors.EdgeX) {
 	path := path.Join(v2.ApiIntervalRoute, v2.Name, url.QueryEscape(name))

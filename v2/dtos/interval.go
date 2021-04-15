@@ -21,6 +21,7 @@ type Interval struct {
 	RunOnce     bool   `json:"runOnce,omitempty"`
 }
 
+// NewInterval creates interval DTO with required fields
 func NewInterval(name, frequency string) Interval {
 	return Interval{Name: name, Frequency: frequency}
 }
@@ -36,6 +37,7 @@ type UpdateInterval struct {
 	RunOnce   *bool   `json:"runOnce,omitempty"`
 }
 
+// NewUpdateInterval creates updateInterval DTO with required field
 func NewUpdateInterval(name string) UpdateInterval {
 	return UpdateInterval{Name: &name}
 }

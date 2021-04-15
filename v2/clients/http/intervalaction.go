@@ -31,6 +31,7 @@ func NewIntervalActionClient(baseUrl string) interfaces.IntervalActionClient {
 	}
 }
 
+// Add adds new intervalActions
 func (client IntervalActionClient) Add(ctx context.Context, reqs []requests.AddIntervalActionRequest) (
 	res []common.BaseWithIdResponse, err errors.EdgeX) {
 	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl+v2.ApiIntervalActionRoute, reqs)
@@ -40,6 +41,7 @@ func (client IntervalActionClient) Add(ctx context.Context, reqs []requests.AddI
 	return res, nil
 }
 
+// Update updates intervalActions
 func (client IntervalActionClient) Update(ctx context.Context, reqs []requests.UpdateIntervalActionRequest) (
 	res []common.BaseResponse, err errors.EdgeX) {
 	err = utils.PatchRequest(ctx, &res, client.baseUrl+v2.ApiIntervalActionRoute, reqs)
@@ -49,6 +51,7 @@ func (client IntervalActionClient) Update(ctx context.Context, reqs []requests.U
 	return res, nil
 }
 
+// AllIntervalActions query the intervalActions with offset, limit
 func (client IntervalActionClient) AllIntervalActions(ctx context.Context, offset int, limit int) (
 	res responses.MultiIntervalActionsResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
@@ -61,6 +64,7 @@ func (client IntervalActionClient) AllIntervalActions(ctx context.Context, offse
 	return res, nil
 }
 
+// IntervalActionByName query the intervalAction by name
 func (client IntervalActionClient) IntervalActionByName(ctx context.Context, name string) (
 	res responses.IntervalActionResponse, err errors.EdgeX) {
 	path := path.Join(v2.ApiIntervalActionRoute, v2.Name, url.QueryEscape(name))
@@ -71,6 +75,7 @@ func (client IntervalActionClient) IntervalActionByName(ctx context.Context, nam
 	return res, nil
 }
 
+// DeleteIntervalActionByName delete the intervalAction by name
 func (client IntervalActionClient) DeleteIntervalActionByName(ctx context.Context, name string) (
 	res common.BaseResponse, err errors.EdgeX) {
 	path := path.Join(v2.ApiIntervalActionRoute, v2.Name, url.QueryEscape(name))
