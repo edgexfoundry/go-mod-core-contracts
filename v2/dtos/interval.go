@@ -21,6 +21,11 @@ type Interval struct {
 	RunOnce     bool   `json:"runOnce,omitempty"`
 }
 
+// NewInterval creates interval DTO with required fields
+func NewInterval(name, frequency string) Interval {
+	return Interval{Name: name, Frequency: frequency}
+}
+
 // UpdateInterval and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/UpdateInterval
 type UpdateInterval struct {
@@ -30,6 +35,11 @@ type UpdateInterval struct {
 	End       *string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	Frequency *string `json:"frequency,omitempty" validate:"omitempty,edgex-dto-frequency"`
 	RunOnce   *bool   `json:"runOnce,omitempty"`
+}
+
+// NewUpdateInterval creates updateInterval DTO with required field
+func NewUpdateInterval(name string) UpdateInterval {
+	return UpdateInterval{Name: &name}
 }
 
 // ToIntervalModel transforms the Interval DTO to the Interval Model
