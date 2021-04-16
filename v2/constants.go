@@ -37,6 +37,9 @@ const (
 	ApiDeviceProfileByModelRoute                = ApiDeviceProfileRoute + "/" + Model + "/{" + Model + "}"
 	ApiDeviceProfileByManufacturerAndModelRoute = ApiDeviceProfileRoute + "/" + Manufacturer + "/{" + Manufacturer + "}" + "/" + Model + "/{" + Model + "}"
 
+	ApiDeviceResourceRoute                     = ApiBase + "/deviceresource"
+	ApiDeviceResourceByProfileAndResourceRoute = ApiDeviceResourceRoute + "/" + Profile + "/{" + ProfileName + "}" + "/" + Resource + "/{" + ResourceName + "}"
+
 	ApiDeviceServiceRoute       = ApiBase + "/deviceservice"
 	ApiAllDeviceServiceRoute    = ApiDeviceServiceRoute + "/" + All
 	ApiDeviceServiceByNameRoute = ApiDeviceServiceRoute + "/" + Name + "/{" + Name + "}"
@@ -124,6 +127,7 @@ const (
 	DeviceName   = "deviceName"
 	Check        = "check"
 	Profile      = "profile"
+	Resource     = "resource"
 	Service      = "service"
 	Command      = "command"
 	ProfileName  = "profileName"
