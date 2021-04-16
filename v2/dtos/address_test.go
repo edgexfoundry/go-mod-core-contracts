@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
@@ -20,6 +21,7 @@ import (
 const (
 	testHost            = "testHost"
 	testPort            = 123
+	testContentType     = clients.ContentTypeJSON
 	testPath            = "testPath"
 	testQueryParameters = "testQueryParameters"
 	testHTTPMethod      = "GET"
@@ -29,9 +31,10 @@ const (
 )
 
 var testRESTAddress = Address{
-	Type: v2.REST,
-	Host: testHost,
-	Port: testPort,
+	Type:        v2.REST,
+	Host:        testHost,
+	Port:        testPort,
+	ContentType: testContentType,
 	RESTAddress: RESTAddress{
 		Path:        testPath,
 		RequestBody: testQueryParameters,
@@ -58,8 +61,8 @@ var testEmailAddress = Address{
 
 func TestAddress_UnmarshalJSON(t *testing.T) {
 	restJsonStr := fmt.Sprintf(
-		`{"type":"%s","host":"%s","port":%d,"path":"%s","requestBody":"%s","httpMethod":"%s"}`,
-		testRESTAddress.Type, testRESTAddress.Host, testRESTAddress.Port,
+		`{"type":"%s","host":"%s","port":%d,"contentType":"%s","path":"%s","requestBody":"%s","httpMethod":"%s"}`,
+		testRESTAddress.Type, testRESTAddress.Host, testRESTAddress.Port, testRESTAddress.ContentType,
 		testRESTAddress.Path, testRESTAddress.RequestBody, testRESTAddress.HTTPMethod,
 	)
 	mqttJsonStr := fmt.Sprintf(

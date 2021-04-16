@@ -75,6 +75,7 @@ const (
 // Constants related to the possible content types supported by the APIs
 const (
 	ContentType     = "Content-Type"
+	ContentLength   = "Content-Length"
 	ContentTypeCBOR = "application/cbor"
 	ContentTypeJSON = "application/json"
 	ContentTypeYAML = "application/x-yaml"
