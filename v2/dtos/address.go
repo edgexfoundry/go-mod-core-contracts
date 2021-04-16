@@ -14,8 +14,9 @@ import (
 type Address struct {
 	Type string `json:"type" validate:"oneof='REST' 'MQTT' 'EMAIL'"`
 
-	Host string `json:"host,omitempty" validate:"required_unless=Type EMAIL"`
-	Port int    `json:"port,omitempty" validate:"required_unless=Type EMAIL"`
+	Host        string `json:"host,omitempty" validate:"required_unless=Type EMAIL"`
+	Port        int    `json:"port,omitempty" validate:"required_unless=Type EMAIL"`
+	ContentType string `json:"contentType,omitempty"`
 
 	RESTAddress    `json:",inline" validate:"-"`
 	MQTTPubAddress `json:",inline" validate:"-"`
@@ -111,7 +112,7 @@ func ToAddressModel(a Address) models.Address {
 	case v2.REST:
 		address = models.RESTAddress{
 			BaseAddress: models.BaseAddress{
-				Type: a.Type, Host: a.Host, Port: a.Port,
+				Type: a.Type, Host: a.Host, Port: a.Port, ContentType: a.ContentType,
 			},
 			Path:        a.RESTAddress.Path,
 			RequestBody: a.RESTAddress.RequestBody,
@@ -121,7 +122,7 @@ func ToAddressModel(a Address) models.Address {
 	case v2.MQTT:
 		address = models.MQTTPubAddress{
 			BaseAddress: models.BaseAddress{
-				Type: a.Type, Host: a.Host, Port: a.Port,
+				Type: a.Type, Host: a.Host, Port: a.Port, ContentType: a.ContentType,
 			},
 			Publisher:      a.MQTTPubAddress.Publisher,
 			Topic:          a.MQTTPubAddress.Topic,
@@ -135,7 +136,7 @@ func ToAddressModel(a Address) models.Address {
 	case v2.EMAIL:
 		address = models.EmailAddress{
 			BaseAddress: models.BaseAddress{
-				Type: a.Type,
+				Type: a.Type, ContentType: a.ContentType,
 			},
 			Recipients: a.EmailAddress.Recipients,
 		}
@@ -145,9 +146,10 @@ func ToAddressModel(a Address) models.Address {
 
 func FromAddressModelToDTO(address models.Address) Address {
 	dto := Address{
-		Type: address.GetBaseAddress().Type,
-		Host: address.GetBaseAddress().Host,
-		Port: address.GetBaseAddress().Port,
+		Type:        address.GetBaseAddress().Type,
+		Host:        address.GetBaseAddress().Host,
+		Port:        address.GetBaseAddress().Port,
+		ContentType: address.GetBaseAddress().ContentType,
 	}
 
 	switch a := address.(type) {

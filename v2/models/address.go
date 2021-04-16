@@ -63,8 +63,9 @@ type BaseAddress struct {
 	Type string
 
 	// Common properties
-	Host string
-	Port int
+	Host        string
+	Port        int
+	ContentType string
 }
 
 // RESTAddress is a REST specific struct
