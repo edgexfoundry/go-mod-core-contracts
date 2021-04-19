@@ -229,3 +229,17 @@ func TestQueryDeviceProfilesByManufacturerAndModel(t *testing.T) {
 	_, err := client.DeviceProfilesByManufacturerAndModel(context.Background(), testManufacturer, testModel, 1, 10)
 	require.NoError(t, err)
 }
+
+func TestDeviceResourceByProfileNameAndResourceName(t *testing.T) {
+	profileName := "testProfile"
+	resourceName := "testResource"
+	urlPath := path.Join(v2.ApiDeviceResourceRoute, v2.Profile, profileName, v2.Resource, resourceName)
+	ts := newTestServer(http.MethodGet, urlPath, responses.DeviceResourceResponse{})
+	defer ts.Close()
+	client := NewDeviceProfileClient(ts.URL)
+
+	res, err := client.DeviceResourceByProfileNameAndResourceName(context.Background(), profileName, resourceName)
+
+	require.NoError(t, err)
+	assert.IsType(t, responses.DeviceResourceResponse{}, res)
+}
