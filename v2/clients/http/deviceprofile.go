@@ -7,10 +7,12 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"path"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
@@ -22,13 +24,16 @@ import (
 )
 
 type DeviceProfileClient struct {
-	baseUrl string
+	baseUrl        string
+	resourcesCache map[string]responses.DeviceResourceResponse
+	mux            sync.RWMutex
 }
 
 // NewDeviceProfileClient creates an instance of DeviceProfileClient
 func NewDeviceProfileClient(baseUrl string) interfaces.DeviceProfileClient {
 	return &DeviceProfileClient{
-		baseUrl: baseUrl,
+		baseUrl:        baseUrl,
+		resourcesCache: make(map[string]responses.DeviceResourceResponse),
 	}
 }
 
@@ -149,10 +154,35 @@ func (client *DeviceProfileClient) DeviceProfilesByManufacturerAndModel(ctx cont
 
 // DeviceResourceByProfileNameAndResourceName queries the device resource by profileName and resourceName
 func (client *DeviceProfileClient) DeviceResourceByProfileNameAndResourceName(ctx context.Context, profileName string, resourceName string) (res responses.DeviceResourceResponse, edgexError errors.EdgeX) {
+	resourceMapKey := fmt.Sprintf("%s:%s", profileName, resourceName)
+	res, exists := client.resourceByMapKey(resourceMapKey)
+	if exists {
+		return res, nil
+	}
 	requestPath := path.Join(v2.ApiDeviceResourceRoute, v2.Profile, url.QueryEscape(profileName), v2.Resource, url.QueryEscape(resourceName))
 	err := utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
+	client.setResourceWithMapKey(res, resourceMapKey)
 	return res, nil
+}
+
+func (client *DeviceProfileClient) resourceByMapKey(key string) (res responses.DeviceResourceResponse, exists bool) {
+	client.mux.RLock()
+	defer client.mux.RUnlock()
+	res, exists = client.resourcesCache[key]
+	return
+}
+
+func (client *DeviceProfileClient) setResourceWithMapKey(res responses.DeviceResourceResponse, key string) {
+	client.mux.Lock()
+	defer client.mux.Unlock()
+	client.resourcesCache[key] = res
+}
+
+func (client *DeviceProfileClient) CleanResourcesCache() {
+	client.mux.Lock()
+	defer client.mux.Unlock()
+	client.resourcesCache = make(map[string]responses.DeviceResourceResponse)
 }
