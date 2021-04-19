@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,6 +32,7 @@ func NewDeviceProfileClient(baseUrl string) interfaces.DeviceProfileClient {
 	}
 }
 
+// Add adds new device profile
 func (client *DeviceProfileClient) Add(ctx context.Context, reqs []requests.DeviceProfileRequest) ([]common.BaseWithIdResponse, errors.EdgeX) {
 	var responses []common.BaseWithIdResponse
 	err := utils.PostRequestWithRawData(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileRoute, reqs)
@@ -41,6 +42,7 @@ func (client *DeviceProfileClient) Add(ctx context.Context, reqs []requests.Devi
 	return responses, nil
 }
 
+// Update updates device profile
 func (client *DeviceProfileClient) Update(ctx context.Context, reqs []requests.DeviceProfileRequest) ([]common.BaseResponse, errors.EdgeX) {
 	var responses []common.BaseResponse
 	err := utils.PutRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileRoute, reqs)
@@ -50,6 +52,7 @@ func (client *DeviceProfileClient) Update(ctx context.Context, reqs []requests.D
 	return responses, nil
 }
 
+// AddByYaml adds new device profile by uploading a yaml file
 func (client *DeviceProfileClient) AddByYaml(ctx context.Context, yamlFilePath string) (common.BaseWithIdResponse, errors.EdgeX) {
 	var responses common.BaseWithIdResponse
 	err := utils.PostByFileRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileUploadFileRoute, yamlFilePath)
@@ -59,6 +62,7 @@ func (client *DeviceProfileClient) AddByYaml(ctx context.Context, yamlFilePath s
 	return responses, nil
 }
 
+// UpdateByYaml updates device profile by uploading a yaml file
 func (client *DeviceProfileClient) UpdateByYaml(ctx context.Context, yamlFilePath string) (common.BaseResponse, errors.EdgeX) {
 	var responses common.BaseResponse
 	err := utils.PutByFileRequest(ctx, &responses, client.baseUrl+v2.ApiDeviceProfileUploadFileRoute, yamlFilePath)
@@ -68,6 +72,7 @@ func (client *DeviceProfileClient) UpdateByYaml(ctx context.Context, yamlFilePat
 	return responses, nil
 }
 
+// DeleteByName deletes the device profile by name
 func (client *DeviceProfileClient) DeleteByName(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX) {
 	var response common.BaseResponse
 	requestPath := path.Join(v2.ApiDeviceProfileRoute, v2.Name, url.QueryEscape(name))
@@ -78,6 +83,7 @@ func (client *DeviceProfileClient) DeleteByName(ctx context.Context, name string
 	return response, nil
 }
 
+// DeviceProfileByName queries the device profile by name
 func (client *DeviceProfileClient) DeviceProfileByName(ctx context.Context, name string) (res responses.DeviceProfileResponse, edgexError errors.EdgeX) {
 	requestPath := path.Join(v2.ApiDeviceProfileRoute, v2.Name, url.QueryEscape(name))
 	err := utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil)
@@ -87,6 +93,7 @@ func (client *DeviceProfileClient) DeviceProfileByName(ctx context.Context, name
 	return res, nil
 }
 
+// AllDeviceProfiles queries the device profiles with offset, and limit
 func (client *DeviceProfileClient) AllDeviceProfiles(ctx context.Context, labels []string, offset int, limit int) (res responses.MultiDeviceProfilesResponse, edgexError errors.EdgeX) {
 	requestParams := url.Values{}
 	if len(labels) > 0 {
@@ -101,6 +108,7 @@ func (client *DeviceProfileClient) AllDeviceProfiles(ctx context.Context, labels
 	return res, nil
 }
 
+// DeviceProfilesByModel queries the device profiles with offset, limit and model
 func (client *DeviceProfileClient) DeviceProfilesByModel(ctx context.Context, model string, offset int, limit int) (res responses.MultiDeviceProfilesResponse, edgexError errors.EdgeX) {
 	requestPath := path.Join(v2.ApiDeviceProfileRoute, v2.Model, url.QueryEscape(model))
 	requestParams := url.Values{}
@@ -113,6 +121,7 @@ func (client *DeviceProfileClient) DeviceProfilesByModel(ctx context.Context, mo
 	return res, nil
 }
 
+// DeviceProfilesByManufacturer queries the device profiles with offset, limit and manufacturer
 func (client *DeviceProfileClient) DeviceProfilesByManufacturer(ctx context.Context, manufacturer string, offset int, limit int) (res responses.MultiDeviceProfilesResponse, edgexError errors.EdgeX) {
 	requestPath := path.Join(v2.ApiDeviceProfileRoute, v2.Manufacturer, url.QueryEscape(manufacturer))
 	requestParams := url.Values{}
@@ -125,12 +134,23 @@ func (client *DeviceProfileClient) DeviceProfilesByManufacturer(ctx context.Cont
 	return res, nil
 }
 
+// DeviceProfilesByManufacturerAndModel queries the device profiles with offset, limit, manufacturer and model
 func (client *DeviceProfileClient) DeviceProfilesByManufacturerAndModel(ctx context.Context, manufacturer string, model string, offset int, limit int) (res responses.MultiDeviceProfilesResponse, edgexError errors.EdgeX) {
 	requestPath := path.Join(v2.ApiDeviceProfileRoute, v2.Manufacturer, url.QueryEscape(manufacturer), v2.Model, url.QueryEscape(model))
 	requestParams := url.Values{}
 	requestParams.Set(v2.Offset, strconv.Itoa(offset))
 	requestParams.Set(v2.Limit, strconv.Itoa(limit))
 	err := utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
+// DeviceResourceByProfileNameAndResourceName queries the device resource by profileName and resourceName
+func (client *DeviceProfileClient) DeviceResourceByProfileNameAndResourceName(ctx context.Context, profileName string, resourceName string) (res responses.DeviceResourceResponse, edgexError errors.EdgeX) {
+	requestPath := path.Join(v2.ApiDeviceResourceRoute, v2.Profile, url.QueryEscape(profileName), v2.Resource, url.QueryEscape(resourceName))
+	err := utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

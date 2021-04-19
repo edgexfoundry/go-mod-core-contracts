@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,14 +26,16 @@ type DeviceProfileClient interface {
 	UpdateByYaml(ctx context.Context, yamlFilePath string) (common.BaseResponse, errors.EdgeX)
 	// DeleteByName deletes profile by name
 	DeleteByName(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX)
-	// Query profile by name
+	// DeviceProfileByName queries profile by name
 	DeviceProfileByName(ctx context.Context, name string) (responses.DeviceProfileResponse, errors.EdgeX)
-	// Query all profiles
+	// AllDeviceProfiles queries all profiles
 	AllDeviceProfiles(ctx context.Context, labels []string, offset int, limit int) (responses.MultiDeviceProfilesResponse, errors.EdgeX)
-	// Query profiles by model
+	// DeviceProfilesByModel queries profiles by model
 	DeviceProfilesByModel(ctx context.Context, model string, offset int, limit int) (responses.MultiDeviceProfilesResponse, errors.EdgeX)
-	// Query profiles by manufacturer
+	// DeviceProfilesByManufacturer queries profiles by manufacturer
 	DeviceProfilesByManufacturer(ctx context.Context, manufacturer string, offset int, limit int) (responses.MultiDeviceProfilesResponse, errors.EdgeX)
-	// Query profiles by manufacturer and model
+	// DeviceProfilesByManufacturerAndModel queries profiles by manufacturer and model
 	DeviceProfilesByManufacturerAndModel(ctx context.Context, manufacturer string, model string, offset int, limit int) (responses.MultiDeviceProfilesResponse, errors.EdgeX)
+	// DeviceResourceByProfileNameAndResourceName queries the device resource by profileName and resourceName
+	DeviceResourceByProfileNameAndResourceName(ctx context.Context, profileName string, resourceName string) (responses.DeviceResourceResponse, errors.EdgeX)
 }
