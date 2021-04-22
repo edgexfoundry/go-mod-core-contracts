@@ -5,18 +5,66 @@
 
 package models
 
+import (
+	"encoding/json"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+)
+
 // Transmission and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Transmission
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Transmission struct {
+	DBTimestamp
 	Id               string
 	Channel          Address
-	Created          int64
-	Notification     Notification
+	NotificationId   string
 	SubscriptionName string
 	Records          []TransmissionRecord
-	ResendCount      int64
+	ResendCount      int
 	Status           TransmissionStatus
+}
+
+func (trans *Transmission) UnmarshalJSON(b []byte) error {
+	var alias struct {
+		DBTimestamp
+		Id               string
+		Channel          interface{}
+		NotificationId   string
+		SubscriptionName string
+		Records          []TransmissionRecord
+		ResendCount      int
+		Status           TransmissionStatus
+	}
+	if err := json.Unmarshal(b, &alias); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal transmission.", err)
+	}
+
+	channel, err := instantiateAddress(alias.Channel)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	*trans = Transmission{
+		DBTimestamp:      alias.DBTimestamp,
+		Id:               alias.Id,
+		Channel:          channel,
+		NotificationId:   alias.NotificationId,
+		SubscriptionName: alias.SubscriptionName,
+		Records:          alias.Records,
+		ResendCount:      alias.ResendCount,
+		Status:           alias.Status,
+	}
+	return nil
+}
+
+// NewTransmission create transmission model with required fields
+func NewTransmission(subscriptionName string, channel Address, notificationId string) Transmission {
+	return Transmission{
+		SubscriptionName: subscriptionName,
+		Channel:          channel,
+		NotificationId:   notificationId,
+	}
 }
 
 // TransmissionStatus indicates the most recent success/failure of a given transmission attempt.

@@ -139,6 +139,7 @@ func TestAddIntervalActionReqToIntervalActionModels(t *testing.T) {
 			Name:         TestIntervalActionName,
 			IntervalName: TestIntervalName,
 			Address:      dtos.ToAddressModel(requests[0].Action.Address),
+			AdminState:   models.Unlocked,
 		},
 	}
 	resultModels := AddIntervalActionReqToIntervalActionModels(requests)

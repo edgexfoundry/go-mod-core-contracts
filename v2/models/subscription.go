@@ -23,8 +23,9 @@ type Subscription struct {
 	Id             string
 	Receiver       string
 	Name           string
-	ResendLimit    int64
+	ResendLimit    int
 	ResendInterval string
+	AdminState     AdminState
 }
 
 // ChannelType controls the range of values which constitute valid delivery types for channels
@@ -40,8 +41,9 @@ func (subscription *Subscription) UnmarshalJSON(b []byte) error {
 		Id             string
 		Receiver       string
 		Name           string
-		ResendLimit    int64
+		ResendLimit    int
 		ResendInterval string
+		AdminState     AdminState
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal intervalAction.", err)
@@ -66,6 +68,7 @@ func (subscription *Subscription) UnmarshalJSON(b []byte) error {
 		ResendLimit:    alias.ResendLimit,
 		ResendInterval: alias.ResendInterval,
 		Channels:       channels,
+		AdminState:     alias.AdminState,
 	}
 	return nil
 }

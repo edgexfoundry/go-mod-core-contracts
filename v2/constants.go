@@ -149,6 +149,7 @@ const (
 	Category     = "category"
 	Receiver     = "receiver"
 	Subscription = "subscription"
+	Notification = "notification"
 	Target       = "target"
 	Status       = "status"
 	Cleanup      = "cleanup"

@@ -63,17 +63,15 @@ type BaseAddress struct {
 	Type string
 
 	// Common properties
-	Host        string
-	Port        int
-	ContentType string
+	Host string
+	Port int
 }
 
 // RESTAddress is a REST specific struct
 type RESTAddress struct {
 	BaseAddress
-	Path        string
-	RequestBody string
-	HTTPMethod  string
+	Path       string
+	HTTPMethod string
 }
 
 func (a RESTAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }

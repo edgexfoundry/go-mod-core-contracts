@@ -12,27 +12,27 @@ import (
 // Transmission and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Transmission
 type Transmission struct {
+	DBTimestamp      `json:",inline"`
 	Id               string               `json:"id,omitempty" validate:"omitempty,uuid"`
 	Channel          Address              `json:"channel" validate:"required"`
-	Created          int64                `json:"created,omitempty"`
-	Notification     Notification         `json:"notification" validate:"required"`
+	NotificationId   string               `json:"notificationId" validate:"required"`
 	SubscriptionName string               `json:"subscriptionName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Records          []TransmissionRecord `json:"records,omitempty"`
-	ResendCount      int64                `json:"resendCount,omitempty"`
+	ResendCount      int                  `json:"resendCount,omitempty"`
 	Status           string               `json:"status" validate:"required,oneof='ACKNOWLEDGED' 'FAILED' 'SENT' 'ESCALATED'"`
 }
 
 // ToTransmissionModel transforms a Transmission DTO to a Transmission Model
-func ToTransmissionModel(t Transmission) models.Transmission {
+func ToTransmissionModel(trans Transmission) models.Transmission {
 	var m models.Transmission
-	m.Id = t.Id
-	m.Channel = ToAddressModel(t.Channel)
-	m.Created = t.Created
-	m.Notification = ToNotificationModel(t.Notification)
-	m.SubscriptionName = t.SubscriptionName
-	m.Records = ToTransmissionRecordModels(t.Records)
-	m.ResendCount = t.ResendCount
-	m.Status = models.TransmissionStatus(t.Status)
+	m.Id = trans.Id
+	m.Channel = ToAddressModel(trans.Channel)
+	m.DBTimestamp = models.DBTimestamp(trans.DBTimestamp)
+	m.NotificationId = trans.NotificationId
+	m.SubscriptionName = trans.SubscriptionName
+	m.Records = ToTransmissionRecordModels(trans.Records)
+	m.ResendCount = trans.ResendCount
+	m.Status = models.TransmissionStatus(trans.Status)
 	return m
 }
 
@@ -46,16 +46,16 @@ func ToTransmissionModels(ts []Transmission) []models.Transmission {
 }
 
 // FromTransmissionModelToDTO transforms a Transmission Model to a Transmission DTO
-func FromTransmissionModelToDTO(t models.Transmission) Transmission {
+func FromTransmissionModelToDTO(trans models.Transmission) Transmission {
 	return Transmission{
-		Id:               t.Id,
-		Channel:          FromAddressModelToDTO(t.Channel),
-		Created:          t.Created,
-		Notification:     FromNotificationModelToDTO(t.Notification),
-		SubscriptionName: t.SubscriptionName,
-		Records:          FromTransmissionRecordModelsToDTOs(t.Records),
-		ResendCount:      t.ResendCount,
-		Status:           string(t.Status),
+		DBTimestamp:      DBTimestamp(trans.DBTimestamp),
+		Id:               trans.Id,
+		Channel:          FromAddressModelToDTO(trans.Channel),
+		NotificationId:   trans.NotificationId,
+		SubscriptionName: trans.SubscriptionName,
+		Records:          FromTransmissionRecordModelsToDTOs(trans.Records),
+		ResendCount:      trans.ResendCount,
+		Status:           string(trans.Status),
 	}
 }
 

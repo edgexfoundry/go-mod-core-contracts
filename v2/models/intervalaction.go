@@ -19,7 +19,10 @@ type IntervalAction struct {
 	Id           string
 	Name         string
 	IntervalName string
+	Content      string
+	ContentType  string
 	Address      Address
+	AdminState   AdminState
 }
 
 func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
@@ -28,7 +31,10 @@ func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
 		Id           string
 		Name         string
 		IntervalName string
+		Content      string
+		ContentType  string
 		Address      interface{}
+		AdminState   AdminState
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal intervalAction.", err)
@@ -43,7 +49,10 @@ func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
 		Id:           alias.Id,
 		Name:         alias.Name,
 		IntervalName: alias.IntervalName,
+		Content:      alias.Content,
+		ContentType:  alias.ContentType,
 		Address:      address,
+		AdminState:   alias.AdminState,
 	}
 	return nil
 }

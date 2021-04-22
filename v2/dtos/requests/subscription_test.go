@@ -25,7 +25,7 @@ var (
 	}
 	testSubscriptionDescription    = "description"
 	testSubscriptionReceiver       = "receiver"
-	testSubscriptionResendLimit    = int64(5)
+	testSubscriptionResendLimit    = 5
 	testSubscriptionResendInterval = "10s"
 	unsupportedChannelType         = "unsupportedChannelType"
 )
@@ -40,6 +40,7 @@ func addSubscriptionRequestData() AddSubscriptionRequest {
 		Receiver:       testSubscriptionReceiver,
 		ResendLimit:    testSubscriptionResendLimit,
 		ResendInterval: testSubscriptionResendInterval,
+		AdminState:     models.Unlocked,
 	})
 }
 
@@ -176,6 +177,7 @@ func TestAddSubscriptionReqToSubscriptionModels(t *testing.T) {
 			Receiver:       testSubscriptionReceiver,
 			ResendLimit:    testSubscriptionResendLimit,
 			ResendInterval: testSubscriptionResendInterval,
+			AdminState:     models.Unlocked,
 		},
 	}
 	resultModels := AddSubscriptionReqToSubscriptionModels(requests)

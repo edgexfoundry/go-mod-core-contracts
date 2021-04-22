@@ -14,9 +14,8 @@ import (
 type Address struct {
 	Type string `json:"type" validate:"oneof='REST' 'MQTT' 'EMAIL'"`
 
-	Host        string `json:"host,omitempty" validate:"required_unless=Type EMAIL"`
-	Port        int    `json:"port,omitempty" validate:"required_unless=Type EMAIL"`
-	ContentType string `json:"contentType,omitempty"`
+	Host string `json:"host,omitempty" validate:"required_unless=Type EMAIL"`
+	Port int    `json:"port,omitempty" validate:"required_unless=Type EMAIL"`
 
 	RESTAddress    `json:",inline" validate:"-"`
 	MQTTPubAddress `json:",inline" validate:"-"`
@@ -54,9 +53,8 @@ func (a *Address) Validate() error {
 }
 
 type RESTAddress struct {
-	Path        string `json:"path,omitempty"`
-	RequestBody string `json:"requestBody,omitempty"`
-	HTTPMethod  string `json:"httpMethod,omitempty" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
+	Path       string `json:"path,omitempty"`
+	HTTPMethod string `json:"httpMethod,omitempty" validate:"required,oneof='GET' 'HEAD' 'POST' 'PUT' 'DELETE' 'TRACE' 'CONNECT'"`
 }
 
 func NewRESTAddress(host string, port int, httpMethod string) Address {
@@ -112,17 +110,16 @@ func ToAddressModel(a Address) models.Address {
 	case v2.REST:
 		address = models.RESTAddress{
 			BaseAddress: models.BaseAddress{
-				Type: a.Type, Host: a.Host, Port: a.Port, ContentType: a.ContentType,
+				Type: a.Type, Host: a.Host, Port: a.Port,
 			},
-			Path:        a.RESTAddress.Path,
-			RequestBody: a.RESTAddress.RequestBody,
-			HTTPMethod:  a.RESTAddress.HTTPMethod,
+			Path:       a.RESTAddress.Path,
+			HTTPMethod: a.RESTAddress.HTTPMethod,
 		}
 		break
 	case v2.MQTT:
 		address = models.MQTTPubAddress{
 			BaseAddress: models.BaseAddress{
-				Type: a.Type, Host: a.Host, Port: a.Port, ContentType: a.ContentType,
+				Type: a.Type, Host: a.Host, Port: a.Port,
 			},
 			Publisher:      a.MQTTPubAddress.Publisher,
 			Topic:          a.MQTTPubAddress.Topic,
@@ -136,7 +133,7 @@ func ToAddressModel(a Address) models.Address {
 	case v2.EMAIL:
 		address = models.EmailAddress{
 			BaseAddress: models.BaseAddress{
-				Type: a.Type, ContentType: a.ContentType,
+				Type: a.Type,
 			},
 			Recipients: a.EmailAddress.Recipients,
 		}
@@ -146,18 +143,16 @@ func ToAddressModel(a Address) models.Address {
 
 func FromAddressModelToDTO(address models.Address) Address {
 	dto := Address{
-		Type:        address.GetBaseAddress().Type,
-		Host:        address.GetBaseAddress().Host,
-		Port:        address.GetBaseAddress().Port,
-		ContentType: address.GetBaseAddress().ContentType,
+		Type: address.GetBaseAddress().Type,
+		Host: address.GetBaseAddress().Host,
+		Port: address.GetBaseAddress().Port,
 	}
 
 	switch a := address.(type) {
 	case models.RESTAddress:
 		dto.RESTAddress = RESTAddress{
-			Path:        a.Path,
-			RequestBody: a.RequestBody,
-			HTTPMethod:  a.HTTPMethod,
+			Path:       a.Path,
+			HTTPMethod: a.HTTPMethod,
 		}
 		break
 	case models.MQTTPubAddress:
