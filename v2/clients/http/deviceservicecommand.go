@@ -25,6 +25,7 @@ func NewDeviceServiceCommandClient() interfaces.DeviceServiceCommandClient {
 	return &deviceServiceCommandClient{}
 }
 
+// GetCommand sends HTTP request to execute the Get command
 func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string) (responses.EventResponse, errors.EdgeX) {
 	var response responses.EventResponse
 	requestPath := path.Join(v2.ApiDeviceRoute, v2.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
@@ -39,6 +40,7 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 	return response, nil
 }
 
+// SetCommand sends HTTP request to execute the Set command
 func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]string) (common.BaseResponse, errors.EdgeX) {
 	var response common.BaseResponse
 	requestPath := path.Join(v2.ApiDeviceRoute, v2.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
