@@ -6,8 +6,9 @@
 package dtos
 
 import (
-	"gopkg.in/yaml.v2"
 	"testing"
+
+	"gopkg.in/yaml.v2"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
@@ -17,7 +18,7 @@ import (
 )
 
 var testLabels = []string{"MODBUS", "TEMP"}
-var testAttributes = map[string]string{
+var testAttributes = map[string]interface{}{
 	"TestAttribute": "TestAttributeValue",
 }
 
