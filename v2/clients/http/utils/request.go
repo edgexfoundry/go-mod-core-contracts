@@ -35,6 +35,15 @@ func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl str
 	return nil
 }
 
+// GetRequestAndReturnBinaryRes makes the get request and return the binary response
+func GetRequestAndReturnBinaryRes(ctx context.Context, baseUrl string, requestPath string, requestParams url.Values) ([]byte, errors.EdgeX) {
+	req, err := createRequest(ctx, http.MethodGet, baseUrl, requestPath, requestParams)
+	if err != nil {
+		return nil, errors.NewCommonEdgeXWrapper(err)
+	}
+	return sendRequest(ctx, req)
+}
+
 // PostRequest makes the post request with encoded data and return the body
 func PostRequest(
 	ctx context.Context,

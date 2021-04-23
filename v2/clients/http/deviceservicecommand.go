@@ -7,6 +7,7 @@ package http
 
 import (
 	"context"
+	"encoding/json"
 	"net/url"
 	"path"
 
@@ -26,16 +27,24 @@ func NewDeviceServiceCommandClient() interfaces.DeviceServiceCommandClient {
 }
 
 // GetCommand sends HTTP request to execute the Get command
-func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string) (responses.EventResponse, errors.EdgeX) {
-	var response responses.EventResponse
+func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string) (*responses.EventResponse, errors.EdgeX) {
 	requestPath := path.Join(v2.ApiDeviceRoute, v2.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
 	params, err := url.ParseQuery(queryParams)
 	if err != nil {
-		return response, errors.NewCommonEdgeXWrapper(err)
+		return nil, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.GetRequest(ctx, &response, baseUrl, requestPath, params)
-	if err != nil {
-		return response, errors.NewCommonEdgeXWrapper(err)
+	res, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params)
+	if edgeXerr != nil {
+		return nil, errors.NewCommonEdgeXWrapper(edgeXerr)
+	}
+	// If execute GetCommand with dsReturnEvent query parameter 'no', there will be no content returned in the http response.
+	// So we can use the nil pointer to indicate that the HTTP response content is empty
+	if len(res) == 0 {
+		return nil, nil
+	}
+	response := &responses.EventResponse{}
+	if err = json.Unmarshal(res, response); err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
 	}
 	return response, nil
 }
