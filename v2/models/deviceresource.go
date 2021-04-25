@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,5 +14,5 @@ type DeviceResource struct {
 	IsHidden    bool
 	Tag         string
 	Properties  ResourceProperties
-	Attributes  map[string]string
+	Attributes  map[string]interface{}
 }
