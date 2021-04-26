@@ -8,9 +8,11 @@ package utils
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 )
 
@@ -33,6 +35,36 @@ func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl str
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
 	}
 	return nil
+}
+
+// GetRequestAndReturnBinaryRes makes the get request and return the binary response and content type(i.e., application/json, application/cbor, ... )
+func GetRequestAndReturnBinaryRes(ctx context.Context, baseUrl string, requestPath string, requestParams url.Values) (res []byte, contentType string, edgeXerr errors.EdgeX) {
+	req, edgeXerr := createRequest(ctx, http.MethodGet, baseUrl, requestPath, requestParams)
+	if edgeXerr != nil {
+		return nil, "", errors.NewCommonEdgeXWrapper(edgeXerr)
+	}
+
+	resp, edgeXerr := makeRequest(req)
+	if edgeXerr != nil {
+		return nil, "", errors.NewCommonEdgeXWrapper(edgeXerr)
+	}
+	defer resp.Body.Close()
+
+	res, edgeXerr = getBody(resp)
+	if edgeXerr != nil {
+		return nil, "", errors.NewCommonEdgeXWrapper(edgeXerr)
+	}
+
+	if resp.StatusCode <= http.StatusMultiStatus {
+		return res, resp.Header.Get(clients.ContentType), nil
+	}
+
+	// Handle error response
+	return nil,
+		"",
+		errors.NewCommonEdgeX(
+			errors.KindMapping(resp.StatusCode),
+			fmt.Sprintf("request failed, status code: %d, err: %s", resp.StatusCode, string(res)), nil)
 }
 
 // PostRequest makes the post request with encoded data and return the body

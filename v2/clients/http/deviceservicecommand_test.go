@@ -51,7 +51,7 @@ func TestGetCommand(t *testing.T) {
 	res, err := client.GetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, "")
 
 	require.NoError(t, err)
-	assert.Equal(t, expectedResponse, res)
+	assert.Equal(t, expectedResponse, *res)
 }
 
 func TestSetCommand(t *testing.T) {
