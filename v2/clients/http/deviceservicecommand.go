@@ -11,12 +11,15 @@ import (
 	"net/url"
 	"path"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/responses"
+
+	"github.com/fxamacker/cbor/v2"
 )
 
 type deviceServiceCommandClient struct{}
@@ -33,7 +36,7 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
 	}
-	res, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params)
+	res, contentType, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params)
 	if edgeXerr != nil {
 		return nil, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
@@ -43,8 +46,14 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 		return nil, nil
 	}
 	response := &responses.EventResponse{}
-	if err = json.Unmarshal(res, response); err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	if contentType == clients.ContentTypeCBOR {
+		if err = cbor.Unmarshal(res, response); err != nil {
+			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to decode the cbor response", err)
+		}
+	} else {
+		if err = json.Unmarshal(res, response); err != nil {
+			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to decode the json response", err)
+		}
 	}
 	return response, nil
 }

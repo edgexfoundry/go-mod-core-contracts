@@ -57,7 +57,10 @@ func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return resp, errors.NewCommonEdgeX(errors.KindClientError, "failed to send a http request", err)
+		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to send a http request", err)
+	}
+	if resp == nil {
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "the response should not be a nil", nil)
 	}
 	return resp, nil
 }
@@ -148,9 +151,6 @@ func sendRequest(ctx context.Context, req *http.Request) ([]byte, errors.EdgeX) 
 	resp, err := makeRequest(req)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
-	}
-	if resp == nil {
-		return nil, errors.NewCommonEdgeX(errors.KindServerError, "the response should not be a nil", nil)
 	}
 	defer resp.Body.Close()
 
