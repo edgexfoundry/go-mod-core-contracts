@@ -198,6 +198,7 @@ func convertFloat32ArrayValue(values []float32) (string, error) {
 		result += ", " + floatValue
 	}
 
+	result += "]"
 	return result, nil
 }
 
@@ -222,6 +223,7 @@ func convertFloat64ArrayValue(values []float64) (string, error) {
 		result += ", " + floatValue
 	}
 
+	result += "]"
 	return result, nil
 }
 

@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"
@@ -125,8 +125,8 @@ func TestNewSimpleReading(t *testing.T) {
 		{"Simple Int16 Array", v2.ValueTypeInt16Array, []int16{-12345, 12345}, "[-12345, 12345]"},
 		{"Simple Int32 Array", v2.ValueTypeInt32Array, []int32{-1234567890, 1234567890}, "[-1234567890, 1234567890]"},
 		{"Simple Int64 Array", v2.ValueTypeInt64Array, []int64{-1234567890987654321, 1234567890987654321}, "[-1234567890987654321, 1234567890987654321]"},
-		{"Simple Float32 Array", v2.ValueTypeFloat32Array, []float32{123.456, -654.321}, "[1.234560e+02, -6.543210e+02"},
-		{"Simple Float64 Array", v2.ValueTypeFloat64Array, []float64{123456789.0987654321, -987654321.123456789}, "[1.234568e+08, -9.876543e+08"},
+		{"Simple Float32 Array", v2.ValueTypeFloat32Array, []float32{123.456, -654.321}, "[1.234560e+02, -6.543210e+02]"},
+		{"Simple Float64 Array", v2.ValueTypeFloat64Array, []float64{123456789.0987654321, -987654321.123456789}, "[1.234568e+08, -9.876543e+08]"},
 	}
 
 	for _, tt := range tests {
