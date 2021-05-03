@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
 
 	"github.com/stretchr/testify/assert"

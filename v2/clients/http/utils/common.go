@@ -17,8 +17,8 @@ import (
 	"net/url"
 	"path/filepath"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients"
 
 	"github.com/google/uuid"
 )

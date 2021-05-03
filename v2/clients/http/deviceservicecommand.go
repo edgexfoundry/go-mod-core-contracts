@@ -11,9 +11,9 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
