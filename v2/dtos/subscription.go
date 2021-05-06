@@ -20,8 +20,9 @@ type Subscription struct {
 	Categories     []string  `json:"categories,omitempty" validate:"required_without=Labels,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels         []string  `json:"labels,omitempty" validate:"required_without=Categories,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Description    string    `json:"description,omitempty"`
-	ResendLimit    int64     `json:"resendLimit,omitempty"`
+	ResendLimit    int       `json:"resendLimit,omitempty"`
 	ResendInterval string    `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
+	AdminState     string    `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 }
 
 // UpdateSubscription and its properties are defined in the APIv2 specification:
@@ -34,8 +35,9 @@ type UpdateSubscription struct {
 	Categories     []string  `json:"categories,omitempty" validate:"omitempty,dive,gt=0,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels         []string  `json:"labels,omitempty" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Description    *string   `json:"description,omitempty"`
-	ResendLimit    *int64    `json:"resendLimit,omitempty"`
+	ResendLimit    *int      `json:"resendLimit,omitempty"`
 	ResendInterval *string   `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
+	AdminState     *string   `json:"adminState,omitempty" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 }
 
 // ToSubscriptionModel transforms the Subscription DTO to the Subscription Model
@@ -51,6 +53,7 @@ func ToSubscriptionModel(s Subscription) models.Subscription {
 	m.Name = s.Name
 	m.ResendLimit = s.ResendLimit
 	m.ResendInterval = s.ResendInterval
+	m.AdminState = models.AdminState(s.AdminState)
 	return m
 }
 
@@ -76,6 +79,7 @@ func FromSubscriptionModelToDTO(s models.Subscription) Subscription {
 		Name:           s.Name,
 		ResendLimit:    s.ResendLimit,
 		ResendInterval: s.ResendInterval,
+		AdminState:     string(s.AdminState),
 	}
 }
 

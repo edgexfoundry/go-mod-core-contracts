@@ -141,6 +141,9 @@ func ReplaceSubscriptionModelFieldsWithDTO(s *models.Subscription, patch dtos.Up
 	if patch.ResendInterval != nil {
 		s.ResendInterval = *patch.ResendInterval
 	}
+	if patch.AdminState != nil {
+		s.AdminState = models.AdminState(*patch.AdminState)
+	}
 }
 
 func NewAddSubscriptionRequest(dto dtos.Subscription) AddSubscriptionRequest {

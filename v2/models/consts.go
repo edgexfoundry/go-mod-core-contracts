@@ -25,6 +25,10 @@ const (
 const (
 	New       = "NEW"
 	Processed = "PROCESSED"
+
+	EscalationSubscriptionName = "ESCALATION"
+	EscalationPrefix           = "escalated-"
+	EscalatedContentNotice     = "This notification is escalated by the transmission"
 )
 
 // Constants for TransmissionStatus

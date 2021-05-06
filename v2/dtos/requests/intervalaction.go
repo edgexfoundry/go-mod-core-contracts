@@ -114,6 +114,15 @@ func ReplaceIntervalActionModelFieldsWithDTO(action *models.IntervalAction, patc
 	if patch.Address != nil {
 		action.Address = dtos.ToAddressModel(*patch.Address)
 	}
+	if patch.Content != nil {
+		action.Content = *patch.Content
+	}
+	if patch.ContentType != nil {
+		action.ContentType = *patch.Content
+	}
+	if patch.AdminState != nil {
+		action.AdminState = models.AdminState(*patch.AdminState)
+	}
 }
 
 func NewAddIntervalActionRequest(dto dtos.IntervalAction) AddIntervalActionRequest {
