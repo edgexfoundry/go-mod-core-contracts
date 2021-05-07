@@ -9,7 +9,9 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,12 +19,15 @@ func TestNewDeviceCoreCommandResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := http.StatusOK
 	expectedMessage := "unit test message"
+	testParameters := []dtos.CoreCommandParameter{
+		{ResourceName: "resource", ValueType: v2.ValueTypeInt8},
+	}
 	expectedDeviceCoreCommand := dtos.DeviceCoreCommand{
 		DeviceName:  "testDevice1",
 		ProfileName: "testProfile",
 		CoreCommands: []dtos.CoreCommand{
-			{Name: "testCommand1", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
-			{Name: "testCommand2", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
+			{Name: "testCommand1", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082", Parameters: testParameters},
+			{Name: "testCommand2", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082", Parameters: testParameters},
 		},
 	}
 	actual := NewDeviceCoreCommandResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDeviceCoreCommand)
@@ -37,21 +42,24 @@ func TestNewMultiDeviceCoreCommandsResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := http.StatusOK
 	expectedMessage := "unit test message"
+	testParameters := []dtos.CoreCommandParameter{
+		{ResourceName: "resource", ValueType: v2.ValueTypeInt8},
+	}
 	expectedDeviceCoreCommands := []dtos.DeviceCoreCommand{
 		dtos.DeviceCoreCommand{
 			DeviceName:  "testDevice1",
 			ProfileName: "testProfile",
 			CoreCommands: []dtos.CoreCommand{
-				{Name: "testCommand1", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
-				{Name: "testCommand2", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
+				{Name: "testCommand1", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082", Parameters: testParameters},
+				{Name: "testCommand2", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082", Parameters: testParameters},
 			},
 		},
 		dtos.DeviceCoreCommand{
 			DeviceName:  "testDevice2",
 			ProfileName: "testProfile",
 			CoreCommands: []dtos.CoreCommand{
-				{Name: "testCommand3", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082"},
-				{Name: "testCommand4", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082"},
+				{Name: "testCommand3", Get: true, Set: false, Path: "/device/name/testDevice1/command/testCommand1", Url: "http://127.0.0.1:48082", Parameters: testParameters},
+				{Name: "testCommand4", Get: false, Set: true, Path: "/device/name/testDevice1/command/testCommand2", Url: "http://127.0.0.1:48082", Parameters: testParameters},
 			},
 		},
 	}
