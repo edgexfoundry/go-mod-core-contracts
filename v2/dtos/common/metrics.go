@@ -34,10 +34,10 @@ func NewMetricsResponse(metrics Metrics) MetricsResponse {
 
 type MultiMetricsResponse struct {
 	BaseResponse `json:",inline"`
-	Metrics      map[string]MetricsResponse `json:"metrics"`
+	Metrics      map[string]interface{} `json:"metrics"`
 }
 
-func NewMultiMetricsResponse(requestId string, message string, statusCode int, metrics map[string]MetricsResponse) MultiMetricsResponse {
+func NewMultiMetricsResponse(requestId string, message string, statusCode int, metrics map[string]interface{}) MultiMetricsResponse {
 	return MultiMetricsResponse{
 		BaseResponse: NewBaseResponse(requestId, message, statusCode),
 		Metrics:      metrics,
