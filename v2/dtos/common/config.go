@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 // Copyright (C) 2020 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -19,5 +19,17 @@ func NewConfigResponse(serviceConfig interface{}) ConfigResponse {
 	return ConfigResponse{
 		Versionable: NewVersionable(),
 		Config:      serviceConfig,
+	}
+}
+
+type MultiConfigsResponse struct {
+	BaseResponse `json:",inline"`
+	Configs      map[string]ConfigResponse `json:"configs"`
+}
+
+func NewMultiConfigsResponse(requestId string, message string, statusCode int, configs map[string]ConfigResponse) MultiConfigsResponse {
+	return MultiConfigsResponse{
+		BaseResponse: NewBaseResponse(requestId, message, statusCode),
+		Configs:      configs,
 	}
 }

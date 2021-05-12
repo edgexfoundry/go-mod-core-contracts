@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 // Copyright (C) 2020 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -29,5 +29,17 @@ func NewMetricsResponse(metrics Metrics) MetricsResponse {
 	return MetricsResponse{
 		Versionable: NewVersionable(),
 		Metrics:     metrics,
+	}
+}
+
+type MultiMetricsResponse struct {
+	BaseResponse `json:",inline"`
+	Metrics      map[string]MetricsResponse `json:"metrics"`
+}
+
+func NewMultiMetricsResponse(requestId string, message string, statusCode int, metrics map[string]MetricsResponse) MultiMetricsResponse {
+	return MultiMetricsResponse{
+		BaseResponse: NewBaseResponse(requestId, message, statusCode),
+		Metrics:      metrics,
 	}
 }
