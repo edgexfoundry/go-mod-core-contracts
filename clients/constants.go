@@ -64,7 +64,6 @@ const (
 	SystemManagementAgentServiceKey     = "sys-mgmt-agent"
 	SupportSchedulerServiceKey          = "support-scheduler"
 	SecuritySecretStoreSetupServiceKey  = "security-secretstore-setup"
-	SecuritySecretsSetupServiceKey      = "security-secrets-setup"
 	SecurityProxySetupServiceKey        = "security-proxy-setup"
 	SecurityFileTokenProviderServiceKey = "security-file-token-provider"
 	SecurityBootstrapperKey             = "security-bootstrapper"
