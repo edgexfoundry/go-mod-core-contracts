@@ -44,7 +44,7 @@ func TestNewMultiMetricsResponse(t *testing.T) {
 		CpuBusyAvg:     uint8(99),
 	}
 
-	expected := make(map[string]MetricsResponse)
+	expected := make(map[string]interface{})
 	expected["test"] = NewMetricsResponse(m)
 	target := NewMultiMetricsResponse("", "", http.StatusOK, expected)
 
