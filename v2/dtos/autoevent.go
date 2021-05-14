@@ -12,7 +12,7 @@ import (
 // AutoEvent and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AutoEvent
 type AutoEvent struct {
-	Frequency  string `json:"frequency" validate:"required,edgex-dto-frequency"`
+	Interval   string `json:"interval" validate:"required,edgex-dto-duration"`
 	OnChange   bool   `json:"onChange,omitempty"`
 	SourceName string `json:"sourceName" validate:"required"`
 }
@@ -20,7 +20,7 @@ type AutoEvent struct {
 // ToAutoEventModel transforms the AutoEvent DTO to the AutoEvent model
 func ToAutoEventModel(a AutoEvent) models.AutoEvent {
 	return models.AutoEvent{
-		Frequency:  a.Frequency,
+		Interval:   a.Interval,
 		OnChange:   a.OnChange,
 		SourceName: a.SourceName,
 	}
@@ -38,13 +38,13 @@ func ToAutoEventModels(autoEventDTOs []AutoEvent) []models.AutoEvent {
 // FromAutoEventModelToDTO transforms the AutoEvent model to the AutoEvent DTO
 func FromAutoEventModelToDTO(a models.AutoEvent) AutoEvent {
 	return AutoEvent{
-		Frequency:  a.Frequency,
+		Interval:   a.Interval,
 		OnChange:   a.OnChange,
 		SourceName: a.SourceName,
 	}
 }
 
-// ToAutoEventModels transforms the AutoEvent model array to the AutoEvent DTO array
+// FromAutoEventModelsToDTOs transforms the AutoEvent model array to the AutoEvent DTO array
 func FromAutoEventModelsToDTOs(autoEvents []models.AutoEvent) []AutoEvent {
 	dtos := make([]AutoEvent, len(autoEvents))
 	for i, a := range autoEvents {
