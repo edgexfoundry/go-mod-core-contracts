@@ -24,11 +24,11 @@ func addIntervalRequestData() AddIntervalRequest {
 			Versionable: common.NewVersionable(),
 		},
 		Interval: dtos.Interval{
-			Name:      TestIntervalName,
-			Start:     TestIntervalStart,
-			End:       TestIntervalEnd,
-			Frequency: TestIntervalFrequency,
-			RunOnce:   TestIntervalRunOnce,
+			Name:     TestIntervalName,
+			Start:    TestIntervalStart,
+			End:      TestIntervalEnd,
+			Interval: TestIntervalInterval,
+			RunOnce:  TestIntervalRunOnce,
 		},
 	}
 }
@@ -48,14 +48,14 @@ func updateIntervalData() dtos.UpdateInterval {
 	testName := TestIntervalName
 	testStart := TestIntervalStart
 	testEnd := TestIntervalEnd
-	testFrequency := TestIntervalFrequency
+	testFrequency := TestIntervalInterval
 	testRunOnce := TestIntervalRunOnce
 	dto := dtos.UpdateInterval{}
 	dto.Id = &testId
 	dto.Name = &testName
 	dto.Start = &testStart
 	dto.End = &testEnd
-	dto.Frequency = &testFrequency
+	dto.Interval = &testFrequency
 	dto.RunOnce = &testRunOnce
 	return dto
 }
@@ -76,7 +76,7 @@ func TestAddIntervalRequest_Validate(t *testing.T) {
 	intervalNameWithReservedChars.Interval.Name = "name!.~_001"
 
 	invalidFrequency := addIntervalRequestData()
-	invalidFrequency.Interval.Frequency = "300"
+	invalidFrequency.Interval.Interval = "300"
 	invalidStartDatetime := addIntervalRequestData()
 	invalidStartDatetime.Interval.Start = "20190802150405"
 	invalidEndDatetime := addIntervalRequestData()
@@ -137,11 +137,11 @@ func TestAddIntervalReqToIntervalModels(t *testing.T) {
 	requests := []AddIntervalRequest{addIntervalRequestData()}
 	expectedIntervalModel := []models.Interval{
 		{
-			Name:      TestIntervalName,
-			Start:     TestIntervalStart,
-			End:       TestIntervalEnd,
-			Frequency: TestIntervalFrequency,
-			RunOnce:   TestIntervalRunOnce,
+			Name:     TestIntervalName,
+			Start:    TestIntervalStart,
+			End:      TestIntervalEnd,
+			Interval: TestIntervalInterval,
+			RunOnce:  TestIntervalRunOnce,
 		},
 	}
 	resultModels := AddIntervalReqToIntervalModels(requests)
@@ -197,7 +197,7 @@ func TestUpdateIntervalRequest_Validate(t *testing.T) {
 	invalidEmptyName.Interval.Name = &emptyString
 
 	invalidFrequency := valid
-	invalidFrequency.Interval.Frequency = &emptyString
+	invalidFrequency.Interval.Interval = &emptyString
 	invalidStartDatetime := valid
 	invalidStartDatetime.Interval.Start = &invalidDatetime
 	invalidEndDatetime := valid
@@ -243,7 +243,7 @@ func TestUpdateIntervalRequest_UnmarshalJSON_NilField(t *testing.T) {
 	// Nil field checking is used to update with patch
 	assert.Nil(t, req.Interval.Start)
 	assert.Nil(t, req.Interval.End)
-	assert.Nil(t, req.Interval.Frequency)
+	assert.Nil(t, req.Interval.Interval)
 	assert.Nil(t, req.Interval.RunOnce)
 }
 
@@ -259,6 +259,6 @@ func TestReplaceIntervalModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, TestIntervalName, interval.Name)
 	assert.Equal(t, TestIntervalStart, interval.Start)
 	assert.Equal(t, TestIntervalEnd, interval.End)
-	assert.Equal(t, TestIntervalFrequency, interval.Frequency)
+	assert.Equal(t, TestIntervalInterval, interval.Interval)
 	assert.Equal(t, TestIntervalRunOnce, interval.RunOnce)
 }

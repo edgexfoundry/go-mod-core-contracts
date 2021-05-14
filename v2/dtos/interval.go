@@ -17,24 +17,24 @@ type Interval struct {
 	Name        string `json:"name" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Start       string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	End         string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
-	Frequency   string `json:"frequency" validate:"required,edgex-dto-frequency"`
+	Interval    string `json:"interval" validate:"required,edgex-dto-duration"`
 	RunOnce     bool   `json:"runOnce,omitempty"`
 }
 
 // NewInterval creates interval DTO with required fields
-func NewInterval(name, frequency string) Interval {
-	return Interval{Name: name, Frequency: frequency}
+func NewInterval(name, interval string) Interval {
+	return Interval{Name: name, Interval: interval}
 }
 
 // UpdateInterval and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/UpdateInterval
 type UpdateInterval struct {
-	Id        *string `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
-	Name      *string `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Start     *string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
-	End       *string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
-	Frequency *string `json:"frequency,omitempty" validate:"omitempty,edgex-dto-frequency"`
-	RunOnce   *bool   `json:"runOnce,omitempty"`
+	Id       *string `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
+	Name     *string `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Start    *string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
+	End      *string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
+	Interval *string `json:"interval,omitempty" validate:"omitempty,edgex-dto-duration"`
+	RunOnce  *bool   `json:"runOnce,omitempty"`
 }
 
 // NewUpdateInterval creates updateInterval DTO with required field
@@ -49,7 +49,7 @@ func ToIntervalModel(dto Interval) models.Interval {
 	model.Name = dto.Name
 	model.Start = dto.Start
 	model.End = dto.End
-	model.Frequency = dto.Frequency
+	model.Interval = dto.Interval
 	model.RunOnce = dto.RunOnce
 	return model
 }
@@ -61,7 +61,7 @@ func FromIntervalModelToDTO(model models.Interval) Interval {
 	dto.Name = model.Name
 	dto.Start = model.Start
 	dto.End = model.End
-	dto.Frequency = model.Frequency
+	dto.Interval = model.Interval
 	dto.RunOnce = model.RunOnce
 	return dto
 }
