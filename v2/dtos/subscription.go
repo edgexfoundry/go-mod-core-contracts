@@ -21,7 +21,7 @@ type Subscription struct {
 	Labels         []string  `json:"labels,omitempty" validate:"required_without=Categories,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Description    string    `json:"description,omitempty"`
 	ResendLimit    int       `json:"resendLimit,omitempty"`
-	ResendInterval string    `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
+	ResendInterval string    `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-duration"`
 	AdminState     string    `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 }
 
@@ -36,7 +36,7 @@ type UpdateSubscription struct {
 	Labels         []string  `json:"labels,omitempty" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Description    *string   `json:"description,omitempty"`
 	ResendLimit    *int      `json:"resendLimit,omitempty"`
-	ResendInterval *string   `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-frequency"`
+	ResendInterval *string   `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-duration"`
 	AdminState     *string   `json:"adminState,omitempty" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 }
 
@@ -83,7 +83,7 @@ func FromSubscriptionModelToDTO(s models.Subscription) Subscription {
 	}
 }
 
-// FromSubscriptionModels transforms the Subscription model array to the Subscription DTO array
+// FromSubscriptionModelsToDTOs transforms the Subscription model array to the Subscription DTO array
 func FromSubscriptionModelsToDTOs(subscruptions []models.Subscription) []Subscription {
 	dtos := make([]Subscription, len(subscruptions))
 	for i, s := range subscruptions {
