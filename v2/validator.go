@@ -12,16 +12,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 )
 
 var val *validator.Validate
 
 const (
-	dtoFrequencyTag             = "edgex-dto-frequency"
+	dtoDurationTag              = "edgex-dto-duration"
 	dtoUuidTag                  = "edgex-dto-uuid"
 	dtoNoneEmptyStringTag       = "edgex-dto-none-empty-string"
 	dtoValueType                = "edgex-dto-value-type"
@@ -41,7 +41,7 @@ var (
 
 func init() {
 	val = validator.New()
-	val.RegisterValidation(dtoFrequencyTag, ValidateFrequency)
+	val.RegisterValidation(dtoDurationTag, ValidateDuration)
 	val.RegisterValidation(dtoUuidTag, ValidateDtoUuid)
 	val.RegisterValidation(dtoNoneEmptyStringTag, ValidateDtoNoneEmptyString)
 	val.RegisterValidation(dtoValueType, ValidateValueType)
@@ -84,7 +84,7 @@ func getErrorMessage(e validator.FieldError) string {
 		msg = fmt.Sprintf("%s field should be one of %s", fieldName, fieldValue)
 	case "gt":
 		msg = fmt.Sprintf("%s field should greater than %s", fieldName, fieldValue)
-	case dtoFrequencyTag:
+	case dtoDurationTag:
 		msg = fmt.Sprintf("%s field should follows the ISO 8601 Durations format. Eg,100ms, 24h", fieldName)
 	case dtoUuidTag:
 		msg = fmt.Sprintf("%s field needs a uuid", fieldName)
@@ -98,8 +98,8 @@ func getErrorMessage(e validator.FieldError) string {
 	return msg
 }
 
-// ValidateFrequency validate AutoEvent's Frequency field which should follow the ISO 8601 Durations format
-func ValidateFrequency(fl validator.FieldLevel) bool {
+// ValidateDuration validate field which should follow the ISO 8601 Durations format
+func ValidateDuration(fl validator.FieldLevel) bool {
 	_, err := time.ParseDuration(fl.Field().String())
 	return err == nil
 }
