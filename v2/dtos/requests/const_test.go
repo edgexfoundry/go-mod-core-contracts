@@ -30,11 +30,11 @@ const (
 	TestBinaryReadingMediaType = "File"
 	TestReadingBinaryValue     = "testbinarydata"
 
-	TestIntervalName      = "TestInterval"
-	TestIntervalStart     = "20190102T150405"
-	TestIntervalEnd       = "20190802T150405"
-	TestIntervalFrequency = "30ms"
-	TestIntervalRunOnce   = false
+	TestIntervalName     = "TestInterval"
+	TestIntervalStart    = "20190102T150405"
+	TestIntervalEnd      = "20190802T150405"
+	TestIntervalInterval = "30ms"
+	TestIntervalRunOnce  = false
 
 	TestIntervalActionName = "TestIntervalAction"
 	TestProtocol           = "http"

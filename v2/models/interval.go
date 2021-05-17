@@ -10,10 +10,10 @@ package models
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Interval struct {
 	DBTimestamp
-	Id        string
-	Name      string
-	Start     string
-	End       string
-	Frequency string
-	RunOnce   bool
+	Id       string
+	Name     string
+	Start    string
+	End      string
+	Interval string
+	RunOnce  bool
 }

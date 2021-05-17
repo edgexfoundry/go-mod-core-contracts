@@ -98,8 +98,8 @@ func ReplaceIntervalModelFieldsWithDTO(interval *models.Interval, patch dtos.Upd
 	if patch.End != nil {
 		interval.End = *patch.End
 	}
-	if patch.Frequency != nil {
-		interval.Frequency = *patch.Frequency
+	if patch.Interval != nil {
+		interval.Interval = *patch.Interval
 	}
 	if patch.RunOnce != nil {
 		interval.RunOnce = *patch.RunOnce

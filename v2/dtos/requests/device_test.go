@@ -23,10 +23,10 @@ import (
 var testDeviceLabels = []string{"MODBUS", "TEMP"}
 var testDeviceLocation = "{40lat;45long}"
 var testAutoEvents = []dtos.AutoEvent{
-	{SourceName: "TestDevice", Frequency: "300ms", OnChange: true},
+	{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
 }
 var testAutoEventsWithInvalidFrequency = []dtos.AutoEvent{
-	{SourceName: "TestDevice", Frequency: "300", OnChange: true},
+	{SourceName: "TestDevice", Interval: "300", OnChange: true},
 }
 var testProtocols = map[string]dtos.ProtocolProperties{
 	"modbus-ip": {
@@ -110,7 +110,7 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 	}
 	noAutoEventResource := testAddDevice
 	noAutoEventResource.Device.AutoEvents = []dtos.AutoEvent{
-		{Frequency: "300ms", OnChange: true},
+		{Interval: "300ms", OnChange: true},
 	}
 	tests := []struct {
 		name        string
@@ -226,7 +226,7 @@ func Test_AddDeviceReqToDeviceModels(t *testing.T) {
 			Labels:         testDeviceLabels,
 			Location:       testDeviceLocation,
 			AutoEvents: []models.AutoEvent{
-				{SourceName: "TestDevice", Frequency: "300ms", OnChange: true},
+				{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
 			},
 			Protocols: map[string]models.ProtocolProperties{
 				"modbus-ip": {

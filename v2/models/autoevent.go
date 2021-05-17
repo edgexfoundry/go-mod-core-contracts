@@ -9,7 +9,7 @@ package models
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AutoEvent
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type AutoEvent struct {
-	Frequency  string
+	Interval   string
 	OnChange   bool
 	SourceName string
 }

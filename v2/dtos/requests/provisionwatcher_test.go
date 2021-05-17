@@ -10,11 +10,12 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2/models"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 var testProvisionWatcherName = "TestWatcher"
@@ -98,7 +99,7 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 	noProfileName.ProvisionWatcher.ProfileName = emptyString
 	invalidFrequency := testAddProvisionWatcher
 	invalidFrequency.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
-		{SourceName: "TestDevice", Frequency: "-1", OnChange: true},
+		{SourceName: "TestDevice", Interval: "-1", OnChange: true},
 	}
 	noAutoEventFrequency := testAddProvisionWatcher
 	noAutoEventFrequency.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
@@ -106,7 +107,7 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 	}
 	noAutoEventResource := testAddProvisionWatcher
 	noAutoEventResource.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
-		{Frequency: "300ms", OnChange: true},
+		{Interval: "300ms", OnChange: true},
 	}
 
 	tests := []struct {
@@ -184,7 +185,7 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 			ProfileName: TestDeviceProfileName,
 			AdminState:  models.Locked,
 			AutoEvents: []models.AutoEvent{
-				{SourceName: "TestDevice", Frequency: "300ms", OnChange: true},
+				{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
 			},
 		},
 	}
