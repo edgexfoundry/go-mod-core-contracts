@@ -36,6 +36,7 @@ const (
 	Failed       = "FAILED"
 	Sent         = "SENT"
 	Acknowledged = "ACKNOWLEDGED"
+	RESENDING    = "RESENDING"
 )
 
 // Constants for both NotificationStatus and TransmissionStatus

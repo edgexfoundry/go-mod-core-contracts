@@ -15,7 +15,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Transmission
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Transmission struct {
-	DBTimestamp
+	Created          int64
 	Id               string
 	Channel          Address
 	NotificationId   string
@@ -27,7 +27,7 @@ type Transmission struct {
 
 func (trans *Transmission) UnmarshalJSON(b []byte) error {
 	var alias struct {
-		DBTimestamp
+		Created          int64
 		Id               string
 		Channel          interface{}
 		NotificationId   string
@@ -46,7 +46,7 @@ func (trans *Transmission) UnmarshalJSON(b []byte) error {
 	}
 
 	*trans = Transmission{
-		DBTimestamp:      alias.DBTimestamp,
+		Created:          alias.Created,
 		Id:               alias.Id,
 		Channel:          channel,
 		NotificationId:   alias.NotificationId,
