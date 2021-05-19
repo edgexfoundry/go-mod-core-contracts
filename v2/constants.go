@@ -112,7 +112,10 @@ const (
 	ApiIntervalActionByNameRoute   = ApiIntervalActionRoute + "/" + Name + "/{" + Name + "}"
 	ApiIntervalActionByTargetRoute = ApiIntervalActionRoute + "/" + Target + "/{" + Target + "}"
 
-	ApiHealthRoute = ApiBase + "/health/{services}"
+	ApiOperationRoute    = ApiBase + "/operation"
+	ApiHealthRoute       = ApiBase + "/health/{" + Services + "}"
+	ApiMultiMetricsRoute = ApiMetricsRoute + "/{" + Services + "}"
+	ApiMultiConfigsRoute = ApiBase + "/configs/{" + Services + "}"
 )
 
 // Constants related to defined url path names and parameters in the v2 service APIs
@@ -131,6 +134,7 @@ const (
 	Profile      = "profile"
 	Resource     = "resource"
 	Service      = "service"
+	Services     = "services"
 	Command      = "command"
 	ProfileName  = "profileName"
 	SourceName   = "sourceName"
