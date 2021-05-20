@@ -84,7 +84,7 @@ const (
 
 	ApiTransmissionRoute                   = ApiBase + "/transmission"
 	ApiTransmissionByIdRoute               = ApiTransmissionRoute + "/" + Id + "/{" + Id + "}"
-	ApiTransmissionByAgeRoute              = ApiTransmissionRoute + "/" + "/" + Age + "/{" + Age + "}"
+	ApiTransmissionByAgeRoute              = ApiTransmissionRoute + "/" + Age + "/{" + Age + "}"
 	ApiAllTransmissionRoute                = ApiTransmissionRoute + "/" + All
 	ApiTransmissionBySubscriptionNameRoute = ApiTransmissionRoute + "/" + Subscription + "/" + Name + "/{" + Name + "}"
 	ApiTransmissionByTimeRangeRoute        = ApiTransmissionRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
