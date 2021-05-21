@@ -48,6 +48,9 @@ const (
 	TestPublisher          = "testPublisher"
 	TestTarget             = "testTarget"
 	TestTopic              = "testTopic"
+
+	TestServiceName = "TestService"
+	TestActionName  = "TestAction"
 )
 
 var namesWithReservedChar = []string{
