@@ -222,6 +222,13 @@ const (
 	EMAIL = "EMAIL"
 )
 
+// Constants for SMA Operation Action
+const (
+	ActionStart   = "start"
+	ActionRestart = "restart"
+	ActionStop    = "stop"
+)
+
 // Constants for DeviceProfile
 const (
 	ReadWrite_R  = "R"

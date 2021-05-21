@@ -19,7 +19,7 @@ import (
 type OperationRequest struct {
 	common.BaseRequest `json:",inline"`
 	ServiceName        string `json:"serviceName" validate:"required"`
-	Action             string `json:"action" validate:"required"`
+	Action             string `json:"action" validate:"oneof='start' 'stop' 'restart'"`
 }
 
 // Validate satisfies the Validator interface

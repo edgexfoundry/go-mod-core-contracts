@@ -50,7 +50,7 @@ const (
 	TestTopic              = "testTopic"
 
 	TestServiceName = "TestService"
-	TestActionName  = "TestAction"
+	TestActionName  = "stop"
 )
 
 var namesWithReservedChar = []string{

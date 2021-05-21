@@ -34,6 +34,8 @@ func TestOperationRequest_Validate(t *testing.T) {
 	noServiceName.ServiceName = ""
 	noAction := testOperationRequest
 	noAction.Action = ""
+	invalidAction := testOperationRequest
+	invalidAction.Action = "remove"
 
 	tests := []struct {
 		name        string
@@ -45,6 +47,7 @@ func TestOperationRequest_Validate(t *testing.T) {
 		{"invalid - RequestId is not an uuid", invalidReqId, true},
 		{"invalid - no ServiceName", noServiceName, true},
 		{"invalid - no Action", noAction, true},
+		{"invalid - invalid Action", invalidAction, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
