@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -63,6 +63,24 @@ func TestVersion(t *testing.T) {
 	response, err := gc.Version(context.Background())
 	require.NoError(t, err)
 	require.Equal(t, expected, response)
+}
+
+func TestAddSecret(t *testing.T) {
+	expected := common.BaseResponse{}
+	req := common.NewSecretRequest(
+		"testPath",
+		[]common.SecretDataKeyValue{
+			{Key: "username", Value: "tester"},
+			{Key: "password", Value: "123"},
+		},
+	)
+	ts := newTestServer(http.MethodPost, v2.ApiSecretRoute, expected)
+	defer ts.Close()
+
+	client := NewCommonClient(ts.URL)
+	res, err := client.AddSecret(context.Background(), req)
+	require.NoError(t, err)
+	require.IsType(t, expected, res)
 }
 
 func newTestServer(httpMethod string, apiRoute string, expectedResponse interface{}) *httptest.Server {

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,4 +21,6 @@ type CommonClient interface {
 	Ping(ctx context.Context) (common.PingResponse, errors.EdgeX)
 	// Version obtains version information from the target service.
 	Version(ctx context.Context) (common.VersionResponse, errors.EdgeX)
+	// AddSecret adds EdgeX Service exclusive secret to the Secret Store
+	AddSecret(ctx context.Context, request common.SecretRequest) (common.BaseResponse, errors.EdgeX)
 }

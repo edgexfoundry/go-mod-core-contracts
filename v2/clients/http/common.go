@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2021 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -60,4 +60,12 @@ func (cc *commonClient) Version(ctx context.Context) (common.VersionResponse, er
 		return vr, errors.NewCommonEdgeXWrapper(err)
 	}
 	return vr, nil
+}
+
+func (cc *commonClient) AddSecret(ctx context.Context, request common.SecretRequest) (res common.BaseResponse, err errors.EdgeX) {
+	err = utils.PostRequestWithRawData(ctx, &res, cc.baseUrl+v2.ApiSecretRoute, request)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
 }
