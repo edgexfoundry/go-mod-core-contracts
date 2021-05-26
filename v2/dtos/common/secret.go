@@ -64,3 +64,11 @@ func (sr *SecretRequest) UnmarshalJSON(b []byte) error {
 	}
 	return nil
 }
+
+func NewSecretRequest(path string, secretData []SecretDataKeyValue) SecretRequest {
+	return SecretRequest{
+		BaseRequest: NewBaseRequest(),
+		Path:        path,
+		SecretData:  secretData,
+	}
+}

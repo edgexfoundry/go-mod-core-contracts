@@ -94,6 +94,7 @@ const (
 	ApiMetricsRoute = ApiBase + "/metrics"
 	ApiPingRoute    = ApiBase + "/ping"
 	ApiVersionRoute = ApiBase + "/version"
+	ApiSecretRoute  = ApiBase + "/secret"
 
 	ApiDeviceCallbackRoute      = ApiBase + "/callback/device"
 	ApiDeviceCallbackNameRoute  = ApiBase + "/callback/device/name/{name}"
