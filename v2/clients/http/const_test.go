@@ -12,4 +12,10 @@ const (
 	TestHost               = "localhost"
 	TestPort               = 48089
 	TestHTTPMethod         = "GET"
+
+	TestSubscriptionName = "TestSubscriptionName"
+	TestReceiver         = "user"
+	TestCategory         = "health-check"
+	TestLabel            = "rest"
+	ExampleUUID          = "82eb2e26-0f24-48aa-ae4c-de9dac3fb9bc"
 )
