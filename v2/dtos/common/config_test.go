@@ -37,24 +37,3 @@ func TestNewConfigResponse(t *testing.T) {
 	json.Unmarshal(data, &actual)
 	assert.Equal(t, expected, actual)
 }
-
-func TestNewMultiConfigsResponse(t *testing.T) {
-	type testConfig struct {
-		Name string
-		Host string
-		Port int
-	}
-
-	c := testConfig{
-		Name: "UnitTest",
-		Host: "localhost",
-		Port: 8080,
-	}
-
-	expected := make(map[string]ConfigResponse)
-	expected["test"] = NewConfigResponse(c)
-	target := NewMultiConfigsResponse("", "", 200, expected)
-
-	assert.Equal(t, v2.ApiVersion, target.ApiVersion)
-	assert.Equal(t, expected, target.Configs)
-}

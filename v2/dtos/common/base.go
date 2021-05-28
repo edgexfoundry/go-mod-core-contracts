@@ -8,7 +8,7 @@ package common
 import (
 	"github.com/google/uuid"
 
-	v2 "github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/v2"
 )
 
 // Request defines the base content for request DTOs (data transfer objects).
@@ -67,4 +67,30 @@ func NewBaseWithIdResponse(requestId string, message string, statusCode int, id 
 		BaseResponse: NewBaseResponse(requestId, message, statusCode),
 		Id:           id,
 	}
+}
+
+// BaseWithServiceNameResponse defines the base content for response DTOs (data transfer objects).
+// This object and its properties correspond to the BaseWithServiceNameResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.x#/BaseWithServiceNameResponse
+type BaseWithServiceNameResponse struct {
+	BaseResponse `json:",inline"`
+	ServiceName  string `json:"serviceName"`
+}
+
+// BaseWithMetricsResponse defines the base content for response DTOs (data transfer objects).
+// This object and its properties correspond to the BaseWithMetricsResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.x#/BaseWithMetricsResponse
+type BaseWithMetricsResponse struct {
+	BaseResponse `json:",inline"`
+	ServiceName  string      `json:"serviceName"`
+	Metrics      interface{} `json:"metrics"`
+}
+
+// BaseWithConfigResponse defines the base content for response DTOs (data transfer objects).
+// This object and its properties correspond to the BaseWithConfigResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.x#/BaseWithConfigResponse
+type BaseWithConfigResponse struct {
+	BaseResponse `json:",inline"`
+	ServiceName  string      `json:"serviceName"`
+	Config       interface{} `json:"config"`
 }
