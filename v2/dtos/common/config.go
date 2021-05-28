@@ -21,15 +21,3 @@ func NewConfigResponse(serviceConfig interface{}) ConfigResponse {
 		Config:      serviceConfig,
 	}
 }
-
-type MultiConfigsResponse struct {
-	BaseResponse `json:",inline"`
-	Configs      map[string]ConfigResponse `json:"configs"`
-}
-
-func NewMultiConfigsResponse(requestId string, message string, statusCode int, configs map[string]ConfigResponse) MultiConfigsResponse {
-	return MultiConfigsResponse{
-		BaseResponse: NewBaseResponse(requestId, message, statusCode),
-		Configs:      configs,
-	}
-}
