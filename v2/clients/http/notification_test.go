@@ -34,11 +34,11 @@ func addNotificationRequest() requests.AddNotificationRequest {
 	)
 }
 
-func TestNotificationClient_Add(t *testing.T) {
+func TestNotificationClient_SendNotification(t *testing.T) {
 	ts := newTestServer(http.MethodPost, v2.ApiNotificationRoute, []common.BaseWithIdResponse{})
 	defer ts.Close()
 	client := NewNotificationClient(ts.URL)
-	res, err := client.Add(context.Background(), []requests.AddNotificationRequest{addNotificationRequest()})
+	res, err := client.SendNotification(context.Background(), []requests.AddNotificationRequest{addNotificationRequest()})
 	require.NoError(t, err)
 	require.IsType(t, []common.BaseWithIdResponse{}, res)
 }

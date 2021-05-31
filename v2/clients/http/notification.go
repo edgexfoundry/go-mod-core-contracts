@@ -31,8 +31,8 @@ func NewNotificationClient(baseUrl string) interfaces.NotificationClient {
 	}
 }
 
-// Add adds new notifications.
-func (client *NotificationClient) Add(ctx context.Context, reqs []requests.AddNotificationRequest) (res []common.BaseWithIdResponse, err errors.EdgeX) {
+// SendNotification sends new notifications.
+func (client *NotificationClient) SendNotification(ctx context.Context, reqs []requests.AddNotificationRequest) (res []common.BaseWithIdResponse, err errors.EdgeX) {
 	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl+v2.ApiNotificationRoute, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

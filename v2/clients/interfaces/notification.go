@@ -16,8 +16,8 @@ import (
 
 // NotificationClient defines the interface for interactions with the Notification endpoint on the EdgeX Foundry support-notifications service.
 type NotificationClient interface {
-	// Add adds new notifications.
-	Add(ctx context.Context, reqs []requests.AddNotificationRequest) ([]common.BaseWithIdResponse, errors.EdgeX)
+	// SendNotification sends new notifications.
+	SendNotification(ctx context.Context, reqs []requests.AddNotificationRequest) ([]common.BaseWithIdResponse, errors.EdgeX)
 	// NotificationById query notification by id.
 	NotificationById(ctx context.Context, id string) (responses.NotificationResponse, errors.EdgeX)
 	// DeleteNotificationById deletes a notification by id.

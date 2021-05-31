@@ -21,31 +21,6 @@ type NotificationClient struct {
 	mock.Mock
 }
 
-// Add provides a mock function with given fields: ctx, reqs
-func (_m *NotificationClient) Add(ctx context.Context, reqs []requests.AddNotificationRequest) ([]common.BaseWithIdResponse, errors.EdgeX) {
-	ret := _m.Called(ctx, reqs)
-
-	var r0 []common.BaseWithIdResponse
-	if rf, ok := ret.Get(0).(func(context.Context, []requests.AddNotificationRequest) []common.BaseWithIdResponse); ok {
-		r0 = rf(ctx, reqs)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]common.BaseWithIdResponse)
-		}
-	}
-
-	var r1 errors.EdgeX
-	if rf, ok := ret.Get(1).(func(context.Context, []requests.AddNotificationRequest) errors.EdgeX); ok {
-		r1 = rf(ctx, reqs)
-	} else {
-		if ret.Get(1) != nil {
-			r1 = ret.Get(1).(errors.EdgeX)
-		}
-	}
-
-	return r0, r1
-}
-
 // CleanupNotifications provides a mock function with given fields: ctx
 func (_m *NotificationClient) CleanupNotifications(ctx context.Context) (common.BaseResponse, errors.EdgeX) {
 	ret := _m.Called(ctx)
@@ -267,6 +242,31 @@ func (_m *NotificationClient) NotificationsByTimeRange(ctx context.Context, star
 	var r1 errors.EdgeX
 	if rf, ok := ret.Get(1).(func(context.Context, int, int, int, int) errors.EdgeX); ok {
 		r1 = rf(ctx, start, end, offset, limit)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
+// SendNotification provides a mock function with given fields: ctx, reqs
+func (_m *NotificationClient) SendNotification(ctx context.Context, reqs []requests.AddNotificationRequest) ([]common.BaseWithIdResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, reqs)
+
+	var r0 []common.BaseWithIdResponse
+	if rf, ok := ret.Get(0).(func(context.Context, []requests.AddNotificationRequest) []common.BaseWithIdResponse); ok {
+		r0 = rf(ctx, reqs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]common.BaseWithIdResponse)
+		}
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, []requests.AddNotificationRequest) errors.EdgeX); ok {
+		r1 = rf(ctx, reqs)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(errors.EdgeX)
