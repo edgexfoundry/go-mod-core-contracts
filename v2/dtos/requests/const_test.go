@@ -34,7 +34,6 @@ const (
 	TestIntervalStart    = "20190102T150405"
 	TestIntervalEnd      = "20190802T150405"
 	TestIntervalInterval = "30ms"
-	TestIntervalRunOnce  = false
 
 	TestIntervalActionName = "TestIntervalAction"
 	TestProtocol           = "http"

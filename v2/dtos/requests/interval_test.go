@@ -28,7 +28,6 @@ func addIntervalRequestData() AddIntervalRequest {
 			Start:    TestIntervalStart,
 			End:      TestIntervalEnd,
 			Interval: TestIntervalInterval,
-			RunOnce:  TestIntervalRunOnce,
 		},
 	}
 }
@@ -49,14 +48,12 @@ func updateIntervalData() dtos.UpdateInterval {
 	testStart := TestIntervalStart
 	testEnd := TestIntervalEnd
 	testFrequency := TestIntervalInterval
-	testRunOnce := TestIntervalRunOnce
 	dto := dtos.UpdateInterval{}
 	dto.Id = &testId
 	dto.Name = &testName
 	dto.Start = &testStart
 	dto.End = &testEnd
 	dto.Interval = &testFrequency
-	dto.RunOnce = &testRunOnce
 	return dto
 }
 
@@ -141,7 +138,6 @@ func TestAddIntervalReqToIntervalModels(t *testing.T) {
 			Start:    TestIntervalStart,
 			End:      TestIntervalEnd,
 			Interval: TestIntervalInterval,
-			RunOnce:  TestIntervalRunOnce,
 		},
 	}
 	resultModels := AddIntervalReqToIntervalModels(requests)
@@ -244,7 +240,6 @@ func TestUpdateIntervalRequest_UnmarshalJSON_NilField(t *testing.T) {
 	assert.Nil(t, req.Interval.Start)
 	assert.Nil(t, req.Interval.End)
 	assert.Nil(t, req.Interval.Interval)
-	assert.Nil(t, req.Interval.RunOnce)
 }
 
 func TestReplaceIntervalModelFieldsWithDTO(t *testing.T) {
@@ -260,5 +255,4 @@ func TestReplaceIntervalModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, TestIntervalStart, interval.Start)
 	assert.Equal(t, TestIntervalEnd, interval.End)
 	assert.Equal(t, TestIntervalInterval, interval.Interval)
-	assert.Equal(t, TestIntervalRunOnce, interval.RunOnce)
 }

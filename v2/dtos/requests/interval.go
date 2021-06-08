@@ -101,9 +101,6 @@ func ReplaceIntervalModelFieldsWithDTO(interval *models.Interval, patch dtos.Upd
 	if patch.Interval != nil {
 		interval.Interval = *patch.Interval
 	}
-	if patch.RunOnce != nil {
-		interval.RunOnce = *patch.RunOnce
-	}
 }
 
 func NewAddIntervalRequest(dto dtos.Interval) AddIntervalRequest {

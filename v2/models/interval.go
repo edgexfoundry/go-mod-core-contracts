@@ -15,5 +15,4 @@ type Interval struct {
 	Start    string
 	End      string
 	Interval string
-	RunOnce  bool
 }
