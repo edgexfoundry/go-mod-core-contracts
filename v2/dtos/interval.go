@@ -18,7 +18,6 @@ type Interval struct {
 	Start       string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	End         string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	Interval    string `json:"interval" validate:"required,edgex-dto-duration"`
-	RunOnce     bool   `json:"runOnce,omitempty"`
 }
 
 // NewInterval creates interval DTO with required fields
@@ -34,7 +33,6 @@ type UpdateInterval struct {
 	Start    *string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	End      *string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	Interval *string `json:"interval,omitempty" validate:"omitempty,edgex-dto-duration"`
-	RunOnce  *bool   `json:"runOnce,omitempty"`
 }
 
 // NewUpdateInterval creates updateInterval DTO with required field
@@ -50,7 +48,6 @@ func ToIntervalModel(dto Interval) models.Interval {
 	model.Start = dto.Start
 	model.End = dto.End
 	model.Interval = dto.Interval
-	model.RunOnce = dto.RunOnce
 	return model
 }
 
@@ -62,6 +59,5 @@ func FromIntervalModelToDTO(model models.Interval) Interval {
 	dto.Start = model.Start
 	dto.End = model.End
 	dto.Interval = model.Interval
-	dto.RunOnce = model.RunOnce
 	return dto
 }
