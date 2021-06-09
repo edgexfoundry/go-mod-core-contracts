@@ -24,36 +24,6 @@ const (
 	CorrelationHeader    = "X-Correlation-ID" // Sets the key of the Correlation ID HTTP header
 )
 
-// Constants related to defined routes in the service APIs
-const (
-	ApiVersionRoute            = "/api/version"
-	ApiBase                    = "/api/v1"
-	ApiAddressableRoute        = "/api/v1/addressable"
-	ApiCallbackRoute           = "/api/v1/callback"
-	ApiCommandRoute            = "/api/v1/command"
-	ApiConfigRoute             = "/api/v1/config"
-	ApiDeviceRoute             = "/api/v1/device"
-	ApiDeviceProfileRoute      = "/api/v1/deviceprofile"
-	ApiDeviceServiceRoute      = "/api/v1/deviceservice"
-	ApiEventRoute              = "/api/v1/event"
-	ApiHealthRoute             = "/api/v1/health"
-	ApiLoggingRoute            = "/api/v1/logs"
-	ApiMetricsRoute            = "/api/v1/metrics"
-	ApiNotificationRoute       = "/api/v1/notification"
-	ApiNotifyRegistrationRoute = "/api/v1/notify/registrations"
-	ApiOperationRoute          = "/api/v1/operation"
-	ApiPingRoute               = "/api/v1/ping"
-	ApiProvisionWatcherRoute   = "/api/v1/provisionwatcher"
-	ApiReadingRoute            = "/api/v1/reading"
-	ApiRegistrationRoute       = "/api/v1/registration"
-	ApiRegistrationByNameRoute = ApiRegistrationRoute + "/name"
-	ApiSubscriptionRoute       = "/api/v1/subscription"
-	ApiTransmissionRoute       = "/api/v1/transmission"
-	ApiValueDescriptorRoute    = "/api/v1/valuedescriptor"
-	ApiIntervalRoute           = "/api/v1/interval"
-	ApiIntervalActionRoute     = "/api/v1/intervalaction"
-)
-
 // Constants related to how services identify themselves in the Service Registry
 const (
 	CoreCommandServiceKey               = "core-command"

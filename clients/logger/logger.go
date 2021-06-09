@@ -25,7 +25,7 @@ import (
 	stdLog "log"
 	"os"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/types"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
 	"github.com/go-kit/kit/log"
@@ -35,7 +35,7 @@ import (
 type LoggingClient interface {
 	// SetLogLevel sets minimum severity log level. If a logging method is called with a lower level of severity than
 	// what is set, it will result in no output.
-	SetLogLevel(logLevel string) error
+	SetLogLevel(logLevel string) errors.EdgeX
 	// LogLevel returns the current log level setting
 	LogLevel() string
 	// Debug logs a message at the DEBUG severity level
@@ -151,14 +151,14 @@ func (lc edgeXLogger) log(logLevel string, formatted bool, msg string, args ...i
 
 }
 
-func (lc edgeXLogger) SetLogLevel(logLevel string) error {
+func (lc edgeXLogger) SetLogLevel(logLevel string) errors.EdgeX {
 	if isValidLogLevel(logLevel) == true {
 		*lc.logLevel = logLevel
 
 		return nil
 	}
 
-	return types.ErrNotFound{}
+	return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("invalid log level `%s`", logLevel), nil)
 }
 
 func (lc edgeXLogger) LogLevel() string {

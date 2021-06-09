@@ -14,6 +14,8 @@
 
 package logger
 
+import "github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+
 // MockLogger is a type that can be used for mocking the LoggingClient interface during unit tests
 type MockLogger struct {
 }
@@ -24,7 +26,7 @@ func NewMockClient() LoggingClient {
 }
 
 // SetLogLevel simulates setting a log severity level
-func (lc MockLogger) SetLogLevel(_ string) error {
+func (lc MockLogger) SetLogLevel(_ string) errors.EdgeX {
 	return nil
 }
 

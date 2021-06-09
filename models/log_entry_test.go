@@ -15,6 +15,7 @@
 package models
 
 import (
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -41,7 +42,11 @@ func TestLogEntryValidation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := tt.le.Validate()
-			checkValidationError(err, tt.expectError, tt.name, t)
+			if tt.expectError {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+			}
 		})
 	}
 }
