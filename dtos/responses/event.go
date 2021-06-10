@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
@@ -48,27 +47,27 @@ func NewMultiEventsResponse(requestId string, message string, statusCode int, ev
 }
 
 func (e *EventResponse) Encode() ([]byte, string, error) {
-	var encoding = clients.ContentTypeJSON
+	var encoding = common.ContentTypeJSON
 
 	for _, r := range e.Event.Readings {
 		if r.ValueType == common.ValueTypeBinary {
-			encoding = clients.ContentTypeCBOR
+			encoding = common.ContentTypeCBOR
 			break
 		}
 	}
 	if v := os.Getenv(common.EnvEncodeAllEvents); v == common.ValueTrue {
-		encoding = clients.ContentTypeCBOR
+		encoding = common.ContentTypeCBOR
 	}
 
 	var err error
 	var encodedData []byte
 	switch encoding {
-	case clients.ContentTypeCBOR:
+	case common.ContentTypeCBOR:
 		encodedData, err = cbor.Marshal(e)
 		if err != nil {
 			return nil, "", errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode EventResponse to CBOR", err)
 		}
-	case clients.ContentTypeJSON:
+	case common.ContentTypeJSON:
 		encodedData, err = json.Marshal(e)
 		if err != nil {
 			return nil, "", errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode EventResponse to JSON", err)

@@ -242,3 +242,36 @@ const (
 const (
 	EnvEncodeAllEvents = "EDGEX_ENCODE_ALL_EVENTS_CBOR"
 )
+
+// Miscellaneous constants
+const (
+	ClientMonitorDefault = 15000              // Defaults the interval at which a given service client will refresh its endpoint from the Registry, if used
+	CorrelationHeader    = "X-Correlation-ID" // Sets the key of the Correlation ID HTTP header
+)
+
+// Constants related to how services identify themselves in the Service Registry
+const (
+	CoreCommandServiceKey               = "core-command"
+	CoreDataServiceKey                  = "core-data"
+	CoreMetaDataServiceKey              = "core-metadata"
+	SupportLoggingServiceKey            = "support-logging"
+	SupportNotificationsServiceKey      = "support-notifications"
+	SystemManagementAgentServiceKey     = "sys-mgmt-agent"
+	SupportSchedulerServiceKey          = "support-scheduler"
+	SecuritySecretStoreSetupServiceKey  = "security-secretstore-setup"
+	SecurityProxySetupServiceKey        = "security-proxy-setup"
+	SecurityFileTokenProviderServiceKey = "security-file-token-provider"
+	SecurityBootstrapperKey             = "security-bootstrapper"
+	SecurityBootstrapperRedisKey        = "security-bootstrapper-redis"
+)
+
+// Constants related to the possible content types supported by the APIs
+const (
+	ContentType     = "Content-Type"
+	ContentLength   = "Content-Length"
+	ContentTypeCBOR = "application/cbor"
+	ContentTypeJSON = "application/json"
+	ContentTypeYAML = "application/x-yaml"
+	ContentTypeText = "text/plain"
+	ContentTypeXML  = "application/xml"
+)

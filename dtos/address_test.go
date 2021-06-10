@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
@@ -21,7 +20,7 @@ import (
 const (
 	testHost            = "testHost"
 	testPort            = 123
-	testContentType     = clients.ContentTypeJSON
+	testContentType     = common.ContentTypeJSON
 	testPath            = "testPath"
 	testQueryParameters = "testQueryParameters"
 	testHTTPMethod      = "GET"

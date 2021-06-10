@@ -11,7 +11,6 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
@@ -46,7 +45,7 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 		return nil, nil
 	}
 	response := &responses.EventResponse{}
-	if contentType == clients.ContentTypeCBOR {
+	if contentType == common.ContentTypeCBOR {
 		if err = cbor.Unmarshal(res, response); err != nil {
 			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to decode the cbor response", err)
 		}

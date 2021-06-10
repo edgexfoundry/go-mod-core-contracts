@@ -17,7 +17,7 @@ import (
 	"net/url"
 	"path/filepath"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
 	"github.com/google/uuid"
@@ -36,7 +36,7 @@ func FromContext(ctx context.Context, key string) string {
 // correlatedId gets Correlation ID from supplied context. If no Correlation ID header is
 // present in the supplied context, one will be created along with a value.
 func correlatedId(ctx context.Context) string {
-	correlation := FromContext(ctx, clients.CorrelationHeader)
+	correlation := FromContext(ctx, common.CorrelationHeader)
 	if len(correlation) == 0 {
 		correlation = uuid.New().String()
 	}
@@ -78,7 +78,7 @@ func createRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}
-	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
+	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))
 	return req, nil
 }
 
@@ -88,32 +88,32 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, url string
 		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to JSON", err)
 	}
 
-	content := FromContext(ctx, clients.ContentType)
+	content := FromContext(ctx, common.ContentType)
 	if content == "" {
-		content = clients.ContentTypeJSON
+		content = common.ContentTypeJSON
 	}
 
 	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(jsonEncodedData))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}
-	req.Header.Set(clients.ContentType, content)
-	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
+	req.Header.Set(common.ContentType, content)
+	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))
 	return req, nil
 }
 
 func createRequestWithEncodedData(ctx context.Context, httpMethod string, url string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
 	content := encoding
 	if content == "" {
-		content = FromContext(ctx, clients.ContentType)
+		content = FromContext(ctx, common.ContentType)
 	}
 
 	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(data))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}
-	req.Header.Set(clients.ContentType, content)
-	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
+	req.Header.Set(common.ContentType, content)
+	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))
 	return req, nil
 }
 
@@ -140,8 +140,8 @@ func createRequestFromFilePath(ctx context.Context, httpMethod string, url strin
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
 	}
-	req.Header.Set(clients.ContentType, writer.FormDataContentType())
-	req.Header.Set(clients.CorrelationHeader, correlatedId(ctx))
+	req.Header.Set(common.ContentType, writer.FormDataContentType())
+	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))
 	return req, nil
 }
 

@@ -12,7 +12,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 )
 
@@ -56,7 +56,7 @@ func GetRequestAndReturnBinaryRes(ctx context.Context, baseUrl string, requestPa
 	}
 
 	if resp.StatusCode <= http.StatusMultiStatus {
-		return res, resp.Header.Get(clients.ContentType), nil
+		return res, resp.Header.Get(common.ContentType), nil
 	}
 
 	// Handle error response
