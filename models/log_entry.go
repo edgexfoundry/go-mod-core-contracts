@@ -17,6 +17,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 )
 
 // These constants identify the log levels in order of increasing severity.
@@ -72,7 +73,7 @@ func (le *LogEntry) UnmarshalJSON(data []byte) error {
 }
 
 // Validate satisfies the Validator interface
-func (le LogEntry) Validate() (bool, error) {
+func (le LogEntry) Validate() (bool, errors.EdgeX) {
 	if !le.isValidated {
 		logLevels := []string{TraceLog, DebugLog, InfoLog, WarnLog, ErrorLog}
 		for _, name := range logLevels {
@@ -80,7 +81,7 @@ func (le LogEntry) Validate() (bool, error) {
 				return true, nil
 			}
 		}
-		return false, NewErrContractInvalid(fmt.Sprintf("Invalid level in LogEntry: %s", le.Level))
+		return false, errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("Invalid level in LogEntry: %s", le.Level), nil)
 	}
 	return le.isValidated, nil
 }

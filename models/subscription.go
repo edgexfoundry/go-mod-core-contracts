@@ -1,41 +1,74 @@
-/*******************************************************************************
- * Copyright 2019 Dell Technologies Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- *
- *******************************************************************************/
+//
+// Copyright (C) 2020-2021 IOTech Ltd
+//
+// SPDX-License-Identifier: Apache-2.0
 
 package models
 
 import (
 	"encoding/json"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 )
 
-// Subscription represents an object for notification alerts
+// Subscription and its properties are defined in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Subscription
+// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Subscription struct {
-	Timestamps
-	ID                   string                  `json:"id,omitempty"`
-	Slug                 string                  `json:"slug,omitempty"`
-	Receiver             string                  `json:"receiver,omitempty"`
-	Description          string                  `json:"description,omitempty"`
-	SubscribedCategories []NotificationsCategory `json:"subscribedCategories,omitempty"`
-	SubscribedLabels     []string                `json:"subscribedLabels,omitempty"`
-	Channels             []Channel               `json:"channels,omitempty"`
+	DBTimestamp
+	Categories     []string
+	Labels         []string
+	Channels       []Address
+	Description    string
+	Id             string
+	Receiver       string
+	Name           string
+	ResendLimit    int
+	ResendInterval string
+	AdminState     AdminState
 }
 
-// String returns a JSON encoded string representation of the model
-func (s Subscription) String() string {
-	out, err := json.Marshal(s)
-	if err != nil {
-		return err.Error()
+// ChannelType controls the range of values which constitute valid delivery types for channels
+type ChannelType string
+
+func (subscription *Subscription) UnmarshalJSON(b []byte) error {
+	var alias struct {
+		DBTimestamp
+		Categories     []string
+		Labels         []string
+		Channels       []interface{}
+		Description    string
+		Id             string
+		Receiver       string
+		Name           string
+		ResendLimit    int
+		ResendInterval string
+		AdminState     AdminState
 	}
-	return string(out)
+	if err := json.Unmarshal(b, &alias); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal intervalAction.", err)
+	}
+	channels := make([]Address, len(alias.Channels))
+	for i, c := range alias.Channels {
+		address, err := instantiateAddress(c)
+		if err != nil {
+			return errors.NewCommonEdgeXWrapper(err)
+		}
+		channels[i] = address
+	}
+
+	*subscription = Subscription{
+		DBTimestamp:    alias.DBTimestamp,
+		Categories:     alias.Categories,
+		Labels:         alias.Labels,
+		Description:    alias.Description,
+		Id:             alias.Id,
+		Receiver:       alias.Receiver,
+		Name:           alias.Name,
+		ResendLimit:    alias.ResendLimit,
+		ResendInterval: alias.ResendInterval,
+		Channels:       channels,
+		AdminState:     alias.AdminState,
+	}
+	return nil
 }
