@@ -88,3 +88,17 @@ func TestQueryReadingsByTimeRange(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
+
+func TestQueryReadingsByResourceNameAndTimeRange(t *testing.T) {
+	resourceName := "resource"
+	start := 1
+	end := 10
+	urlPath := path.Join(common.ApiReadingRoute, common.ResourceName, resourceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
+	defer ts.Close()
+
+	client := NewReadingClient(ts.URL)
+	res, err := client.ReadingsByResourceNameAndTimeRange(context.Background(), resourceName, start, end, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+}
