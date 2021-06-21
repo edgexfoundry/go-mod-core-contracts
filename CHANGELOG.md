@@ -4,6 +4,9 @@
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
 ## [2.0.0] - 2021-06-30
+### General
+- **v2:** Implemented V2 DTOs, Model objects and Clients.
+- **v1:** Removed v1 APIs and request handling code [e59505e](https://github.com/edgexfoundry/go-mod-core-contracts/commits/e59505e)
 ### Features ✨
 - **v2:** Create Constants for configuration's map key ([#7342969](https://github.com/edgexfoundry/go-mod-core-contracts/commits/7342969))
 - **notifications:** Create client library for support-notifications ([#626](https://github.com/edgexfoundry/go-mod-core-contracts/issues/626)) ([#ee4e77d](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ee4e77d))
@@ -80,55 +83,21 @@
 - **v2:** Put together the constants of the models package ([#7967573](https://github.com/edgexfoundry/go-mod-core-contracts/commits/7967573))
 - **v2:** Implement Device Service Command Client ([#b433f68](https://github.com/edgexfoundry/go-mod-core-contracts/commits/b433f68))
 - **v2:** Update the API path to /device/name/{name}/{command} ([#ec69e1e](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ec69e1e))
-### Bug Fixes 🐛
-- **v2:** Check empty value when converting Model to DTO ([#6459cb9](https://github.com/edgexfoundry/go-mod-core-contracts/commits/6459cb9))
-- **v2:** Add the missing ending ']' for float arrays ([#7e9c1cc](https://github.com/edgexfoundry/go-mod-core-contracts/commits/7e9c1cc))
-- **meta:** Modify DS Get cmd client API to use pointer as return value ([#ac08c44](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ac08c44))
-- **v2:** Client lib checks whether the http response is empty ([#233364e](https://github.com/edgexfoundry/go-mod-core-contracts/commits/233364e))
-- **meta:** Add missing UpdateDeviceService DTO filed and omitempty tag ([#1f8df6a](https://github.com/edgexfoundry/go-mod-core-contracts/commits/1f8df6a))
-- **v2:** Remove unnecessary arrow sign in error message ([#ac12a39](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ac12a39))
-- **notifications:** Add validation tag to verify subscription with empty Channels ([#6cd5e03](https://github.com/edgexfoundry/go-mod-core-contracts/commits/6cd5e03))
-- **v2:** Add Address model unmarshal func ([#609911a](https://github.com/edgexfoundry/go-mod-core-contracts/commits/609911a))
-- **v2:** Ensure ApiVersion is set when converting models to DTOs ([#127a7ca](https://github.com/edgexfoundry/go-mod-core-contracts/commits/127a7ca))
-- **v2:** Fix float reading encoding to be simple E-Notation ([#8786adf](https://github.com/edgexfoundry/go-mod-core-contracts/commits/8786adf))
-- **meta:** Modify the profile validation to verify both YAML and JSON format ([#7dc4617](https://github.com/edgexfoundry/go-mod-core-contracts/commits/7dc4617))
-- **v2:** Modify the client lib error handling ([#034c2e8](https://github.com/edgexfoundry/go-mod-core-contracts/commits/034c2e8))
-- **v2:** Fix ambiguous import path for v2 module ([#ee360d7](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ee360d7))
-- **meta:** Add yml tag for device profile API ([#2cf30fb](https://github.com/edgexfoundry/go-mod-core-contracts/commits/2cf30fb))
-- **notification:** Add channel type check to Validate method ([#3e070a1](https://github.com/edgexfoundry/go-mod-core-contracts/commits/3e070a1))
-- **notifications:** Remove name constraints on category value ([#a60e686](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a60e686))
-- **notifications:** Modify inappropriate variable names ([#99ccf6c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/99ccf6c))
-- **notifications:** Rename type `Category` to `NotificationCategory` ([#ad44d54](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ad44d54))
-- **notifications:** Create EmailAddress model ([#1290a85](https://github.com/edgexfoundry/go-mod-core-contracts/commits/1290a85))
-- **scheduler:** Fix func name typo ([#f473d52](https://github.com/edgexfoundry/go-mod-core-contracts/commits/f473d52))
-- **v2:** Add missing validation tag to Subscription DTO ([#bd94282](https://github.com/edgexfoundry/go-mod-core-contracts/commits/bd94282))
-- **v2:** Correct UpdateSubscription DTO validation tags ([#dde2e0e](https://github.com/edgexfoundry/go-mod-core-contracts/commits/dde2e0e))
-- **v2:** Fix subscription_test - Versionable now that is required ([#10f81b4](https://github.com/edgexfoundry/go-mod-core-contracts/commits/10f81b4))
-- **v2:** Correct ProvisionWatcher dto json tag ([#794f195](https://github.com/edgexfoundry/go-mod-core-contracts/commits/794f195))
-- **v2:** Add replacement of ResendLimit and ResendInterval to ReplaceSubscriptionModelFieldsWithDTO func ([#5f87525](https://github.com/edgexfoundry/go-mod-core-contracts/commits/5f87525))
 ### Code Refactoring ♻
 - **scheduler:** Remove runOnce from the Interval ([#782597b](https://github.com/edgexfoundry/go-mod-core-contracts/commits/782597b))
-- **SMA:** Remove obsolete SMA response ([#89682ee](https://github.com/edgexfoundry/go-mod-core-contracts/commits/89682ee))
 - **scheduler:** Rename Interval.Frequency field to Interval ([#94fa9ab](https://github.com/edgexfoundry/go-mod-core-contracts/commits/94fa9ab))
 - **data:** Rename AutoEvent.Frequency field to Interval ([#a14145b](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a14145b))
 - **v2:** Rename edgex-dto-frequency validator ([#4a06e94](https://github.com/edgexfoundry/go-mod-core-contracts/commits/4a06e94))
-- **securit:** Removed 	SecuritySecretsSetupServiceKey ([#38ea8fc](https://github.com/edgexfoundry/go-mod-core-contracts/commits/38ea8fc))
+- **security:** Removed 	SecuritySecretsSetupServiceKey ([#38ea8fc](https://github.com/edgexfoundry/go-mod-core-contracts/commits/38ea8fc))
 - **v2:** Remove edgex-prefix from all service keys ([#078c96f](https://github.com/edgexfoundry/go-mod-core-contracts/commits/078c96f))
     ```
     BREAKING CHANGE:
     Service key names have changed.
     ```
-- **v2:** Refactor DTO's Created and Modified field to DBTimestamp ([#101c1da](https://github.com/edgexfoundry/go-mod-core-contracts/commits/101c1da))
-- **v2:** Rename the unmarshal function name ([#b4fb2f3](https://github.com/edgexfoundry/go-mod-core-contracts/commits/b4fb2f3))
 - **v2:** Remove ApiVersion from update DTOs ([#5ea0556](https://github.com/edgexfoundry/go-mod-core-contracts/commits/5ea0556))
 - **v2:** Remove ApiVersion from normal DTOs except EventDTO ([#581db9a](https://github.com/edgexfoundry/go-mod-core-contracts/commits/581db9a))
 - **meta:** Rename PropertyValue struct to ResourceProperties ([#aae2b6e](https://github.com/edgexfoundry/go-mod-core-contracts/commits/aae2b6e))
 - **v2:** Move all constants to common package ([#d45ecd7](https://github.com/edgexfoundry/go-mod-core-contracts/commits/d45ecd7))
-- **data:** Update NewAddEventRequest factory method ([#321d834](https://github.com/edgexfoundry/go-mod-core-contracts/commits/321d834))
-- **meta:** Rename Put Command to Set Command ([#66222d0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/66222d0))
-- **meta:** Profile add UnmarshalYAML func and rename Type field ([#2ee068f](https://github.com/edgexfoundry/go-mod-core-contracts/commits/2ee068f))
-- **meta:** Factory method use full object instead of name ([#8a3ce9d](https://github.com/edgexfoundry/go-mod-core-contracts/commits/8a3ce9d))
-- **v2:** Remove encoding constants ([#bfd2809](https://github.com/edgexfoundry/go-mod-core-contracts/commits/bfd2809))
 
 <a name="v0.1.149"></a>
 ## [v0.1.149] - 2021-01-19
