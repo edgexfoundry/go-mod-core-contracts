@@ -13,7 +13,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AutoEvent
 type AutoEvent struct {
 	Interval   string `json:"interval" validate:"required,edgex-dto-duration"`
-	OnChange   bool   `json:"onChange,omitempty"`
+	OnChange   bool   `json:"onChange"`
 	SourceName string `json:"sourceName" validate:"required"`
 }
 

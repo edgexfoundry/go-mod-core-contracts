@@ -12,17 +12,17 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 type ResourceProperties struct {
 	ValueType    string `json:"valueType" yaml:"valueType" validate:"required,edgex-dto-value-type"`
 	ReadWrite    string `json:"readWrite" yaml:"readWrite" validate:"required,oneof='R' 'W' 'RW'"`
-	Units        string `json:"units,omitempty" yaml:"units,omitempty"`
-	Minimum      string `json:"minimum,omitempty" yaml:"minimum,omitempty"`
-	Maximum      string `json:"maximum,omitempty" yaml:"maximum,omitempty"`
-	DefaultValue string `json:"defaultValue,omitempty" yaml:"defaultValue,omitempty"`
-	Mask         string `json:"mask,omitempty" yaml:"mask,omitempty"`
-	Shift        string `json:"shift,omitempty" yaml:"shift,omitempty"`
-	Scale        string `json:"scale,omitempty" yaml:"scale,omitempty"`
-	Offset       string `json:"offset,omitempty" yaml:"offset,omitempty"`
-	Base         string `json:"base,omitempty" yaml:"base,omitempty"`
-	Assertion    string `json:"assertion,omitempty" yaml:"assertion,omitempty"`
-	MediaType    string `json:"mediaType,omitempty" yaml:"mediaType,omitempty"`
+	Units        string `json:"units" yaml:"units"`
+	Minimum      string `json:"minimum" yaml:"minimum"`
+	Maximum      string `json:"maximum" yaml:"maximum"`
+	DefaultValue string `json:"defaultValue" yaml:"defaultValue"`
+	Mask         string `json:"mask" yaml:"mask"`
+	Shift        string `json:"shift" yaml:"shift"`
+	Scale        string `json:"scale" yaml:"scale"`
+	Offset       string `json:"offset" yaml:"offset"`
+	Base         string `json:"base" yaml:"base"`
+	Assertion    string `json:"assertion" yaml:"assertion"`
+	MediaType    string `json:"mediaType" yaml:"mediaType"`
 }
 
 // ToResourcePropertiesModel transforms the ResourceProperties DTO to the ResourceProperties model

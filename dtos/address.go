@@ -14,8 +14,8 @@ import (
 type Address struct {
 	Type string `json:"type" validate:"oneof='REST' 'MQTT' 'EMAIL'"`
 
-	Host string `json:"host,omitempty" validate:"required_unless=Type EMAIL"`
-	Port int    `json:"port,omitempty" validate:"required_unless=Type EMAIL"`
+	Host string `json:"host" validate:"required_unless=Type EMAIL"`
+	Port int    `json:"port" validate:"required_unless=Type EMAIL"`
 
 	RESTAddress    `json:",inline" validate:"-"`
 	MQTTPubAddress `json:",inline" validate:"-"`

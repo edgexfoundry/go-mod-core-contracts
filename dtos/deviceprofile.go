@@ -17,14 +17,14 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceProfile
 type DeviceProfile struct {
 	DBTimestamp     `json:",inline"`
-	Id              string           `json:"id,omitempty" validate:"omitempty,uuid"`
+	Id              string           `json:"id" validate:"omitempty,uuid"`
 	Name            string           `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Manufacturer    string           `json:"manufacturer,omitempty" yaml:"manufacturer,omitempty"`
-	Description     string           `json:"description,omitempty" yaml:"description,omitempty"`
-	Model           string           `json:"model,omitempty" yaml:"model,omitempty"`
-	Labels          []string         `json:"labels,omitempty" yaml:"labels,flow,omitempty"`
+	Manufacturer    string           `json:"manufacturer" yaml:"manufacturer"`
+	Description     string           `json:"description" yaml:"description"`
+	Model           string           `json:"model" yaml:"model"`
+	Labels          []string         `json:"labels" yaml:"labels,flow"`
 	DeviceResources []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
-	DeviceCommands  []DeviceCommand  `json:"deviceCommands,omitempty" yaml:"deviceCommands,omitempty" validate:"dive"`
+	DeviceCommands  []DeviceCommand  `json:"deviceCommands" yaml:"deviceCommands" validate:"dive"`
 }
 
 // Validate satisfies the Validator interface
