@@ -35,13 +35,13 @@ func NewIntervalAction(name string, intervalName string, address Address) Interv
 // UpdateIntervalAction and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/UpdateIntervalAction
 type UpdateIntervalAction struct {
-	Id           *string  `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
-	Name         *string  `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	IntervalName *string  `json:"intervalName,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Content      *string  `json:"content,omitempty"`
-	ContentType  *string  `json:"contentType,omitempty"`
-	Address      *Address `json:"address,omitempty"`
-	AdminState   *string  `json:"adminState,omitempty" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Id           *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name         *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	IntervalName *string  `json:"intervalName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Content      *string  `json:"content"`
+	ContentType  *string  `json:"contentType"`
+	Address      *Address `json:"address"`
+	AdminState   *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 }
 
 // NewUpdateIntervalAction creates updateIntervalAction DTO with required field

@@ -26,14 +26,14 @@ type DeviceService struct {
 // UpdateDeviceService and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceService
 type UpdateDeviceService struct {
-	Id            *string  `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
-	Name          *string  `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Description   *string  `json:"description,omitempty"`
-	LastConnected *int64   `json:"lastConnected,omitempty"`
-	LastReported  *int64   `json:"lastReported,omitempty"`
-	BaseAddress   *string  `json:"baseAddress,omitempty" validate:"omitempty,uri"`
-	Labels        []string `json:"labels,omitempty"`
-	AdminState    *string  `json:"adminState,omitempty" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Id            *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name          *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Description   *string  `json:"description"`
+	LastConnected *int64   `json:"lastConnected"`
+	LastReported  *int64   `json:"lastReported"`
+	BaseAddress   *string  `json:"baseAddress" validate:"omitempty,uri"`
+	Labels        []string `json:"labels"`
+	AdminState    *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 }
 
 // ToDeviceServiceModel transforms the DeviceService DTO to the DeviceService Model
@@ -66,30 +66,16 @@ func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 
 // FromDeviceServiceModelToUpdateDTO transforms the DeviceService Model to the UpdateDeviceService DTO
 func FromDeviceServiceModelToUpdateDTO(ds models.DeviceService) UpdateDeviceService {
+	adminState := string(ds.AdminState)
 	dto := UpdateDeviceService{
-		Labels: ds.Labels,
-	}
-	if ds.Id != "" {
-		dto.Id = &ds.Id
-	}
-	if ds.Name != "" {
-		dto.Name = &ds.Name
-	}
-	if ds.Description != "" {
-		dto.Description = &ds.Description
-	}
-	if ds.LastReported != 0 {
-		dto.LastReported = &ds.LastReported
-	}
-	if ds.LastConnected != 0 {
-		dto.LastConnected = &ds.LastConnected
-	}
-	if ds.BaseAddress != "" {
-		dto.BaseAddress = &ds.BaseAddress
-	}
-	if ds.AdminState != "" {
-		adminState := string(ds.AdminState)
-		dto.AdminState = &adminState
+		Id:            &ds.Id,
+		Name:          &ds.Name,
+		Description:   &ds.Description,
+		Labels:        ds.Labels,
+		LastReported:  &ds.LastReported,
+		LastConnected: &ds.LastConnected,
+		BaseAddress:   &ds.BaseAddress,
+		AdminState:    &adminState,
 	}
 	return dto
 }

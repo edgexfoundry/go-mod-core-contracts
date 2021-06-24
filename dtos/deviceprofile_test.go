@@ -21,6 +21,7 @@ var testLabels = []string{"MODBUS", "TEMP"}
 var testAttributes = map[string]interface{}{
 	"TestAttribute": "TestAttributeValue",
 }
+var testMappings = map[string]string{"0": "off", "1": "on"}
 
 var testDeviceProfile = models.DeviceProfile{
 	Name:         TestDeviceProfileName,
@@ -43,6 +44,7 @@ var testDeviceProfile = models.DeviceProfile{
 		ReadWrite: common.ReadWrite_RW,
 		ResourceOperations: []models.ResourceOperation{{
 			DeviceResource: TestDeviceResourceName,
+			Mappings:       testMappings,
 		}},
 	}},
 }
@@ -69,6 +71,7 @@ func profileData() DeviceProfile {
 			ReadWrite: common.ReadWrite_RW,
 			ResourceOperations: []ResourceOperation{{
 				DeviceResource: TestDeviceResourceName,
+				Mappings:       testMappings,
 			}},
 		}},
 	}

@@ -180,7 +180,7 @@ func TestAddress_marshalJSON(t *testing.T) {
 		},
 	}
 	expectedEmailJsonStr := fmt.Sprintf(
-		`{"type":"%s","recipients":["%s"]}`,
+		`{"type":"%s","host":"","port":0,"recipients":["%s"]}`,
 		emailAddress.Type, emailAddress.Recipients[0],
 	)
 

@@ -339,7 +339,6 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 		{"invalid, no Id and name", noIdAndName, true},
 
 		{"valid, nil description", validNilDescription, false},
-		{"invalid, empty description", invalidEmptyDescription, true},
 
 		{"valid, nil service name", validNilServiceName, false},
 		{"invalid, empty service name", invalidEmptyServiceName, true},

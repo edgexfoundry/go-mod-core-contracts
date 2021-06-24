@@ -16,9 +16,9 @@ import (
 func TestFromDeviceServiceModelToUpdateDTO(t *testing.T) {
 	model := models.DeviceService{}
 	dto := FromDeviceServiceModelToUpdateDTO(model)
-	assert.Nil(t, dto.Id)
-	assert.Nil(t, dto.Name)
-	assert.Nil(t, dto.Labels)
-	assert.Nil(t, dto.BaseAddress)
-	assert.Nil(t, dto.AdminState)
+	assert.Equal(t, model.Id, *dto.Id)
+	assert.Equal(t, model.Name, *dto.Name)
+	assert.Equal(t, model.Labels, dto.Labels)
+	assert.Equal(t, model.Id, *dto.BaseAddress)
+	assert.EqualValues(t, model.Id, *dto.AdminState)
 }
