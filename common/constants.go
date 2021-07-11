@@ -20,13 +20,14 @@ const (
 	ApiEventByTimeRangeRoute                     = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
 	ApiEventByAgeRoute                           = ApiEventRoute + "/" + Age + "/{" + Age + "}"
 
-	ApiReadingRoute                  = ApiBase + "/reading"
-	ApiAllReadingRoute               = ApiReadingRoute + "/" + All
-	ApiReadingCountRoute             = ApiReadingRoute + "/" + Count
-	ApiReadingCountByDeviceNameRoute = ApiReadingCountRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiReadingByDeviceNameRoute      = ApiReadingRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiReadingByResourceNameRoute    = ApiReadingRoute + "/" + ResourceName + "/{" + ResourceName + "}"
-	ApiReadingByTimeRangeRoute       = ApiReadingRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiReadingRoute                           = ApiBase + "/reading"
+	ApiAllReadingRoute                        = ApiReadingRoute + "/" + All
+	ApiReadingCountRoute                      = ApiReadingRoute + "/" + Count
+	ApiReadingCountByDeviceNameRoute          = ApiReadingCountRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
+	ApiReadingByDeviceNameRoute               = ApiReadingRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
+	ApiReadingByResourceNameRoute             = ApiReadingRoute + "/" + ResourceName + "/{" + ResourceName + "}"
+	ApiReadingByTimeRangeRoute                = ApiReadingRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiReadingByResourceNameAndTimeRangeRoute = ApiReadingByResourceNameRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
 
 	ApiDeviceProfileRoute                       = ApiBase + "/deviceprofile"
 	ApiDeviceProfileUploadFileRoute             = ApiDeviceProfileRoute + "/uploadfile"
