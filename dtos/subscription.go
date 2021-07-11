@@ -28,16 +28,16 @@ type Subscription struct {
 // UpdateSubscription and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/UpdateSubscription
 type UpdateSubscription struct {
-	Id             *string   `json:"id,omitempty" validate:"required_without=Name,edgex-dto-uuid"`
-	Name           *string   `json:"name,omitempty" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Channels       []Address `json:"channels,omitempty" validate:"omitempty,gt=0,dive"`
-	Receiver       *string   `json:"receiver,omitempty" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Categories     []string  `json:"categories,omitempty" validate:"omitempty,dive,gt=0,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Labels         []string  `json:"labels,omitempty" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Description    *string   `json:"description,omitempty"`
-	ResendLimit    *int      `json:"resendLimit,omitempty"`
-	ResendInterval *string   `json:"resendInterval,omitempty" validate:"omitempty,edgex-dto-duration"`
-	AdminState     *string   `json:"adminState,omitempty" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Id             *string   `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name           *string   `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Channels       []Address `json:"channels" validate:"omitempty,gt=0,dive"`
+	Receiver       *string   `json:"receiver" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Categories     []string  `json:"categories" validate:"omitempty,dive,gt=0,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Labels         []string  `json:"labels" validate:"omitempty,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Description    *string   `json:"description"`
+	ResendLimit    *int      `json:"resendLimit"`
+	ResendInterval *string   `json:"resendInterval" validate:"omitempty,edgex-dto-duration"`
+	AdminState     *string   `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 }
 
 // ToSubscriptionModel transforms the Subscription DTO to the Subscription Model

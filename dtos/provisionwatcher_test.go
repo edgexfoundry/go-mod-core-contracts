@@ -16,13 +16,12 @@ import (
 func TestFromProvisionWatcherModelToUpdateDTO(t *testing.T) {
 	model := models.ProvisionWatcher{}
 	dto := FromProvisionWatcherModelToUpdateDTO(model)
-	assert.Nil(t, dto.Id)
-	assert.Nil(t, dto.Name)
-	assert.Nil(t, dto.Labels)
-	assert.Nil(t, dto.Identifiers)
-	assert.Nil(t, dto.BlockingIdentifiers)
-	assert.Nil(t, dto.ProfileName)
-	assert.Nil(t, dto.ServiceName)
-	assert.Nil(t, dto.AdminState)
-	assert.Nil(t, dto.AutoEvents)
+	assert.Equal(t, model.Id, *dto.Id)
+	assert.Equal(t, model.Name, *dto.Name)
+	assert.Equal(t, model.Labels, dto.Labels)
+	assert.Nil(t, model.Identifiers, dto.Identifiers)
+	assert.Nil(t, model.BlockingIdentifiers, dto.BlockingIdentifiers)
+	assert.Equal(t, model.ProfileName, *dto.ProfileName)
+	assert.Equal(t, model.ServiceName, *dto.ServiceName)
+	assert.EqualValues(t, model.AdminState, *dto.AdminState)
 }
