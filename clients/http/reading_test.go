@@ -12,12 +12,12 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/responses"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestQueryAllReadings(t *testing.T) {
@@ -99,6 +99,34 @@ func TestQueryReadingsByResourceNameAndTimeRange(t *testing.T) {
 
 	client := NewReadingClient(ts.URL)
 	res, err := client.ReadingsByResourceNameAndTimeRange(context.Background(), resourceName, start, end, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+}
+
+func TestQueryReadingsByDeviceNameAndResourceName(t *testing.T) {
+	deviceName := "device"
+	resourceName := "resource"
+	urlPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.ResourceName, resourceName)
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
+	defer ts.Close()
+
+	client := NewReadingClient(ts.URL)
+	res, err := client.ReadingsByDeviceNameAndResourceName(context.Background(), deviceName, resourceName, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+}
+
+func TestQueryReadingsByDeviceNameAndResourceNameAndTimeRange(t *testing.T) {
+	deviceName := "device"
+	resourceName := "resource"
+	start := 1
+	end := 10
+	urlPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.ResourceName, resourceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
+	defer ts.Close()
+
+	client := NewReadingClient(ts.URL)
+	res, err := client.ReadingsByDeviceNameAndResourceNameAndTimeRange(context.Background(), deviceName, resourceName, start, end, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
