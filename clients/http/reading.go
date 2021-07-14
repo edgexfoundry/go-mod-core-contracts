@@ -99,3 +99,44 @@ func (rc readingClient) ReadingsByTimeRange(ctx context.Context, start, end, off
 	}
 	return res, nil
 }
+
+// ReadingsByResourceNameAndTimeRange returns readings by resource name and specified time range. Readings are sorted in descending order of origin time.
+func (rc readingClient) ReadingsByResourceNameAndTimeRange(ctx context.Context, name string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
+	requestPath := path.Join(common.ApiReadingRoute, common.ResourceName, url.QueryEscape(name), common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	requestParams := url.Values{}
+	requestParams.Set(common.Offset, strconv.Itoa(offset))
+	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	res := responses.MultiReadingsResponse{}
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
+func (rc readingClient) ReadingsByDeviceNameAndResourceName(ctx context.Context, deviceName, resourceName string, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
+	requestPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, url.QueryEscape(deviceName), common.ResourceName, url.QueryEscape(resourceName))
+	requestParams := url.Values{}
+	requestParams.Set(common.Offset, strconv.Itoa(offset))
+	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	res := responses.MultiReadingsResponse{}
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+
+}
+
+func (rc readingClient) ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx context.Context, deviceName, resourceName string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
+	requestPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, url.QueryEscape(deviceName), common.ResourceName, url.QueryEscape(resourceName), common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	requestParams := url.Values{}
+	requestParams.Set(common.Offset, strconv.Itoa(offset))
+	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	res := responses.MultiReadingsResponse{}
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
