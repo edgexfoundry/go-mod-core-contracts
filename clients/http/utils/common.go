@@ -57,7 +57,7 @@ func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to send a http request", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to send a http request", err)
 	}
 	if resp == nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "the response should not be a nil", nil)
@@ -68,7 +68,7 @@ func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
 func createRequest(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values) (*http.Request, errors.EdgeX) {
 	u, err := url.Parse(baseUrl)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, "fail to parse baseUrl", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
 	}
 	u.Path = requestPath
 	if requestParams != nil {
@@ -76,7 +76,7 @@ func createRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 	}
 	req, err := http.NewRequest(httpMethod, u.String(), nil)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
 	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))
 	return req, nil
@@ -95,7 +95,7 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, url string
 
 	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(jsonEncodedData))
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
 	req.Header.Set(common.ContentType, content)
 	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))
@@ -110,7 +110,7 @@ func createRequestWithEncodedData(ctx context.Context, httpMethod string, url st
 
 	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(data))
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
 	req.Header.Set(common.ContentType, content)
 	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))
@@ -121,24 +121,24 @@ func createRequestWithEncodedData(ctx context.Context, httpMethod string, url st
 func createRequestFromFilePath(ctx context.Context, httpMethod string, url string, filePath string) (*http.Request, errors.EdgeX) {
 	fileContents, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, fmt.Sprintf("fail to read file from %s", filePath), err)
+		return nil, errors.NewCommonEdgeX(errors.KindIOError, fmt.Sprintf("fail to read file from %s", filePath), err)
 	}
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	formFileWriter, err := writer.CreateFormFile("file", filepath.Base(filePath))
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, "fail to create form data", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to create form data", err)
 	}
 	_, err = io.Copy(formFileWriter, bytes.NewReader(fileContents))
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, "fail to copy file to form data", err)
+		return nil, errors.NewCommonEdgeX(errors.KindIOError, "fail to copy file to form data", err)
 	}
 	writer.Close()
 
 	req, err := http.NewRequest(httpMethod, url, body)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindClientError, "failed to create a http request", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
 	req.Header.Set(common.ContentType, writer.FormDataContentType())
 	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))

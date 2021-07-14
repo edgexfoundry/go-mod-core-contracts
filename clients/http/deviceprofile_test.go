@@ -112,8 +112,7 @@ func TestAddDeviceProfileByYaml(t *testing.T) {
 			res, err := client.AddByYaml(context.Background(), testCase.filePath)
 			if testCase.errorExpected {
 				require.True(t, errors.Is(err, os.ErrNotExist))
-				assert.Equal(t, edgexErrors.KindClientError, edgexErrors.Kind(err))
-				assert.Equal(t, edgexErrors.ClientErrorCode, res.StatusCode)
+				assert.Equal(t, edgexErrors.KindIOError, edgexErrors.Kind(err))
 			} else {
 				require.NoError(t, err)
 				assert.Equal(t, requestId, res.RequestId)
@@ -158,8 +157,7 @@ func TestUpdateDeviceProfileByYaml(t *testing.T) {
 			res, err := client.UpdateByYaml(context.Background(), testCase.filePath)
 			if testCase.errorExpected {
 				require.True(t, errors.Is(err, os.ErrNotExist))
-				assert.Equal(t, edgexErrors.KindClientError, edgexErrors.Kind(err))
-				assert.Equal(t, edgexErrors.ClientErrorCode, res.StatusCode)
+				assert.Equal(t, edgexErrors.KindIOError, edgexErrors.Kind(err))
 			} else {
 				require.NoError(t, err)
 				assert.Equal(t, requestId, res.RequestId)
