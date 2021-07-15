@@ -122,11 +122,11 @@ func ValidateDeviceProfileDTO(profile DeviceProfile) error {
 		for _, ro := range resourceOperations {
 			// ResourceOperations referenced in deviceCommands must exist
 			if !deviceResourcesContains(profile.DeviceResources, ro.DeviceResource) {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's resource %s doesn't match any deivce resource", ro.DeviceResource), nil)
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's resource %s doesn't match any device resource", ro.DeviceResource), nil)
 			}
 			// Check the ReadWrite whether is align to the deviceResource
 			if !validReadWritePermission(profile.DeviceResources, ro.DeviceResource, command.ReadWrite) {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's ReadWrite permission '%s' doesn't align the deivce resource", command.ReadWrite), nil)
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's ReadWrite permission '%s' doesn't align the device resource", command.ReadWrite), nil)
 			}
 		}
 	}
