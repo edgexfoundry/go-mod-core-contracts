@@ -190,6 +190,8 @@ func TestUpdateIntervalActionRequest_Validate(t *testing.T) {
 
 	validOnlyName := valid
 	validOnlyName.Action.Id = nil
+	nameAndEmptyId := valid
+	nameAndEmptyId.Action.Id = &emptyString
 	invalidEmptyName := valid
 	invalidEmptyName.Action.Name = &emptyString
 	invalidEmptyIntervalName := valid
@@ -220,6 +222,7 @@ func TestUpdateIntervalActionRequest_Validate(t *testing.T) {
 		{"valid, only id", validOnlyId, false},
 		{"invalid, invalid Id", invalidId, true},
 		{"valid, only name", validOnlyName, false},
+		{"valid, name and empty Id", nameAndEmptyId, false},
 		{"invalid, empty name", invalidEmptyName, true},
 		{"invalid, empty interval name", invalidEmptyIntervalName, true},
 
