@@ -57,6 +57,7 @@ func ToProvisionWatcherModel(dto ProvisionWatcher) models.ProvisionWatcher {
 // FromProvisionWatcherModelToDTO transforms the ProvisionWatcher Model to the ProvisionWatcher DTO
 func FromProvisionWatcherModelToDTO(pw models.ProvisionWatcher) ProvisionWatcher {
 	return ProvisionWatcher{
+		DBTimestamp:         DBTimestamp(pw.DBTimestamp),
 		Id:                  pw.Id,
 		Name:                pw.Name,
 		Labels:              pw.Labels,
