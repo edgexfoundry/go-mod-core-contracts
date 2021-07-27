@@ -69,6 +69,7 @@ func ToDeviceModel(dto Device) models.Device {
 // FromDeviceModelToDTO transforms the Device Model to the Device DTO
 func FromDeviceModelToDTO(d models.Device) Device {
 	var dto Device
+	dto.DBTimestamp = DBTimestamp(d.DBTimestamp)
 	dto.Id = d.Id
 	dto.Name = d.Name
 	dto.Description = d.Description
