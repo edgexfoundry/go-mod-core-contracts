@@ -290,6 +290,8 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 	// name
 	validOnlyName := valid
 	validOnlyName.Device.Id = nil
+	nameAndEmptyId := valid
+	nameAndEmptyId.Device.Id = &emptyString
 	invalidEmptyName := valid
 	invalidEmptyName.Device.Name = &emptyString
 	// no id and name
@@ -334,6 +336,7 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 		{"valid, only id", validOnlyId, false},
 		{"invalid, invalid Id", invalidId, true},
 		{"valid, only name", validOnlyName, false},
+		{"valid, name and empty Id", nameAndEmptyId, false},
 		{"invalid, empty name", invalidEmptyName, true},
 
 		{"invalid, no Id and name", noIdAndName, true},

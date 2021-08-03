@@ -212,6 +212,8 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 	// name
 	validOnlyName := valid
 	validOnlyName.ProvisionWatcher.Id = nil
+	nameAndEmptyId := valid
+	nameAndEmptyId.ProvisionWatcher.Id = &emptyString
 	invalidEmptyName := valid
 	invalidEmptyName.ProvisionWatcher.Name = &emptyString
 	invalidReservedName := valid
@@ -254,6 +256,7 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 		{"valid, only id", validOnlyId, false},
 		{"invalid, invalid Id", invalidId, true},
 		{"valid, only name", validOnlyName, false},
+		{"valid, name and empty Id", nameAndEmptyId, false},
 		{"invalid, empty name", invalidEmptyName, true},
 		{"invalid, name with reserved chars", invalidReservedName, true},
 

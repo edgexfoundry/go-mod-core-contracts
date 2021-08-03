@@ -34,6 +34,7 @@ const (
 	// Also due to names used in topics for Redis Pub/Sub, "."are not allowed
 	rFC3986UnreservedCharsRegexString = "^[a-zA-Z0-9-_~]+$"
 	intervalDatetimeLayout            = "20060102T150405"
+	name                              = "Name"
 )
 
 var (
@@ -109,12 +110,19 @@ func ValidateDuration(fl validator.FieldLevel) bool {
 // Currently, required_without can not correct work with other tag, so write custom tag instead.
 // Issue can refer to https://github.com/go-playground/validator/issues/624
 func ValidateDtoUuid(fl validator.FieldLevel) bool {
-	val := fl.Field()
+	idField := fl.Field()
 	// Skip the validation if the pointer value is nil
-	if val.Kind() == reflect.Ptr && val.IsNil() {
+	if isNilPointer(idField) {
 		return true
 	}
-	_, err := uuid.Parse(val.String())
+
+	// The Id field should accept the empty string if the Name field is provided
+	nameField := fl.Parent().FieldByName(name)
+	if len(strings.TrimSpace(idField.String())) == 0 && !isNilPointer(nameField) && len(nameField.Elem().String()) > 0 {
+		return true
+	}
+
+	_, err := uuid.Parse(idField.String())
 	return err == nil
 }
 
@@ -122,7 +130,7 @@ func ValidateDtoUuid(fl validator.FieldLevel) bool {
 func ValidateDtoNoneEmptyString(fl validator.FieldLevel) bool {
 	val := fl.Field()
 	// Skip the validation if the pointer value is nil
-	if val.Kind() == reflect.Ptr && val.IsNil() {
+	if isNilPointer(val) {
 		return true
 	}
 	// The string value should not be empty
@@ -149,7 +157,7 @@ func ValidateValueType(fl validator.FieldLevel) bool {
 func ValidateDtoRFC3986UnreservedChars(fl validator.FieldLevel) bool {
 	val := fl.Field()
 	// Skip the validation if the pointer value is nil
-	if val.Kind() == reflect.Ptr && val.IsNil() {
+	if isNilPointer(val) {
 		return true
 	} else {
 		return rFC3986UnreservedCharsRegex.MatchString(val.String())
@@ -160,4 +168,8 @@ func ValidateDtoRFC3986UnreservedChars(fl validator.FieldLevel) bool {
 func ValidateIntervalDatetime(fl validator.FieldLevel) bool {
 	_, err := time.Parse(intervalDatetimeLayout, fl.Field().String())
 	return err == nil
+}
+
+func isNilPointer(value reflect.Value) bool {
+	return value.Kind() == reflect.Ptr && value.IsNil()
 }

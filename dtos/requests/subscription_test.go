@@ -202,6 +202,8 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 
 	validOnlyName := valid
 	validOnlyName.Subscription.Id = nil
+	nameAndEmptyId := valid
+	nameAndEmptyId.Subscription.Id = &emptyString
 	invalidEmptyName := valid
 	invalidEmptyName.Subscription.Name = &emptyString
 
@@ -255,6 +257,7 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 		{"valid, only ID", validOnlyId, false},
 		{"invalid, invalid ID", invalidId, true},
 		{"valid, only name", validOnlyName, false},
+		{"valid, name and empty Id", nameAndEmptyId, false},
 		{"invalid, empty name", invalidEmptyName, true},
 		{"invalid, email address is invalid", invalidEmailAddress, true},
 		{"invalid, unsupported channel type", unsupportedChannelType, true},
