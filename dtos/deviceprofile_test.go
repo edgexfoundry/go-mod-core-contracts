@@ -6,9 +6,8 @@
 package dtos
 
 import (
+	"gopkg.in/yaml.v3"
 	"testing"
-
-	"gopkg.in/yaml.v2"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
