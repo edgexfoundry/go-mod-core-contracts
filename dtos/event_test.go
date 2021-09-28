@@ -24,10 +24,18 @@ var valid = models.Event{
 	ProfileName: TestDeviceProfileName,
 	SourceName:  TestSourceName,
 	Origin:      TestTimestamp,
-	Tags: map[string]string{
+	Tags: map[string]interface{}{
 		"GatewayID": "Houston-0001",
-		"Latitude":  "29.630771",
-		"Longitude": "-95.377603",
+		"latitude": map[string]interface{}{
+			"degrees": 25.0,
+			"minute":  1.0,
+			"second":  26.6268000000062,
+		},
+		"longitude": map[string]interface{}{
+			"degree": 121.0,
+			"minute": 31.0,
+			"second": 19.600799999980154,
+		},
 	},
 }
 
@@ -38,10 +46,18 @@ var expectedDTO = Event{
 	ProfileName: TestDeviceProfileName,
 	SourceName:  TestSourceName,
 	Origin:      TestTimestamp,
-	Tags: map[string]string{
+	Tags: map[string]interface{}{
 		"GatewayID": "Houston-0001",
-		"Latitude":  "29.630771",
-		"Longitude": "-95.377603",
+		"latitude": map[string]interface{}{
+			"degrees": 25.0,
+			"minute":  1.0,
+			"second":  26.6268000000062,
+		},
+		"longitude": map[string]interface{}{
+			"degree": 121.0,
+			"minute": 31.0,
+			"second": 19.600799999980154,
+		},
 	},
 }
 
@@ -61,6 +77,19 @@ func TestFromEventModelToDTO(t *testing.T) {
 }
 
 func TestEvent_ToXML(t *testing.T) {
+	var expectedDTO = Event{
+		Versionable: dtoCommon.Versionable{ApiVersion: common.ApiVersion},
+		Id:          TestUUID,
+		DeviceName:  TestDeviceName,
+		ProfileName: TestDeviceProfileName,
+		SourceName:  TestSourceName,
+		Origin:      TestTimestamp,
+		Tags: map[string]interface{}{
+			"GatewayID": "Houston-0001",
+			"Latitude":  "29.630771",
+			"Longitude": "-95.377603",
+		},
+	}
 	// Since the order in map is random we have to verify the individual items exists without depending on order
 	contains := []string{
 		"<Event><ApiVersion>v2</ApiVersion><Id>7a1707f0-166f-4c4b-bc9d-1d54c74e0137</Id><DeviceName>TestDevice</DeviceName><ProfileName>TestDeviceProfileName</ProfileName><SourceName>TestSourceName</SourceName><Origin>1594963842</Origin><Tags>",

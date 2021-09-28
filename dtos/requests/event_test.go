@@ -24,7 +24,7 @@ func eventData() dtos.Event {
 	event := dtos.NewEvent(TestDeviceProfileName, TestDeviceName, TestSourceName)
 	event.Id = ExampleUUID
 	event.Origin = TestOriginTime
-	event.Tags = map[string]string{
+	event.Tags = map[string]interface{}{
 		"GatewayId": "Houston-0001",
 	}
 	value, _ := strconv.ParseUint(TestReadingValue, 10, 8)
@@ -298,7 +298,7 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 		SourceName:  TestSourceName,
 		Origin:      TestOriginTime,
 		Readings:    []models.Reading{s},
-		Tags: map[string]string{
+		Tags: map[string]interface{}{
 			"GatewayId": "Houston-0001",
 		},
 	}

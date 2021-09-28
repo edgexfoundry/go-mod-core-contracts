@@ -15,5 +15,5 @@ type Event struct {
 	SourceName  string
 	Origin      int64
 	Readings    []Reading
-	Tags        map[string]string
+	Tags        map[string]interface{}
 }
