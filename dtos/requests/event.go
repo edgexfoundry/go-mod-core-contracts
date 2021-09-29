@@ -128,7 +128,7 @@ func AddEventReqToEventModel(addEventReq AddEventRequest) (event models.Event) {
 		readings[i] = dtos.ToReadingModel(r)
 	}
 
-	tags := make(map[string]string)
+	tags := make(map[string]interface{})
 	for tag, value := range addEventReq.Event.Tags {
 		tags[tag] = value
 	}
