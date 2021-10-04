@@ -179,3 +179,30 @@ func TestEvent_AddBinaryReading(t *testing.T) {
 	assert.Equal(t, expectedValue, actual.BinaryValue)
 	assert.NotZero(t, actual.Origin)
 }
+
+func TestEvent_AddObjectReading(t *testing.T) {
+	expectedDeviceName := TestDeviceName
+	expectedProfileName := TestDeviceProfileName
+	expectedSourceName := TestSourceName
+	expectedResourceName := TestDeviceResourceName
+	expectedValueType := common.ValueTypeObject
+	expectedValue := map[string]interface{}{
+		"Attr1": "yyz",
+		"Attr2": -45,
+		"Attr3": []interface{}{255, 1, 0},
+	}
+	expectedReadingsCount := 1
+
+	target := NewEvent(expectedProfileName, expectedDeviceName, expectedSourceName)
+	target.AddObjectReading(expectedResourceName, expectedValue)
+
+	require.Equal(t, expectedReadingsCount, len(target.Readings))
+	actual := target.Readings[0]
+	assert.NotEmpty(t, actual.Id)
+	assert.Equal(t, expectedProfileName, actual.ProfileName)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
+	assert.Equal(t, expectedResourceName, actual.ResourceName)
+	assert.Equal(t, expectedValueType, actual.ValueType)
+	assert.Equal(t, expectedValue, actual.ObjectValue)
+	assert.NotZero(t, actual.Origin)
+}
