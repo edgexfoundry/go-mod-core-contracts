@@ -34,14 +34,23 @@ type SimpleReading struct {
 	Value       string
 }
 
+// ObjectReading and its properties are defined in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/ObjectReading
+// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
+type ObjectReading struct {
+	BaseReading `json:",inline"`
+	ObjectValue interface{}
+}
+
 // Reading is an abstract interface to be implemented by BinaryReading/SimpleReading
 type Reading interface {
 	GetBaseReading() BaseReading
 }
 
-// Implement GetBaseReading() method in order for BinaryReading and SimpleReading structs to implement the
+// Implement GetBaseReading() method in order for BinaryReading and SimpleReading, ObjectReading structs to implement the
 // abstract Reading interface and then be used as a Reading.
 // Also, the Reading interface can access the BaseReading fields.
 // This is Golang's way to implement inheritance.
 func (b BinaryReading) GetBaseReading() BaseReading { return b.BaseReading }
 func (s SimpleReading) GetBaseReading() BaseReading { return s.BaseReading }
+func (o ObjectReading) GetBaseReading() BaseReading { return o.BaseReading }

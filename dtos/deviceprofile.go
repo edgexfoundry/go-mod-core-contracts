@@ -7,6 +7,7 @@ package dtos
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
@@ -103,6 +104,10 @@ func ValidateDeviceProfileDTO(profile DeviceProfile) error {
 	// deviceResources validation
 	dupCheck := make(map[string]bool)
 	for _, resource := range profile.DeviceResources {
+		if (resource.Properties.ValueType == common.ValueTypeBinary || resource.Properties.ValueType == common.ValueTypeObject) &&
+			strings.Contains(resource.Properties.ReadWrite, common.ReadWrite_W) {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("write permission not support %s and %s value type for resource '%s'", common.ValueTypeBinary, common.ValueTypeObject, resource.Name), nil)
+		}
 		// deviceResource name should not duplicated
 		if dupCheck[resource.Name] {
 			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device resource %s is duplicated", resource.Name), nil)

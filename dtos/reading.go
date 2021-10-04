@@ -28,6 +28,7 @@ type BaseReading struct {
 	ValueType     string `json:"valueType" validate:"required,edgex-dto-value-type"`
 	BinaryReading `json:",inline" validate:"-"`
 	SimpleReading `json:",inline" validate:"-"`
+	ObjectReading `json:",inline" validate:"-"`
 }
 
 // SimpleReading and its properties are defined in the APIv2 specification:
@@ -41,6 +42,12 @@ type SimpleReading struct {
 type BinaryReading struct {
 	BinaryValue []byte `json:"binaryValue,omitempty" validate:"gt=0,required"`
 	MediaType   string `json:"mediaType,omitempty" validate:"required"`
+}
+
+// ObjectReading and its properties are defined in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/ObjectReading
+type ObjectReading struct {
+	ObjectValue interface{} `json:"objectValue,omitempty" validate:"required"`
 }
 
 func newBaseReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
@@ -74,6 +81,15 @@ func NewBinaryReading(profileName string, deviceName string, resourceName string
 	reading.BinaryReading = BinaryReading{
 		BinaryValue: binaryValue,
 		MediaType:   mediaType,
+	}
+	return reading
+}
+
+// NewObjectReading creates and returns a new initialized BaseReading with its ObjectReading initialized
+func NewObjectReading(profileName string, deviceName string, resourceName string, objectValue interface{}) BaseReading {
+	reading := newBaseReading(profileName, deviceName, resourceName, common.ValueTypeObject)
+	reading.ObjectReading = ObjectReading{
+		ObjectValue: objectValue,
 	}
 	return reading
 }
@@ -250,6 +266,12 @@ func (b BaseReading) Validate() error {
 		if err := common.Validate(binaryReading); err != nil {
 			return err
 		}
+	} else if b.ValueType == common.ValueTypeObject {
+		// validate the inner ObjectReading struct
+		objectReading := b.ObjectReading
+		if err := common.Validate(objectReading); err != nil {
+			return err
+		}
 	} else {
 		// validate the inner SimpleReading struct
 		simpleReading := b.SimpleReading
@@ -277,6 +299,11 @@ func ToReadingModel(r BaseReading) models.Reading {
 			BinaryValue: r.BinaryValue,
 			MediaType:   r.MediaType,
 		}
+	} else if r.ValueType == common.ValueTypeObject {
+		readingModel = models.ObjectReading{
+			BaseReading: br,
+			ObjectValue: r.ObjectValue,
+		}
 	} else {
 		readingModel = models.SimpleReading{
 			BaseReading: br,
@@ -298,6 +325,16 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ProfileName:   r.ProfileName,
 			ValueType:     r.ValueType,
 			BinaryReading: BinaryReading{BinaryValue: r.BinaryValue, MediaType: r.MediaType},
+		}
+	case models.ObjectReading:
+		baseReading = BaseReading{
+			Id:            r.Id,
+			Origin:        r.Origin,
+			DeviceName:    r.DeviceName,
+			ResourceName:  r.ResourceName,
+			ProfileName:   r.ProfileName,
+			ValueType:     r.ValueType,
+			ObjectReading: ObjectReading{ObjectValue: r.ObjectValue},
 		}
 	case models.SimpleReading:
 		baseReading = BaseReading{

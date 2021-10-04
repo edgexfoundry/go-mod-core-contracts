@@ -81,6 +81,11 @@ func (e *Event) AddBinaryReading(resourceName string, binaryValue []byte, mediaT
 	e.Readings = append(e.Readings, NewBinaryReading(e.ProfileName, e.DeviceName, resourceName, binaryValue, mediaType))
 }
 
+// AddObjectReading adds a object reading to the Event
+func (e *Event) AddObjectReading(resourceName string, objectValue interface{}) {
+	e.Readings = append(e.Readings, NewObjectReading(e.ProfileName, e.DeviceName, resourceName, objectValue))
+}
+
 // ToXML provides a XML representation of the Event as a string
 func (e *Event) ToXML() (string, error) {
 	eventXml, err := xml.Marshal(e)
