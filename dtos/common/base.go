@@ -69,6 +69,21 @@ func NewBaseWithIdResponse(requestId string, message string, statusCode int, id 
 	}
 }
 
+// BaseWithTotalCountResponse defines the base content for response DTOs (data transfer objects).
+// This object and its properties correspond to the BaseWithTotalCountResponse object in the APIv2 specification:
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseWithTotalCountResponse
+type BaseWithTotalCountResponse struct {
+	BaseResponse `json:",inline"`
+	TotalCount   uint32 `json:"totalCount"`
+}
+
+func NewBaseWithTotalCountResponse(requestId string, message string, statusCode int, totalCount uint32) BaseWithTotalCountResponse {
+	return BaseWithTotalCountResponse{
+		BaseResponse: NewBaseResponse(requestId, message, statusCode),
+		TotalCount:   totalCount,
+	}
+}
+
 // BaseWithServiceNameResponse defines the base content for response DTOs (data transfer objects).
 // This object and its properties correspond to the BaseWithServiceNameResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.x#/BaseWithServiceNameResponse

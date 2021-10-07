@@ -28,8 +28,8 @@ type EventResponse struct {
 // This object and its properties correspond to the MultiEventsResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/MultiEventsResponse
 type MultiEventsResponse struct {
-	dtoCommon.BaseResponse `json:",inline"`
-	Events                 []dtos.Event `json:"events"`
+	dtoCommon.BaseWithTotalCountResponse `json:",inline"`
+	Events                               []dtos.Event `json:"events"`
 }
 
 func NewEventResponse(requestId string, message string, statusCode int, event dtos.Event) EventResponse {
@@ -39,10 +39,10 @@ func NewEventResponse(requestId string, message string, statusCode int, event dt
 	}
 }
 
-func NewMultiEventsResponse(requestId string, message string, statusCode int, events []dtos.Event) MultiEventsResponse {
+func NewMultiEventsResponse(requestId string, message string, statusCode int, totalCount uint32, events []dtos.Event) MultiEventsResponse {
 	return MultiEventsResponse{
-		BaseResponse: dtoCommon.NewBaseResponse(requestId, message, statusCode),
-		Events:       events,
+		BaseWithTotalCountResponse: dtoCommon.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		Events:                     events,
 	}
 }
 
