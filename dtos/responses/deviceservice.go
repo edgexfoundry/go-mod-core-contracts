@@ -29,13 +29,13 @@ func NewDeviceServiceResponse(requestId string, message string, statusCode int, 
 // This object and its properties correspond to the MultiDeviceServicesResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/MultiDeviceServicesResponse
 type MultiDeviceServicesResponse struct {
-	common.BaseResponse `json:",inline"`
-	Services            []dtos.DeviceService `json:"services"`
+	common.BaseWithTotalCountResponse `json:",inline"`
+	Services                          []dtos.DeviceService `json:"services"`
 }
 
-func NewMultiDeviceServicesResponse(requestId string, message string, statusCode int, deviceServices []dtos.DeviceService) MultiDeviceServicesResponse {
+func NewMultiDeviceServicesResponse(requestId string, message string, statusCode int, totalCount uint32, deviceServices []dtos.DeviceService) MultiDeviceServicesResponse {
 	return MultiDeviceServicesResponse{
-		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
-		Services:     deviceServices,
+		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		Services:                   deviceServices,
 	}
 }

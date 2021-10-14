@@ -29,13 +29,13 @@ func NewDeviceProfileResponse(requestId string, message string, statusCode int, 
 // This object and its properties correspond to the MultiDeviceProfilesResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/MultiDeviceProfilesResponse
 type MultiDeviceProfilesResponse struct {
-	common.BaseResponse `json:",inline"`
-	Profiles            []dtos.DeviceProfile `json:"profiles"`
+	common.BaseWithTotalCountResponse `json:",inline"`
+	Profiles                          []dtos.DeviceProfile `json:"profiles"`
 }
 
-func NewMultiDeviceProfilesResponse(requestId string, message string, statusCode int, deviceProfiles []dtos.DeviceProfile) MultiDeviceProfilesResponse {
+func NewMultiDeviceProfilesResponse(requestId string, message string, statusCode int, totalCount uint32, deviceProfiles []dtos.DeviceProfile) MultiDeviceProfilesResponse {
 	return MultiDeviceProfilesResponse{
-		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
-		Profiles:     deviceProfiles,
+		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		Profiles:                   deviceProfiles,
 	}
 }
