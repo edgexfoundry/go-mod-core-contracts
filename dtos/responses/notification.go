@@ -30,14 +30,13 @@ func NewNotificationResponse(requestId string, message string, statusCode int,
 // This object and its properties correspond to the MultiNotificationsResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/MultiNotificationsResponse
 type MultiNotificationsResponse struct {
-	common.BaseResponse `json:",inline"`
-	Notifications       []dtos.Notification `json:"notifications"`
+	common.BaseWithTotalCountResponse `json:",inline"`
+	Notifications                     []dtos.Notification `json:"notifications"`
 }
 
-func NewMultiNotificationsResponse(requestId string, message string, statusCode int,
-	notifications []dtos.Notification) MultiNotificationsResponse {
+func NewMultiNotificationsResponse(requestId string, message string, statusCode int, totalCount uint32, notifications []dtos.Notification) MultiNotificationsResponse {
 	return MultiNotificationsResponse{
-		BaseResponse:  common.NewBaseResponse(requestId, message, statusCode),
-		Notifications: notifications,
+		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		Notifications:              notifications,
 	}
 }

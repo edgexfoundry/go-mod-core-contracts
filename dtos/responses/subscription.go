@@ -30,14 +30,13 @@ func NewSubscriptionResponse(requestId string, message string, statusCode int,
 // This object and its properties correspond to the MultiSubscriptionsResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/MultiSubscriptionsResponse
 type MultiSubscriptionsResponse struct {
-	common.BaseResponse `json:",inline"`
-	Subscriptions       []dtos.Subscription `json:"subscriptions"`
+	common.BaseWithTotalCountResponse `json:",inline"`
+	Subscriptions                     []dtos.Subscription `json:"subscriptions"`
 }
 
-func NewMultiSubscriptionsResponse(requestId string, message string, statusCode int,
-	subscriptions []dtos.Subscription) MultiSubscriptionsResponse {
+func NewMultiSubscriptionsResponse(requestId string, message string, statusCode int, totalCount uint32, subscriptions []dtos.Subscription) MultiSubscriptionsResponse {
 	return MultiSubscriptionsResponse{
-		BaseResponse:  common.NewBaseResponse(requestId, message, statusCode),
-		Subscriptions: subscriptions,
+		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		Subscriptions:              subscriptions,
 	}
 }
