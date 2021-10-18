@@ -100,3 +100,16 @@ func (client *TransmissionClient) TransmissionsBySubscriptionName(ctx context.Co
 	}
 	return res, nil
 }
+
+// TransmissionsByNotificationId query transmissions with notification id, offset and limit
+func (client *TransmissionClient) TransmissionsByNotificationId(ctx context.Context, id string, offset int, limit int) (res responses.MultiTransmissionsResponse, err errors.EdgeX) {
+	requestPath := path.Join(common.ApiTransmissionRoute, common.Notification, common.Id, url.QueryEscape(id))
+	requestParams := url.Values{}
+	requestParams.Set(common.Offset, strconv.Itoa(offset))
+	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}

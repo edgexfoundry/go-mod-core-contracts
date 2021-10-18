@@ -84,3 +84,14 @@ func TestTransmissionClient_TransmissionsByTimeRange(t *testing.T) {
 	require.NoError(t, err)
 	require.IsType(t, responses.MultiTransmissionsResponse{}, res)
 }
+
+func TestTransmissionClient_TransmissionsByNotificationId(t *testing.T) {
+	notificationId := ExampleUUID
+	urlPath := path.Join(common.ApiTransmissionRoute, common.Notification, common.Id, notificationId)
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiTransmissionsResponse{})
+	defer ts.Close()
+	client := NewTransmissionClient(ts.URL)
+	res, err := client.TransmissionsByNotificationId(context.Background(), notificationId, 0, 10)
+	require.NoError(t, err)
+	require.IsType(t, responses.MultiTransmissionsResponse{}, res)
+}
