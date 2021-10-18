@@ -27,4 +27,6 @@ type TransmissionClient interface {
 	DeleteProcessedTransmissionsByAge(ctx context.Context, age int) (common.BaseResponse, errors.EdgeX)
 	// TransmissionsBySubscriptionName query transmissions with subscriptionName, offset and limit
 	TransmissionsBySubscriptionName(ctx context.Context, subscriptionName string, offset int, limit int) (responses.MultiTransmissionsResponse, errors.EdgeX)
+	// TransmissionsByNotificationId query transmissions with notification id, offset and limit
+	TransmissionsByNotificationId(ctx context.Context, id string, offset int, limit int) (responses.MultiTransmissionsResponse, errors.EdgeX)
 }
