@@ -8,7 +8,7 @@ package dtos
 import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
 // DeviceCommand and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceCommand
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/DeviceCommand
 type DeviceCommand struct {
 	Name               string              `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	IsHidden           bool                `json:"isHidden" yaml:"isHidden"`

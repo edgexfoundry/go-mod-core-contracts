@@ -12,7 +12,7 @@ import (
 
 // DeviceProfileResponse defines the Response Content for GET DeviceProfile DTOs.
 // This object and its properties correspond to the DeviceProfileResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceProfileResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/DeviceProfileResponse
 type DeviceProfileResponse struct {
 	common.BaseResponse `json:",inline"`
 	Profile             dtos.DeviceProfile `json:"profile"`
@@ -27,7 +27,7 @@ func NewDeviceProfileResponse(requestId string, message string, statusCode int, 
 
 // MultiDeviceProfilesResponse defines the Response Content for GET multiple DeviceProfile DTOs.
 // This object and its properties correspond to the MultiDeviceProfilesResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/MultiDeviceProfilesResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/MultiDeviceProfilesResponse
 type MultiDeviceProfilesResponse struct {
 	common.BaseWithTotalCountResponse `json:",inline"`
 	Profiles                          []dtos.DeviceProfile `json:"profiles"`

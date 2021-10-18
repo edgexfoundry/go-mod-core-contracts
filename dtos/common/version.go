@@ -8,7 +8,7 @@ package common
 
 // VersionResponse defines the latest version supported by the service.
 // This object and its properties correspond to the VersionResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/VersionResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/VersionResponse
 type VersionResponse struct {
 	Versionable `json:",inline"`
 	Version     string `json:"version"`
@@ -16,7 +16,7 @@ type VersionResponse struct {
 
 // VersionSdkResponse defines the latest sdk version supported by the service.
 // This object and its properties correspond to the VersionSdkResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/VersionSdkResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/VersionSdkResponse
 type VersionSdkResponse struct {
 	VersionResponse `json:",inline"`
 	SdkVersion      string `json:"sdk_version"`

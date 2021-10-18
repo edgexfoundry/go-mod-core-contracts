@@ -12,7 +12,7 @@ import (
 
 // DeviceServiceResponse defines the Response Content for GET DeviceService DTOs.
 // This object and its properties correspond to the DeviceServiceResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceServiceResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/DeviceServiceResponse
 type DeviceServiceResponse struct {
 	common.BaseResponse `json:",inline"`
 	Service             dtos.DeviceService `json:"service"`
@@ -27,7 +27,7 @@ func NewDeviceServiceResponse(requestId string, message string, statusCode int, 
 
 // MultiDeviceServicesResponse defines the Response Content for GET multiple DeviceService DTOs.
 // This object and its properties correspond to the MultiDeviceServicesResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/MultiDeviceServicesResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/MultiDeviceServicesResponse
 type MultiDeviceServicesResponse struct {
 	common.BaseWithTotalCountResponse `json:",inline"`
 	Services                          []dtos.DeviceService `json:"services"`

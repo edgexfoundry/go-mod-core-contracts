@@ -18,7 +18,7 @@ type Metrics struct {
 
 // MetricsResponse defines the providing memory and cpu utilization stats of the service.
 // This object and its properties correspond to the MetricsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/MetricsResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/MetricsResponse
 type MetricsResponse struct {
 	Versionable `json:",inline"`
 	Metrics     Metrics `json:"metrics"`

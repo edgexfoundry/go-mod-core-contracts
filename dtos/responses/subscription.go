@@ -12,7 +12,7 @@ import (
 
 // SubscriptionResponse defines the Subscription Content for GET Subscription DTOs.
 // This object and its properties correspond to the SubscriptionResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/SubscriptionResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/SubscriptionResponse
 type SubscriptionResponse struct {
 	common.BaseResponse `json:",inline"`
 	Subscription        dtos.Subscription `json:"subscription"`
@@ -28,7 +28,7 @@ func NewSubscriptionResponse(requestId string, message string, statusCode int,
 
 // MultiSubscriptionsResponse defines the Subscription Content for GET multiple Subscription DTOs.
 // This object and its properties correspond to the MultiSubscriptionsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/MultiSubscriptionsResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/MultiSubscriptionsResponse
 type MultiSubscriptionsResponse struct {
 	common.BaseWithTotalCountResponse `json:",inline"`
 	Subscriptions                     []dtos.Subscription `json:"subscriptions"`

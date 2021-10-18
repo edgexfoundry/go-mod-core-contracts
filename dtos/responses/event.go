@@ -18,7 +18,7 @@ import (
 
 // EventResponse defines the Response Content for GET event DTOs.
 // This object and its properties correspond to the EventResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/EventResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/EventResponse
 type EventResponse struct {
 	dtoCommon.BaseResponse `json:",inline"`
 	Event                  dtos.Event `json:"event"`
@@ -26,7 +26,7 @@ type EventResponse struct {
 
 // MultiEventsResponse defines the Response Content for GET multiple event DTOs.
 // This object and its properties correspond to the MultiEventsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/MultiEventsResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/MultiEventsResponse
 type MultiEventsResponse struct {
 	dtoCommon.BaseWithTotalCountResponse `json:",inline"`
 	Events                               []dtos.Event `json:"events"`

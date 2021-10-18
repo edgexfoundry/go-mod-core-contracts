@@ -12,7 +12,7 @@ import (
 
 // NotificationResponse defines the Response Content for GET Notification DTO.
 // This object and its properties correspond to the NotificationResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/NotificationResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/NotificationResponse
 type NotificationResponse struct {
 	common.BaseResponse `json:",inline"`
 	Notification        dtos.Notification `json:"notification"`
@@ -28,7 +28,7 @@ func NewNotificationResponse(requestId string, message string, statusCode int,
 
 // MultiNotificationsResponse defines the Response Content for GET multiple Notification DTOs.
 // This object and its properties correspond to the MultiNotificationsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/MultiNotificationsResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/MultiNotificationsResponse
 type MultiNotificationsResponse struct {
 	common.BaseWithTotalCountResponse `json:",inline"`
 	Notifications                     []dtos.Notification `json:"notifications"`

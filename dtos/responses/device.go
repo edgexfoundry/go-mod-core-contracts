@@ -12,7 +12,7 @@ import (
 
 // DeviceResponse defines the Response Content for GET Device DTOs.
 // This object and its properties correspond to the DeviceResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/DeviceResponse
 type DeviceResponse struct {
 	common.BaseResponse `json:",inline"`
 	Device              dtos.Device `json:"device"`
@@ -27,7 +27,7 @@ func NewDeviceResponse(requestId string, message string, statusCode int, device 
 
 // MultiDevicesResponse defines the Response Content for GET multiple Device DTOs.
 // This object and its properties correspond to the MultiDevicesResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/MultiDevicesResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/MultiDevicesResponse
 type MultiDevicesResponse struct {
 	common.BaseWithTotalCountResponse `json:",inline"`
 	Devices                           []dtos.Device `json:"devices"`
