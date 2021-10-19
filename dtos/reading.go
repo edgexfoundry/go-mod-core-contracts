@@ -287,6 +287,7 @@ func (b BaseReading) Validate() error {
 func ToReadingModel(r BaseReading) models.Reading {
 	var readingModel models.Reading
 	br := models.BaseReading{
+		Id:           r.Id,
 		Origin:       r.Origin,
 		DeviceName:   r.DeviceName,
 		ResourceName: r.ResourceName,
