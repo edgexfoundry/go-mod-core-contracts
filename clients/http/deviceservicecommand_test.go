@@ -66,3 +66,22 @@ func TestSetCommand(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, requestId, res.RequestId)
 }
+
+func TestSetCommandWithObject(t *testing.T) {
+	requestId := uuid.New().String()
+	expectedResponse := dtoCommon.NewBaseResponse(requestId, "", http.StatusOK)
+	ts := newTestServer(http.MethodPut, common.ApiDeviceRoute+"/"+common.Name+"/"+TestDeviceName+"/"+TestCommandName, expectedResponse)
+	defer ts.Close()
+	settings := map[string]interface{}{
+		"SwitchButton": map[string]interface{}{
+			"kind":  "button",
+			"value": "on",
+		},
+	}
+
+	client := NewDeviceServiceCommandClient()
+	res, err := client.SetCommandWithObject(context.Background(), ts.URL, TestDeviceName, TestCommandName, "", settings)
+
+	require.NoError(t, err)
+	assert.Equal(t, requestId, res.RequestId)
+}
