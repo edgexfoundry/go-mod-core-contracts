@@ -17,7 +17,7 @@ import (
 
 // AddNotificationRequest defines the Request Content for POST Notification DTO.
 // This object and its properties correspond to the AddNotificationRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/AddNotificationRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/AddNotificationRequest
 type AddNotificationRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	Notification          dtos.Notification `json:"notification"`

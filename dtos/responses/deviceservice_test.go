@@ -33,10 +33,12 @@ func TestNewMultiDeviceServicesResponse(t *testing.T) {
 		{Name: "test device service1"},
 		{Name: "test device service2"},
 	}
-	actual := NewMultiDeviceServicesResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDeviceServices)
+	expectedTotalCount := uint32(2)
+	actual := NewMultiDeviceServicesResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedDeviceServices)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedTotalCount, actual.TotalCount)
 	assert.Equal(t, expectedDeviceServices, actual.Services)
 }

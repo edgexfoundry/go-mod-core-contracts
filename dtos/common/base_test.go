@@ -52,6 +52,19 @@ func TestNewBaseWithIdResponse(t *testing.T) {
 	assert.Equal(t, expectedId, actual.Id)
 }
 
+func TestNewBaseWithTotalCountResponse(t *testing.T) {
+	expectedRequestId := "123456"
+	expectedStatusCode := 200
+	expectedMessage := "unit test message"
+	expectedTotalCount := uint32(3)
+	actual := NewBaseWithTotalCountResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount)
+
+	assert.Equal(t, expectedRequestId, actual.RequestId)
+	assert.Equal(t, expectedStatusCode, actual.StatusCode)
+	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedTotalCount, actual.TotalCount)
+}
+
 func TestBaseResponse_Marshal(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200

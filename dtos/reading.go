@@ -18,7 +18,7 @@ import (
 )
 
 // BaseReading and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BaseReading
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/BaseReading
 type BaseReading struct {
 	Id            string `json:"id,omitempty"`
 	Origin        int64  `json:"origin" validate:"required"`
@@ -32,20 +32,20 @@ type BaseReading struct {
 }
 
 // SimpleReading and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/SimpleReading
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/SimpleReading
 type SimpleReading struct {
 	Value string `json:"value,omitempty" validate:"required"`
 }
 
 // BinaryReading and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/BinaryReading
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/BinaryReading
 type BinaryReading struct {
 	BinaryValue []byte `json:"binaryValue,omitempty" validate:"gt=0,required"`
 	MediaType   string `json:"mediaType,omitempty" validate:"required"`
 }
 
 // ObjectReading and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/ObjectReading
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/ObjectReading
 type ObjectReading struct {
 	ObjectValue interface{} `json:"objectValue,omitempty" validate:"required"`
 }

@@ -12,7 +12,7 @@ import (
 
 // ProvisionWatcherResponse defines the Response Content for GET ProvisionWatcher DTOs.
 // This object and its properties correspond to the ProvisionWatcherResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ProvisionWatcherResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/ProvisionWatcherResponse
 type ProvisionWatcherResponse struct {
 	common.BaseResponse `json:",inline"`
 	ProvisionWatcher    dtos.ProvisionWatcher `json:"provisionWatcher"`
@@ -27,15 +27,15 @@ func NewProvisionWatcherResponse(requestId string, message string, statusCode in
 
 // MultiProvisionWatchersResponse defines the Response Content for GET multiple ProvisionWatcher DTOs.
 // This object and its properties correspond to the MultiProvisionWatchersResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/MultiProvisionWatchersResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/MultiProvisionWatchersResponse
 type MultiProvisionWatchersResponse struct {
-	common.BaseResponse `json:",inline"`
-	ProvisionWatchers   []dtos.ProvisionWatcher `json:"provisionWatchers"`
+	common.BaseWithTotalCountResponse `json:",inline"`
+	ProvisionWatchers                 []dtos.ProvisionWatcher `json:"provisionWatchers"`
 }
 
-func NewMultiProvisionWatchersResponse(requestId string, message string, statusCode int, pws []dtos.ProvisionWatcher) MultiProvisionWatchersResponse {
+func NewMultiProvisionWatchersResponse(requestId string, message string, statusCode int, totalCount uint32, pws []dtos.ProvisionWatcher) MultiProvisionWatchersResponse {
 	return MultiProvisionWatchersResponse{
-		BaseResponse:      common.NewBaseResponse(requestId, message, statusCode),
-		ProvisionWatchers: pws,
+		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		ProvisionWatchers:          pws,
 	}
 }

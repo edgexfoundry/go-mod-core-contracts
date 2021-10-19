@@ -10,7 +10,7 @@ import (
 )
 
 // Device and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/Device
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/Device
 type Device struct {
 	DBTimestamp    `json:",inline"`
 	Id             string                        `json:"id,omitempty" validate:"omitempty,uuid"`
@@ -29,7 +29,7 @@ type Device struct {
 }
 
 // UpdateDevice and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDevice
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/UpdateDevice
 type UpdateDevice struct {
 	Id             *string                       `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name           *string                       `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`

@@ -34,10 +34,12 @@ func TestNewMultiReadingsResponse(t *testing.T) {
 		{Id: "7a1707f0-166f-4c4b-bc9d-1d54c74e0137"},
 		{Id: "11111111-2222-3333-4444-555555555555"},
 	}
-	actual := NewMultiReadingsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedReadings)
+	expectedTotalCount := uint32(len(expectedReadings))
+	actual := NewMultiReadingsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedReadings)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedReadings, actual.Readings)
+	assert.Equal(t, expectedTotalCount, actual.TotalCount)
 }

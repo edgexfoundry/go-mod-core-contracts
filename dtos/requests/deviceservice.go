@@ -17,7 +17,7 @@ import (
 
 // AddDeviceServiceRequest defines the Request Content for POST DeviceService DTO.
 // This object and its properties correspond to the AddDeviceServiceRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AddDeviceServiceRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/AddDeviceServiceRequest
 type AddDeviceServiceRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	Service               dtos.DeviceService `json:"service"`
@@ -59,7 +59,7 @@ func AddDeviceServiceReqToDeviceServiceModels(addRequests []AddDeviceServiceRequ
 
 // UpdateDeviceServiceRequest defines the Request Content for PUT event as pushed DTO.
 // This object and its properties correspond to the UpdateDeviceServiceRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateDeviceServiceRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/UpdateDeviceServiceRequest
 type UpdateDeviceServiceRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	Service               dtos.UpdateDeviceService `json:"service"`

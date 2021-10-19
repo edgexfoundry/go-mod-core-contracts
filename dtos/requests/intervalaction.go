@@ -17,7 +17,7 @@ import (
 
 // AddIntervalRequest defines the Request Content for POST Interval DTO.
 // This object and its properties correspond to the AddIntervalRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/AddIntervalActionRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.1.0#/AddIntervalActionRequest
 type AddIntervalActionRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	Action                dtos.IntervalAction `json:"action"`
@@ -66,7 +66,7 @@ func AddIntervalActionReqToIntervalActionModels(addRequests []AddIntervalActionR
 
 // UpdateIntervalActionRequest defines the Request Content for PUT event as pushed DTO.
 // This object and its properties correspond to the UpdateIntervalActionRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/UpdateIntervalActionRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.1.0#/UpdateIntervalActionRequest
 type UpdateIntervalActionRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	Action                dtos.UpdateIntervalAction `json:"action"`

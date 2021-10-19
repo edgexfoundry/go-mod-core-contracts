@@ -33,10 +33,12 @@ func TestNewMultiIntervalsResponse(t *testing.T) {
 		{Name: "test interval1"},
 		{Name: "test interval2"},
 	}
-	actual := NewMultiIntervalsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedIntervals)
+	expectedTotalCount := uint32(len(expectedIntervals))
+	actual := NewMultiIntervalsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedIntervals)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedTotalCount, actual.TotalCount)
 	assert.Equal(t, expectedIntervals, actual.Intervals)
 }

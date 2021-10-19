@@ -34,10 +34,12 @@ func TestNewMultiNotificationsResponse(t *testing.T) {
 		{Id: "abc"},
 		{Id: "def"},
 	}
-	actual := NewMultiNotificationsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedNotifications)
+	expectedTotalCount := uint32(len(expectedNotifications))
+	actual := NewMultiNotificationsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedNotifications)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedTotalCount, actual.TotalCount)
 	assert.Equal(t, expectedNotifications, actual.Notifications)
 }

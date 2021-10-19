@@ -10,7 +10,7 @@ import (
 )
 
 // ProvisionWatcher and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ProvisionWatcher
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/ProvisionWatcher
 type ProvisionWatcher struct {
 	DBTimestamp         `json:",inline"`
 	Id                  string              `json:"id,omitempty" validate:"omitempty,uuid"`
@@ -25,7 +25,7 @@ type ProvisionWatcher struct {
 }
 
 // UpdateProvisionWatcher and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateProvisionWatcher
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/UpdateProvisionWatcher
 type UpdateProvisionWatcher struct {
 	Id                  *string             `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name                *string             `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`

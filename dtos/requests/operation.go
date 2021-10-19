@@ -15,7 +15,7 @@ import (
 
 // OperationRequest defines the Request Content for SMA POST Operation.
 // This object and its properties correspond to the OperationRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.x#/OperationRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.1.0#/OperationRequest
 type OperationRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	ServiceName           string `json:"serviceName" validate:"required"`

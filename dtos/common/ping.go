@@ -12,7 +12,7 @@ import (
 
 // PingResponse defines the content of response content for POST Ping DTO
 // This object and its properties correspond to the Ping object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/PingResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/PingResponse
 type PingResponse struct {
 	Versionable `json:",inline"`
 	Timestamp   string `json:"timestamp"`

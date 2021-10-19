@@ -17,7 +17,7 @@ import (
 
 // DeviceProfileRequest defines the Request Content for POST DeviceProfile DTO.
 // This object and its properties correspond to the DeviceProfileRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AddDeviceProfileRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/AddDeviceProfileRequest
 type DeviceProfileRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	Profile               dtos.DeviceProfile `json:"profile"`
