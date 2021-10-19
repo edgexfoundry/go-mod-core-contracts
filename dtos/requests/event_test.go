@@ -283,6 +283,7 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 	valid := eventRequestData()
 	s := models.SimpleReading{
 		BaseReading: models.BaseReading{
+			Id:           ExampleUUID,
 			DeviceName:   TestDeviceName,
 			ResourceName: TestDeviceResourceName,
 			ProfileName:  TestDeviceProfileName,

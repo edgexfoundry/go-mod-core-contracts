@@ -17,6 +17,7 @@ import (
 )
 
 var testSimpleReading = BaseReading{
+	Id:           TestUUID,
 	DeviceName:   TestDeviceName,
 	ResourceName: TestReadingName,
 	ProfileName:  TestDeviceProfileName,
@@ -31,6 +32,7 @@ func Test_ToReadingModel(t *testing.T) {
 	valid := testSimpleReading
 	expectedSimpleReading := models.SimpleReading{
 		BaseReading: models.BaseReading{
+			Id:           TestUUID,
 			DeviceName:   TestDeviceName,
 			ResourceName: TestReadingName,
 			ProfileName:  TestDeviceProfileName,
