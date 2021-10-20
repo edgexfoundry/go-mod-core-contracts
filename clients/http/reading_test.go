@@ -130,3 +130,18 @@ func TestQueryReadingsByDeviceNameAndResourceNameAndTimeRange(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
+
+func TestQueryReadingsByDeviceNameAndResourceNamesAndTimeRange(t *testing.T) {
+	deviceName := "device"
+	resourceNames := []string{"resource01", "resource02"}
+	start := 1
+	end := 10
+	urlPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
+	defer ts.Close()
+
+	client := NewReadingClient(ts.URL)
+	res, err := client.ReadingsByDeviceNameAndResourceNamesAndTimeRange(context.Background(), deviceName, resourceNames, start, end, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+}

@@ -82,6 +82,34 @@ func createRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 	return req, nil
 }
 
+func createRequestWithRawDataAndParams(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+	}
+	u.Path = requestPath
+	if requestParams != nil {
+		u.RawQuery = requestParams.Encode()
+	}
+	jsonEncodedData, err := json.Marshal(data)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to JSON", err)
+	}
+
+	content := FromContext(ctx, common.ContentType)
+	if content == "" {
+		content = common.ContentTypeJSON
+	}
+
+	req, err := http.NewRequest(httpMethod, u.String(), bytes.NewReader(jsonEncodedData))
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
+	}
+	req.Header.Set(common.ContentType, content)
+	req.Header.Set(common.CorrelationHeader, correlatedId(ctx))
+	return req, nil
+}
+
 func createRequestWithRawData(ctx context.Context, httpMethod string, url string, data interface{}) (*http.Request, errors.EdgeX) {
 	jsonEncodedData, err := json.Marshal(data)
 	if err != nil {

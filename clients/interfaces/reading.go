@@ -20,9 +20,9 @@ type ReadingClient interface {
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
 	AllReadings(ctx context.Context, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX)
-	// ReadingCount returns a count of all of readings currently stored in the database.
+	// ReadingCount returns a count of all readings currently stored in the database.
 	ReadingCount(ctx context.Context) (common.CountResponse, errors.EdgeX)
-	// ReadingCountByDeviceName returns a count of all of readings currently stored in the database, sourced from the specified device.
+	// ReadingCountByDeviceName returns a count of all readings currently stored in the database, sourced from the specified device.
 	ReadingCountByDeviceName(ctx context.Context, name string) (common.CountResponse, errors.EdgeX)
 	// ReadingsByDeviceName returns a portion of the entire readings according to the device name, offset and limit parameters. Readings are sorted in descending order of created time.
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
@@ -51,4 +51,10 @@ type ReadingClient interface {
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
 	ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx context.Context, deviceName, resourceName string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX)
+	// ReadingsByDeviceNameAndResourceNamesAndTimeRange returns readings by device name, multiple resource names and specified time range. Readings are sorted in descending order of origin time.
+	// If none of resourceNames is specified, return all Readings under specified deviceName and within specified time range
+	// start, end: Unix timestamp, indicating the date/time range
+	// offset: The number of items to skip before starting to collect the result set. Default is 0.
+	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
+	ReadingsByDeviceNameAndResourceNamesAndTimeRange(ctx context.Context, deviceName string, resourceNames []string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX)
 }

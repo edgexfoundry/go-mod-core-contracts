@@ -67,6 +67,23 @@ func GetRequestAndReturnBinaryRes(ctx context.Context, baseUrl string, requestPa
 			fmt.Sprintf("request failed, status code: %d, err: %s", resp.StatusCode, string(res)), nil)
 }
 
+// GetRequestWithBodyRawData makes the GET request with JSON raw data as request body and return the response
+func GetRequestWithBodyRawData(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, requestParams url.Values, data interface{}) errors.EdgeX {
+	req, err := createRequestWithRawDataAndParams(ctx, http.MethodGet, baseUrl, requestPath, requestParams, data)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}
+
 // PostRequest makes the post request with encoded data and return the body
 func PostRequest(
 	ctx context.Context,
