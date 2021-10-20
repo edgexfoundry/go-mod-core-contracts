@@ -76,3 +76,13 @@ func (client *CommandClient) IssueSetCommandByName(ctx context.Context, deviceNa
 	}
 	return res, nil
 }
+
+// IssueSetCommandByNameWithObject issues the specified write command and the settings supports object value type
+func (client *CommandClient) IssueSetCommandByNameWithObject(ctx context.Context, deviceName string, commandName string, settings map[string]interface{}) (res dtoCommon.BaseResponse, err errors.EdgeX) {
+	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
+	err = utils.PutRequest(ctx, &res, client.baseUrl+requestPath, settings)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}

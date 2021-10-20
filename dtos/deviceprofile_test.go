@@ -97,9 +97,6 @@ func TestDeviceProfileDTOValidation(t *testing.T) {
 	binaryWithWritePermission := profileData()
 	binaryWithWritePermission.DeviceResources[0].Properties.ValueType = common.ValueTypeBinary
 	binaryWithWritePermission.DeviceResources[0].Properties.ReadWrite = common.ReadWrite_RW
-	objectWithWritePermission := profileData()
-	objectWithWritePermission.DeviceResources[0].Properties.ValueType = common.ValueTypeObject
-	objectWithWritePermission.DeviceResources[0].Properties.ReadWrite = common.ReadWrite_W
 
 	tests := []struct {
 		name        string
@@ -112,7 +109,6 @@ func TestDeviceProfileDTOValidation(t *testing.T) {
 		{"mismatched resource", mismatchedResource, true},
 		{"invalid ReadWrite permission", invalidReadWrite, true},
 		{"write permission not support Binary value type", binaryWithWritePermission, true},
-		{"write permission not support Object value type", objectWithWritePermission, true},
 	}
 
 	for _, tt := range tests {

@@ -67,3 +67,14 @@ func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUr
 	}
 	return response, nil
 }
+
+// SetCommandWithObject invokes device service's set command API and the settings supports object value type
+func (client *deviceServiceCommandClient) SetCommandWithObject(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]interface{}) (dtoCommon.BaseResponse, errors.EdgeX) {
+	var response dtoCommon.BaseResponse
+	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
+	err := utils.PutRequest(ctx, &response, baseUrl+requestPath+"?"+queryParams, settings)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
+}
