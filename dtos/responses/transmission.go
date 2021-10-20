@@ -12,7 +12,7 @@ import (
 
 // TransmissionResponse defines the Response Content for GET Transmission DTO.
 // This object and its properties correspond to the NotificationResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/TransmissionResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/TransmissionResponse
 type TransmissionResponse struct {
 	common.BaseResponse `json:",inline"`
 	Transmission        dtos.Transmission `json:"transmission"`
@@ -28,16 +28,15 @@ func NewTransmissionResponse(requestId string, message string, statusCode int,
 
 // MultiTransmissionsResponse defines the Response Content for GET multiple Transmission DTOs.
 // This object and its properties correspond to the MultiNotificationsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/MultiTransmissionsResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/MultiTransmissionsResponse
 type MultiTransmissionsResponse struct {
-	common.BaseResponse `json:",inline"`
-	Transmissions       []dtos.Transmission `json:"transmissions"`
+	common.BaseWithTotalCountResponse `json:",inline"`
+	Transmissions                     []dtos.Transmission `json:"transmissions"`
 }
 
-func NewMultiTransmissionsResponse(requestId string, message string, statusCode int,
-	transmissions []dtos.Transmission) MultiTransmissionsResponse {
+func NewMultiTransmissionsResponse(requestId string, message string, statusCode int, totalCount uint32, transmissions []dtos.Transmission) MultiTransmissionsResponse {
 	return MultiTransmissionsResponse{
-		BaseResponse:  common.NewBaseResponse(requestId, message, statusCode),
-		Transmissions: transmissions,
+		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		Transmissions:              transmissions,
 	}
 }

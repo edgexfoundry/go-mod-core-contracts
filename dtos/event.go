@@ -18,7 +18,7 @@ import (
 )
 
 // Event and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/Event
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/Event
 type Event struct {
 	common.Versionable `json:",inline"`
 	Id                 string                 `json:"id" validate:"required,uuid"`

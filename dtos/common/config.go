@@ -8,7 +8,7 @@ package common
 
 // ConfigResponse defines the configuration for the targeted service.
 // This object and its properties correspond to the ConfigResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.x#/ConfigResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/ConfigResponse
 type ConfigResponse struct {
 	Versionable `json:",inline"`
 	Config      interface{} `json:"config"`

@@ -33,10 +33,12 @@ func TestNewMultiDeviceProfilesResponse(t *testing.T) {
 		{Name: "test device profile1"},
 		{Name: "test device profile2"},
 	}
-	actual := NewMultiDeviceProfilesResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedDeviceProfiles)
+	expectedTotalCount := uint32(2)
+	actual := NewMultiDeviceProfilesResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedDeviceProfiles)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedTotalCount, actual.TotalCount)
 	assert.Equal(t, expectedDeviceProfiles, actual.Profiles)
 }

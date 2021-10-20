@@ -34,10 +34,12 @@ func TestNewMultiSubscriptionsResponse(t *testing.T) {
 		{Name: "test Subscription1"},
 		{Name: "test Subscription2"},
 	}
-	actual := NewMultiSubscriptionsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedSubscriptions)
+	expectedTotalCount := uint32(len(expectedSubscriptions))
+	actual := NewMultiSubscriptionsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedSubscriptions)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
 	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedTotalCount, actual.TotalCount)
 	assert.Equal(t, expectedSubscriptions, actual.Subscriptions)
 }

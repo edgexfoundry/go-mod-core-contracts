@@ -12,7 +12,7 @@ import (
 
 // DeviceCoreCommandResponse defines the Response Content for GET DeviceCoreCommand DTO.
 // This object and its properties correspond to the DeviceCoreCommandResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.x#/DeviceCoreCommandResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.1.0#/DeviceCoreCommandResponse
 type DeviceCoreCommandResponse struct {
 	common.BaseResponse `json:",inline"`
 	DeviceCoreCommand   dtos.DeviceCoreCommand `json:"deviceCoreCommand"`
@@ -27,15 +27,15 @@ func NewDeviceCoreCommandResponse(requestId string, message string, statusCode i
 
 // MultiDeviceCoreCommandsResponse defines the Response Content for GET multiple DeviceCoreCommand DTOs.
 // This object and its properties correspond to the MultiDeviceCoreCommandsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.x#/MultiDeviceCoreCommandsResponse
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.1.0#/MultiDeviceCoreCommandsResponse
 type MultiDeviceCoreCommandsResponse struct {
-	common.BaseResponse `json:",inline"`
-	DeviceCoreCommands  []dtos.DeviceCoreCommand `json:"deviceCoreCommands"`
+	common.BaseWithTotalCountResponse `json:",inline"`
+	DeviceCoreCommands                []dtos.DeviceCoreCommand `json:"deviceCoreCommands"`
 }
 
-func NewMultiDeviceCoreCommandsResponse(requestId string, message string, statusCode int, commands []dtos.DeviceCoreCommand) MultiDeviceCoreCommandsResponse {
+func NewMultiDeviceCoreCommandsResponse(requestId string, message string, statusCode int, totalCount uint32, commands []dtos.DeviceCoreCommand) MultiDeviceCoreCommandsResponse {
 	return MultiDeviceCoreCommandsResponse{
-		BaseResponse:       common.NewBaseResponse(requestId, message, statusCode),
-		DeviceCoreCommands: commands,
+		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		DeviceCoreCommands:         commands,
 	}
 }

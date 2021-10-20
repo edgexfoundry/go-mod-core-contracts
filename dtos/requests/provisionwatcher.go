@@ -17,7 +17,7 @@ import (
 
 // AddProvisionWatcherRequest defines the Request Content for POST ProvisionWatcher DTO.
 // This object and its properties correspond to the AddProvisionWatcherRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/AddProvisionWatcherRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/AddProvisionWatcherRequest
 type AddProvisionWatcherRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	ProvisionWatcher      dtos.ProvisionWatcher `json:"provisionWatcher"`
@@ -59,7 +59,7 @@ func AddProvisionWatcherReqToProvisionWatcherModels(addRequests []AddProvisionWa
 
 // UpdateProvisionWatcherRequest defines the Request Content for PUT event as pushed DTO.
 // This object and its properties correspond to the UpdateProvisionWatcherRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/UpdateProvisionWatcherRequest
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/UpdateProvisionWatcherRequest
 type UpdateProvisionWatcherRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	ProvisionWatcher      dtos.UpdateProvisionWatcher `json:"provisionWatcher"`

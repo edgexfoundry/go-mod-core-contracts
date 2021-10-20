@@ -8,7 +8,7 @@ package dtos
 import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
 // DeviceResource and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/DeviceResource
+// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/DeviceResource
 type DeviceResource struct {
 	Description string                 `json:"description" yaml:"description"`
 	Name        string                 `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
