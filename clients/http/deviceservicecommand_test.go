@@ -54,6 +54,23 @@ func TestGetCommand(t *testing.T) {
 	assert.Equal(t, expectedResponse, *res)
 }
 
+func TestGetCommandWithObject(t *testing.T) {
+	requestId := uuid.New().String()
+	expectedResponse := responses.NewEventResponse(requestId, "", http.StatusOK, testEventDTO)
+	ts := newTestServer(http.MethodGet, common.ApiDeviceRoute+"/"+common.Name+"/"+TestDeviceName+"/"+TestCommandName, expectedResponse)
+	defer ts.Close()
+	parameters := map[string]interface{}{
+		"kind":  "button",
+		"value": "on",
+	}
+
+	client := NewDeviceServiceCommandClient()
+	res, err := client.GetCommandWithObject(context.Background(), ts.URL, TestDeviceName, TestCommandName, "ds-returnevent=yes", parameters)
+
+	require.NoError(t, err)
+	assert.Equal(t, expectedResponse, *res)
+}
+
 func TestSetCommand(t *testing.T) {
 	requestId := uuid.New().String()
 	expectedResponse := dtoCommon.NewBaseResponse(requestId, "", http.StatusOK)

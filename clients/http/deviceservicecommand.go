@@ -35,7 +35,36 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
 	}
-	res, contentType, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params)
+	res, contentType, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params, nil)
+	if edgeXerr != nil {
+		return nil, errors.NewCommonEdgeXWrapper(edgeXerr)
+	}
+	// If execute GetCommand with dsReturnEvent query parameter 'no', there will be no content returned in the http response.
+	// So we can use the nil pointer to indicate that the HTTP response content is empty
+	if len(res) == 0 {
+		return nil, nil
+	}
+	response := &responses.EventResponse{}
+	if contentType == common.ContentTypeCBOR {
+		if err = cbor.Unmarshal(res, response); err != nil {
+			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to decode the cbor response", err)
+		}
+	} else {
+		if err = json.Unmarshal(res, response); err != nil {
+			return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to decode the json response", err)
+		}
+	}
+	return response, nil
+}
+
+// GetCommandWithObject invokes device service's get command API and pass the parameters in the payload
+func (client *deviceServiceCommandClient) GetCommandWithObject(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, parameters map[string]interface{}) (*responses.EventResponse, errors.EdgeX) {
+	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
+	params, err := url.ParseQuery(queryParams)
+	if err != nil {
+		return nil, errors.NewCommonEdgeXWrapper(err)
+	}
+	res, contentType, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params, parameters)
 	if edgeXerr != nil {
 		return nil, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}

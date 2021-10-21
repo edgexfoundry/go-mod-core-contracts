@@ -67,6 +67,19 @@ func (client *CommandClient) IssueGetCommandByName(ctx context.Context, deviceNa
 	return res, nil
 }
 
+// IssueGetCommandByNameWithObject issues the specified read command and pass the parameters in the payload
+func (client *CommandClient) IssueGetCommandByNameWithObject(ctx context.Context, deviceName string, commandName string, dsPushEvent string, dsReturnEvent string, parameters map[string]interface{}) (res *responses.EventResponse, err errors.EdgeX) {
+	requestParams := url.Values{}
+	requestParams.Set(common.PushEvent, dsPushEvent)
+	requestParams.Set(common.ReturnEvent, dsReturnEvent)
+	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
+	err = utils.GetRequestWithBodyRawData(ctx, &res, client.baseUrl, requestPath, requestParams, parameters)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
 // IssueSetCommandByName issues the specified write command referenced by the command name to the device/sensor that is also referenced by name.
 func (client *CommandClient) IssueSetCommandByName(ctx context.Context, deviceName string, commandName string, settings map[string]string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))

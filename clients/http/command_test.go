@@ -50,7 +50,23 @@ func TestIssueGetCommandByName(t *testing.T) {
 	require.IsType(t, &responses.EventResponse{}, res)
 }
 
-func TestIssueIssueSetCommandByName(t *testing.T) {
+func TestIssueGetCommandByNameWithObject(t *testing.T) {
+	deviceName := "Simple-Device01"
+	cmdName := "SwitchButton"
+	parameters := map[string]interface{}{
+		"kind":  "button",
+		"value": "on",
+	}
+	path := path.Join(common.ApiDeviceRoute, common.Name, deviceName, cmdName)
+	ts := newTestServer(http.MethodGet, path, &responses.EventResponse{})
+	defer ts.Close()
+	client := NewCommandClient(ts.URL)
+	res, err := client.IssueGetCommandByNameWithObject(context.Background(), deviceName, cmdName, common.ValueYes, common.ValueNo, parameters)
+	require.NoError(t, err)
+	require.IsType(t, &responses.EventResponse{}, res)
+}
+
+func TestIssueSetCommandByName(t *testing.T) {
 	deviceName := "Simple-Device01"
 	cmdName := "SwitchButton"
 	settings := map[string]string{
@@ -65,7 +81,7 @@ func TestIssueIssueSetCommandByName(t *testing.T) {
 	require.IsType(t, dtoCommon.BaseResponse{}, res)
 }
 
-func TestIssueIssueSetCommandByNameWithObject(t *testing.T) {
+func TestIssueSetCommandByNameWithObject(t *testing.T) {
 	deviceName := "Simple-Device01"
 	cmdName := "SwitchButton"
 	settings := map[string]interface{}{

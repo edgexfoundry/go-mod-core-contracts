@@ -26,6 +26,8 @@ type CommandClient interface {
 	// dsPushEvent: If set to yes, a successful GET will result in an event being pushed to the EdgeX system. Default value is no.
 	// dsReturnEvent: If set to no, there will be no Event returned in the http response. Default value is yes.
 	IssueGetCommandByName(ctx context.Context, deviceName string, commandName string, dsPushEvent string, dsReturnEvent string) (*responses.EventResponse, errors.EdgeX)
+	// IssueGetCommandByNameWithObject issues the specified read command and pass the parameters in the payload
+	IssueGetCommandByNameWithObject(ctx context.Context, deviceName string, commandName string, dsPushEvent string, dsReturnEvent string, parameters map[string]interface{}) (*responses.EventResponse, errors.EdgeX)
 	// IssueSetCommandByName issues the specified write command referenced by the command name to the device/sensor that is also referenced by name.
 	IssueSetCommandByName(ctx context.Context, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX)
 	// IssueSetCommandByNameWithObject issues the specified write command and the settings supports object value type

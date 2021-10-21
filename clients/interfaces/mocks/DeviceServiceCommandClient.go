@@ -44,6 +44,31 @@ func (_m *DeviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl st
 	return r0, r1
 }
 
+// GetCommandWithObject provides a mock function with given fields: ctx, baseUrl, deviceName, commandName, queryParams, settings
+func (_m *DeviceServiceCommandClient) GetCommandWithObject(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]interface{}) (*responses.EventResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, baseUrl, deviceName, commandName, queryParams, settings)
+
+	var r0 *responses.EventResponse
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, string, string, map[string]interface{}) *responses.EventResponse); ok {
+		r0 = rf(ctx, baseUrl, deviceName, commandName, queryParams, settings)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*responses.EventResponse)
+		}
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, string, string, string, string, map[string]interface{}) errors.EdgeX); ok {
+		r1 = rf(ctx, baseUrl, deviceName, commandName, queryParams, settings)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
 // SetCommand provides a mock function with given fields: ctx, baseUrl, deviceName, commandName, queryParams, settings
 func (_m *DeviceServiceCommandClient) SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]string) (common.BaseResponse, errors.EdgeX) {
 	ret := _m.Called(ctx, baseUrl, deviceName, commandName, queryParams, settings)
