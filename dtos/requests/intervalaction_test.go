@@ -38,11 +38,15 @@ func updateIntervalActionData() dtos.UpdateIntervalAction {
 	testId := ExampleUUID
 	testName := TestIntervalActionName
 	testIntervalName := TestIntervalName
+	testContent := TestContent
+	testContentType := common.ContentTypeText
 
 	dto := dtos.UpdateIntervalAction{}
 	dto.Id = &testId
 	dto.Name = &testName
 	dto.IntervalName = &testIntervalName
+	dto.Content = &testContent
+	dto.ContentType = &testContentType
 	address := dtos.NewRESTAddress(TestHost, TestPort, TestHTTPMethod)
 	dto.Address = &address
 	return dto
@@ -266,5 +270,7 @@ func TestReplaceIntervalActionModelFieldsWithDTO(t *testing.T) {
 	expectedAddress := dtos.ToAddressModel(*patch.Address)
 	assert.Equal(t, TestIntervalActionName, interval.Name)
 	assert.Equal(t, TestIntervalName, interval.IntervalName)
+	assert.Equal(t, TestContent, interval.Content)
+	assert.Equal(t, common.ContentTypeText, interval.ContentType)
 	assert.Equal(t, expectedAddress, interval.Address)
 }
