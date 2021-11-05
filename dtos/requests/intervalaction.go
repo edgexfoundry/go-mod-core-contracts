@@ -118,7 +118,7 @@ func ReplaceIntervalActionModelFieldsWithDTO(action *models.IntervalAction, patc
 		action.Content = *patch.Content
 	}
 	if patch.ContentType != nil {
-		action.ContentType = *patch.Content
+		action.ContentType = *patch.ContentType
 	}
 	if patch.AdminState != nil {
 		action.AdminState = models.AdminState(*patch.AdminState)
