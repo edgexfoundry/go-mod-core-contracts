@@ -3,7 +3,35 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
-## [2.0.0] - 2021-06-30
+## [v2.1.0] - 2021-11-17
+
+### Features ✨
+
+- Add Object Value type in Reading ([#388af6c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/388af6c))
+- Add Client API to support Object Value type in Set Command ([#676](https://github.com/edgexfoundry/go-mod-core-contracts/issues/676)) ([#762fd04](https://github.com/edgexfoundry/go-mod-core-contracts/commits/762fd04))
+- Add Reading API route constant and client ([#635](https://github.com/edgexfoundry/go-mod-core-contracts/issues/635)) ([#62d0d23](https://github.com/edgexfoundry/go-mod-core-contracts/commits/62d0d23))
+- Update routes and ReadingClient for new Reading APIs ([#dcbf024](https://github.com/edgexfoundry/go-mod-core-contracts/commits/dcbf024))
+- Remove unclear HTTP status code ([#646](https://github.com/edgexfoundry/go-mod-core-contracts/issues/646)) ([#5e91c92](https://github.com/edgexfoundry/go-mod-core-contracts/commits/5e91c92))
+- Add omitempty tag to Reading DTO ([#630bcf1](https://github.com/edgexfoundry/go-mod-core-contracts/commits/630bcf1))
+- Update the api version inside all godoc from 2.x to 2.1.0 ([#99ac5f5](https://github.com/edgexfoundry/go-mod-core-contracts/commits/99ac5f5))
+- **command:** Add totalCount field into MultiDeviceCoreCommandsResponse DTO ([#eaa77a0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/eaa77a0))
+- **data:** Add totalCount field into MultiReadingsResponse DTO ([#94063c0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/94063c0))
+- **data:** Use generic interface in the Event Tagging value ([#ad694db](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ad694db))
+- **data:** Add totalCount field into MultiEventsResponse DTO ([#e706228](https://github.com/edgexfoundry/go-mod-core-contracts/commits/e706228))
+- **data:** Add new core-data reading API route and update ReadingClient ([#2d3bd2a](https://github.com/edgexfoundry/go-mod-core-contracts/commits/2d3bd2a))
+- **metadata:** Add totalCount field into core-metadata multi-instance response DTO ([#af86f72](https://github.com/edgexfoundry/go-mod-core-contracts/commits/af86f72))
+- **notification:** Add totalCount field into multi-instance response DTOs ([#a61439c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a61439c))
+- **notifications:** Add new notification API route and update TransmissionClient ([#e205b66](https://github.com/edgexfoundry/go-mod-core-contracts/commits/e205b66))
+- **scheduler:** Add totalCount field into multi-instance response DTOs ([#e8f11e0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/e8f11e0))
+
+### Bug Fixes 🐛
+
+- Add missing DBTimestamp for Model To DTO conversion ([#c361e36](https://github.com/edgexfoundry/go-mod-core-contracts/commits/c361e36))
+- Update DTO accept empty Id if the name is provided ([#35f1535](https://github.com/edgexfoundry/go-mod-core-contracts/commits/35f1535))
+- Fix error message typo ([#a2d58b6](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a2d58b6))
+- **data:** Add reading id mapping during conversion ([#fcb12ca](https://github.com/edgexfoundry/go-mod-core-contracts/commits/fcb12ca))
+
+## [v2.0.0] - 2021-06-30
 ### General
 - **v2:** Implemented V2 DTOs, Model objects and Clients.
 - **v1:** Removed v1 APIs and request handling code [e59505e](https://github.com/edgexfoundry/go-mod-core-contracts/commits/e59505e)
