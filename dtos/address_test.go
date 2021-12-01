@@ -8,6 +8,7 @@ package dtos
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
@@ -98,6 +99,8 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 
 func TestAddress_Validate(t *testing.T) {
 	validRest := testRESTAddress
+	validRestPatch := testRESTAddress
+	validRestPatch.HTTPMethod = http.MethodPatch
 	noRestHttpMethod := testRESTAddress
 	noRestHttpMethod.HTTPMethod = ""
 
@@ -117,6 +120,7 @@ func TestAddress_Validate(t *testing.T) {
 		expectError bool
 	}{
 		{"valid RESTAddress", validRest, false},
+		{"valid RESTAddress, PATCH http method", validRestPatch, false},
 		{"invalid RESTAddress, no HTTP method", noRestHttpMethod, true},
 		{"valid MQTTPubAddress", validMQTT, false},
 		{"invalid MQTTPubAddress, no MQTT publisher", noMQTTPublisher, true},
