@@ -254,9 +254,9 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 	assert.NoError(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
 
 	// Following tests verify if service name containing reserved characters should be detected with an error
-	for _, n := range namesWithReservedChar {
+	for i, n := range namesWithReservedChar {
 		serviceNameWithReservedChar := testUpdateDeviceService
-		serviceNameWithReservedChar.Service.Name = &n
+		serviceNameWithReservedChar.Service.Name = &namesWithReservedChar[i]
 
 		err := serviceNameWithReservedChar.Validate()
 		assert.Error(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))

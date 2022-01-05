@@ -19,15 +19,13 @@ import (
 )
 
 const (
-	testHost            = "testHost"
-	testPort            = 123
-	testContentType     = common.ContentTypeJSON
-	testPath            = "testPath"
-	testQueryParameters = "testQueryParameters"
-	testHTTPMethod      = "GET"
-	testPublisher       = "testPublisher"
-	testTopic           = "testTopic"
-	testEmail           = "test@example.com"
+	testHost       = "testHost"
+	testPort       = 123
+	testPath       = "testPath"
+	testHTTPMethod = "GET"
+	testPublisher  = "testPublisher"
+	testTopic      = "testTopic"
+	testEmail      = "test@example.com"
 )
 
 var testRESTAddress = Address{

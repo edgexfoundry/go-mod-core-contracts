@@ -28,7 +28,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 )
 
 // LoggingClient defines the interface for logging operations.
@@ -152,7 +152,7 @@ func (lc edgeXLogger) log(logLevel string, formatted bool, msg string, args ...i
 }
 
 func (lc edgeXLogger) SetLogLevel(logLevel string) errors.EdgeX {
-	if isValidLogLevel(logLevel) == true {
+	if isValidLogLevel(logLevel) {
 		*lc.logLevel = logLevel
 
 		return nil
@@ -206,15 +206,4 @@ func (lc edgeXLogger) Warnf(msg string, args ...interface{}) {
 
 func (lc edgeXLogger) Errorf(msg string, args ...interface{}) {
 	lc.log(models.ErrorLog, true, msg, args...)
-}
-
-// Build the log entry object
-func (lc edgeXLogger) buildLogEntry(logLevel string, msg string, args ...interface{}) models.LogEntry {
-	res := models.LogEntry{}
-	res.Level = logLevel
-	res.Message = msg
-	res.Args = args
-	res.OriginService = lc.owningServiceName
-
-	return res
 }

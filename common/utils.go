@@ -28,7 +28,7 @@ var valueTypes = []string{
 // // NormalizeValueType normalizes the valueType to upper camel case
 func NormalizeValueType(valueType string) (string, error) {
 	for _, v := range valueTypes {
-		if strings.ToLower(valueType) == strings.ToLower(v) {
+		if strings.EqualFold(valueType, v) {
 			return v, nil
 		}
 	}
