@@ -147,7 +147,7 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceNamesAndTimeRange(ctx con
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	var queryPayload map[string]interface{}
-	if resourceNames != nil && len(resourceNames) > 0 {
+	if len(resourceNames) > 0 { // gosimple S1009: len(nil slice) == 0
 		queryPayload = make(map[string]interface{}, 1)
 		queryPayload[common.ResourceNames] = resourceNames
 	}

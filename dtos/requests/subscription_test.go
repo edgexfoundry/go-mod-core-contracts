@@ -27,7 +27,6 @@ var (
 	testSubscriptionReceiver       = "receiver"
 	testSubscriptionResendLimit    = 5
 	testSubscriptionResendInterval = "10s"
-	unsupportedChannelType         = "unsupportedChannelType"
 )
 
 func addSubscriptionRequestData() AddSubscriptionRequest {

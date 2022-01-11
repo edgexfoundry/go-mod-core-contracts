@@ -43,12 +43,12 @@ var (
 
 func init() {
 	val = validator.New()
-	val.RegisterValidation(dtoDurationTag, ValidateDuration)
-	val.RegisterValidation(dtoUuidTag, ValidateDtoUuid)
-	val.RegisterValidation(dtoNoneEmptyStringTag, ValidateDtoNoneEmptyString)
-	val.RegisterValidation(dtoValueType, ValidateValueType)
-	val.RegisterValidation(dtoRFC3986UnreservedCharTag, ValidateDtoRFC3986UnreservedChars)
-	val.RegisterValidation(dtoInterDatetimeTag, ValidateIntervalDatetime)
+	_ = val.RegisterValidation(dtoDurationTag, ValidateDuration)
+	_ = val.RegisterValidation(dtoUuidTag, ValidateDtoUuid)
+	_ = val.RegisterValidation(dtoNoneEmptyStringTag, ValidateDtoNoneEmptyString)
+	_ = val.RegisterValidation(dtoValueType, ValidateValueType)
+	_ = val.RegisterValidation(dtoRFC3986UnreservedCharTag, ValidateDtoRFC3986UnreservedChars)
+	_ = val.RegisterValidation(dtoInterDatetimeTag, ValidateIntervalDatetime)
 }
 
 // Validate function will use the validator package to validate the struct annotation
@@ -145,7 +145,7 @@ func ValidateDtoNoneEmptyString(fl validator.FieldLevel) bool {
 func ValidateValueType(fl validator.FieldLevel) bool {
 	valueType := fl.Field().String()
 	for _, v := range valueTypes {
-		if strings.ToLower(valueType) == strings.ToLower(v) {
+		if strings.EqualFold(valueType, v) {
 			return true
 		}
 	}

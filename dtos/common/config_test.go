@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 )
@@ -34,6 +35,7 @@ func TestNewConfigResponse(t *testing.T) {
 	assert.Equal(t, common.ApiVersion, target.ApiVersion)
 	data, _ := json.Marshal(target.Config)
 	actual := testConfig{}
-	json.Unmarshal(data, &actual)
+	err := json.Unmarshal(data, &actual)
+	require.NoError(t, err)
 	assert.Equal(t, expected, actual)
 }

@@ -34,19 +34,16 @@ func (a *Address) Validate() error {
 		if err != nil {
 			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid RESTAddress.", err)
 		}
-		break
 	case common.MQTT:
 		err = common.Validate(a.MQTTPubAddress)
 		if err != nil {
 			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid MQTTPubAddress.", err)
 		}
-		break
 	case common.EMAIL:
 		err = common.Validate(a.EmailAddress)
 		if err != nil {
 			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid EmailAddress.", err)
 		}
-		break
 	}
 
 	return nil
@@ -115,7 +112,6 @@ func ToAddressModel(a Address) models.Address {
 			Path:       a.RESTAddress.Path,
 			HTTPMethod: a.RESTAddress.HTTPMethod,
 		}
-		break
 	case common.MQTT:
 		address = models.MQTTPubAddress{
 			BaseAddress: models.BaseAddress{
@@ -129,7 +125,6 @@ func ToAddressModel(a Address) models.Address {
 			AutoReconnect:  a.AutoReconnect,
 			ConnectTimeout: a.ConnectTimeout,
 		}
-		break
 	case common.EMAIL:
 		address = models.EmailAddress{
 			BaseAddress: models.BaseAddress{
@@ -154,7 +149,6 @@ func FromAddressModelToDTO(address models.Address) Address {
 			Path:       a.Path,
 			HTTPMethod: a.HTTPMethod,
 		}
-		break
 	case models.MQTTPubAddress:
 		dto.MQTTPubAddress = MQTTPubAddress{
 			Publisher:      a.Publisher,
@@ -165,12 +159,10 @@ func FromAddressModelToDTO(address models.Address) Address {
 			AutoReconnect:  a.AutoReconnect,
 			ConnectTimeout: a.ConnectTimeout,
 		}
-		break
 	case models.EmailAddress:
 		dto.EmailAddress = EmailAddress{
 			Recipients: a.Recipients,
 		}
-		break
 	}
 	return dto
 }
