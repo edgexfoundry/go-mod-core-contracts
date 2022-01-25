@@ -16,12 +16,14 @@ import (
 type PingResponse struct {
 	Versionable `json:",inline"`
 	Timestamp   string `json:"timestamp"`
+	ServiceName string `json:"serviceName"`
 }
 
 // NewPingResponse creates new PingResponse with all fields set appropriately
-func NewPingResponse() PingResponse {
+func NewPingResponse(serviceName string) PingResponse {
 	return PingResponse{
 		Versionable: NewVersionable(),
 		Timestamp:   time.Now().Format(time.UnixDate),
+		ServiceName: serviceName,
 	}
 }

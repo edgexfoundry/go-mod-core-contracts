@@ -7,6 +7,7 @@
 package common
 
 import (
+	"github.com/google/uuid"
 	"testing"
 	"time"
 
@@ -16,9 +17,11 @@ import (
 )
 
 func TestNewPingResponse(t *testing.T) {
-	target := NewPingResponse()
+	serviceName := uuid.NewString()
+	target := NewPingResponse(serviceName)
 
 	assert.Equal(t, common.ApiVersion, target.ApiVersion)
 	_, err := time.Parse(time.UnixDate, target.Timestamp)
 	assert.NoError(t, err)
+	assert.Equal(t, serviceName, target.ServiceName)
 }
