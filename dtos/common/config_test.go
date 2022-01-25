@@ -9,6 +9,7 @@ package common
 
 import (
 	"encoding/json"
+	"github.com/google/uuid"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,6 +19,8 @@ import (
 )
 
 func TestNewConfigResponse(t *testing.T) {
+	serviceName := uuid.NewString()
+
 	type testConfig struct {
 		Name string
 		Host string
@@ -30,9 +33,11 @@ func TestNewConfigResponse(t *testing.T) {
 		Port: 8080,
 	}
 
-	target := NewConfigResponse(expected)
+	target := NewConfigResponse(expected, serviceName)
 
 	assert.Equal(t, common.ApiVersion, target.ApiVersion)
+	assert.Equal(t, serviceName, target.ServiceName)
+
 	data, _ := json.Marshal(target.Config)
 	actual := testConfig{}
 	err := json.Unmarshal(data, &actual)

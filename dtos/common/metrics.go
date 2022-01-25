@@ -22,12 +22,14 @@ type Metrics struct {
 type MetricsResponse struct {
 	Versionable `json:",inline"`
 	Metrics     Metrics `json:"metrics"`
+	ServiceName string  `json:"serviceName"`
 }
 
 // NewMetricsResponse creates new MetricsResponse with all fields set appropriately
-func NewMetricsResponse(metrics Metrics) MetricsResponse {
+func NewMetricsResponse(metrics Metrics, serviceName string) MetricsResponse {
 	return MetricsResponse{
 		Versionable: NewVersionable(),
 		Metrics:     metrics,
+		ServiceName: serviceName,
 	}
 }
