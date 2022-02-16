@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2022 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -85,7 +85,7 @@ func TestOperationRequest_UnmarshalJSON(t *testing.T) {
 				require.Error(t, err)
 			} else {
 				require.NoError(t, err)
-				assert.Equal(t, expected, tt.request, "Unmarshal did not result in expected AddProvisionWatcherRequest.")
+				assert.Equal(t, expected, tt.request, "Unmarshal did not result in expected OperationRequest.")
 			}
 		})
 	}
