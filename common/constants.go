@@ -109,7 +109,7 @@ const (
 	ApiWatcherCallbackNameRoute = ApiBase + "/callback/watcher/name/{name}"
 	ApiServiceCallbackRoute     = ApiBase + "/callback/service"
 	ApiDiscoveryRoute           = ApiBase + "/discovery"
-	ApiValidateRoute            = ApiBase + "/validate"
+	ApiDeviceValidationRoute    = ApiBase + "/validate/device"
 
 	ApiIntervalRoute               = ApiBase + "/interval"
 	ApiAllIntervalRoute            = ApiIntervalRoute + "/" + All
