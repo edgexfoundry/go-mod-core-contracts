@@ -271,6 +271,7 @@ const (
 	SecurityFileTokenProviderServiceKey = "security-file-token-provider"
 	SecurityBootstrapperKey             = "security-bootstrapper"
 	SecurityBootstrapperRedisKey        = "security-bootstrapper-redis"
+	SecuritySpiffeTokenProviderKey      = "security-spiffe-token-provider" // nolint:gosec
 )
 
 // Constants related to the possible content types supported by the APIs
