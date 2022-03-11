@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2022 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,6 +28,19 @@ func TestAddDeviceCallback(t *testing.T) {
 
 	client := NewDeviceServiceCallbackClient(ts.URL)
 	res, err := client.AddDeviceCallback(context.Background(), requests.AddDeviceRequest{})
+
+	require.NoError(t, err)
+	assert.Equal(t, requestId, res.RequestId)
+}
+
+func TestValidateDeviceCallback(t *testing.T) {
+	requestId := uuid.New().String()
+	expectedResponse := dtoCommon.NewBaseResponse(requestId, "", http.StatusOK)
+	ts := newTestServer(http.MethodPost, common.ApiDeviceValidationRoute, expectedResponse)
+	defer ts.Close()
+
+	client := NewDeviceServiceCallbackClient(ts.URL)
+	res, err := client.ValidateDeviceCallback(context.Background(), requests.AddDeviceRequest{})
 
 	require.NoError(t, err)
 	assert.Equal(t, requestId, res.RequestId)

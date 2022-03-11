@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2022 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,6 +31,15 @@ func NewDeviceServiceCallbackClient(baseUrl string) interfaces.DeviceServiceCall
 func (client *deviceServiceCallbackClient) AddDeviceCallback(ctx context.Context, request requests.AddDeviceRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
 	err := utils.PostRequestWithRawData(ctx, &response, client.baseUrl+common.ApiDeviceCallbackRoute, request)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
+}
+
+func (client *deviceServiceCallbackClient) ValidateDeviceCallback(ctx context.Context, request requests.AddDeviceRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
+	var response dtoCommon.BaseResponse
+	err := utils.PostRequestWithRawData(ctx, &response, client.baseUrl+common.ApiDeviceValidationRoute, request)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
