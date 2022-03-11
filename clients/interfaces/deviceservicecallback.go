@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2022 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,6 +21,8 @@ type DeviceServiceCallbackClient interface {
 	UpdateDeviceCallback(ctx context.Context, request requests.UpdateDeviceRequest) (common.BaseResponse, errors.EdgeX)
 	// DeleteDeviceCallback invokes device service's callback API for deleting device
 	DeleteDeviceCallback(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX)
+	// ValidateDeviceCallback invokes device service's validation API for validating device
+	ValidateDeviceCallback(ctx context.Context, request requests.AddDeviceRequest) (common.BaseResponse, errors.EdgeX)
 	// UpdateDeviceProfileCallback invokes device service's callback API for updating device profile
 	UpdateDeviceProfileCallback(ctx context.Context, request requests.DeviceProfileRequest) (common.BaseResponse, errors.EdgeX)
 	// AddProvisionWatcherCallback invokes device service's callback API for adding provision watcher
