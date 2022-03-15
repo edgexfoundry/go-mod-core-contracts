@@ -244,6 +244,7 @@ const (
 	ReadWrite_R  = "R"
 	ReadWrite_W  = "W"
 	ReadWrite_RW = "RW"
+	ReadWrite_WR = "WR"
 )
 
 // Constants for Edgex Environment variable

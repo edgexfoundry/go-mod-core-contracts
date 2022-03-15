@@ -153,7 +153,7 @@ func validReadWritePermission(resources []DeviceResource, name string, readWrite
 	valid := true
 	for _, resource := range resources {
 		if resource.Name == name {
-			if resource.Properties.ReadWrite != common.ReadWrite_RW &&
+			if resource.Properties.ReadWrite != common.ReadWrite_RW && resource.Properties.ReadWrite != common.ReadWrite_WR &&
 				resource.Properties.ReadWrite != readWrite {
 				valid = false
 				break
