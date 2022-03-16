@@ -33,6 +33,7 @@ const (
 	ApiReadingByDeviceNameAndTimeRangeRoute                = ApiReadingByDeviceNameRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
 
 	ApiDeviceProfileRoute                       = ApiBase + "/deviceprofile"
+	ApiDeviceProfileBasicInfoRoute              = ApiDeviceProfileRoute + "/basicinfo"
 	ApiDeviceProfileUploadFileRoute             = ApiDeviceProfileRoute + "/uploadfile"
 	ApiDeviceProfileByNameRoute                 = ApiDeviceProfileRoute + "/" + Name + "/{" + Name + "}"
 	ApiDeviceProfileByIdRoute                   = ApiDeviceProfileRoute + "/" + Id + "/{" + Id + "}"
@@ -43,6 +44,8 @@ const (
 
 	ApiDeviceResourceRoute                     = ApiBase + "/deviceresource"
 	ApiDeviceResourceByProfileAndResourceRoute = ApiDeviceResourceRoute + "/" + Profile + "/{" + ProfileName + "}" + "/" + Resource + "/{" + ResourceName + "}"
+
+	ApiDeviceCommandRoute = ApiBase + "/devicecommand"
 
 	ApiDeviceServiceRoute       = ApiBase + "/deviceservice"
 	ApiAllDeviceServiceRoute    = ApiDeviceServiceRoute + "/" + All
