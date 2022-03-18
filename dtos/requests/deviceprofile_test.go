@@ -101,6 +101,8 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 	noDeviceResourceReadWrite.Profile.DeviceResources[0].Properties.ReadWrite = emptyString
 	invalidDeviceResourceReadWrite := profileData()
 	invalidDeviceResourceReadWrite.Profile.DeviceResources[0].Properties.ReadWrite = "invalid"
+	validDeviceResourceReadWrite := profileData()
+	validDeviceResourceReadWrite.Profile.DeviceResources[0].Properties.ReadWrite = common.ReadWrite_WR
 
 	tests := []struct {
 		name          string
@@ -115,6 +117,7 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 		{"invalid DeviceProfileRequest, invalid deviceResource property type", invalidDeviceResourcePropertyType, true},
 		{"invalid DeviceProfileRequest, no deviceResource property readWrite", noDeviceResourceReadWrite, true},
 		{"invalid DeviceProfileRequest, invalid deviceResource property readWrite", invalidDeviceResourcePropertyType, true},
+		{"valid DeviceProfileRequest, valid deviceResource property readWrite with value WR", validDeviceResourceReadWrite, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
