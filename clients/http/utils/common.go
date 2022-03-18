@@ -57,7 +57,7 @@ func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to send a http request", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServiceUnavailable, "failed to send a http request", err)
 	}
 	if resp == nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "the response should not be a nil", nil)
