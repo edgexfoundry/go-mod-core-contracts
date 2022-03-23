@@ -50,11 +50,13 @@ var testDeviceProfile = models.DeviceProfile{
 
 func profileData() DeviceProfile {
 	return DeviceProfile{
-		Name:         TestDeviceProfileName,
-		Manufacturer: TestManufacturer,
-		Description:  TestDescription,
-		Model:        TestModel,
-		Labels:       testLabels,
+		DeviceProfileBasicInfo: DeviceProfileBasicInfo{
+			Name:         TestDeviceProfileName,
+			Manufacturer: TestManufacturer,
+			Description:  TestDescription,
+			Model:        TestModel,
+			Labels:       testLabels,
+		},
 		DeviceResources: []DeviceResource{{
 			Name:        TestDeviceResourceName,
 			Description: TestDescription,
