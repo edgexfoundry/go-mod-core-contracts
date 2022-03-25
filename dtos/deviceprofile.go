@@ -24,7 +24,7 @@ type DeviceProfile struct {
 	Description     string           `json:"description" yaml:"description"`
 	Model           string           `json:"model" yaml:"model"`
 	Labels          []string         `json:"labels" yaml:"labels,flow"`
-	DeviceResources []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"required,gt=0,dive"`
+	DeviceResources []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"dive"`
 	DeviceCommands  []DeviceCommand  `json:"deviceCommands" yaml:"deviceCommands" validate:"dive"`
 }
 

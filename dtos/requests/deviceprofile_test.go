@@ -89,8 +89,9 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 	valid := profileData()
 	noName := profileData()
 	noName.Profile.Name = emptyString
-	noDeviceResource := profileData()
-	noDeviceResource.Profile.DeviceResources = []dtos.DeviceResource{}
+	noDeviceResourceAndDeviceCommand := profileData()
+	noDeviceResourceAndDeviceCommand.Profile.DeviceResources = []dtos.DeviceResource{}
+	noDeviceResourceAndDeviceCommand.Profile.DeviceCommands = []dtos.DeviceCommand{}
 	noDeviceResourceName := profileData()
 	noDeviceResourceName.Profile.DeviceResources[0].Name = emptyString
 	noDeviceResourcePropertyType := profileData()
@@ -103,6 +104,8 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 	invalidDeviceResourceReadWrite.Profile.DeviceResources[0].Properties.ReadWrite = "invalid"
 	validDeviceResourceReadWrite := profileData()
 	validDeviceResourceReadWrite.Profile.DeviceResources[0].Properties.ReadWrite = common.ReadWrite_WR
+	dismatchDeviceCommand := profileData()
+	dismatchDeviceCommand.Profile.DeviceResources = []dtos.DeviceResource{}
 
 	tests := []struct {
 		name          string
@@ -111,13 +114,14 @@ func TestDeviceProfileRequest_Validate(t *testing.T) {
 	}{
 		{"valid DeviceProfileRequest", valid, false},
 		{"invalid DeviceProfileRequest, no name", noName, true},
-		{"invalid DeviceProfileRequest, no deviceResource", noDeviceResource, true},
+		{"valid DeviceProfileRequest, no deviceResource and no deviceCommand", noDeviceResourceAndDeviceCommand, false},
 		{"invalid DeviceProfileRequest, no deviceResource name", noDeviceResourceName, true},
 		{"invalid DeviceProfileRequest, no deviceResource property type", noDeviceResourcePropertyType, true},
 		{"invalid DeviceProfileRequest, invalid deviceResource property type", invalidDeviceResourcePropertyType, true},
 		{"invalid DeviceProfileRequest, no deviceResource property readWrite", noDeviceResourceReadWrite, true},
 		{"invalid DeviceProfileRequest, invalid deviceResource property readWrite", invalidDeviceResourcePropertyType, true},
 		{"valid DeviceProfileRequest, valid deviceResource property readWrite with value WR", validDeviceResourceReadWrite, false},
+		{"invalid DeviceProfileRequest, dismatch deviceCommand", dismatchDeviceCommand, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
