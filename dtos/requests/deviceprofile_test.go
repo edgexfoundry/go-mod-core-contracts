@@ -48,11 +48,13 @@ func profileData() DeviceProfileRequest {
 			Versionable: dtoCommon.NewVersionable(),
 		},
 		Profile: dtos.DeviceProfile{
-			Name:            TestDeviceProfileName,
-			Manufacturer:    TestManufacturer,
-			Description:     TestDescription,
-			Model:           TestModel,
-			Labels:          testLabels,
+			DeviceProfileBasicInfo: dtos.DeviceProfileBasicInfo{
+				Name:         TestDeviceProfileName,
+				Manufacturer: TestManufacturer,
+				Description:  TestDescription,
+				Model:        TestModel,
+				Labels:       testLabels,
+			},
 			DeviceResources: testDeviceResources,
 			DeviceCommands:  testDeviceCommands,
 		},

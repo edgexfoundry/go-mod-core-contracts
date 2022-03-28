@@ -34,8 +34,12 @@ const (
 
 	ApiDeviceProfileRoute                       = ApiBase + "/deviceprofile"
 	ApiDeviceProfileBasicInfoRoute              = ApiDeviceProfileRoute + "/basicinfo"
+	ApiDeviceProfileDeviceCommandRoute          = ApiDeviceProfileRoute + "/" + DeviceCommand
+	ApiDeviceProfileResourceRoute               = ApiDeviceProfileRoute + "/" + Resource
 	ApiDeviceProfileUploadFileRoute             = ApiDeviceProfileRoute + "/uploadfile"
 	ApiDeviceProfileByNameRoute                 = ApiDeviceProfileRoute + "/" + Name + "/{" + Name + "}"
+	ApiDeviceProfileDeviceCommandByNameRoute    = ApiDeviceProfileByNameRoute + "/" + DeviceCommand + "/{" + CommandName + "}"
+	ApiDeviceProfileResourceByNameRoute         = ApiDeviceProfileByNameRoute + "/" + Resource + "/{" + ResourceName + "}"
 	ApiDeviceProfileByIdRoute                   = ApiDeviceProfileRoute + "/" + Id + "/{" + Id + "}"
 	ApiAllDeviceProfileRoute                    = ApiDeviceProfileRoute + "/" + All
 	ApiDeviceProfileByManufacturerRoute         = ApiDeviceProfileRoute + "/" + Manufacturer + "/{" + Manufacturer + "}"
@@ -44,8 +48,6 @@ const (
 
 	ApiDeviceResourceRoute                     = ApiBase + "/deviceresource"
 	ApiDeviceResourceByProfileAndResourceRoute = ApiDeviceResourceRoute + "/" + Profile + "/{" + ProfileName + "}" + "/" + Resource + "/{" + ResourceName + "}"
-
-	ApiDeviceCommandRoute = ApiBase + "/devicecommand"
 
 	ApiDeviceServiceRoute       = ApiBase + "/deviceservice"
 	ApiAllDeviceServiceRoute    = ApiDeviceServiceRoute + "/" + All
@@ -141,6 +143,7 @@ const (
 	Device        = "device"
 	DeviceId      = "deviceId"
 	DeviceName    = "deviceName"
+	DeviceCommand = "deviceCommand"
 	Check         = "check"
 	Profile       = "profile"
 	Resource      = "resource"
@@ -152,6 +155,7 @@ const (
 	ServiceName   = "serviceName"
 	ResourceName  = "resourceName"
 	ResourceNames = "resourceNames"
+	CommandName   = "commandName"
 	Start         = "start"
 	End           = "end"
 	Age           = "age"

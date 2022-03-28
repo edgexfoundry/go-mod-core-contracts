@@ -32,3 +32,11 @@ func FromResourceOperationModelToDTO(ro models.ResourceOperation) ResourceOperat
 		Mappings:       ro.Mappings,
 	}
 }
+
+func ToResourceOperationModels(dtos []ResourceOperation) []models.ResourceOperation {
+	resourceOperations := make([]models.ResourceOperation, len(dtos))
+	for i, ro := range dtos {
+		resourceOperations[i] = ToResourceOperationModel(ro)
+	}
+	return resourceOperations
+}
