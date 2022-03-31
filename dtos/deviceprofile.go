@@ -18,7 +18,7 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/DeviceProfile
 type DeviceProfile struct {
 	DBTimestamp            `json:",inline"`
-	DeviceProfileBasicInfo `json:",inline"`
+	DeviceProfileBasicInfo `json:",inline" yaml:",inline"`
 	DeviceResources        []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"dive"`
 	DeviceCommands         []DeviceCommand  `json:"deviceCommands" yaml:"deviceCommands" validate:"dive"`
 }
@@ -36,9 +36,9 @@ func (dp *DeviceProfile) Validate() error {
 func (dp *DeviceProfile) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var alias struct {
 		DBTimestamp
-		DeviceProfileBasicInfo
-		DeviceResources []DeviceResource `yaml:"deviceResources"`
-		DeviceCommands  []DeviceCommand  `yaml:"deviceCommands"`
+		DeviceProfileBasicInfo `yaml:",inline"`
+		DeviceResources        []DeviceResource `yaml:"deviceResources"`
+		DeviceCommands         []DeviceCommand  `yaml:"deviceCommands"`
 	}
 	if err := unmarshal(&alias); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to unmarshal request body as YAML.", err)
