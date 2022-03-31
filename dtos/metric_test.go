@@ -28,17 +28,11 @@ func TestNewMetric(t *testing.T) {
 	expectedApiVersion := "v2"
 	expectedName := "my-metric"
 
-	validField := MetricField{
-		Name:  "count",
-		Value: 50,
-	}
-
-	invalidField := MetricField{
-		Name:  " ",
-		Value: 50,
-	}
-
-	validAdditionalFields := []MetricField{
+	validFields := []MetricField{
+		{
+			Name:  "count",
+			Value: 50,
+		},
 		{
 			Name:  "max",
 			Value: 5.0,
@@ -46,6 +40,13 @@ func TestNewMetric(t *testing.T) {
 		{
 			Name:  "rate",
 			Value: 2.5,
+		},
+	}
+
+	invalidFields := []MetricField{
+		{
+			Name:  "    ",
+			Value: 50,
 		},
 	}
 
@@ -64,41 +65,56 @@ func TestNewMetric(t *testing.T) {
 		},
 	}
 
+	invalidTags := []MetricTag{
+		{
+			Name:  "      ",
+			Value: "my-service",
+		},
+	}
+
 	tests := []struct {
-		Name                     string
-		ExpectedField            MetricField
-		ExpectedAdditionalFields []MetricField
-		ExpectedTags             []MetricTag
-		ErrorExpected            bool
+		Name           string
+		ExpectedFields []MetricField
+		ExpectedTags   []MetricTag
+		ErrorExpected  bool
 	}{
-		{"Happy Path - no extras", validField, nil, nil, false},
-		{"Happy Path - extra fields and tags", validField, validAdditionalFields, validTags, false},
-		{"Error Path - invalid field", invalidField, nil, nil, true},
+		{"Happy Path", validFields, nil, false},
+		{"Happy Path - with tags", validFields, validTags, false},
+		{"Error Path - invalid field", invalidFields, nil, true},
+		{"Error Path - invalid tag", validFields, invalidTags, true},
 	}
 
 	for _, test := range tests {
-		actual, err := NewMetric(expectedName, test.ExpectedField, test.ExpectedAdditionalFields, test.ExpectedTags)
-		if test.ErrorExpected {
-			require.Error(t, err)
-			return
-		}
+		t.Run(test.Name, func(t *testing.T) {
+			actual, err := NewMetric(expectedName, test.ExpectedFields, test.ExpectedTags)
+			if test.ErrorExpected {
+				require.Error(t, err)
+				return
+			}
 
-		assert.Equal(t, expectedApiVersion, actual.ApiVersion)
-		assert.Equal(t, expectedName, actual.Name)
-		assert.Equal(t, test.ExpectedField, actual.Field)
-		assert.Equal(t, test.ExpectedAdditionalFields, actual.AdditionalFields)
-		assert.GreaterOrEqual(t, actual.Timestamp, expectedTimestamp)
-		assert.Equal(t, test.ExpectedTags, actual.Tags)
+			require.NoError(t, err)
+			assert.Equal(t, expectedApiVersion, actual.ApiVersion)
+			assert.Equal(t, expectedName, actual.Name)
+			assert.Equal(t, test.ExpectedFields, actual.Fields)
+			assert.GreaterOrEqual(t, actual.Timestamp, expectedTimestamp)
+			assert.Equal(t, test.ExpectedTags, actual.Tags)
+		})
 	}
 }
 
 func TestMetric_ToLineProtocol(t *testing.T) {
-	field := MetricField{
-		Name:  "count",
-		Value: 50,
+	singleField := []MetricField{
+		{
+			Name:  "count",
+			Value: 50,
+		},
 	}
 
-	additionalFields := []MetricField{
+	multipleFields := []MetricField{
+		{
+			Name:  "count",
+			Value: 50,
+		},
 		{
 			Name:  "max",
 			Value: 5.0,
@@ -125,20 +141,20 @@ func TestMetric_ToLineProtocol(t *testing.T) {
 	}
 
 	tests := []struct {
-		Name             string
-		ExpectedResult   string
-		AdditionalFields []MetricField
-		AdditionalTags   []MetricTag
+		Name           string
+		ExpectedResult string
+		Fields         []MetricField
+		AdditionalTags []MetricTag
 	}{
-		{"No extras", "unit.test count=50i %d", nil, nil},
-		{"Extra fields", "unit.test count=50i,max=5,rate=2.5 %d", additionalFields, nil},
-		{"Extra tags", "unit.test,service=my-service,my-tag=my-tag-value,gateway=my-gateway count=50i %d", nil, additionalTags},
-		{"Extra fields and tags", "unit.test,service=my-service,my-tag=my-tag-value,gateway=my-gateway count=50i,max=5,rate=2.5 %d", additionalFields, additionalTags},
+		{"On Field", "unit.test count=50i %d", singleField, nil},
+		{"Multi fields", "unit.test count=50i,max=5,rate=2.5 %d", multipleFields, nil},
+		{"On Field with added tags", "unit.test,service=my-service,my-tag=my-tag-value,gateway=my-gateway count=50i %d", singleField, additionalTags},
+		{"Multi fields with added tags", "unit.test,service=my-service,my-tag=my-tag-value,gateway=my-gateway count=50i,max=5,rate=2.5 %d", multipleFields, additionalTags},
 	}
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
-			metric, err := NewMetric("unit.test", field, test.AdditionalFields, test.AdditionalTags)
+			metric, err := NewMetric("unit.test", test.Fields, test.AdditionalTags)
 			require.NoError(t, err)
 
 			expected := fmt.Sprintf(test.ExpectedResult, metric.Timestamp)

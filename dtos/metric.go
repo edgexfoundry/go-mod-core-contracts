@@ -26,40 +26,45 @@ import (
 // Metric defines the metric data for a specific named metric
 type Metric struct {
 	common.Versionable `json:",inline"`
-	Name               string        `json:"name" validate:"edgex-dto-none-empty-string"`
-	Field              MetricField   `json:"field,omitempty" validate:"required"`
-	AdditionalFields   []MetricField `json:"additionalFields,omitempty" validate:"required"`
-	Tags               []MetricTag   `json:"tags,omitempty"`
-	Timestamp          int64         `json:"timestamp" validate:"required"`
+	// Name is the identifier of the collected Metric
+	Name string `json:"name" validate:"edgex-dto-none-empty-string"`
+	// Fields are the Key/Value measurements associated with the metric
+	Fields []MetricField `json:"fields,omitempty" validate:"required"`
+	// Tags and the Key/Value tags associated with the metric
+	Tags []MetricTag `json:"tags,omitempty"`
+	// Timestamp is the time and date the metric was collected.
+	Timestamp int64 `json:"timestamp" validate:"required"`
 }
 
 // MetricField defines a metric field associated with a metric
 type MetricField struct {
-	Name  string      `json:"name" validate:"edgex-dto-none-empty-string"`
+	// Name is the identifier of the metric field
+	Name string `json:"name" validate:"edgex-dto-none-empty-string"`
+	// Value is measurement for the metric field
 	Value interface{} `json:"value" validate:"required"`
 }
 
 // MetricTag defines a metric tag associated with a metric
 type MetricTag struct {
-	Name  string `json:"name" validate:"edgex-dto-none-empty-string"`
+	// Name is the identifier of the metric tag
+	Name string `json:"name" validate:"edgex-dto-none-empty-string"`
+	// Value is tag vale for the metric tag
 	Value string `json:"value" validate:"required"`
 }
 
 // NewMetric creates a new metric for the specified data
-func NewMetric(name string, field MetricField, additionalFields []MetricField, tags []MetricTag) (Metric, error) {
+func NewMetric(name string, fields []MetricField, tags []MetricTag) (Metric, error) {
 	if err := ValidateMetricName(name, "metric"); err != nil {
 		return Metric{}, err
 	}
 
-	if err := ValidateMetricName(field.Name, "field"); err != nil {
-		return Metric{}, err
+	if len(fields) == 0 {
+		return Metric{}, errors.New("one or more metric fields are required")
 	}
 
-	if len(additionalFields) > 0 {
-		for _, additionalField := range additionalFields {
-			if err := ValidateMetricName(additionalField.Name, "additional field"); err != nil {
-				return Metric{}, err
-			}
+	for _, field := range fields {
+		if err := ValidateMetricName(field.Name, "field"); err != nil {
+			return Metric{}, err
 		}
 	}
 
@@ -72,12 +77,11 @@ func NewMetric(name string, field MetricField, additionalFields []MetricField, t
 	}
 
 	metric := Metric{
-		Versionable:      common.NewVersionable(),
-		Name:             name,
-		Field:            field,
-		AdditionalFields: additionalFields,
-		Timestamp:        time.Now().UnixNano(),
-		Tags:             tags,
+		Versionable: common.NewVersionable(),
+		Name:        name,
+		Fields:      fields,
+		Timestamp:   time.Now().UnixNano(),
+		Tags:        tags,
 	}
 
 	return metric, nil
@@ -100,11 +104,18 @@ func ValidateMetricName(name string, nameType string) error {
 //    measurementName fieldKey="field string value" 1556813561098000000
 //    myMeasurement,tag1=value1,tag2=value2 fieldKey="fieldValue" 1556813561098000000
 //
+// Note that this is a simple helper function for those receiving this DTO that are pushing metrics to an endpoint
+// that receives LineProtocol such as InfluxDb or Telegraf
 func (m *Metric) ToLineProtocol() string {
-	// Fields section doesn't have a leading comma per syntax above
-	fields := fmt.Sprintf("%s=%s", m.Field.Name, formatLineProtocolValue(m.Field.Value))
-	for _, field := range m.AdditionalFields {
-		fields += ","
+	isFirst := true
+	fields := ""
+	for _, field := range m.Fields {
+		// Fields section doesn't have a leading comma per syntax above so need to skip the comma on the first field
+		if isFirst {
+			isFirst = false
+		} else {
+			fields += ","
+		}
 		fields += fmt.Sprintf("%s=%s", field.Name, formatLineProtocolValue(field.Value))
 	}
 
@@ -117,12 +128,6 @@ func (m *Metric) ToLineProtocol() string {
 	result := fmt.Sprintf("%s%s %s %d", m.Name, tags, fields, m.Timestamp)
 
 	return result
-}
-
-// ToPrometheusSyntax transforms the Metric to syntax for Prometheus.
-// TODO: Implement once good reference for Prometheus Syntax is found
-func (m *Metric) ToPrometheusSyntax() string {
-	panic(errors.New("not implemented"))
 }
 
 func formatLineProtocolValue(value interface{}) string {
