@@ -15,6 +15,7 @@ type BaseReading struct {
 	ResourceName string
 	ProfileName  string
 	ValueType    string
+	Units        string
 }
 
 // BinaryReading and its properties are defined in the APIv2 specification:

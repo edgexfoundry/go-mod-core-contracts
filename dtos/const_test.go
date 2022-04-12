@@ -12,6 +12,7 @@ const (
 	TestReadingName = "TestDeviceResource"
 	TestValueType   = "Int8"
 	TestValue       = "500"
+	TestUnit        = "degreesFarenheit"
 
 	TestDeviceProfileName = "TestDeviceProfileName"
 	TestManufacturer      = "TestManufacturer"

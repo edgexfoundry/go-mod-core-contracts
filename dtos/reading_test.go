@@ -23,6 +23,7 @@ var testSimpleReading = BaseReading{
 	ProfileName:  TestDeviceProfileName,
 	Origin:       TestTimestamp,
 	ValueType:    TestValueType,
+	Units:        TestUnit,
 	SimpleReading: SimpleReading{
 		Value: TestValue,
 	},
@@ -38,6 +39,7 @@ func Test_ToReadingModel(t *testing.T) {
 			ProfileName:  TestDeviceProfileName,
 			Origin:       TestTimestamp,
 			ValueType:    TestValueType,
+			Units:        TestUnit,
 		},
 		Value: TestValue,
 	}
@@ -64,6 +66,7 @@ func TestFromReadingModelToDTO(t *testing.T) {
 			ResourceName: TestReadingName,
 			ProfileName:  TestDeviceProfileName,
 			ValueType:    TestValueType,
+			Units:        TestUnit,
 		},
 		Value: TestValue,
 	}
@@ -74,6 +77,7 @@ func TestFromReadingModelToDTO(t *testing.T) {
 		ResourceName: TestReadingName,
 		ProfileName:  TestDeviceProfileName,
 		ValueType:    TestValueType,
+		Units:        TestUnit,
 		SimpleReading: SimpleReading{
 			Value: TestValue,
 		},
