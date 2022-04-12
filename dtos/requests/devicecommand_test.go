@@ -45,15 +45,11 @@ var testUpdateDeviceCommand = UpdateDeviceCommandRequest{
 }
 
 func mockUpdateDeviceCommandDTO() dtos.UpdateDeviceCommand {
+	testIsHidden := true
 	testName := TestDeviceCommandName
-	testReadWrite := common.ReadWrite_RW
-	testResourceOperations := []dtos.ResourceOperation{{
-		DeviceResource: TestDeviceResourceName,
-	}}
 	dc := dtos.UpdateDeviceCommand{}
 	dc.Name = &testName
-	dc.ReadWrite = &testReadWrite
-	dc.ResourceOperations = testResourceOperations
+	dc.IsHidden = &testIsHidden
 	return dc
 }
 
@@ -129,17 +125,6 @@ func TestUpdateDeviceCommandRequest_Validate(t *testing.T) {
 	noDeviceCommandName := testUpdateDeviceCommand
 	noDeviceCommandName.DeviceCommand.Name = &emptyString
 
-	// ReadWrite
-	validNilReadWrite := valid
-	validNilReadWrite.DeviceCommand.ReadWrite = nil
-	invalidEmptyReadWrite := valid
-	invalidEmptyReadWrite.DeviceCommand.ReadWrite = &emptyString
-	// ResourceOperations
-	validNilResourceOperations := valid
-	validNilResourceOperations.DeviceCommand.ResourceOperations = nil
-	invalidEmptyResourceOperations := valid
-	invalidEmptyResourceOperations.DeviceCommand.ResourceOperations = make([]dtos.ResourceOperation, 0)
-
 	tests := []struct {
 		name        string
 		request     UpdateDeviceCommandRequest
@@ -148,10 +133,6 @@ func TestUpdateDeviceCommandRequest_Validate(t *testing.T) {
 		{"valid UpdateDeviceCommandRequest", valid, false},
 		{"invalid UpdateDeviceCommandRequest, no profile name", noProfileName, true},
 		{"invalid UpdateDeviceCommandRequest, no device command name", noDeviceCommandName, true},
-		{"valid UpdateDeviceCommandRequest, nil ReadWrite", validNilReadWrite, false},
-		{"invalid UpdateDeviceCommandRequest, empty ReadWrite", invalidEmptyReadWrite, true},
-		{"valid UpdateDeviceCommandRequest, nil ResourceOperations", validNilResourceOperations, false},
-		{"invalid UpdateDeviceCommandRequest, empty ResourceOperations", invalidEmptyResourceOperations, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -178,23 +159,23 @@ func TestUpdateDeviceCommandRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 	require.NoError(t, err)
 	// Nil field checking is used to update with patch
-	assert.Nil(t, req.DeviceCommand.ReadWrite)
 	assert.Nil(t, req.DeviceCommand.IsHidden)
-	assert.Nil(t, req.DeviceCommand.ResourceOperations)
 }
 
 func TestReplaceDeviceCommandModelFieldsWithDTO(t *testing.T) {
 	command := models.DeviceCommand{
 		Name:      TestDeviceCommandName,
 		ReadWrite: common.ReadWrite_R,
-		IsHidden:  true,
+		IsHidden:  false,
+		ResourceOperations: []models.ResourceOperation{{
+			DeviceResource: TestDeviceResourceName,
+		}},
 	}
 
 	patch := mockUpdateDeviceCommandDTO()
 
 	ReplaceDeviceCommandModelFieldsWithDTO(&command, patch)
-
-	assert.Equal(t, common.ReadWrite_RW, command.ReadWrite)
+	assert.Equal(t, common.ReadWrite_R, command.ReadWrite)
 	assert.Equal(t, true, command.IsHidden)
 	assert.Equal(t, TestDeviceResourceName, command.ResourceOperations[0].DeviceResource)
 }

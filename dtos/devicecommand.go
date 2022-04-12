@@ -19,10 +19,8 @@ type DeviceCommand struct {
 // UpdateDeviceComman and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.2.0#/DeviceCommand
 type UpdateDeviceCommand struct {
-	Name               *string             `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	IsHidden           *bool               `json:"isHidden"`
-	ReadWrite          *string             `json:"readWrite" validate:"omitempty,oneof='R' 'W' 'RW' 'WR'"`
-	ResourceOperations []ResourceOperation `json:"resourceOperations" validate:"omitempty,gt=0,dive"`
+	Name     *string `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	IsHidden *bool   `json:"isHidden"`
 }
 
 // ToDeviceCommandModel transforms the DeviceCommand DTO to the DeviceCommand model
