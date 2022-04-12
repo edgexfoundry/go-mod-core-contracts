@@ -26,6 +26,7 @@ type BaseReading struct {
 	ResourceName  string `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ProfileName   string `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ValueType     string `json:"valueType" validate:"required,edgex-dto-value-type"`
+	Units         string `json:"units,omitempty"`
 	BinaryReading `json:",inline" validate:"-"`
 	SimpleReading `json:",inline" validate:"-"`
 	ObjectReading `json:",inline" validate:"-"`
@@ -293,6 +294,7 @@ func ToReadingModel(r BaseReading) models.Reading {
 		ResourceName: r.ResourceName,
 		ProfileName:  r.ProfileName,
 		ValueType:    r.ValueType,
+		Units:        r.Units,
 	}
 	if r.ValueType == common.ValueTypeBinary {
 		readingModel = models.BinaryReading{
@@ -325,6 +327,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ResourceName:  r.ResourceName,
 			ProfileName:   r.ProfileName,
 			ValueType:     r.ValueType,
+			Units:         r.Units,
 			BinaryReading: BinaryReading{BinaryValue: r.BinaryValue, MediaType: r.MediaType},
 		}
 	case models.ObjectReading:
@@ -335,6 +338,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ResourceName:  r.ResourceName,
 			ProfileName:   r.ProfileName,
 			ValueType:     r.ValueType,
+			Units:         r.Units,
 			ObjectReading: ObjectReading{ObjectValue: r.ObjectValue},
 		}
 	case models.SimpleReading:
@@ -345,6 +349,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ResourceName:  r.ResourceName,
 			ProfileName:   r.ProfileName,
 			ValueType:     r.ValueType,
+			Units:         r.Units,
 			SimpleReading: SimpleReading{Value: r.Value},
 		}
 	}
