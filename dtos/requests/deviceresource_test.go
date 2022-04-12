@@ -7,7 +7,6 @@ package requests
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
@@ -50,18 +49,12 @@ func mockUpdateDeviceResourceDTO() dtos.UpdateDeviceResource {
 	testName := TestDeviceCommandName
 	testIsHidden := true
 	testDescription := TestDescription
-	testTag := TestTag
-	testProperties := dtos.ResourceProperties{
-		ValueType: common.ValueTypeInt16,
-		ReadWrite: common.ReadWrite_RW,
-	}
+
 	dr := dtos.UpdateDeviceResource{}
 	dr.Name = &testName
 	dr.IsHidden = &testIsHidden
 	dr.Description = &testDescription
-	dr.Tag = &testTag
-	dr.Attributes = testAttributes
-	dr.Properties = &testProperties
+
 	return dr
 }
 
@@ -131,14 +124,6 @@ func TestUpdateDeviceResourceRequest_Validate(t *testing.T) {
 	noDeviceResourceName := testUpdateDeviceResource
 	noDeviceResourceName.Resource.Name = &emptyString
 
-	// Properties
-	validNilProperties := valid
-	validNilProperties.Resource.Properties = nil
-	invalidEmptyProperties := valid
-	invalidEmptyProperties.Resource.Properties = &dtos.ResourceProperties{}
-	invalidEmptyReadWrite := valid
-	invalidEmptyReadWrite.Resource.Properties = &dtos.ResourceProperties{ValueType: common.ValueTypeInt16, ReadWrite: emptyString}
-
 	tests := []struct {
 		name        string
 		request     UpdateDeviceResourceRequest
@@ -147,16 +132,12 @@ func TestUpdateDeviceResourceRequest_Validate(t *testing.T) {
 		{"valid UpdateDeviceResourceRequest", valid, false},
 		{"invalid UpdateDeviceResourceRequest, no ProfileName", noProfileName, true},
 		{"invalid UpdateDeviceResourceRequest, no DeviceResource Name", noDeviceResourceName, true},
-		{"valid UpdateDeviceResourceRequest, nil Properties", validNilProperties, false},
-		{"invalid UpdateDeviceResourceRequest, empty Properties", invalidEmptyProperties, true},
-		{"invalid UpdateDeviceResourceRequest, empty Properties ReadWrite", invalidEmptyReadWrite, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.request.Validate()
 			if tt.expectedErr {
 				assert.Error(t, err)
-				fmt.Println(err)
 			} else {
 				assert.NoError(t, err)
 			}
@@ -178,17 +159,15 @@ func TestUpdateDeviceResourceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	require.NoError(t, err)
 	// Nil field checking is used to update with patch
 	assert.Nil(t, req.Resource.Description)
-	assert.Nil(t, req.Resource.Tag)
-	assert.Nil(t, req.Resource.Properties)
-	assert.Nil(t, req.Resource.Attributes)
+	assert.Nil(t, req.Resource.IsHidden)
 }
 
 func TestReplaceDeviceResourceModelFieldsWithDTO(t *testing.T) {
 	resource := models.DeviceResource{
 		Name:        TestDeviceResourceName,
-		Description: "",
-		Tag:         "",
-		Attributes:  map[string]interface{}{},
+		Description: emptyString,
+		Tag:         emptyString,
+		Attributes:  testAttributes,
 		Properties: models.ResourceProperties{
 			ValueType: common.ValueTypeInt16,
 			ReadWrite: common.ReadWrite_R,
@@ -200,8 +179,8 @@ func TestReplaceDeviceResourceModelFieldsWithDTO(t *testing.T) {
 	ReplaceDeviceResourceModelFieldsWithDTO(&resource, patch)
 
 	assert.Equal(t, TestDescription, resource.Description)
-	assert.Equal(t, TestTag, resource.Tag)
+	assert.Equal(t, emptyString, resource.Tag)
 	assert.Equal(t, true, resource.IsHidden)
 	assert.Equal(t, testAttributes, resource.Attributes)
-	assert.Equal(t, common.ReadWrite_RW, resource.Properties.ReadWrite)
+	assert.Equal(t, common.ReadWrite_R, resource.Properties.ReadWrite)
 }

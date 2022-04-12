@@ -91,13 +91,4 @@ func ReplaceDeviceResourceModelFieldsWithDTO(dr *models.DeviceResource, patch dt
 	if patch.IsHidden != nil {
 		dr.IsHidden = *patch.IsHidden
 	}
-	if patch.Tag != nil {
-		dr.Tag = *patch.Tag
-	}
-	if patch.Properties != nil {
-		dr.Properties = dtos.ToResourcePropertiesModel(*patch.Properties)
-	}
-	if patch.Attributes != nil {
-		dr.Attributes = patch.Attributes
-	}
 }

@@ -90,10 +90,4 @@ func ReplaceDeviceCommandModelFieldsWithDTO(dc *models.DeviceCommand, patch dtos
 	if patch.IsHidden != nil {
 		dc.IsHidden = *patch.IsHidden
 	}
-	if patch.ReadWrite != nil {
-		dc.ReadWrite = *patch.ReadWrite
-	}
-	if patch.ResourceOperations != nil {
-		dc.ResourceOperations = dtos.ToResourceOperationModels(patch.ResourceOperations)
-	}
 }
