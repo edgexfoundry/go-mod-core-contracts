@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2022 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -185,4 +185,76 @@ func (client *DeviceProfileClient) CleanResourcesCache() {
 	client.mux.Lock()
 	defer client.mux.Unlock()
 	client.resourcesCache = make(map[string]responses.DeviceResourceResponse)
+}
+
+// UpdateDeviceProfileBasicInfo updates existing profile's basic info
+func (client *DeviceProfileClient) UpdateDeviceProfileBasicInfo(ctx context.Context, reqs []requests.DeviceProfileBasicInfoRequest) ([]dtoCommon.BaseResponse, errors.EdgeX) {
+	var responses []dtoCommon.BaseResponse
+	err := utils.PatchRequest(ctx, &responses, client.baseUrl+common.ApiDeviceProfileBasicInfoRoute, reqs)
+	if err != nil {
+		return responses, errors.NewCommonEdgeXWrapper(err)
+	}
+	return responses, nil
+}
+
+// AddDeviceProfileResource adds new device resource to an existing profile
+func (client *DeviceProfileClient) AddDeviceProfileResource(ctx context.Context, reqs []requests.AddDeviceResourceRequest) ([]dtoCommon.BaseResponse, errors.EdgeX) {
+	var responses []dtoCommon.BaseResponse
+	err := utils.PostRequestWithRawData(ctx, &responses, client.baseUrl+common.ApiDeviceProfileResourceRoute, reqs)
+	if err != nil {
+		return responses, errors.NewCommonEdgeXWrapper(err)
+	}
+	return responses, nil
+}
+
+// UpdateDeviceProfileResource updates existing device resource
+func (client *DeviceProfileClient) UpdateDeviceProfileResource(ctx context.Context, reqs []requests.UpdateDeviceResourceRequest) ([]dtoCommon.BaseResponse, errors.EdgeX) {
+	var responses []dtoCommon.BaseResponse
+	err := utils.PatchRequest(ctx, &responses, client.baseUrl+common.ApiDeviceProfileResourceRoute, reqs)
+	if err != nil {
+		return responses, errors.NewCommonEdgeXWrapper(err)
+	}
+	return responses, nil
+}
+
+// DeleteDeviceResourceByName deletes device resource by name
+func (client *DeviceProfileClient) DeleteDeviceResourceByName(ctx context.Context, profileName string, resourceName string) (dtoCommon.BaseResponse, errors.EdgeX) {
+	var response dtoCommon.BaseResponse
+	requestPath := path.Join(common.ApiDeviceProfileRoute, common.Name, url.QueryEscape(profileName), common.Resource, url.QueryEscape(resourceName))
+	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
+}
+
+// AddDeviceProfileDeviceCommand adds new device command to an existing profile
+func (client *DeviceProfileClient) AddDeviceProfileDeviceCommand(ctx context.Context, reqs []requests.AddDeviceCommandRequest) ([]dtoCommon.BaseResponse, errors.EdgeX) {
+	var responses []dtoCommon.BaseResponse
+	err := utils.PostRequestWithRawData(ctx, &responses, client.baseUrl+common.ApiDeviceProfileDeviceCommandRoute, reqs)
+	if err != nil {
+		return responses, errors.NewCommonEdgeXWrapper(err)
+	}
+	return responses, nil
+}
+
+// UpdateDeviceProfileDeviceCommand updates existing device command
+func (client *DeviceProfileClient) UpdateDeviceProfileDeviceCommand(ctx context.Context, reqs []requests.UpdateDeviceCommandRequest) ([]dtoCommon.BaseResponse, errors.EdgeX) {
+	var responses []dtoCommon.BaseResponse
+	err := utils.PatchRequest(ctx, &responses, client.baseUrl+common.ApiDeviceProfileDeviceCommandRoute, reqs)
+	if err != nil {
+		return responses, errors.NewCommonEdgeXWrapper(err)
+	}
+	return responses, nil
+}
+
+// DeleteDeviceCommandByName deletes device command by name
+func (client *DeviceProfileClient) DeleteDeviceCommandByName(ctx context.Context, profileName string, commandName string) (dtoCommon.BaseResponse, errors.EdgeX) {
+	var response dtoCommon.BaseResponse
+	requestPath := path.Join(common.ApiDeviceProfileRoute, common.Name, url.QueryEscape(profileName), common.DeviceCommand, url.QueryEscape(commandName))
+	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
 }

@@ -69,6 +69,56 @@ func (_m *DeviceProfileClient) AddByYaml(ctx context.Context, yamlFilePath strin
 	return r0, r1
 }
 
+// AddDeviceProfileDeviceCommand provides a mock function with given fields: ctx, reqs
+func (_m *DeviceProfileClient) AddDeviceProfileDeviceCommand(ctx context.Context, reqs []requests.AddDeviceCommandRequest) ([]common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, reqs)
+
+	var r0 []common.BaseResponse
+	if rf, ok := ret.Get(0).(func(context.Context, []requests.AddDeviceCommandRequest) []common.BaseResponse); ok {
+		r0 = rf(ctx, reqs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]common.BaseResponse)
+		}
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, []requests.AddDeviceCommandRequest) errors.EdgeX); ok {
+		r1 = rf(ctx, reqs)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
+// AddDeviceProfileResource provides a mock function with given fields: ctx, reqs
+func (_m *DeviceProfileClient) AddDeviceProfileResource(ctx context.Context, reqs []requests.AddDeviceResourceRequest) ([]common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, reqs)
+
+	var r0 []common.BaseResponse
+	if rf, ok := ret.Get(0).(func(context.Context, []requests.AddDeviceResourceRequest) []common.BaseResponse); ok {
+		r0 = rf(ctx, reqs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]common.BaseResponse)
+		}
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, []requests.AddDeviceResourceRequest) errors.EdgeX); ok {
+		r1 = rf(ctx, reqs)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
 // AllDeviceProfiles provides a mock function with given fields: ctx, labels, offset, limit
 func (_m *DeviceProfileClient) AllDeviceProfiles(ctx context.Context, labels []string, offset int, limit int) (responses.MultiDeviceProfilesResponse, errors.EdgeX) {
 	ret := _m.Called(ctx, labels, offset, limit)
@@ -106,6 +156,52 @@ func (_m *DeviceProfileClient) DeleteByName(ctx context.Context, name string) (c
 	var r1 errors.EdgeX
 	if rf, ok := ret.Get(1).(func(context.Context, string) errors.EdgeX); ok {
 		r1 = rf(ctx, name)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
+// DeleteDeviceCommandByName provides a mock function with given fields: ctx, profileName, commandName
+func (_m *DeviceProfileClient) DeleteDeviceCommandByName(ctx context.Context, profileName string, commandName string) (common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, profileName, commandName)
+
+	var r0 common.BaseResponse
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) common.BaseResponse); ok {
+		r0 = rf(ctx, profileName, commandName)
+	} else {
+		r0 = ret.Get(0).(common.BaseResponse)
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, string, string) errors.EdgeX); ok {
+		r1 = rf(ctx, profileName, commandName)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
+// DeleteDeviceResourceByName provides a mock function with given fields: ctx, profileName, resourceName
+func (_m *DeviceProfileClient) DeleteDeviceResourceByName(ctx context.Context, profileName string, resourceName string) (common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, profileName, resourceName)
+
+	var r0 common.BaseResponse
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) common.BaseResponse); ok {
+		r0 = rf(ctx, profileName, resourceName)
+	} else {
+		r0 = ret.Get(0).(common.BaseResponse)
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, string, string) errors.EdgeX); ok {
+		r1 = rf(ctx, profileName, resourceName)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(errors.EdgeX)
@@ -269,6 +365,81 @@ func (_m *DeviceProfileClient) UpdateByYaml(ctx context.Context, yamlFilePath st
 	var r1 errors.EdgeX
 	if rf, ok := ret.Get(1).(func(context.Context, string) errors.EdgeX); ok {
 		r1 = rf(ctx, yamlFilePath)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
+// UpdateDeviceProfileBasicInfo provides a mock function with given fields: ctx, reqs
+func (_m *DeviceProfileClient) UpdateDeviceProfileBasicInfo(ctx context.Context, reqs []requests.DeviceProfileBasicInfoRequest) ([]common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, reqs)
+
+	var r0 []common.BaseResponse
+	if rf, ok := ret.Get(0).(func(context.Context, []requests.DeviceProfileBasicInfoRequest) []common.BaseResponse); ok {
+		r0 = rf(ctx, reqs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]common.BaseResponse)
+		}
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, []requests.DeviceProfileBasicInfoRequest) errors.EdgeX); ok {
+		r1 = rf(ctx, reqs)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
+// UpdateDeviceProfileDeviceCommand provides a mock function with given fields: ctx, reqs
+func (_m *DeviceProfileClient) UpdateDeviceProfileDeviceCommand(ctx context.Context, reqs []requests.UpdateDeviceCommandRequest) ([]common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, reqs)
+
+	var r0 []common.BaseResponse
+	if rf, ok := ret.Get(0).(func(context.Context, []requests.UpdateDeviceCommandRequest) []common.BaseResponse); ok {
+		r0 = rf(ctx, reqs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]common.BaseResponse)
+		}
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, []requests.UpdateDeviceCommandRequest) errors.EdgeX); ok {
+		r1 = rf(ctx, reqs)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
+// UpdateDeviceProfileResource provides a mock function with given fields: ctx, reqs
+func (_m *DeviceProfileClient) UpdateDeviceProfileResource(ctx context.Context, reqs []requests.UpdateDeviceResourceRequest) ([]common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, reqs)
+
+	var r0 []common.BaseResponse
+	if rf, ok := ret.Get(0).(func(context.Context, []requests.UpdateDeviceResourceRequest) []common.BaseResponse); ok {
+		r0 = rf(ctx, reqs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]common.BaseResponse)
+		}
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, []requests.UpdateDeviceResourceRequest) errors.EdgeX); ok {
+		r1 = rf(ctx, reqs)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(errors.EdgeX)
