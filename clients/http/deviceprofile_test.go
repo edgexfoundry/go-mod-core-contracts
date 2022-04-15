@@ -241,3 +241,81 @@ func TestDeviceResourceByProfileNameAndResourceName(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.DeviceResourceResponse{}, res)
 }
+
+func TestUpdateDeviceProfileBasicInfo(t *testing.T) {
+	ts := newTestServer(http.MethodPatch, common.ApiDeviceProfileBasicInfoRoute, []dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	res, err := client.UpdateDeviceProfileBasicInfo(context.Background(), []requests.DeviceProfileBasicInfoRequest{})
+	require.NoError(t, err)
+	require.IsType(t, []dtoCommon.BaseResponse{}, res)
+}
+
+func TestAddDeviceProfileResource(t *testing.T) {
+	ts := newTestServer(http.MethodPost, common.ApiDeviceProfileResourceRoute, []dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	res, err := client.AddDeviceProfileResource(context.Background(), []requests.AddDeviceResourceRequest{})
+
+	require.NoError(t, err)
+	assert.IsType(t, []dtoCommon.BaseResponse{}, res)
+}
+
+func TestUpdateDeviceProfileResource(t *testing.T) {
+	ts := newTestServer(http.MethodPatch, common.ApiDeviceProfileResourceRoute, []dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	res, err := client.UpdateDeviceProfileResource(context.Background(), []requests.UpdateDeviceResourceRequest{})
+	require.NoError(t, err)
+	require.IsType(t, []dtoCommon.BaseResponse{}, res)
+}
+
+func TestDeleteDeviceResourceByName(t *testing.T) {
+	profileName := "testProfile"
+	resourceName := "testResource"
+	urlPath := path.Join(common.ApiDeviceProfileRoute, common.Name, profileName, common.Resource, resourceName)
+	ts := newTestServer(http.MethodDelete, urlPath, dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	res, err := client.DeleteDeviceResourceByName(context.Background(), profileName, resourceName)
+	require.NoError(t, err)
+	require.NotNil(t, res)
+}
+
+func TestAddDeviceProfileDeviceCommand(t *testing.T) {
+	ts := newTestServer(http.MethodPost, common.ApiDeviceProfileDeviceCommandRoute, []dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	res, err := client.AddDeviceProfileDeviceCommand(context.Background(), []requests.AddDeviceCommandRequest{})
+
+	require.NoError(t, err)
+	assert.IsType(t, []dtoCommon.BaseResponse{}, res)
+}
+
+func TestUpdateDeviceProfileDeviceCommand(t *testing.T) {
+	ts := newTestServer(http.MethodPatch, common.ApiDeviceProfileDeviceCommandRoute, []dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	res, err := client.UpdateDeviceProfileDeviceCommand(context.Background(), []requests.UpdateDeviceCommandRequest{})
+	require.NoError(t, err)
+	require.IsType(t, []dtoCommon.BaseResponse{}, res)
+}
+
+func TestDeleteDeviceCommandByName(t *testing.T) {
+	profileName := "testProfile"
+	commandName := "testCommand"
+	urlPath := path.Join(common.ApiDeviceProfileRoute, common.Name, profileName, common.DeviceCommand, commandName)
+	ts := newTestServer(http.MethodDelete, urlPath, dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL)
+	res, err := client.DeleteDeviceCommandByName(context.Background(), profileName, commandName)
+	require.NoError(t, err)
+	require.NotNil(t, res)
+}
