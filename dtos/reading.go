@@ -35,7 +35,7 @@ type BaseReading struct {
 // SimpleReading and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/SimpleReading
 type SimpleReading struct {
-	Value string `json:"value,omitempty" validate:"required"`
+	Value string `json:"value" validate:"required"`
 }
 
 // BinaryReading and its properties are defined in the APIv2 specification:
