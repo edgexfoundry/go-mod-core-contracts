@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2022 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +7,9 @@ package http
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
+	"net/http/httptest"
 	"path"
 	"testing"
 
@@ -46,6 +48,30 @@ func TestIssueGetCommandByName(t *testing.T) {
 	defer ts.Close()
 	client := NewCommandClient(ts.URL)
 	res, err := client.IssueGetCommandByName(context.Background(), deviceName, cmdName, common.ValueYes, common.ValueNo)
+	require.NoError(t, err)
+	require.IsType(t, &responses.EventResponse{}, res)
+}
+
+func TestIssueGetCommandByNameWithQueryParams(t *testing.T) {
+	deviceName := "Simple-Device01"
+	cmdName := "SwitchButton"
+	testQueryParams := map[string]string{"foo": "bar", "key": "value"}
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		for k, v := range testQueryParams {
+			if r.URL.Query().Get(k) != v {
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+		}
+
+		w.WriteHeader(http.StatusOK)
+		b, _ := json.Marshal(responses.EventResponse{})
+		_, _ = w.Write(b)
+	}))
+	defer ts.Close()
+
+	client := NewCommandClient(ts.URL)
+	res, err := client.IssueGetCommandByNameWithQueryParams(context.Background(), deviceName, cmdName, testQueryParams)
 	require.NoError(t, err)
 	require.IsType(t, &responses.EventResponse{}, res)
 }

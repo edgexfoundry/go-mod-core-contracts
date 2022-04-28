@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2022 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -59,6 +59,20 @@ func (client *CommandClient) IssueGetCommandByName(ctx context.Context, deviceNa
 	requestParams := url.Values{}
 	requestParams.Set(common.PushEvent, dsPushEvent)
 	requestParams.Set(common.ReturnEvent, dsReturnEvent)
+	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
+	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
+func (client *CommandClient) IssueGetCommandByNameWithQueryParams(ctx context.Context, deviceName string, commandName string, queryParams map[string]string) (res *responses.EventResponse, err errors.EdgeX) {
+	requestParams := url.Values{}
+	for k, v := range queryParams {
+		requestParams.Set(k, v)
+	}
+
 	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
 	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
 	if err != nil {
