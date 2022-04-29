@@ -33,7 +33,7 @@ func NewProvisionWatcherClient(baseUrl string) interfaces.ProvisionWatcherClient
 }
 
 func (pwc ProvisionWatcherClient) Add(ctx context.Context, reqs []requests.AddProvisionWatcherRequest) (res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, pwc.baseUrl+common.ApiProvisionWatcherRoute, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, pwc.baseUrl, common.ApiProvisionWatcherRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -42,7 +42,7 @@ func (pwc ProvisionWatcherClient) Add(ctx context.Context, reqs []requests.AddPr
 }
 
 func (pwc ProvisionWatcherClient) Update(ctx context.Context, reqs []requests.UpdateProvisionWatcherRequest) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, pwc.baseUrl+common.ApiProvisionWatcherRoute, reqs)
+	err = utils.PatchRequest(ctx, &res, pwc.baseUrl, common.ApiProvisionWatcherRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -66,7 +66,7 @@ func (pwc ProvisionWatcherClient) AllProvisionWatchers(ctx context.Context, labe
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatcherByName(ctx context.Context, name string) (res responses.ProvisionWatcherResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiProvisionWatcherRoute, common.Name, url.QueryEscape(name))
+	path := path.Join(common.ApiProvisionWatcherRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, pwc.baseUrl, path, nil)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -76,7 +76,7 @@ func (pwc ProvisionWatcherClient) ProvisionWatcherByName(ctx context.Context, na
 }
 
 func (pwc ProvisionWatcherClient) DeleteProvisionWatcherByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiProvisionWatcherRoute, common.Name, url.QueryEscape(name))
+	path := path.Join(common.ApiProvisionWatcherRoute, common.Name, name)
 	err = utils.DeleteRequest(ctx, &res, pwc.baseUrl, path)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -86,7 +86,7 @@ func (pwc ProvisionWatcherClient) DeleteProvisionWatcherByName(ctx context.Conte
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatchersByProfileName(ctx context.Context, name string, offset int, limit int) (res responses.MultiProvisionWatchersResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiProvisionWatcherRoute, common.Profile, common.Name, url.QueryEscape(name))
+	requestPath := path.Join(common.ApiProvisionWatcherRoute, common.Profile, common.Name, name)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -99,7 +99,7 @@ func (pwc ProvisionWatcherClient) ProvisionWatchersByProfileName(ctx context.Con
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatchersByServiceName(ctx context.Context, name string, offset int, limit int) (res responses.MultiProvisionWatchersResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiProvisionWatcherRoute, common.Service, common.Name, url.QueryEscape(name))
+	requestPath := path.Join(common.ApiProvisionWatcherRoute, common.Service, common.Name, name)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

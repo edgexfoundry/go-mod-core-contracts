@@ -88,11 +88,11 @@ func GetRequestWithBodyRawData(ctx context.Context, returnValuePointer interface
 func PostRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
-	url string,
+	baseUrl string, requestPath string,
 	data []byte,
 	encoding string) errors.EdgeX {
 
-	req, err := createRequestWithEncodedData(ctx, http.MethodPost, url, data, encoding)
+	req, err := createRequestWithEncodedData(ctx, http.MethodPost, baseUrl, requestPath, data, encoding)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -111,10 +111,11 @@ func PostRequest(
 func PostRequestWithRawData(
 	ctx context.Context,
 	returnValuePointer interface{},
-	url string,
+	baseUrl string, requestPath string,
+	requestParams url.Values,
 	data interface{}) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPost, url, data)
+	req, err := createRequestWithRawData(ctx, http.MethodPost, baseUrl, requestPath, requestParams, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -133,10 +134,11 @@ func PostRequestWithRawData(
 func PutRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
-	url string,
+	baseUrl string, requestPath string,
+	requestParams url.Values,
 	data interface{}) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPut, url, data)
+	req, err := createRequestWithRawData(ctx, http.MethodPut, baseUrl, requestPath, requestParams, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -155,10 +157,11 @@ func PutRequest(
 func PatchRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
-	url string,
+	baseUrl string, requestPath string,
+	requestParams url.Values,
 	data interface{}) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPatch, url, data)
+	req, err := createRequestWithRawData(ctx, http.MethodPatch, baseUrl, requestPath, requestParams, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -177,10 +180,10 @@ func PatchRequest(
 func PostByFileRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
-	url string,
+	baseUrl string, requestPath string,
 	filePath string) errors.EdgeX {
 
-	req, err := createRequestFromFilePath(ctx, http.MethodPost, url, filePath)
+	req, err := createRequestFromFilePath(ctx, http.MethodPost, baseUrl, requestPath, filePath)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -199,10 +202,10 @@ func PostByFileRequest(
 func PutByFileRequest(
 	ctx context.Context,
 	returnValuePointer interface{},
-	url string,
+	baseUrl string, requestPath string,
 	filePath string) errors.EdgeX {
 
-	req, err := createRequestFromFilePath(ctx, http.MethodPut, url, filePath)
+	req, err := createRequestFromFilePath(ctx, http.MethodPut, baseUrl, requestPath, filePath)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}

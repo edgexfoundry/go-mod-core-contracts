@@ -63,7 +63,7 @@ func (cc *commonClient) Version(ctx context.Context) (dtoCommon.VersionResponse,
 }
 
 func (cc *commonClient) AddSecret(ctx context.Context, request dtoCommon.SecretRequest) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, cc.baseUrl+common.ApiSecretRoute, request)
+	err = utils.PostRequestWithRawData(ctx, &res, cc.baseUrl, common.ApiSecretRoute, nil, request)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

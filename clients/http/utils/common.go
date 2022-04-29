@@ -110,7 +110,16 @@ func createRequestWithRawDataAndParams(ctx context.Context, httpMethod string, b
 	return req, nil
 }
 
-func createRequestWithRawData(ctx context.Context, httpMethod string, url string, data interface{}) (*http.Request, errors.EdgeX) {
+func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+	}
+	u.Path = requestPath
+	if requestParams != nil {
+		u.RawQuery = requestParams.Encode()
+	}
+
 	jsonEncodedData, err := json.Marshal(data)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to encode input data to JSON", err)
@@ -121,7 +130,7 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, url string
 		content = common.ContentTypeJSON
 	}
 
-	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(jsonEncodedData))
+	req, err := http.NewRequest(httpMethod, u.String(), bytes.NewReader(jsonEncodedData))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
@@ -130,13 +139,19 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, url string
 	return req, nil
 }
 
-func createRequestWithEncodedData(ctx context.Context, httpMethod string, url string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
+func createRequestWithEncodedData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+	}
+	u.Path = requestPath
+
 	content := encoding
 	if content == "" {
 		content = FromContext(ctx, common.ContentType)
 	}
 
-	req, err := http.NewRequest(httpMethod, url, bytes.NewReader(data))
+	req, err := http.NewRequest(httpMethod, u.String(), bytes.NewReader(data))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
@@ -146,7 +161,13 @@ func createRequestWithEncodedData(ctx context.Context, httpMethod string, url st
 }
 
 // createRequestFromFilePath creates multipart/form-data request with the specified file
-func createRequestFromFilePath(ctx context.Context, httpMethod string, url string, filePath string) (*http.Request, errors.EdgeX) {
+func createRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl string, requestPath string, filePath string) (*http.Request, errors.EdgeX) {
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+	}
+	u.Path = requestPath
+
 	fileContents, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindIOError, fmt.Sprintf("fail to read file from %s", filePath), err)
@@ -164,7 +185,7 @@ func createRequestFromFilePath(ctx context.Context, httpMethod string, url strin
 	}
 	writer.Close()
 
-	req, err := http.NewRequest(httpMethod, url, body)
+	req, err := http.NewRequest(httpMethod, u.String(), body)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}

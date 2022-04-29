@@ -33,7 +33,7 @@ func NewSubscriptionClient(baseUrl string) interfaces.SubscriptionClient {
 
 // Add adds new subscriptions.
 func (client *SubscriptionClient) Add(ctx context.Context, reqs []requests.AddSubscriptionRequest) (res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl+common.ApiSubscriptionRoute, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, common.ApiSubscriptionRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -42,7 +42,7 @@ func (client *SubscriptionClient) Add(ctx context.Context, reqs []requests.AddSu
 
 // Update updates subscriptions.
 func (client *SubscriptionClient) Update(ctx context.Context, reqs []requests.UpdateSubscriptionRequest) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, client.baseUrl+common.ApiSubscriptionRoute, reqs)
+	err = utils.PatchRequest(ctx, &res, client.baseUrl, common.ApiSubscriptionRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -63,7 +63,7 @@ func (client *SubscriptionClient) AllSubscriptions(ctx context.Context, offset i
 
 // SubscriptionsByCategory queries subscriptions with category, offset and limit
 func (client *SubscriptionClient) SubscriptionsByCategory(ctx context.Context, category string, offset int, limit int) (res responses.MultiSubscriptionsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiSubscriptionRoute, common.Category, url.QueryEscape(category))
+	requestPath := path.Join(common.ApiSubscriptionRoute, common.Category, category)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -76,7 +76,7 @@ func (client *SubscriptionClient) SubscriptionsByCategory(ctx context.Context, c
 
 // SubscriptionsByLabel queries subscriptions with label, offset and limit
 func (client *SubscriptionClient) SubscriptionsByLabel(ctx context.Context, label string, offset int, limit int) (res responses.MultiSubscriptionsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiSubscriptionRoute, common.Label, url.QueryEscape(label))
+	requestPath := path.Join(common.ApiSubscriptionRoute, common.Label, label)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -89,7 +89,7 @@ func (client *SubscriptionClient) SubscriptionsByLabel(ctx context.Context, labe
 
 // SubscriptionsByReceiver queries subscriptions with receiver, offset and limit
 func (client *SubscriptionClient) SubscriptionsByReceiver(ctx context.Context, receiver string, offset int, limit int) (res responses.MultiSubscriptionsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiSubscriptionRoute, common.Receiver, url.QueryEscape(receiver))
+	requestPath := path.Join(common.ApiSubscriptionRoute, common.Receiver, receiver)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -102,7 +102,7 @@ func (client *SubscriptionClient) SubscriptionsByReceiver(ctx context.Context, r
 
 // SubscriptionByName query subscription by name.
 func (client *SubscriptionClient) SubscriptionByName(ctx context.Context, name string) (res responses.SubscriptionResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiSubscriptionRoute, common.Name, url.QueryEscape(name))
+	path := path.Join(common.ApiSubscriptionRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -112,7 +112,7 @@ func (client *SubscriptionClient) SubscriptionByName(ctx context.Context, name s
 
 // DeleteSubscriptionByName deletes a subscription by name.
 func (client *SubscriptionClient) DeleteSubscriptionByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiSubscriptionRoute, common.Name, url.QueryEscape(name))
+	path := path.Join(common.ApiSubscriptionRoute, common.Name, name)
 	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

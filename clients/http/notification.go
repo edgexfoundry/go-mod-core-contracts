@@ -33,7 +33,7 @@ func NewNotificationClient(baseUrl string) interfaces.NotificationClient {
 
 // SendNotification sends new notifications.
 func (client *NotificationClient) SendNotification(ctx context.Context, reqs []requests.AddNotificationRequest) (res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl+common.ApiNotificationRoute, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, common.ApiNotificationRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -42,7 +42,7 @@ func (client *NotificationClient) SendNotification(ctx context.Context, reqs []r
 
 // NotificationById query notification by id.
 func (client *NotificationClient) NotificationById(ctx context.Context, id string) (res responses.NotificationResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiNotificationRoute, common.Id, url.QueryEscape(id))
+	path := path.Join(common.ApiNotificationRoute, common.Id, id)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -52,7 +52,7 @@ func (client *NotificationClient) NotificationById(ctx context.Context, id strin
 
 // DeleteNotificationById deletes a notification by id.
 func (client *NotificationClient) DeleteNotificationById(ctx context.Context, id string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiNotificationRoute, common.Id, url.QueryEscape(id))
+	path := path.Join(common.ApiNotificationRoute, common.Id, id)
 	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -62,7 +62,7 @@ func (client *NotificationClient) DeleteNotificationById(ctx context.Context, id
 
 // NotificationsByCategory queries notifications with category, offset and limit
 func (client *NotificationClient) NotificationsByCategory(ctx context.Context, category string, offset int, limit int) (res responses.MultiNotificationsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiNotificationRoute, common.Category, url.QueryEscape(category))
+	requestPath := path.Join(common.ApiNotificationRoute, common.Category, category)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -75,7 +75,7 @@ func (client *NotificationClient) NotificationsByCategory(ctx context.Context, c
 
 // NotificationsByLabel queries notifications with label, offset and limit
 func (client *NotificationClient) NotificationsByLabel(ctx context.Context, label string, offset int, limit int) (res responses.MultiNotificationsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiNotificationRoute, common.Label, url.QueryEscape(label))
+	requestPath := path.Join(common.ApiNotificationRoute, common.Label, label)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -88,7 +88,7 @@ func (client *NotificationClient) NotificationsByLabel(ctx context.Context, labe
 
 // NotificationsByStatus queries notifications with status, offset and limit
 func (client *NotificationClient) NotificationsByStatus(ctx context.Context, status string, offset int, limit int) (res responses.MultiNotificationsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiNotificationRoute, common.Status, url.QueryEscape(status))
+	requestPath := path.Join(common.ApiNotificationRoute, common.Status, status)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -114,7 +114,7 @@ func (client *NotificationClient) NotificationsByTimeRange(ctx context.Context, 
 
 // NotificationsBySubscriptionName query notifications with subscriptionName, offset and limit
 func (client *NotificationClient) NotificationsBySubscriptionName(ctx context.Context, subscriptionName string, offset int, limit int) (res responses.MultiNotificationsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiNotificationRoute, common.Subscription, common.Name, url.QueryEscape(subscriptionName))
+	requestPath := path.Join(common.ApiNotificationRoute, common.Subscription, common.Name, subscriptionName)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

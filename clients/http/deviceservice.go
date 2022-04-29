@@ -29,7 +29,7 @@ func NewDeviceServiceClient(baseUrl string) interfaces.DeviceServiceClient {
 
 func (dsc DeviceServiceClient) Add(ctx context.Context, reqs []requests.AddDeviceServiceRequest) (
 	res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, dsc.baseUrl+common.ApiDeviceServiceRoute, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, dsc.baseUrl, common.ApiDeviceServiceRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -38,7 +38,7 @@ func (dsc DeviceServiceClient) Add(ctx context.Context, reqs []requests.AddDevic
 
 func (dsc DeviceServiceClient) Update(ctx context.Context, reqs []requests.UpdateDeviceServiceRequest) (
 	res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, dsc.baseUrl+common.ApiDeviceServiceRoute, reqs)
+	err = utils.PatchRequest(ctx, &res, dsc.baseUrl, common.ApiDeviceServiceRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -62,7 +62,7 @@ func (dsc DeviceServiceClient) AllDeviceServices(ctx context.Context, labels []s
 
 func (dsc DeviceServiceClient) DeviceServiceByName(ctx context.Context, name string) (
 	res responses.DeviceServiceResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiDeviceServiceRoute, common.Name, url.QueryEscape(name))
+	path := path.Join(common.ApiDeviceServiceRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, dsc.baseUrl, path, nil)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -72,7 +72,7 @@ func (dsc DeviceServiceClient) DeviceServiceByName(ctx context.Context, name str
 
 func (dsc DeviceServiceClient) DeleteByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiDeviceServiceRoute, common.Name, url.QueryEscape(name))
+	path := path.Join(common.ApiDeviceServiceRoute, common.Name, name)
 	err = utils.DeleteRequest(ctx, &res, dsc.baseUrl, path)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

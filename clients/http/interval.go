@@ -34,7 +34,7 @@ func NewIntervalClient(baseUrl string) interfaces.IntervalClient {
 // Add adds new intervals
 func (client IntervalClient) Add(ctx context.Context, reqs []requests.AddIntervalRequest) (
 	res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl+common.ApiIntervalRoute, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, common.ApiIntervalRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -44,7 +44,7 @@ func (client IntervalClient) Add(ctx context.Context, reqs []requests.AddInterva
 // Update updates intervals
 func (client IntervalClient) Update(ctx context.Context, reqs []requests.UpdateIntervalRequest) (
 	res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, client.baseUrl+common.ApiIntervalRoute, reqs)
+	err = utils.PatchRequest(ctx, &res, client.baseUrl, common.ApiIntervalRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -67,7 +67,7 @@ func (client IntervalClient) AllIntervals(ctx context.Context, offset int, limit
 // IntervalByName query the interval by name
 func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 	res responses.IntervalResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiIntervalRoute, common.Name, url.QueryEscape(name))
+	path := path.Join(common.ApiIntervalRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -78,7 +78,7 @@ func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 // DeleteIntervalByName delete the interval by name
 func (client IntervalClient) DeleteIntervalByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiIntervalRoute, common.Name, url.QueryEscape(name))
+	path := path.Join(common.ApiIntervalRoute, common.Name, name)
 	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
