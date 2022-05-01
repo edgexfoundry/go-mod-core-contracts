@@ -62,7 +62,7 @@ func (smc *SystemManagementClient) GetConfig(ctx context.Context, services []str
 }
 
 func (smc *SystemManagementClient) DoOperation(ctx context.Context, reqs []requests.OperationRequest) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, smc.baseUrl+common.ApiOperationRoute, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, smc.baseUrl, common.ApiOperationRoute, nil, reqs)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

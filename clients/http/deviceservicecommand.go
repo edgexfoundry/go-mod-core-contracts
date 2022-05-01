@@ -30,7 +30,7 @@ func NewDeviceServiceCommandClient() interfaces.DeviceServiceCommandClient {
 
 // GetCommand sends HTTP request to execute the Get command
 func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string) (*responses.EventResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
+	requestPath := path.Join(common.ApiDeviceRoute, common.Name, deviceName, commandName)
 	params, err := url.ParseQuery(queryParams)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
@@ -60,8 +60,12 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 // SetCommand sends HTTP request to execute the Set command
 func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
-	err := utils.PutRequest(ctx, &response, baseUrl+requestPath+"?"+queryParams, settings)
+	requestPath := path.Join(common.ApiDeviceRoute, common.Name, deviceName, commandName)
+	params, err := url.ParseQuery(queryParams)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -71,8 +75,12 @@ func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUr
 // SetCommandWithObject invokes device service's set command API and the settings supports object value type
 func (client *deviceServiceCommandClient) SetCommandWithObject(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]interface{}) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := path.Join(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
-	err := utils.PutRequest(ctx, &response, baseUrl+requestPath+"?"+queryParams, settings)
+	requestPath := path.Join(common.ApiDeviceRoute, common.Name, deviceName, commandName)
+	params, err := url.ParseQuery(queryParams)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}

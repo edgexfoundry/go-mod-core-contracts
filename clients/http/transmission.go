@@ -32,7 +32,7 @@ func NewTransmissionClient(baseUrl string) interfaces.TransmissionClient {
 
 // TransmissionById query transmission by id.
 func (client *TransmissionClient) TransmissionById(ctx context.Context, id string) (res responses.TransmissionResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiTransmissionRoute, common.Id, url.QueryEscape(id))
+	path := path.Join(common.ApiTransmissionRoute, common.Id, id)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -67,7 +67,7 @@ func (client *TransmissionClient) AllTransmissions(ctx context.Context, offset i
 
 // TransmissionsByStatus queries transmissions with status, offset and limit
 func (client *TransmissionClient) TransmissionsByStatus(ctx context.Context, status string, offset int, limit int) (res responses.MultiTransmissionsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiTransmissionRoute, common.Status, url.QueryEscape(status))
+	requestPath := path.Join(common.ApiTransmissionRoute, common.Status, status)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -90,7 +90,7 @@ func (client *TransmissionClient) DeleteProcessedTransmissionsByAge(ctx context.
 
 // TransmissionsBySubscriptionName query transmissions with subscriptionName, offset and limit
 func (client *TransmissionClient) TransmissionsBySubscriptionName(ctx context.Context, subscriptionName string, offset int, limit int) (res responses.MultiTransmissionsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiTransmissionRoute, common.Subscription, common.Name, url.QueryEscape(subscriptionName))
+	requestPath := path.Join(common.ApiTransmissionRoute, common.Subscription, common.Name, subscriptionName)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -103,7 +103,7 @@ func (client *TransmissionClient) TransmissionsBySubscriptionName(ctx context.Co
 
 // TransmissionsByNotificationId query transmissions with notification id, offset and limit
 func (client *TransmissionClient) TransmissionsByNotificationId(ctx context.Context, id string, offset int, limit int) (res responses.MultiTransmissionsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiTransmissionRoute, common.Notification, common.Id, url.QueryEscape(id))
+	requestPath := path.Join(common.ApiTransmissionRoute, common.Notification, common.Id, id)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

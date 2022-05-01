@@ -90,6 +90,31 @@ func (_m *CommandClient) IssueGetCommandByName(ctx context.Context, deviceName s
 	return r0, r1
 }
 
+// IssueGetCommandByNameWithQueryParams provides a mock function with given fields: ctx, deviceName, commandName, queryParams
+func (_m *CommandClient) IssueGetCommandByNameWithQueryParams(ctx context.Context, deviceName string, commandName string, queryParams map[string]string) (*responses.EventResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, deviceName, commandName, queryParams)
+
+	var r0 *responses.EventResponse
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, map[string]string) *responses.EventResponse); ok {
+		r0 = rf(ctx, deviceName, commandName, queryParams)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*responses.EventResponse)
+		}
+	}
+
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(1).(func(context.Context, string, string, map[string]string) errors.EdgeX); ok {
+		r1 = rf(ctx, deviceName, commandName, queryParams)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
 // IssueSetCommandByName provides a mock function with given fields: ctx, deviceName, commandName, settings
 func (_m *CommandClient) IssueSetCommandByName(ctx context.Context, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX) {
 	ret := _m.Called(ctx, deviceName, commandName, settings)
