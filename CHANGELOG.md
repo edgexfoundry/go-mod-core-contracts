@@ -3,6 +3,41 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
+## [v2.2.0] - 2022-05-11
+
+### Features ✨
+
+- add new method for CommandClient ([#a13ffb3](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a13ffb3))
+- Add new device profile API clients ([#3d2ca3b](https://github.com/edgexfoundry/go-mod-core-contracts/commits/3d2ca3b))
+- Add Units property to reading DTO and model ([#637851d](https://github.com/edgexfoundry/go-mod-core-contracts/commits/637851d))
+- Add Metric DTO to hold data for a single metric ([#6f432a9](https://github.com/edgexfoundry/go-mod-core-contracts/commits/6f432a9))
+- Add DTOs for device profile changes ([#ee12520](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ee12520))
+- Remove DeviceProfile deviceResources validate gt=0 ([#fd99e17](https://github.com/edgexfoundry/go-mod-core-contracts/commits/fd99e17))
+- Add new routes for device profile changes ([#e5aff1a](https://github.com/edgexfoundry/go-mod-core-contracts/commits/e5aff1a))
+- extend DeviceServiceCallbackClient to support validation API ([#20c4465](https://github.com/edgexfoundry/go-mod-core-contracts/commits/20c4465))
+- Add ServiceName to Common DTOs ([#043134c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/043134c))
+- update device validation route ([#a30116e](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a30116e))
+- add validate API route for device service ([#e6de2b0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/e6de2b0))
+- **security:** Add a new constant for security-spiffe-token-provider ([#306938c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/306938c))
+
+### Test
+
+- Generate mock CommandClient for unit test ([#9b8e31f](https://github.com/edgexfoundry/go-mod-core-contracts/commits/9b8e31f))
+
+### Bug Fixes 🐛
+
+- Remove redundant URL escaping from Client lib ([#c67fdec](https://github.com/edgexfoundry/go-mod-core-contracts/commits/c67fdec))
+- Remove JSON omitempty from SimpleReading value ([#d83bf3a](https://github.com/edgexfoundry/go-mod-core-contracts/commits/d83bf3a))
+- Update device resource/command DTO ([#59aa69d](https://github.com/edgexfoundry/go-mod-core-contracts/commits/59aa69d))
+- Add yaml:inline to DeviceProfile DTO DeviceProfileBasicInfo ([#4d80223](https://github.com/edgexfoundry/go-mod-core-contracts/commits/4d80223))
+- Update the ReadWrite validation to include WR ([#708](https://github.com/edgexfoundry/go-mod-core-contracts/issues/708)) ([#b3917be](https://github.com/edgexfoundry/go-mod-core-contracts/commits/b3917be))
+- update network connectivity problem error kind ([#a52b776](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a52b776))
+- Adding the missed PATCH method in REST Address DTO ([#a113ab0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a113ab0))
+
+### Build 👷
+
+- **security:** Enable gosec and default linter set ([#6ac863c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/6ac863c))
+
 ## [v2.1.0] - 2021-11-17
 
 ### Features ✨
