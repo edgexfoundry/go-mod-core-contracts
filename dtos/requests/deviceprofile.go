@@ -7,11 +7,13 @@ package requests
 
 import (
 	"encoding/json"
+	"errors"
+	"strings"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	edgexErrors "github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
@@ -27,7 +29,10 @@ type DeviceProfileRequest struct {
 func (dp DeviceProfileRequest) Validate() error {
 	err := common.Validate(dp)
 	if err != nil {
-		return err
+		// The DeviceProfileBasicInfo is the internal struct in Golang programming, not in the Profile model,
+		// so it should be hidden from the error messages.
+		err = errors.New(strings.ReplaceAll(err.Error(), ".DeviceProfileBasicInfo", ""))
+		return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, "", err)
 	}
 	return dp.Profile.Validate()
 }
@@ -39,7 +44,7 @@ func (dp *DeviceProfileRequest) UnmarshalJSON(b []byte) error {
 		Profile dtos.DeviceProfile
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
+		return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
 	}
 
 	*dp = DeviceProfileRequest(alias)
@@ -53,7 +58,7 @@ func (dp *DeviceProfileRequest) UnmarshalJSON(b []byte) error {
 	for i, resource := range dp.Profile.DeviceResources {
 		valueType, err := common.NormalizeValueType(resource.Properties.ValueType)
 		if err != nil {
-			return errors.NewCommonEdgeXWrapper(err)
+			return edgexErrors.NewCommonEdgeXWrapper(err)
 		}
 		dp.Profile.DeviceResources[i].Properties.ValueType = valueType
 	}
