@@ -6,11 +6,12 @@
 package dtos
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	edgexErrors "github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
@@ -27,7 +28,10 @@ type DeviceProfile struct {
 func (dp *DeviceProfile) Validate() error {
 	err := common.Validate(dp)
 	if err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid DeviceProfile.", err)
+		// The DeviceProfileBasicInfo is the internal struct in Golang programming, not in the Profile model,
+		// so it should be hidden from the error messages.
+		err = errors.New(strings.ReplaceAll(err.Error(), ".DeviceProfileBasicInfo", ""))
+		return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, "Invalid DeviceProfile.", err)
 	}
 	return ValidateDeviceProfileDTO(*dp)
 }
@@ -41,19 +45,19 @@ func (dp *DeviceProfile) UnmarshalYAML(unmarshal func(interface{}) error) error 
 		DeviceCommands         []DeviceCommand  `yaml:"deviceCommands"`
 	}
 	if err := unmarshal(&alias); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to unmarshal request body as YAML.", err)
+		return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, "failed to unmarshal request body as YAML.", err)
 	}
 	*dp = DeviceProfile(alias)
 
 	if err := dp.Validate(); err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
+		return edgexErrors.NewCommonEdgeXWrapper(err)
 	}
 
 	// Normalize resource's value type
 	for i, resource := range dp.DeviceResources {
 		valueType, err := common.NormalizeValueType(resource.Properties.ValueType)
 		if err != nil {
-			return errors.NewCommonEdgeXWrapper(err)
+			return edgexErrors.NewCommonEdgeXWrapper(err)
 		}
 		dp.DeviceResources[i].Properties.ValueType = valueType
 	}
@@ -98,11 +102,11 @@ func ValidateDeviceProfileDTO(profile DeviceProfile) error {
 	for _, resource := range profile.DeviceResources {
 		if resource.Properties.ValueType == common.ValueTypeBinary &&
 			strings.Contains(resource.Properties.ReadWrite, common.ReadWrite_W) {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("write permission not support %s value type for resource '%s'", common.ValueTypeBinary, resource.Name), nil)
+			return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("write permission not support %s value type for resource '%s'", common.ValueTypeBinary, resource.Name), nil)
 		}
 		// deviceResource name should not duplicated
 		if dupCheck[resource.Name] {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device resource %s is duplicated", resource.Name), nil)
+			return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("device resource %s is duplicated", resource.Name), nil)
 		}
 		dupCheck[resource.Name] = true
 	}
@@ -111,7 +115,7 @@ func ValidateDeviceProfileDTO(profile DeviceProfile) error {
 	for _, command := range profile.DeviceCommands {
 		// deviceCommand name should not duplicated
 		if dupCheck[command.Name] {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command %s is duplicated", command.Name), nil)
+			return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("device command %s is duplicated", command.Name), nil)
 		}
 		dupCheck[command.Name] = true
 
@@ -119,11 +123,11 @@ func ValidateDeviceProfileDTO(profile DeviceProfile) error {
 		for _, ro := range resourceOperations {
 			// ResourceOperations referenced in deviceCommands must exist
 			if !deviceResourcesContains(profile.DeviceResources, ro.DeviceResource) {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's resource %s doesn't match any device resource", ro.DeviceResource), nil)
+				return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("device command's resource %s doesn't match any device resource", ro.DeviceResource), nil)
 			}
 			// Check the ReadWrite whether is align to the deviceResource
 			if !validReadWritePermission(profile.DeviceResources, ro.DeviceResource, command.ReadWrite) {
-				return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("device command's ReadWrite permission '%s' doesn't align the device resource", command.ReadWrite), nil)
+				return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("device command's ReadWrite permission '%s' doesn't align the device resource", command.ReadWrite), nil)
 			}
 		}
 	}
