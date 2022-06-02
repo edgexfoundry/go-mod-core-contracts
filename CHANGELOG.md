@@ -3,6 +3,12 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
+## [v2.1.1] - 2022-06-08
+
+### Bug Fixes 🐛
+
+- Adding the missed PATCH method in REST Address DTO ([#c8112de](https://github.com/edgexfoundry/go-mod-core-contracts/commits/c8112de))
+
 ## [v2.1.0] - 2021-11-17
 
 ### Features ✨
