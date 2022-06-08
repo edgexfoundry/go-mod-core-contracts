@@ -195,7 +195,8 @@ func convertSimpleArrayValue(valueType string, kind reflect.Kind, value interfac
 }
 
 func convertFloat32ArrayValue(values []float32) (string, error) {
-	result := "["
+	var result strings.Builder
+	result.WriteString("[")
 	first := true
 	for _, value := range values {
 		if first {
@@ -203,7 +204,7 @@ func convertFloat32ArrayValue(values []float32) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			result += floatValue
+			result.WriteString(floatValue)
 			first = false
 			continue
 		}
@@ -212,15 +213,16 @@ func convertFloat32ArrayValue(values []float32) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		result += ", " + floatValue
+		result.WriteString(", " + floatValue)
 	}
 
-	result += "]"
-	return result, nil
+	result.WriteString("]")
+	return result.String(), nil
 }
 
 func convertFloat64ArrayValue(values []float64) (string, error) {
-	result := "["
+	var result strings.Builder
+	result.WriteString("[")
 	first := true
 	for _, value := range values {
 		if first {
@@ -228,7 +230,7 @@ func convertFloat64ArrayValue(values []float64) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			result += floatValue
+			result.WriteString(floatValue)
 			first = false
 			continue
 		}
@@ -237,11 +239,11 @@ func convertFloat64ArrayValue(values []float64) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		result += ", " + floatValue
+		result.WriteString(", " + floatValue)
 	}
 
-	result += "]"
-	return result, nil
+	result.WriteString("]")
+	return result.String(), nil
 }
 
 func validateType(valueType string, kind reflect.Kind, value interface{}) error {

@@ -107,25 +107,25 @@ func ValidateMetricName(name string, nameType string) error {
 // Note that this is a simple helper function for those receiving this DTO that are pushing metrics to an endpoint
 // that receives LineProtocol such as InfluxDb or Telegraf
 func (m *Metric) ToLineProtocol() string {
+	var fields strings.Builder
 	isFirst := true
-	fields := ""
 	for _, field := range m.Fields {
 		// Fields section doesn't have a leading comma per syntax above so need to skip the comma on the first field
 		if isFirst {
 			isFirst = false
 		} else {
-			fields += ","
+			fields.WriteString(",")
 		}
-		fields += fmt.Sprintf("%s=%s", field.Name, formatLineProtocolValue(field.Value))
+		fields.WriteString(field.Name + "=" + formatLineProtocolValue(field.Value))
 	}
 
 	// Tags section does have a leading comma per syntax above
-	tags := ""
+	var tags strings.Builder
 	for _, tag := range m.Tags {
-		tags += fmt.Sprintf(",%s=%s", tag.Name, tag.Value)
+		tags.WriteString("," + tag.Name + "=" + tag.Value)
 	}
 
-	result := fmt.Sprintf("%s%s %s %d", m.Name, tags, fields, m.Timestamp)
+	result := fmt.Sprintf("%s%s %s %d", m.Name, tags.String(), fields.String(), m.Timestamp)
 
 	return result
 }
