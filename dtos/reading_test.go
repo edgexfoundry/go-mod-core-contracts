@@ -231,3 +231,80 @@ func TestNewObjectReading(t *testing.T) {
 	assert.Equal(t, expectedValue, actual.ObjectValue)
 	assert.NotZero(t, actual.Origin)
 }
+
+func TestValidateValue(t *testing.T) {
+	tests := []struct {
+		name      string
+		valueType string
+		value     string
+	}{
+		{"Simple Boolean (true)", common.ValueTypeBool, "True"},
+		{"Simple String", common.ValueTypeString, "hello world"},
+		{"Simple Uint8", common.ValueTypeUint8, "123"},
+		{"Simple Uint16", common.ValueTypeUint16, "12345"},
+		{"Simple Uint32", common.ValueTypeUint32, "1234567890"},
+		{"Simple uint64", common.ValueTypeUint64, "1234567890987654321"},
+		{"Simple int8", common.ValueTypeInt8, "-123"},
+		{"Simple int16", common.ValueTypeInt16, "-12345"},
+		{"Simple int32", common.ValueTypeInt32, "-1234567890"},
+		{"Simple int64", common.ValueTypeInt64, "-1234567890987654321"},
+		{"Simple Float32", common.ValueTypeFloat32, "123.456"},
+		{"Simple Float64", common.ValueTypeFloat64, "123456789.0987654321"},
+		{"Simple Boolean Array", common.ValueTypeBoolArray, "[true, false]"},
+		{"Simple String Array", common.ValueTypeStringArray, "[\"hello\", \"world\"]"},
+		{"Simple Uint8 Array", common.ValueTypeUint8Array, "[123, 21]"},
+		{"Simple Uint16 Array", common.ValueTypeUint16Array, "[12345, 4321]"},
+		{"Simple Uint32 Array", common.ValueTypeUint32Array, "[1234567890, 87654321]"},
+		{"Simple Uint64 Array", common.ValueTypeUint64Array, "[1234567890987654321, 10987654321]"},
+		{"Simple Int8 Array", common.ValueTypeInt8Array, "[-123, 123]"},
+		{"Simple Int16 Array", common.ValueTypeInt16Array, "[-12345, 12345]"},
+		{"Simple Int32 Array", common.ValueTypeInt32Array, "[-1234567890, 1234567890]"},
+		{"Simple Int64 Array", common.ValueTypeInt64Array, "[-1234567890987654321, 1234567890987654321]"},
+		{"Simple Float32 Array", common.ValueTypeFloat32Array, "[123.456, -654.321]"},
+		{"Simple Float64 Array", common.ValueTypeFloat64Array, "[123456789.0987654321, -987654321.123456789]"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidateValue(tt.valueType, tt.value)
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestValidateValueError(t *testing.T) {
+	invalidValue := "invalid"
+	tests := []struct {
+		name      string
+		valueType string
+	}{
+		{"Invalid Simple Boolean (true)", common.ValueTypeBool},
+		{"Invalid Simple Uint8", common.ValueTypeUint8},
+		{"Invalid Simple Uint16", common.ValueTypeUint16},
+		{"Invalid Simple Uint32", common.ValueTypeUint32},
+		{"Invalid Simple uint64", common.ValueTypeUint64},
+		{"Invalid Simple int8", common.ValueTypeInt8},
+		{"Invalid Simple int16", common.ValueTypeInt16},
+		{"Invalid Simple int32", common.ValueTypeInt32},
+		{"Invalid Simple int64", common.ValueTypeInt64},
+		{"Invalid Simple Float32", common.ValueTypeFloat32},
+		{"Invalid Simple Float64", common.ValueTypeFloat64},
+		{"Invalid Simple Boolean Array", common.ValueTypeBoolArray},
+		{"Invalid Simple Uint8 Array", common.ValueTypeUint8Array},
+		{"Invalid Simple Uint16 Array", common.ValueTypeUint16Array},
+		{"Invalid Simple Uint32 Array", common.ValueTypeUint32Array},
+		{"Invalid Simple Uint64 Array", common.ValueTypeUint64Array},
+		{"Invalid Simple Int8 Array", common.ValueTypeInt8Array},
+		{"Invalid Simple Int16 Array", common.ValueTypeInt16Array},
+		{"Invalid Simple Int32 Array", common.ValueTypeInt32Array},
+		{"Invalid Simple Int64 Array", common.ValueTypeInt64Array},
+		{"Invalid Simple Float32 Array", common.ValueTypeFloat32Array},
+		{"Invalid Simple Float64 Array", common.ValueTypeFloat64Array},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidateValue(tt.valueType, invalidValue)
+			require.Error(t, err)
+		})
+	}
+}
