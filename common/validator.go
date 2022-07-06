@@ -1,3 +1,5 @@
+//go:build !no_dto_validator
+
 //
 // Copyright (C) 2020-2021 IOTech Ltd
 //
