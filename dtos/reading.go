@@ -8,12 +8,14 @@ package dtos
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
+	edgexErrors "github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 )
 
@@ -281,6 +283,9 @@ func (b BaseReading) Validate() error {
 		if err := common.Validate(simpleReading); err != nil {
 			return err
 		}
+		if err := ValidateValue(b.ValueType, simpleReading.Value); err != nil {
+			return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("The value does not match the %v valueType", b.ValueType), nil)
+		}
 	}
 
 	return nil
@@ -357,4 +362,87 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	}
 
 	return baseReading
+}
+
+// ValidateValue used to check whether the value and valueType are matched
+func ValidateValue(valueType string, value string) error {
+	if strings.Contains(valueType, "Array") {
+		return parseArrayValue(valueType, value)
+	} else {
+		return parseSimpleValue(valueType, value)
+	}
+}
+
+func parseSimpleValue(valueType string, value string) (err error) {
+	switch valueType {
+	case common.ValueTypeBool:
+		_, err = strconv.ParseBool(value)
+
+	case common.ValueTypeUint8:
+		_, err = strconv.ParseUint(value, 10, 8)
+	case common.ValueTypeUint16:
+		_, err = strconv.ParseUint(value, 10, 16)
+	case common.ValueTypeUint32:
+		_, err = strconv.ParseUint(value, 10, 32)
+	case common.ValueTypeUint64:
+		_, err = strconv.ParseUint(value, 10, 64)
+
+	case common.ValueTypeInt8:
+		_, err = strconv.ParseInt(value, 10, 8)
+	case common.ValueTypeInt16:
+		_, err = strconv.ParseInt(value, 10, 16)
+	case common.ValueTypeInt32:
+		_, err = strconv.ParseInt(value, 10, 32)
+	case common.ValueTypeInt64:
+		_, err = strconv.ParseInt(value, 10, 64)
+
+	case common.ValueTypeFloat32:
+		_, err = strconv.ParseFloat(value, 32)
+	case common.ValueTypeFloat64:
+		_, err = strconv.ParseFloat(value, 64)
+	}
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func parseArrayValue(valueType string, value string) (err error) {
+	arrayValue := strings.Split(value[1:len(value)-1], ", ") // trim "[" and "]"
+
+	for _, v := range arrayValue {
+		switch valueType {
+		case common.ValueTypeBoolArray:
+			err = parseSimpleValue(common.ValueTypeBool, v)
+
+		case common.ValueTypeUint8Array:
+			err = parseSimpleValue(common.ValueTypeUint8, v)
+		case common.ValueTypeUint16Array:
+			err = parseSimpleValue(common.ValueTypeUint16, v)
+		case common.ValueTypeUint32Array:
+			err = parseSimpleValue(common.ValueTypeUint32, v)
+		case common.ValueTypeUint64Array:
+			err = parseSimpleValue(common.ValueTypeUint64, v)
+
+		case common.ValueTypeInt8Array:
+			err = parseSimpleValue(common.ValueTypeInt8, v)
+		case common.ValueTypeInt16Array:
+			err = parseSimpleValue(common.ValueTypeInt16, v)
+		case common.ValueTypeInt32Array:
+			err = parseSimpleValue(common.ValueTypeInt32, v)
+		case common.ValueTypeInt64Array:
+			err = parseSimpleValue(common.ValueTypeInt64, v)
+
+		case common.ValueTypeFloat32Array:
+			err = parseSimpleValue(common.ValueTypeFloat32, v)
+		case common.ValueTypeFloat64Array:
+			err = parseSimpleValue(common.ValueTypeFloat64, v)
+
+		}
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
