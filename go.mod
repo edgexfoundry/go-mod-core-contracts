@@ -1,5 +1,7 @@
 module github.com/edgexfoundry/go-mod-core-contracts/v2
 
+go 1.18
+
 require (
 	github.com/fxamacker/cbor/v2 v2.4.0
 	github.com/go-kit/log v0.2.1
@@ -22,5 +24,3 @@ require (
 	golang.org/x/sys v0.0.0-20210917161153-d61c044b1678 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
-
-go 1.17
