@@ -26,13 +26,13 @@ import (
 // SystemEvent defines the data for a system event
 type SystemEvent struct {
 	common.Versionable `json:",inline"`
-	Type               string
-	Action             string
-	Source             string
-	Owner              string
-	Tags               map[string]string
-	Details            any
-	Timestamp          int64
+	Type               string            `json:"type"`
+	Action             string            `json:"action"`
+	Source             string            `json:"source"`
+	Owner              string            `json:"owner"`
+	Tags               map[string]string `json:"tags"`
+	Details            any               `json:"details"`
+	Timestamp          int64             `json:"timestamp"`
 }
 
 // NewSystemEvent creates a new SystemEvent for the specified data
