@@ -292,3 +292,11 @@ const (
 	ContentTypeText = "text/plain"
 	ContentTypeXML  = "application/xml"
 )
+
+// Constants related to System Events
+const (
+	DeviceSystemEventType         = "device"
+	DeviceSystemEventActionAdd    = "add"
+	DeviceSystemEventActionUpdate = "update"
+	DeviceSystemEventActionDelete = "delete"
+)
