@@ -16,8 +16,8 @@ type DeviceService struct {
 	Id            string   `json:"id,omitempty" validate:"omitempty,uuid"`
 	Name          string   `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Description   string   `json:"description,omitempty"`
-	LastConnected int64    `json:"lastConnected,omitempty"`
-	LastReported  int64    `json:"lastReported,omitempty"`
+	LastConnected int64    `json:"lastConnected,omitempty"` // Deprecated: will be replaced by Metrics in v3
+	LastReported  int64    `json:"lastReported,omitempty"`  // Deprecated: will be replaced by Metrics in v3
 	Labels        []string `json:"labels,omitempty"`
 	BaseAddress   string   `json:"baseAddress" validate:"required,uri"`
 	AdminState    string   `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
@@ -29,8 +29,8 @@ type UpdateDeviceService struct {
 	Id            *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name          *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Description   *string  `json:"description"`
-	LastConnected *int64   `json:"lastConnected"`
-	LastReported  *int64   `json:"lastReported"`
+	LastConnected *int64   `json:"lastConnected"` // Deprecated: will be replaced by Metrics in v3
+	LastReported  *int64   `json:"lastReported"`  // Deprecated: will be replaced by Metrics in v3
 	BaseAddress   *string  `json:"baseAddress" validate:"omitempty,uri"`
 	Labels        []string `json:"labels"`
 	AdminState    *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`

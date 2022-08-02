@@ -16,8 +16,8 @@ type Device struct {
 	AdminState     AdminState
 	OperatingState OperatingState
 	Protocols      map[string]ProtocolProperties
-	LastConnected  int64
-	LastReported   int64
+	LastConnected  int64 // Deprecated: will be replaced by Metrics in v3
+	LastReported   int64 // Deprecated: will be replaced by Metrics in v3
 	Labels         []string
 	Location       interface{}
 	ServiceName    string
