@@ -13,8 +13,8 @@ type DeviceService struct {
 	Id            string
 	Name          string
 	Description   string
-	LastConnected int64
-	LastReported  int64
+	LastConnected int64 // Deprecated: will be replaced by Metrics in v3
+	LastReported  int64 // Deprecated: will be replaced by Metrics in v3
 	Labels        []string
 	BaseAddress   string
 	AdminState    AdminState
