@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2022 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -100,11 +100,12 @@ const (
 	ApiTransmissionByStatusRoute           = ApiTransmissionRoute + "/" + Status + "/{" + Status + "}"
 	ApiTransmissionByNotificationIdRoute   = ApiTransmissionRoute + "/" + Notification + "/" + Id + "/{" + Id + "}"
 
-	ApiConfigRoute  = ApiBase + "/config"
-	ApiMetricsRoute = ApiBase + "/metrics"
-	ApiPingRoute    = ApiBase + "/ping"
-	ApiVersionRoute = ApiBase + "/version"
-	ApiSecretRoute  = ApiBase + "/secret"
+	ApiConfigRoute         = ApiBase + "/config"
+	ApiMetricsRoute        = ApiBase + "/metrics"
+	ApiPingRoute           = ApiBase + "/ping"
+	ApiVersionRoute        = ApiBase + "/version"
+	ApiSecretRoute         = ApiBase + "/secret"
+	ApiUnitsOfMeasureRoute = ApiBase + "/uom"
 
 	ApiDeviceCallbackRoute      = ApiBase + "/callback/device"
 	ApiDeviceCallbackNameRoute  = ApiBase + "/callback/device/name/{name}"
@@ -284,10 +285,12 @@ const (
 
 // Constants related to the possible content types supported by the APIs
 const (
+	Accept          = "Accept"
 	ContentType     = "Content-Type"
 	ContentLength   = "Content-Length"
 	ContentTypeCBOR = "application/cbor"
 	ContentTypeJSON = "application/json"
+	ContentTypeTOML = "application/toml"
 	ContentTypeYAML = "application/x-yaml"
 	ContentTypeText = "text/plain"
 	ContentTypeXML  = "application/xml"
