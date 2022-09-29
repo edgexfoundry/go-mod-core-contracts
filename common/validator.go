@@ -34,7 +34,7 @@ const (
 const (
 	// Per https://tools.ietf.org/html/rfc3986#section-2.3, unreserved characters= ALPHA / DIGIT / "-" / "." / "_" / "~"
 	// Also due to names used in topics for Redis Pub/Sub, "."are not allowed
-	rFC3986UnreservedCharsRegexString = "^[a-zA-Z0-9-_~]+$"
+	rFC3986UnreservedCharsRegexString = "^[a-zA-Z0-9-_~:;=]+$"
 	intervalDatetimeLayout            = "20060102T150405"
 	name                              = "Name"
 )
@@ -95,7 +95,7 @@ func getErrorMessage(e validator.FieldError) string {
 	case dtoNoneEmptyStringTag:
 		msg = fmt.Sprintf("%s field should not be empty string", fieldName)
 	case dtoRFC3986UnreservedCharTag:
-		msg = fmt.Sprintf("%s field only allows unreserved characters which are ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_~", fieldName)
+		msg = fmt.Sprintf("%s field only allows unreserved characters which are ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_~:;=", fieldName)
 	default:
 		msg = fmt.Sprintf("%s field validation failed on the %s tag", fieldName, tag)
 	}
