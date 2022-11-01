@@ -3,6 +3,34 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
+## [v2.3.0] - 2022-11-09
+
+### Features ✨
+
+- Reduce the character restriction for name fields ([#49dcdfb](https://github.com/edgexfoundry/go-mod-core-contracts/commits/49dcdfb))
+- Add UoM API route and UoM response DTO ([#aa36825](https://github.com/edgexfoundry/go-mod-core-contracts/commits/aa36825))
+- Add new SystemEvent DTO ([#c11c1bf](https://github.com/edgexfoundry/go-mod-core-contracts/commits/c11c1bf))
+- Add SimpleReading value validation to prevent type mismatch ([#3cd3c74](https://github.com/edgexfoundry/go-mod-core-contracts/commits/3cd3c74))
+
+### Bug Fixes 🐛
+
+- Keep the existing baseUrl path in helper function ([#abc04af](https://github.com/edgexfoundry/go-mod-core-contracts/commits/abc04af))
+- Remove DeviceProfileBasicInfo fieldName from validation error messages ([#8656825](https://github.com/edgexfoundry/go-mod-core-contracts/commits/8656825))
+
+### Code Refactoring ♻
+
+- Adding config stem constants ([#33d1416](https://github.com/edgexfoundry/go-mod-core-contracts/commits/33d1416))
+- Improve string concatenate logic for Metric DTO ToLineProtocol() ([#c7c3660](https://github.com/edgexfoundry/go-mod-core-contracts/commits/c7c3660))
+
+### Documentation 📖
+
+- Add deprecated annotation to lastConnected and lastReported ([#ab92af2](https://github.com/edgexfoundry/go-mod-core-contracts/commits/ab92af2))
+
+### Build 👷
+
+- Upgrade to Go 1.18 ([#de188ed](https://github.com/edgexfoundry/go-mod-core-contracts/commits/de188ed))
+- Add go build tag to exclude DTO validator ([#af18e4a](https://github.com/edgexfoundry/go-mod-core-contracts/commits/af18e4a))
+
 ## [v2.2.0] - 2022-05-11
 
 ### Features ✨
