@@ -305,8 +305,9 @@ const (
 )
 
 const (
-	ConfigStemApp      = "edgex/appservices/"
-	ConfigStemCore     = "edgex/core/"
-	ConfigStemDevice   = "edgex/devices/"
-	ConfigStemSecurity = "edgex/security/"
+	ConfigStemAll      = "edgex/3.0"
+	ConfigStemApp      = ConfigStemAll
+	ConfigStemCore     = ConfigStemAll
+	ConfigStemDevice   = ConfigStemAll
+	ConfigStemSecurity = ConfigStemAll
 )
