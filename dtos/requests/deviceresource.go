@@ -8,11 +8,11 @@ package requests
 import (
 	"encoding/json"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 )
 
 // DeviceResourceRequest defines the Request Content for POST DeviceResource DTO.
@@ -83,7 +83,7 @@ func (dr *UpdateDeviceResourceRequest) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-//  ReplaceDeviceResourceModelFieldsWithDTO replace existing DeviceResource's fields with DTO patch
+// ReplaceDeviceResourceModelFieldsWithDTO replace existing DeviceResource's fields with DTO patch
 func ReplaceDeviceResourceModelFieldsWithDTO(dr *models.DeviceResource, patch dtos.UpdateDeviceResource) {
 	if patch.Description != nil {
 		dr.Description = *patch.Description

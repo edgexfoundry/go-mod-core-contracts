@@ -8,11 +8,11 @@ package requests
 import (
 	"encoding/json"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 )
 
 // AddDeviceCommandRequest defines the Request Content for POST DeviceCommand DTO.
@@ -85,7 +85,7 @@ func (dc *UpdateDeviceCommandRequest) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-//  ReplaceDeviceCommandModelFieldsWithDTO replace existing DeviceCommand's fields with DTO patch
+// ReplaceDeviceCommandModelFieldsWithDTO replace existing DeviceCommand's fields with DTO patch
 func ReplaceDeviceCommandModelFieldsWithDTO(dc *models.DeviceCommand, patch dtos.UpdateDeviceCommand) {
 	if patch.IsHidden != nil {
 		dc.IsHidden = *patch.IsHidden

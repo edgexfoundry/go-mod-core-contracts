@@ -8,11 +8,11 @@ package requests
 import (
 	"encoding/json"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos"
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 )
 
 // DeviceProfileBasicInfoRequest defines the Request Content for PATCH UpdateDeviceProfileBasicInfo DTO.
@@ -48,7 +48,7 @@ func (d *DeviceProfileBasicInfoRequest) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-//  ReplaceDeviceProfileModelBasicInfoFieldsWithDTO replace existing DeviceProfile's basic info fields with DTO patch
+// ReplaceDeviceProfileModelBasicInfoFieldsWithDTO replace existing DeviceProfile's basic info fields with DTO patch
 func ReplaceDeviceProfileModelBasicInfoFieldsWithDTO(dp *models.DeviceProfile, patch dtos.UpdateDeviceProfileBasicInfo) {
 	if patch.Description != nil {
 		dp.Description = *patch.Description
