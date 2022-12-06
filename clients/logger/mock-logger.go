@@ -14,7 +14,7 @@
 
 package logger
 
-import "github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+import "github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 
 // MockLogger is a type that can be used for mocking the LoggingClient interface during unit tests
 type MockLogger struct {

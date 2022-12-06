@@ -8,7 +8,7 @@ package models
 import (
 	"encoding/json"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 )
 
 // Subscription and its properties are defined in the APIv2 specification:

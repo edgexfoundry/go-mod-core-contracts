@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
 )
 
 // Metric defines the metric data for a specific named metric
@@ -99,10 +99,13 @@ func ValidateMetricName(name string, nameType string) error {
 // ToLineProtocol transforms the Metric to Line Protocol syntax which is most commonly used with InfluxDB
 // For more information on Line Protocol see: https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/
 // Line Protocol Syntax:
-//    <measurement>[,<tag_key>=<tag_value>[,<tag_key>=<tag_value>]] <field_key>=<field_value>[,<field_key>=<field_value>] [<timestamp>]
+//
+//	<measurement>[,<tag_key>=<tag_value>[,<tag_key>=<tag_value>]] <field_key>=<field_value>[,<field_key>=<field_value>] [<timestamp>]
+//
 // Examples:
-//    measurementName fieldKey="field string value" 1556813561098000000
-//    myMeasurement,tag1=value1,tag2=value2 fieldKey="fieldValue" 1556813561098000000
+//
+//	measurementName fieldKey="field string value" 1556813561098000000
+//	myMeasurement,tag1=value1,tag2=value2 fieldKey="fieldValue" 1556813561098000000
 //
 // Note that this is a simple helper function for those receiving this DTO that are pushing metrics to an endpoint
 // that receives LineProtocol such as InfluxDb or Telegraf

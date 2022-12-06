@@ -5,7 +5,7 @@
 
 package dtos
 
-import "github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+import "github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 
 // ResourceProperties and its properties care defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/ResourceProperties
