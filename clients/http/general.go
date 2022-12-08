@@ -16,17 +16,19 @@ import (
 )
 
 type generalClient struct {
-	baseUrl string
+	baseUrl     string
+	jwtProvider interfaces.JWTProvider
 }
 
-func NewGeneralClient(baseUrl string) interfaces.GeneralClient {
+func NewGeneralClient(baseUrl string, jwtProvider interfaces.JWTProvider) interfaces.GeneralClient {
 	return &generalClient{
-		baseUrl: baseUrl,
+		baseUrl:     baseUrl,
+		jwtProvider: jwtProvider,
 	}
 }
 
 func (g *generalClient) FetchConfiguration(ctx context.Context) (res dtoCommon.ConfigResponse, err errors.EdgeX) {
-	err = utils.GetRequest(ctx, &res, g.baseUrl, common.ApiConfigRoute, nil)
+	err = utils.GetRequest(ctx, &res, g.baseUrl, common.ApiConfigRoute, nil, g.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -35,7 +37,7 @@ func (g *generalClient) FetchConfiguration(ctx context.Context) (res dtoCommon.C
 }
 
 func (g *generalClient) FetchMetrics(ctx context.Context) (res dtoCommon.MetricsResponse, err errors.EdgeX) {
-	err = utils.GetRequest(ctx, &res, g.baseUrl, common.ApiMetricsRoute, nil)
+	err = utils.GetRequest(ctx, &res, g.baseUrl, common.ApiMetricsRoute, nil, g.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

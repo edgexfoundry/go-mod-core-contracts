@@ -21,20 +21,22 @@ import (
 )
 
 type IntervalActionClient struct {
-	baseUrl string
+	baseUrl     string
+	jwtProvider interfaces.JWTProvider
 }
 
 // NewIntervalActionClient creates an instance of IntervalActionClient
-func NewIntervalActionClient(baseUrl string) interfaces.IntervalActionClient {
+func NewIntervalActionClient(baseUrl string, jwtProvider interfaces.JWTProvider) interfaces.IntervalActionClient {
 	return &IntervalActionClient{
-		baseUrl: baseUrl,
+		baseUrl:     baseUrl,
+		jwtProvider: jwtProvider,
 	}
 }
 
 // Add adds new intervalActions
 func (client IntervalActionClient) Add(ctx context.Context, reqs []requests.AddIntervalActionRequest) (
 	res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, common.ApiIntervalActionRoute, nil, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, common.ApiIntervalActionRoute, nil, reqs, client.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -44,7 +46,7 @@ func (client IntervalActionClient) Add(ctx context.Context, reqs []requests.AddI
 // Update updates intervalActions
 func (client IntervalActionClient) Update(ctx context.Context, reqs []requests.UpdateIntervalActionRequest) (
 	res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, client.baseUrl, common.ApiIntervalActionRoute, nil, reqs)
+	err = utils.PatchRequest(ctx, &res, client.baseUrl, common.ApiIntervalActionRoute, nil, reqs, client.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -57,7 +59,7 @@ func (client IntervalActionClient) AllIntervalActions(ctx context.Context, offse
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllIntervalActionRoute, requestParams)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllIntervalActionRoute, requestParams, client.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -68,7 +70,7 @@ func (client IntervalActionClient) AllIntervalActions(ctx context.Context, offse
 func (client IntervalActionClient) IntervalActionByName(ctx context.Context, name string) (
 	res responses.IntervalActionResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiIntervalActionRoute, common.Name, name)
-	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -79,7 +81,7 @@ func (client IntervalActionClient) IntervalActionByName(ctx context.Context, nam
 func (client IntervalActionClient) DeleteIntervalActionByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiIntervalActionRoute, common.Name, name)
-	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path)
+	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

@@ -17,18 +17,20 @@ import (
 )
 
 type DeviceClient struct {
-	baseUrl string
+	baseUrl     string
+	jwtProvider interfaces.JWTProvider
 }
 
 // NewDeviceClient creates an instance of DeviceClient
-func NewDeviceClient(baseUrl string) interfaces.DeviceClient {
+func NewDeviceClient(baseUrl string, jwtProvider interfaces.JWTProvider) interfaces.DeviceClient {
 	return &DeviceClient{
-		baseUrl: baseUrl,
+		baseUrl:     baseUrl,
+		jwtProvider: jwtProvider,
 	}
 }
 
 func (dc DeviceClient) Add(ctx context.Context, reqs []requests.AddDeviceRequest) (res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, nil, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, nil, reqs, dc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -36,7 +38,7 @@ func (dc DeviceClient) Add(ctx context.Context, reqs []requests.AddDeviceRequest
 }
 
 func (dc DeviceClient) Update(ctx context.Context, reqs []requests.UpdateDeviceRequest) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, nil, reqs)
+	err = utils.PatchRequest(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, nil, reqs, dc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -50,7 +52,7 @@ func (dc DeviceClient) AllDevices(ctx context.Context, labels []string, offset i
 	}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, common.ApiAllDeviceRoute, requestParams)
+	err = utils.GetRequest(ctx, &res, dc.baseUrl, common.ApiAllDeviceRoute, requestParams, dc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -59,7 +61,7 @@ func (dc DeviceClient) AllDevices(ctx context.Context, labels []string, offset i
 
 func (dc DeviceClient) DeviceNameExists(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiDeviceRoute, common.Check, common.Name, name)
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, path, nil)
+	err = utils.GetRequest(ctx, &res, dc.baseUrl, path, nil, dc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -68,7 +70,7 @@ func (dc DeviceClient) DeviceNameExists(ctx context.Context, name string) (res d
 
 func (dc DeviceClient) DeviceByName(ctx context.Context, name string) (res responses.DeviceResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiDeviceRoute, common.Name, name)
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, path, nil)
+	err = utils.GetRequest(ctx, &res, dc.baseUrl, path, nil, dc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -77,7 +79,7 @@ func (dc DeviceClient) DeviceByName(ctx context.Context, name string) (res respo
 
 func (dc DeviceClient) DeleteDeviceByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiDeviceRoute, common.Name, name)
-	err = utils.DeleteRequest(ctx, &res, dc.baseUrl, path)
+	err = utils.DeleteRequest(ctx, &res, dc.baseUrl, path, dc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -89,7 +91,7 @@ func (dc DeviceClient) DevicesByProfileName(ctx context.Context, name string, of
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, requestPath, requestParams)
+	err = utils.GetRequest(ctx, &res, dc.baseUrl, requestPath, requestParams, dc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -101,7 +103,7 @@ func (dc DeviceClient) DevicesByServiceName(ctx context.Context, name string, of
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, requestPath, requestParams)
+	err = utils.GetRequest(ctx, &res, dc.baseUrl, requestPath, requestParams, dc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

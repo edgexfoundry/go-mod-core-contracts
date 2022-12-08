@@ -17,19 +17,21 @@ import (
 )
 
 type DeviceServiceClient struct {
-	baseUrl string
+	baseUrl     string
+	jwtProvider interfaces.JWTProvider
 }
 
 // NewDeviceServiceClient creates an instance of DeviceServiceClient
-func NewDeviceServiceClient(baseUrl string) interfaces.DeviceServiceClient {
+func NewDeviceServiceClient(baseUrl string, jwtProvider interfaces.JWTProvider) interfaces.DeviceServiceClient {
 	return &DeviceServiceClient{
-		baseUrl: baseUrl,
+		baseUrl:     baseUrl,
+		jwtProvider: jwtProvider,
 	}
 }
 
 func (dsc DeviceServiceClient) Add(ctx context.Context, reqs []requests.AddDeviceServiceRequest) (
 	res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, dsc.baseUrl, common.ApiDeviceServiceRoute, nil, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, dsc.baseUrl, common.ApiDeviceServiceRoute, nil, reqs, dsc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -38,7 +40,7 @@ func (dsc DeviceServiceClient) Add(ctx context.Context, reqs []requests.AddDevic
 
 func (dsc DeviceServiceClient) Update(ctx context.Context, reqs []requests.UpdateDeviceServiceRequest) (
 	res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, dsc.baseUrl, common.ApiDeviceServiceRoute, nil, reqs)
+	err = utils.PatchRequest(ctx, &res, dsc.baseUrl, common.ApiDeviceServiceRoute, nil, reqs, dsc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -53,7 +55,7 @@ func (dsc DeviceServiceClient) AllDeviceServices(ctx context.Context, labels []s
 	}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, dsc.baseUrl, common.ApiAllDeviceServiceRoute, requestParams)
+	err = utils.GetRequest(ctx, &res, dsc.baseUrl, common.ApiAllDeviceServiceRoute, requestParams, dsc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -63,7 +65,7 @@ func (dsc DeviceServiceClient) AllDeviceServices(ctx context.Context, labels []s
 func (dsc DeviceServiceClient) DeviceServiceByName(ctx context.Context, name string) (
 	res responses.DeviceServiceResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiDeviceServiceRoute, common.Name, name)
-	err = utils.GetRequest(ctx, &res, dsc.baseUrl, path, nil)
+	err = utils.GetRequest(ctx, &res, dsc.baseUrl, path, nil, dsc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -73,7 +75,7 @@ func (dsc DeviceServiceClient) DeviceServiceByName(ctx context.Context, name str
 func (dsc DeviceServiceClient) DeleteByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiDeviceServiceRoute, common.Name, name)
-	err = utils.DeleteRequest(ctx, &res, dsc.baseUrl, path)
+	err = utils.DeleteRequest(ctx, &res, dsc.baseUrl, path, dsc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

@@ -21,11 +21,15 @@ import (
 	"github.com/fxamacker/cbor/v2"
 )
 
-type deviceServiceCommandClient struct{}
+type deviceServiceCommandClient struct {
+	jwtProvider interfaces.JWTProvider
+}
 
 // NewDeviceServiceCommandClient creates an instance of deviceServiceCommandClient
-func NewDeviceServiceCommandClient() interfaces.DeviceServiceCommandClient {
-	return &deviceServiceCommandClient{}
+func NewDeviceServiceCommandClient(jwtProvider interfaces.JWTProvider) interfaces.DeviceServiceCommandClient {
+	return &deviceServiceCommandClient{
+		jwtProvider: jwtProvider,
+	}
 }
 
 // GetCommand sends HTTP request to execute the Get command
@@ -35,7 +39,7 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
 	}
-	res, contentType, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params)
+	res, contentType, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params, client.jwtProvider)
 	if edgeXerr != nil {
 		return nil, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
@@ -65,7 +69,7 @@ func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUr
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings)
+	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -80,7 +84,7 @@ func (client *deviceServiceCommandClient) SetCommandWithObject(ctx context.Conte
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings)
+	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}

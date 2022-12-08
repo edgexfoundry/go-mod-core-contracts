@@ -18,19 +18,21 @@ import (
 )
 
 type deviceServiceCallbackClient struct {
-	baseUrl string
+	baseUrl     string
+	jwtProvider interfaces.JWTProvider
 }
 
 // NewDeviceServiceCallbackClient creates an instance of deviceServiceCallbackClient
-func NewDeviceServiceCallbackClient(baseUrl string) interfaces.DeviceServiceCallbackClient {
+func NewDeviceServiceCallbackClient(baseUrl string, jwtProvider interfaces.JWTProvider) interfaces.DeviceServiceCallbackClient {
 	return &deviceServiceCallbackClient{
-		baseUrl: baseUrl,
+		baseUrl:     baseUrl,
+		jwtProvider: jwtProvider,
 	}
 }
 
 func (client *deviceServiceCallbackClient) AddDeviceCallback(ctx context.Context, request requests.AddDeviceRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	err := utils.PostRequestWithRawData(ctx, &response, client.baseUrl, common.ApiDeviceCallbackRoute, nil, request)
+	err := utils.PostRequestWithRawData(ctx, &response, client.baseUrl, common.ApiDeviceCallbackRoute, nil, request, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -39,7 +41,7 @@ func (client *deviceServiceCallbackClient) AddDeviceCallback(ctx context.Context
 
 func (client *deviceServiceCallbackClient) ValidateDeviceCallback(ctx context.Context, request requests.AddDeviceRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	err := utils.PostRequestWithRawData(ctx, &response, client.baseUrl, common.ApiDeviceValidationRoute, nil, request)
+	err := utils.PostRequestWithRawData(ctx, &response, client.baseUrl, common.ApiDeviceValidationRoute, nil, request, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -48,7 +50,7 @@ func (client *deviceServiceCallbackClient) ValidateDeviceCallback(ctx context.Co
 
 func (client *deviceServiceCallbackClient) UpdateDeviceCallback(ctx context.Context, request requests.UpdateDeviceRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	err := utils.PutRequest(ctx, &response, client.baseUrl, common.ApiDeviceCallbackRoute, nil, request)
+	err := utils.PutRequest(ctx, &response, client.baseUrl, common.ApiDeviceCallbackRoute, nil, request, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -58,7 +60,7 @@ func (client *deviceServiceCallbackClient) UpdateDeviceCallback(ctx context.Cont
 func (client *deviceServiceCallbackClient) DeleteDeviceCallback(ctx context.Context, name string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
 	requestPath := path.Join(common.ApiDeviceCallbackRoute, common.Name, name)
-	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath)
+	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -67,7 +69,7 @@ func (client *deviceServiceCallbackClient) DeleteDeviceCallback(ctx context.Cont
 
 func (client *deviceServiceCallbackClient) UpdateDeviceProfileCallback(ctx context.Context, request requests.DeviceProfileRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	err := utils.PutRequest(ctx, &response, client.baseUrl, common.ApiProfileCallbackRoute, nil, request)
+	err := utils.PutRequest(ctx, &response, client.baseUrl, common.ApiProfileCallbackRoute, nil, request, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -76,7 +78,7 @@ func (client *deviceServiceCallbackClient) UpdateDeviceProfileCallback(ctx conte
 
 func (client *deviceServiceCallbackClient) AddProvisionWatcherCallback(ctx context.Context, request requests.AddProvisionWatcherRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	err := utils.PostRequestWithRawData(ctx, &response, client.baseUrl, common.ApiWatcherCallbackRoute, nil, request)
+	err := utils.PostRequestWithRawData(ctx, &response, client.baseUrl, common.ApiWatcherCallbackRoute, nil, request, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -85,7 +87,7 @@ func (client *deviceServiceCallbackClient) AddProvisionWatcherCallback(ctx conte
 
 func (client *deviceServiceCallbackClient) UpdateProvisionWatcherCallback(ctx context.Context, request requests.UpdateProvisionWatcherRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	err := utils.PutRequest(ctx, &response, client.baseUrl, common.ApiWatcherCallbackRoute, nil, request)
+	err := utils.PutRequest(ctx, &response, client.baseUrl, common.ApiWatcherCallbackRoute, nil, request, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -95,7 +97,7 @@ func (client *deviceServiceCallbackClient) UpdateProvisionWatcherCallback(ctx co
 func (client *deviceServiceCallbackClient) DeleteProvisionWatcherCallback(ctx context.Context, name string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
 	requestPath := path.Join(common.ApiWatcherCallbackRoute, common.Name, name)
-	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath)
+	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -104,7 +106,7 @@ func (client *deviceServiceCallbackClient) DeleteProvisionWatcherCallback(ctx co
 
 func (client *deviceServiceCallbackClient) UpdateDeviceServiceCallback(ctx context.Context, request requests.UpdateDeviceServiceRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	err := utils.PutRequest(ctx, &response, client.baseUrl, common.ApiServiceCallbackRoute, nil, request)
+	err := utils.PutRequest(ctx, &response, client.baseUrl, common.ApiServiceCallbackRoute, nil, request, client.jwtProvider)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}

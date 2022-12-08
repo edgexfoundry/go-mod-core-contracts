@@ -43,7 +43,7 @@ func TestAddDeviceProfiles(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.Add(context.Background(), []requests.DeviceProfileRequest{})
 	require.NoError(t, err)
 	require.NotNil(t, res)
@@ -70,7 +70,7 @@ func TestPutDeviceProfiles(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.Update(context.Background(), []requests.DeviceProfileRequest{})
 	require.NoError(t, err)
 	require.NotNil(t, res)
@@ -96,7 +96,7 @@ func TestAddDeviceProfileByYaml(t *testing.T) {
 		_, _ = w.Write(res)
 	}))
 	defer ts.Close()
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	_, b, _, _ := runtime.Caller(0)
 
 	tests := []struct {
@@ -141,7 +141,7 @@ func TestUpdateDeviceProfileByYaml(t *testing.T) {
 		_, _ = w.Write(res)
 	}))
 	defer ts.Close()
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	_, b, _, _ := runtime.Caller(0)
 
 	tests := []struct {
@@ -173,7 +173,7 @@ func TestDeleteDeviceProfileByName(t *testing.T) {
 	ts := newTestServer(http.MethodDelete, urlPath, dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.DeleteByName(context.Background(), testName)
 	require.NoError(t, err)
 	require.NotNil(t, res)
@@ -184,7 +184,7 @@ func TestQueryDeviceProfileByName(t *testing.T) {
 	urlPath := path.Join(common.ApiDeviceProfileRoute, common.Name, testName)
 	ts := newTestServer(http.MethodGet, urlPath, responses.DeviceProfileResponse{})
 	defer ts.Close()
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	_, err := client.DeviceProfileByName(context.Background(), testName)
 	require.NoError(t, err)
 }
@@ -192,7 +192,7 @@ func TestQueryDeviceProfileByName(t *testing.T) {
 func TestQueryAllDeviceProfiles(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllDeviceProfileRoute, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	_, err := client.AllDeviceProfiles(context.Background(), []string{"testLabel1", "testLabel2"}, 1, 10)
 	require.NoError(t, err)
 }
@@ -202,7 +202,7 @@ func TestQueryDeviceProfilesByModel(t *testing.T) {
 	urlPath := path.Join(common.ApiDeviceProfileRoute, common.Model, testModel)
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	_, err := client.DeviceProfilesByModel(context.Background(), testModel, 1, 10)
 	require.NoError(t, err)
 }
@@ -212,7 +212,7 @@ func TestQueryDeviceProfilesByManufacturer(t *testing.T) {
 	urlPath := path.Join(common.ApiDeviceProfileRoute, common.Manufacturer, testManufacturer)
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	_, err := client.DeviceProfilesByManufacturer(context.Background(), testManufacturer, 1, 10)
 	require.NoError(t, err)
 }
@@ -223,7 +223,7 @@ func TestQueryDeviceProfilesByManufacturerAndModel(t *testing.T) {
 	urlPath := path.Join(common.ApiDeviceProfileRoute, common.Manufacturer, testManufacturer, common.Model, testModel)
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	_, err := client.DeviceProfilesByManufacturerAndModel(context.Background(), testManufacturer, testModel, 1, 10)
 	require.NoError(t, err)
 }
@@ -234,7 +234,7 @@ func TestDeviceResourceByProfileNameAndResourceName(t *testing.T) {
 	urlPath := path.Join(common.ApiDeviceResourceRoute, common.Profile, profileName, common.Resource, resourceName)
 	ts := newTestServer(http.MethodGet, urlPath, responses.DeviceResourceResponse{})
 	defer ts.Close()
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 
 	res, err := client.DeviceResourceByProfileNameAndResourceName(context.Background(), profileName, resourceName)
 
@@ -246,7 +246,7 @@ func TestUpdateDeviceProfileBasicInfo(t *testing.T) {
 	ts := newTestServer(http.MethodPatch, common.ApiDeviceProfileBasicInfoRoute, []dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.UpdateDeviceProfileBasicInfo(context.Background(), []requests.DeviceProfileBasicInfoRequest{})
 	require.NoError(t, err)
 	require.IsType(t, []dtoCommon.BaseResponse{}, res)
@@ -256,7 +256,7 @@ func TestAddDeviceProfileResource(t *testing.T) {
 	ts := newTestServer(http.MethodPost, common.ApiDeviceProfileResourceRoute, []dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.AddDeviceProfileResource(context.Background(), []requests.AddDeviceResourceRequest{})
 
 	require.NoError(t, err)
@@ -267,7 +267,7 @@ func TestUpdateDeviceProfileResource(t *testing.T) {
 	ts := newTestServer(http.MethodPatch, common.ApiDeviceProfileResourceRoute, []dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.UpdateDeviceProfileResource(context.Background(), []requests.UpdateDeviceResourceRequest{})
 	require.NoError(t, err)
 	require.IsType(t, []dtoCommon.BaseResponse{}, res)
@@ -280,7 +280,7 @@ func TestDeleteDeviceResourceByName(t *testing.T) {
 	ts := newTestServer(http.MethodDelete, urlPath, dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.DeleteDeviceResourceByName(context.Background(), profileName, resourceName)
 	require.NoError(t, err)
 	require.NotNil(t, res)
@@ -290,7 +290,7 @@ func TestAddDeviceProfileDeviceCommand(t *testing.T) {
 	ts := newTestServer(http.MethodPost, common.ApiDeviceProfileDeviceCommandRoute, []dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.AddDeviceProfileDeviceCommand(context.Background(), []requests.AddDeviceCommandRequest{})
 
 	require.NoError(t, err)
@@ -301,7 +301,7 @@ func TestUpdateDeviceProfileDeviceCommand(t *testing.T) {
 	ts := newTestServer(http.MethodPatch, common.ApiDeviceProfileDeviceCommandRoute, []dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.UpdateDeviceProfileDeviceCommand(context.Background(), []requests.UpdateDeviceCommandRequest{})
 	require.NoError(t, err)
 	require.IsType(t, []dtoCommon.BaseResponse{}, res)
@@ -314,7 +314,7 @@ func TestDeleteDeviceCommandByName(t *testing.T) {
 	ts := newTestServer(http.MethodDelete, urlPath, dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewDeviceProfileClient(ts.URL)
+	client := NewDeviceProfileClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.DeleteDeviceCommandByName(context.Background(), profileName, commandName)
 	require.NoError(t, err)
 	require.NotNil(t, res)

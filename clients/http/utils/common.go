@@ -18,6 +18,7 @@ import (
 	"path"
 	"path/filepath"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
@@ -54,7 +55,22 @@ func getBody(resp *http.Response) ([]byte, errors.EdgeX) {
 }
 
 // Helper method to make the request and return the response
-func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
+func makeRequest(req *http.Request, jwtProvider interfaces.JWTProvider) (*http.Response, errors.EdgeX) {
+	if jwtProvider != nil {
+		fmt.Printf(" ** JWT provider found ")
+		jwt, err2 := jwtProvider.JWT()
+		if err2 != nil {
+			return nil, err2
+		} else if len(jwt) > 0 {
+			fmt.Printf(" ** JWT = %s", jwt)
+			req.Header.Set("Authorization", "Bearer "+jwt)
+		} else {
+			fmt.Printf(" ** No JWT returned from provider")
+		}
+	} else {
+		fmt.Printf(" ** No  JWT provider supplied")
+	}
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -197,8 +213,8 @@ func createRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl s
 
 // sendRequest will make a request with raw data to the specified URL.
 // It returns the body as a byte array if successful and an error otherwise.
-func sendRequest(ctx context.Context, req *http.Request) ([]byte, errors.EdgeX) {
-	resp, err := makeRequest(req)
+func sendRequest(ctx context.Context, req *http.Request, jwtProvider interfaces.JWTProvider) ([]byte, errors.EdgeX) {
+	resp, err := makeRequest(req, jwtProvider)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
 	}

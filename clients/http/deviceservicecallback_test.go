@@ -26,7 +26,7 @@ func TestAddDeviceCallback(t *testing.T) {
 	ts := newTestServer(http.MethodPost, common.ApiDeviceCallbackRoute, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.AddDeviceCallback(context.Background(), requests.AddDeviceRequest{})
 
 	require.NoError(t, err)
@@ -39,7 +39,7 @@ func TestValidateDeviceCallback(t *testing.T) {
 	ts := newTestServer(http.MethodPost, common.ApiDeviceValidationRoute, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.ValidateDeviceCallback(context.Background(), requests.AddDeviceRequest{})
 
 	require.NoError(t, err)
@@ -52,7 +52,7 @@ func TestUpdateDeviceCallback(t *testing.T) {
 	ts := newTestServer(http.MethodPut, common.ApiDeviceCallbackRoute, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.UpdateDeviceCallback(context.Background(), requests.UpdateDeviceRequest{})
 
 	require.NoError(t, err)
@@ -67,7 +67,7 @@ func TestDeleteDeviceCallback(t *testing.T) {
 	ts := newTestServer(http.MethodDelete, urlPath, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.DeleteDeviceCallback(context.Background(), testDeviceName)
 
 	require.NoError(t, err)
@@ -80,7 +80,7 @@ func TestUpdateDeviceProfileCallback(t *testing.T) {
 	ts := newTestServer(http.MethodPut, common.ApiProfileCallbackRoute, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.UpdateDeviceProfileCallback(context.Background(), requests.DeviceProfileRequest{})
 
 	require.NoError(t, err)
@@ -93,7 +93,7 @@ func TestAddProvisionWatcherCallback(t *testing.T) {
 	ts := newTestServer(http.MethodPost, common.ApiWatcherCallbackRoute, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.AddProvisionWatcherCallback(context.Background(), requests.AddProvisionWatcherRequest{})
 
 	require.NoError(t, err)
@@ -106,7 +106,7 @@ func TestUpdateProvisionWatcherCallback(t *testing.T) {
 	ts := newTestServer(http.MethodPut, common.ApiWatcherCallbackRoute, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.UpdateProvisionWatcherCallback(context.Background(), requests.UpdateProvisionWatcherRequest{})
 
 	require.NoError(t, err)
@@ -121,7 +121,7 @@ func TestDeleteProvisionWatcherCallback(t *testing.T) {
 	ts := newTestServer(http.MethodDelete, urlPath, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.DeleteProvisionWatcherCallback(context.Background(), testWatcherName)
 
 	require.NoError(t, err)
@@ -134,7 +134,7 @@ func TestUpdateDeviceServiceCallback(t *testing.T) {
 	ts := newTestServer(http.MethodPut, common.ApiServiceCallbackRoute, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCallbackClient(ts.URL)
+	client := NewDeviceServiceCallbackClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.UpdateDeviceServiceCallback(context.Background(), requests.UpdateDeviceServiceRequest{})
 
 	require.NoError(t, err)

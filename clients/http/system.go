@@ -19,19 +19,21 @@ import (
 )
 
 type SystemManagementClient struct {
-	baseUrl string
+	baseUrl     string
+	jwtProvider interfaces.JWTProvider
 }
 
-func NewSystemManagementClient(baseUrl string) interfaces.SystemManagementClient {
+func NewSystemManagementClient(baseUrl string, jwtProvider interfaces.JWTProvider) interfaces.SystemManagementClient {
 	return &SystemManagementClient{
-		baseUrl: baseUrl,
+		baseUrl:     baseUrl,
+		jwtProvider: jwtProvider,
 	}
 }
 
 func (smc *SystemManagementClient) GetHealth(ctx context.Context, services []string) (res []dtoCommon.BaseWithServiceNameResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
 	requestParams.Set(common.Services, strings.Join(services, common.CommaSeparator))
-	err = utils.GetRequest(ctx, &res, smc.baseUrl, common.ApiHealthRoute, requestParams)
+	err = utils.GetRequest(ctx, &res, smc.baseUrl, common.ApiHealthRoute, requestParams, smc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -42,7 +44,7 @@ func (smc *SystemManagementClient) GetHealth(ctx context.Context, services []str
 func (smc *SystemManagementClient) GetMetrics(ctx context.Context, services []string) (res []dtoCommon.BaseWithMetricsResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
 	requestParams.Set(common.Services, strings.Join(services, common.CommaSeparator))
-	err = utils.GetRequest(ctx, &res, smc.baseUrl, common.ApiMultiMetricsRoute, requestParams)
+	err = utils.GetRequest(ctx, &res, smc.baseUrl, common.ApiMultiMetricsRoute, requestParams, smc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -53,7 +55,7 @@ func (smc *SystemManagementClient) GetMetrics(ctx context.Context, services []st
 func (smc *SystemManagementClient) GetConfig(ctx context.Context, services []string) (res []dtoCommon.BaseWithConfigResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
 	requestParams.Set(common.Services, strings.Join(services, common.CommaSeparator))
-	err = utils.GetRequest(ctx, &res, smc.baseUrl, common.ApiMultiConfigRoute, requestParams)
+	err = utils.GetRequest(ctx, &res, smc.baseUrl, common.ApiMultiConfigRoute, requestParams, smc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -62,7 +64,7 @@ func (smc *SystemManagementClient) GetConfig(ctx context.Context, services []str
 }
 
 func (smc *SystemManagementClient) DoOperation(ctx context.Context, reqs []requests.OperationRequest) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, smc.baseUrl, common.ApiOperationRoute, nil, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, smc.baseUrl, common.ApiOperationRoute, nil, reqs, smc.jwtProvider)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

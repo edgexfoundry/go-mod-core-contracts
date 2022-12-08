@@ -20,7 +20,7 @@ func Test_generalClient_FetchConfiguration(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiConfigRoute, dtoCommon.ConfigResponse{})
 	defer ts.Close()
 
-	client := NewGeneralClient(ts.URL)
+	client := NewGeneralClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.FetchConfiguration(context.Background())
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.ConfigResponse{}, res)
@@ -30,7 +30,7 @@ func Test_generalClient_FetchMetrics(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiMetricsRoute, dtoCommon.MetricsResponse{})
 	defer ts.Close()
 
-	client := NewGeneralClient(ts.URL)
+	client := NewGeneralClient(ts.URL, NewEmptyJWTProvider())
 	res, err := client.FetchMetrics(context.Background())
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.MetricsResponse{}, res)
