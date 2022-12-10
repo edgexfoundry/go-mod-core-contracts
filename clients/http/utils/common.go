@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2020-2022 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,6 +19,7 @@ import (
 	"path"
 	"path/filepath"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 
@@ -54,7 +56,15 @@ func getBody(resp *http.Response) ([]byte, errors.EdgeX) {
 }
 
 // Helper method to make the request and return the response
-func makeRequest(req *http.Request) (*http.Response, errors.EdgeX) {
+func makeRequest(req *http.Request, authInjector interfaces.AuthenticationInjector) (*http.Response, errors.EdgeX) {
+	if authInjector != nil {
+		if err := authInjector.AddAuthenticationData(req); err != nil {
+			return nil, errors.NewCommonEdgeXWrapper(err)
+		}
+	} else {
+		fmt.Printf(" ** FIXME - REMOVE: No auth provider supplied")
+	}
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -197,8 +207,8 @@ func createRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl s
 
 // sendRequest will make a request with raw data to the specified URL.
 // It returns the body as a byte array if successful and an error otherwise.
-func sendRequest(ctx context.Context, req *http.Request) ([]byte, errors.EdgeX) {
-	resp, err := makeRequest(req)
+func sendRequest(ctx context.Context, req *http.Request, authInjector interfaces.AuthenticationInjector) ([]byte, errors.EdgeX) {
+	resp, err := makeRequest(req, authInjector)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
 	}

@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,20 +22,22 @@ import (
 )
 
 type IntervalClient struct {
-	baseUrl string
+	baseUrl      string
+	authInjector interfaces.AuthenticationInjector
 }
 
 // NewIntervalClient creates an instance of IntervalClient
-func NewIntervalClient(baseUrl string) interfaces.IntervalClient {
+func NewIntervalClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.IntervalClient {
 	return &IntervalClient{
-		baseUrl: baseUrl,
+		baseUrl:      baseUrl,
+		authInjector: authInjector,
 	}
 }
 
 // Add adds new intervals
 func (client IntervalClient) Add(ctx context.Context, reqs []requests.AddIntervalRequest) (
 	res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, common.ApiIntervalRoute, nil, reqs)
+	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, common.ApiIntervalRoute, nil, reqs, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -44,7 +47,7 @@ func (client IntervalClient) Add(ctx context.Context, reqs []requests.AddInterva
 // Update updates intervals
 func (client IntervalClient) Update(ctx context.Context, reqs []requests.UpdateIntervalRequest) (
 	res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, client.baseUrl, common.ApiIntervalRoute, nil, reqs)
+	err = utils.PatchRequest(ctx, &res, client.baseUrl, common.ApiIntervalRoute, nil, reqs, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -57,7 +60,7 @@ func (client IntervalClient) AllIntervals(ctx context.Context, offset int, limit
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllIntervalRoute, requestParams)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllIntervalRoute, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -68,7 +71,7 @@ func (client IntervalClient) AllIntervals(ctx context.Context, offset int, limit
 func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 	res responses.IntervalResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiIntervalRoute, common.Name, name)
-	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -79,7 +82,7 @@ func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 func (client IntervalClient) DeleteIntervalByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiIntervalRoute, common.Name, name)
-	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path)
+	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -273,6 +274,7 @@ const (
 	SystemManagementAgentServiceKey     = "sys-mgmt-agent"
 	SupportSchedulerServiceKey          = "support-scheduler"
 	SecuritySecretStoreSetupServiceKey  = "security-secretstore-setup"
+	SecurityProxyAuthServiceKey         = "security-proxy-auth"
 	SecurityProxySetupServiceKey        = "security-proxy-setup"
 	SecurityFileTokenProviderServiceKey = "security-file-token-provider"
 	SecurityBootstrapperKey             = "security-bootstrapper"

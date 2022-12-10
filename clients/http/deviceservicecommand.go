@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,11 +22,15 @@ import (
 	"github.com/fxamacker/cbor/v2"
 )
 
-type deviceServiceCommandClient struct{}
+type deviceServiceCommandClient struct {
+	authInjector interfaces.AuthenticationInjector
+}
 
 // NewDeviceServiceCommandClient creates an instance of deviceServiceCommandClient
-func NewDeviceServiceCommandClient() interfaces.DeviceServiceCommandClient {
-	return &deviceServiceCommandClient{}
+func NewDeviceServiceCommandClient(authInjector interfaces.AuthenticationInjector) interfaces.DeviceServiceCommandClient {
+	return &deviceServiceCommandClient{
+		authInjector: authInjector,
+	}
 }
 
 // GetCommand sends HTTP request to execute the Get command
@@ -35,7 +40,7 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
 	}
-	res, contentType, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params)
+	res, contentType, edgeXerr := utils.GetRequestAndReturnBinaryRes(ctx, baseUrl, requestPath, params, client.authInjector)
 	if edgeXerr != nil {
 		return nil, errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
@@ -65,7 +70,7 @@ func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUr
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings)
+	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -80,7 +85,7 @@ func (client *deviceServiceCommandClient) SetCommandWithObject(ctx context.Conte
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings)
+	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}

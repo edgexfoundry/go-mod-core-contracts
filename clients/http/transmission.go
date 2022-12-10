@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,20 +21,22 @@ import (
 )
 
 type TransmissionClient struct {
-	baseUrl string
+	baseUrl      string
+	authInjector interfaces.AuthenticationInjector
 }
 
 // NewTransmissionClient creates an instance of TransmissionClient
-func NewTransmissionClient(baseUrl string) interfaces.TransmissionClient {
+func NewTransmissionClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.TransmissionClient {
 	return &TransmissionClient{
-		baseUrl: baseUrl,
+		baseUrl:      baseUrl,
+		authInjector: authInjector,
 	}
 }
 
 // TransmissionById query transmission by id.
 func (client *TransmissionClient) TransmissionById(ctx context.Context, id string) (res responses.TransmissionResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiTransmissionRoute, common.Id, id)
-	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -46,7 +49,7 @@ func (client *TransmissionClient) TransmissionsByTimeRange(ctx context.Context, 
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -58,7 +61,7 @@ func (client *TransmissionClient) AllTransmissions(ctx context.Context, offset i
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllTransmissionRoute, requestParams)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllTransmissionRoute, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -71,7 +74,7 @@ func (client *TransmissionClient) TransmissionsByStatus(ctx context.Context, sta
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -81,7 +84,7 @@ func (client *TransmissionClient) TransmissionsByStatus(ctx context.Context, sta
 // DeleteProcessedTransmissionsByAge deletes the processed transmissions if the current timestamp minus their created timestamp is less than the age parameter.
 func (client *TransmissionClient) DeleteProcessedTransmissionsByAge(ctx context.Context, age int) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := path.Join(common.ApiTransmissionRoute, common.Age, strconv.Itoa(age))
-	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path)
+	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -94,7 +97,7 @@ func (client *TransmissionClient) TransmissionsBySubscriptionName(ctx context.Co
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -107,7 +110,7 @@ func (client *TransmissionClient) TransmissionsByNotificationId(ctx context.Cont
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

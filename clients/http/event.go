@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2021-2023 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,13 +22,15 @@ import (
 )
 
 type eventClient struct {
-	baseUrl string
+	baseUrl      string
+	authInjector interfaces.AuthenticationInjector
 }
 
 // NewEventClient creates an instance of EventClient
-func NewEventClient(baseUrl string) interfaces.EventClient {
+func NewEventClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.EventClient {
 	return &eventClient{
-		baseUrl: baseUrl,
+		baseUrl:      baseUrl,
+		authInjector: authInjector,
 	}
 }
 
@@ -41,7 +44,7 @@ func (ec *eventClient) Add(ctx context.Context, serviceName string, req requests
 		return br, errors.NewCommonEdgeXWrapper(err)
 	}
 
-	err = utils.PostRequest(ctx, &br, ec.baseUrl, path, bytes, encoding)
+	err = utils.PostRequest(ctx, &br, ec.baseUrl, path, bytes, encoding, ec.authInjector)
 	if err != nil {
 		return br, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -53,7 +56,7 @@ func (ec *eventClient) AllEvents(ctx context.Context, offset, limit int) (respon
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiEventsResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, common.ApiAllEventRoute, requestParams)
+	err := utils.GetRequest(ctx, &res, ec.baseUrl, common.ApiAllEventRoute, requestParams, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -62,7 +65,7 @@ func (ec *eventClient) AllEvents(ctx context.Context, offset, limit int) (respon
 
 func (ec *eventClient) EventCount(ctx context.Context) (dtoCommon.CountResponse, errors.EdgeX) {
 	res := dtoCommon.CountResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, common.ApiEventCountRoute, nil)
+	err := utils.GetRequest(ctx, &res, ec.baseUrl, common.ApiEventCountRoute, nil, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -72,7 +75,7 @@ func (ec *eventClient) EventCount(ctx context.Context) (dtoCommon.CountResponse,
 func (ec *eventClient) EventCountByDeviceName(ctx context.Context, name string) (dtoCommon.CountResponse, errors.EdgeX) {
 	requestPath := path.Join(common.ApiEventCountRoute, common.Device, common.Name, name)
 	res := dtoCommon.CountResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, nil)
+	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, nil, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -86,7 +89,7 @@ func (ec *eventClient) EventsByDeviceName(ctx context.Context, name string, offs
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiEventsResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, requestParams)
+	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, requestParams, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -96,7 +99,7 @@ func (ec *eventClient) EventsByDeviceName(ctx context.Context, name string, offs
 func (ec *eventClient) DeleteByDeviceName(ctx context.Context, name string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	path := path.Join(common.ApiEventRoute, common.Device, common.Name, name)
 	res := dtoCommon.BaseResponse{}
-	err := utils.DeleteRequest(ctx, &res, ec.baseUrl, path)
+	err := utils.DeleteRequest(ctx, &res, ec.baseUrl, path, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -110,7 +113,7 @@ func (ec *eventClient) EventsByTimeRange(ctx context.Context, start, end, offset
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiEventsResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, requestParams)
+	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, requestParams, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -120,7 +123,7 @@ func (ec *eventClient) EventsByTimeRange(ctx context.Context, start, end, offset
 func (ec *eventClient) DeleteByAge(ctx context.Context, age int) (dtoCommon.BaseResponse, errors.EdgeX) {
 	path := path.Join(common.ApiEventRoute, common.Age, strconv.Itoa(age))
 	res := dtoCommon.BaseResponse{}
-	err := utils.DeleteRequest(ctx, &res, ec.baseUrl, path)
+	err := utils.DeleteRequest(ctx, &res, ec.baseUrl, path, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,13 +21,15 @@ import (
 )
 
 type readingClient struct {
-	baseUrl string
+	baseUrl      string
+	authInjector interfaces.AuthenticationInjector
 }
 
 // NewReadingClient creates an instance of ReadingClient
-func NewReadingClient(baseUrl string) interfaces.ReadingClient {
+func NewReadingClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.ReadingClient {
 	return &readingClient{
-		baseUrl: baseUrl,
+		baseUrl:      baseUrl,
+		authInjector: authInjector,
 	}
 }
 
@@ -35,7 +38,7 @@ func (rc readingClient) AllReadings(ctx context.Context, offset, limit int) (res
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, common.ApiAllReadingRoute, requestParams)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, common.ApiAllReadingRoute, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -44,7 +47,7 @@ func (rc readingClient) AllReadings(ctx context.Context, offset, limit int) (res
 
 func (rc readingClient) ReadingCount(ctx context.Context) (dtoCommon.CountResponse, errors.EdgeX) {
 	res := dtoCommon.CountResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, common.ApiReadingCountRoute, nil)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, common.ApiReadingCountRoute, nil, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -54,7 +57,7 @@ func (rc readingClient) ReadingCount(ctx context.Context) (dtoCommon.CountRespon
 func (rc readingClient) ReadingCountByDeviceName(ctx context.Context, name string) (dtoCommon.CountResponse, errors.EdgeX) {
 	requestPath := path.Join(common.ApiReadingCountRoute, common.Device, common.Name, name)
 	res := dtoCommon.CountResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, nil)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, nil, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -67,7 +70,7 @@ func (rc readingClient) ReadingsByDeviceName(ctx context.Context, name string, o
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -80,7 +83,7 @@ func (rc readingClient) ReadingsByResourceName(ctx context.Context, name string,
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -93,7 +96,7 @@ func (rc readingClient) ReadingsByTimeRange(ctx context.Context, start, end, off
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -107,7 +110,7 @@ func (rc readingClient) ReadingsByResourceNameAndTimeRange(ctx context.Context, 
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -120,7 +123,7 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceName(ctx context.Context,
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -134,7 +137,7 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx cont
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams)
+	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -152,7 +155,7 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceNamesAndTimeRange(ctx con
 		queryPayload[common.ResourceNames] = resourceNames
 	}
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequestWithBodyRawData(ctx, &res, rc.baseUrl, requestPath, requestParams, queryPayload)
+	err := utils.GetRequestWithBodyRawData(ctx, &res, rc.baseUrl, requestPath, requestParams, queryPayload, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
