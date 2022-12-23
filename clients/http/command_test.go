@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"path"
+	"strconv"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
@@ -47,7 +48,11 @@ func TestIssueGetCommandByName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, path, &responses.EventResponse{})
 	defer ts.Close()
 	client := NewCommandClient(ts.URL)
-	res, err := client.IssueGetCommandByName(context.Background(), deviceName, cmdName, common.ValueYes, common.ValueNo)
+	pushEvent, err := strconv.ParseBool(common.ValueTrue)
+	require.NoError(t, err)
+	notReturnEvent, err := strconv.ParseBool(common.ValueFalse)
+	require.NoError(t, err)
+	res, err := client.IssueGetCommandByName(context.Background(), deviceName, cmdName, pushEvent, notReturnEvent)
 	require.NoError(t, err)
 	require.IsType(t, &responses.EventResponse{}, res)
 }

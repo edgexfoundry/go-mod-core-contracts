@@ -55,10 +55,10 @@ func (client *CommandClient) DeviceCoreCommandsByDeviceName(ctx context.Context,
 }
 
 // IssueGetCommandByName issues the specified read command referenced by the command name to the device/sensor that is also referenced by name.
-func (client *CommandClient) IssueGetCommandByName(ctx context.Context, deviceName string, commandName string, dsPushEvent string, dsReturnEvent string) (res *responses.EventResponse, err errors.EdgeX) {
+func (client *CommandClient) IssueGetCommandByName(ctx context.Context, deviceName string, commandName string, dsPushEvent bool, dsReturnEvent bool) (res *responses.EventResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
-	requestParams.Set(common.PushEvent, dsPushEvent)
-	requestParams.Set(common.ReturnEvent, dsReturnEvent)
+	requestParams.Set(common.PushEvent, strconv.FormatBool(dsPushEvent))
+	requestParams.Set(common.ReturnEvent, strconv.FormatBool(dsReturnEvent))
 	requestPath := path.Join(common.ApiDeviceRoute, common.Name, deviceName, commandName)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams)
 	if err != nil {

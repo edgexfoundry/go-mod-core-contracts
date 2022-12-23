@@ -190,8 +190,6 @@ const (
 	DefaultOffset  = 0
 	DefaultLimit   = 20
 	CommaSeparator = ","
-	ValueYes       = "yes"
-	ValueNo        = "no"
 	ValueTrue      = "true"
 	ValueFalse     = "false"
 )
