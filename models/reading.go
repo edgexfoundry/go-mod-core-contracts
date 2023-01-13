@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +16,7 @@ type BaseReading struct {
 	ProfileName  string
 	ValueType    string
 	Units        string
+	Tags         map[string]any
 }
 
 // BinaryReading and its properties are defined in the APIv2 specification:

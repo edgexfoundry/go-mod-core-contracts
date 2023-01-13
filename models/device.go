@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,6 +24,7 @@ type Device struct {
 	ProfileName    string
 	AutoEvents     []AutoEvent
 	Notify         bool
+	Tags           map[string]any
 }
 
 // ProtocolProperties contains the device connection information in key/value pair
