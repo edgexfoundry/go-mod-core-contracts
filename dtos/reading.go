@@ -22,14 +22,14 @@ import (
 // BaseReading and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/BaseReading
 type BaseReading struct {
-	Id            string         `json:"id,omitempty"`
-	Origin        int64          `json:"origin" validate:"required"`
-	DeviceName    string         `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	ResourceName  string         `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	ProfileName   string         `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	ValueType     string         `json:"valueType" validate:"required,edgex-dto-value-type"`
-	Units         string         `json:"units,omitempty"`
-	Tags          map[string]any `json:"tags,omitempty"`
+	Id            string `json:"id,omitempty"`
+	Origin        int64  `json:"origin" validate:"required"`
+	DeviceName    string `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ResourceName  string `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName   string `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ValueType     string `json:"valueType" validate:"required,edgex-dto-value-type"`
+	Units         string `json:"units,omitempty"`
+	Tags          Tags   `json:"tags,omitempty"`
 	BinaryReading `json:",inline" validate:"-"`
 	SimpleReading `json:",inline" validate:"-"`
 	ObjectReading `json:",inline" validate:"-"`
