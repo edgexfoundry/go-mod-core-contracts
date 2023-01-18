@@ -269,6 +269,7 @@ const (
 	CoreCommandServiceKey               = "core-command"
 	CoreDataServiceKey                  = "core-data"
 	CoreMetaDataServiceKey              = "core-metadata"
+	CoreCommonConfigServiceKey          = "core-common-config-bootstrapper"
 	SupportLoggingServiceKey            = "support-logging"
 	SupportNotificationsServiceKey      = "support-notifications"
 	SystemManagementAgentServiceKey     = "sys-mgmt-agent"
