@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,6 +26,7 @@ type Device struct {
 	ProfileName    string                        `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" validate:"dive"`
 	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"required,gt=0"`
+	Tags           map[string]any                `json:"tags,omitempty"`
 }
 
 // UpdateDevice and its properties are defined in the APIv2 specification:
@@ -45,6 +46,7 @@ type UpdateDevice struct {
 	AutoEvents     []AutoEvent                   `json:"autoEvents" validate:"dive"`
 	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"omitempty,gt=0"`
 	Notify         *bool                         `json:"notify"`
+	Tags           map[string]any                `json:"tags"`
 }
 
 // ToDeviceModel transforms the Device DTO to the Device Model
@@ -63,6 +65,7 @@ func ToDeviceModel(dto Device) models.Device {
 	d.Location = dto.Location
 	d.AutoEvents = ToAutoEventModels(dto.AutoEvents)
 	d.Protocols = ToProtocolModels(dto.Protocols)
+	d.Tags = dto.Tags
 	return d
 }
 
@@ -83,6 +86,7 @@ func FromDeviceModelToDTO(d models.Device) Device {
 	dto.Location = d.Location
 	dto.AutoEvents = FromAutoEventModelsToDTOs(d.AutoEvents)
 	dto.Protocols = FromProtocolModelsToDTOs(d.Protocols)
+	dto.Tags = d.Tags
 	return dto
 }
 
@@ -105,6 +109,7 @@ func FromDeviceModelToUpdateDTO(d models.Device) UpdateDevice {
 		Protocols:      FromProtocolModelsToDTOs(d.Protocols),
 		Labels:         d.Labels,
 		Notify:         &d.Notify,
+		Tags:           d.Tags,
 	}
 	return dto
 }

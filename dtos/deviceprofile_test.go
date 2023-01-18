@@ -1,13 +1,14 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package dtos
 
 import (
-	"gopkg.in/yaml.v3"
 	"testing"
+
+	"gopkg.in/yaml.v3"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
@@ -21,6 +22,7 @@ var testAttributes = map[string]interface{}{
 	"TestAttribute": "TestAttributeValue",
 }
 var testMappings = map[string]string{"0": "off", "1": "on"}
+var testTags = map[string]any{"TestTagsKey": "TestTagsValue"}
 
 var testDeviceProfile = models.DeviceProfile{
 	Name:         TestDeviceProfileName,
@@ -31,12 +33,12 @@ var testDeviceProfile = models.DeviceProfile{
 	DeviceResources: []models.DeviceResource{{
 		Name:        TestDeviceResourceName,
 		Description: TestDescription,
-		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: models.ResourceProperties{
 			ValueType: common.ValueTypeInt16,
 			ReadWrite: common.ReadWrite_RW,
 		},
+		Tags: testTags,
 	}},
 	DeviceCommands: []models.DeviceCommand{{
 		Name:      TestDeviceCommandName,
@@ -45,6 +47,7 @@ var testDeviceProfile = models.DeviceProfile{
 			DeviceResource: TestDeviceResourceName,
 			Mappings:       testMappings,
 		}},
+		Tags: testTags,
 	}},
 }
 
@@ -60,12 +63,12 @@ func profileData() DeviceProfile {
 		DeviceResources: []DeviceResource{{
 			Name:        TestDeviceResourceName,
 			Description: TestDescription,
-			Tag:         TestTag,
 			Attributes:  testAttributes,
 			Properties: ResourceProperties{
 				ValueType: common.ValueTypeInt16,
 				ReadWrite: common.ReadWrite_RW,
 			},
+			Tags: testTags,
 		}},
 		DeviceCommands: []DeviceCommand{{
 			Name:      TestDeviceCommandName,
@@ -74,6 +77,7 @@ func profileData() DeviceProfile {
 				DeviceResource: TestDeviceResourceName,
 				Mappings:       testMappings,
 			}},
+			Tags: testTags,
 		}},
 	}
 }

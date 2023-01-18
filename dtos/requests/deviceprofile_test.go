@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,17 +23,20 @@ var testLabels = []string{"MODBUS", "TEMP"}
 var testAttributes = map[string]interface{}{
 	"TestAttribute": "TestAttributeValue",
 }
+var testTags = map[string]any{
+	"TestTagsKey": "TestTagsValue",
+}
 
 func profileData() DeviceProfileRequest {
 	var testDeviceResources = []dtos.DeviceResource{{
 		Name:        TestDeviceResourceName,
 		Description: TestDescription,
-		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: dtos.ResourceProperties{
 			ValueType: common.ValueTypeInt16,
 			ReadWrite: common.ReadWrite_RW,
 		},
+		Tags: testTags,
 	}}
 	var testDeviceCommands = []dtos.DeviceCommand{{
 		Name:      TestDeviceCommandName,
@@ -41,6 +44,7 @@ func profileData() DeviceProfileRequest {
 		ResourceOperations: []dtos.ResourceOperation{{
 			DeviceResource: TestDeviceResourceName,
 		}},
+		Tags: testTags,
 	}}
 	return DeviceProfileRequest{
 		BaseRequest: dtoCommon.BaseRequest{
@@ -70,12 +74,12 @@ var expectedDeviceProfile = models.DeviceProfile{
 	DeviceResources: []models.DeviceResource{{
 		Name:        TestDeviceResourceName,
 		Description: TestDescription,
-		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: models.ResourceProperties{
 			ValueType: common.ValueTypeInt16,
 			ReadWrite: common.ReadWrite_RW,
 		},
+		Tags: testTags,
 	}},
 	DeviceCommands: []models.DeviceCommand{{
 		Name:      TestDeviceCommandName,
@@ -83,6 +87,7 @@ var expectedDeviceProfile = models.DeviceProfile{
 		ResourceOperations: []models.ResourceOperation{{
 			DeviceResource: TestDeviceResourceName,
 		}},
+		Tags: testTags,
 	}},
 }
 

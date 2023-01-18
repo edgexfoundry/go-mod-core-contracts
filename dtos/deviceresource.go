@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,9 +13,9 @@ type DeviceResource struct {
 	Description string                 `json:"description" yaml:"description"`
 	Name        string                 `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	IsHidden    bool                   `json:"isHidden" yaml:"isHidden"`
-	Tag         string                 `json:"tag" yaml:"tag"`
 	Properties  ResourceProperties     `json:"properties" yaml:"properties"`
 	Attributes  map[string]interface{} `json:"attributes" yaml:"attributes"`
+	Tags        map[string]any         `json:"tags,omitempty" yaml:"tags,omitempty"`
 }
 
 // UpdateDeviceResource and its properties are defined in the APIv2 specification:
@@ -32,9 +32,9 @@ func ToDeviceResourceModel(d DeviceResource) models.DeviceResource {
 		Description: d.Description,
 		Name:        d.Name,
 		IsHidden:    d.IsHidden,
-		Tag:         d.Tag,
 		Properties:  ToResourcePropertiesModel(d.Properties),
 		Attributes:  d.Attributes,
+		Tags:        d.Tags,
 	}
 }
 
@@ -53,9 +53,9 @@ func FromDeviceResourceModelToDTO(d models.DeviceResource) DeviceResource {
 		Description: d.Description,
 		Name:        d.Name,
 		IsHidden:    d.IsHidden,
-		Tag:         d.Tag,
 		Properties:  FromResourcePropertiesModelToDTO(d.Properties),
 		Attributes:  d.Attributes,
+		Tags:        d.Tags,
 	}
 }
 

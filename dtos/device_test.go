@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,4 +26,5 @@ func TestFromDeviceModelToUpdateDTO(t *testing.T) {
 	assert.Equal(t, model.ServiceName, *dto.ServiceName)
 	assert.Equal(t, model.ProfileName, *dto.ProfileName)
 	assert.Equal(t, model.Location, dto.Location)
+	assert.Equal(t, model.Tags, dto.Tags)
 }

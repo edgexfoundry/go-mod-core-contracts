@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2022 IOTech Ltd
+// Copyright (C) 2022-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +27,6 @@ var testDeviceResource = AddDeviceResourceRequest{
 	Resource: dtos.DeviceResource{
 		Name:        TestDeviceCommandName,
 		Description: TestDescription,
-		Tag:         TestTag,
 		Attributes:  testAttributes,
 		Properties: dtos.ResourceProperties{
 			ValueType: common.ValueTypeInt16,
@@ -166,12 +165,12 @@ func TestReplaceDeviceResourceModelFieldsWithDTO(t *testing.T) {
 	resource := models.DeviceResource{
 		Name:        TestDeviceResourceName,
 		Description: emptyString,
-		Tag:         emptyString,
 		Attributes:  testAttributes,
 		Properties: models.ResourceProperties{
 			ValueType: common.ValueTypeInt16,
 			ReadWrite: common.ReadWrite_R,
 		},
+		Tags: testTags,
 	}
 
 	patch := mockUpdateDeviceResourceDTO()
@@ -179,8 +178,8 @@ func TestReplaceDeviceResourceModelFieldsWithDTO(t *testing.T) {
 	ReplaceDeviceResourceModelFieldsWithDTO(&resource, patch)
 
 	assert.Equal(t, TestDescription, resource.Description)
-	assert.Equal(t, emptyString, resource.Tag)
 	assert.Equal(t, true, resource.IsHidden)
 	assert.Equal(t, testAttributes, resource.Attributes)
 	assert.Equal(t, common.ReadWrite_R, resource.Properties.ReadWrite)
+	assert.Equal(t, testTags, resource.Tags)
 }

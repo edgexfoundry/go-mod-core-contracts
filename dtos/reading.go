@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,6 +29,7 @@ type BaseReading struct {
 	ProfileName   string `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ValueType     string `json:"valueType" validate:"required,edgex-dto-value-type"`
 	Units         string `json:"units,omitempty"`
+	Tags          Tags   `json:"tags,omitempty"`
 	BinaryReading `json:",inline" validate:"-"`
 	SimpleReading `json:",inline" validate:"-"`
 	ObjectReading `json:",inline" validate:"-"`
@@ -291,7 +292,7 @@ func (b BaseReading) Validate() error {
 	return nil
 }
 
-// Convert Reading DTO to Reading model
+// ToReadingModel converts Reading DTO to Reading Model
 func ToReadingModel(r BaseReading) models.Reading {
 	var readingModel models.Reading
 	br := models.BaseReading{
@@ -302,6 +303,7 @@ func ToReadingModel(r BaseReading) models.Reading {
 		ProfileName:  r.ProfileName,
 		ValueType:    r.ValueType,
 		Units:        r.Units,
+		Tags:         r.Tags,
 	}
 	if r.ValueType == common.ValueTypeBinary {
 		readingModel = models.BinaryReading{
@@ -335,6 +337,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ProfileName:   r.ProfileName,
 			ValueType:     r.ValueType,
 			Units:         r.Units,
+			Tags:          r.Tags,
 			BinaryReading: BinaryReading{BinaryValue: r.BinaryValue, MediaType: r.MediaType},
 		}
 	case models.ObjectReading:
@@ -346,6 +349,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ProfileName:   r.ProfileName,
 			ValueType:     r.ValueType,
 			Units:         r.Units,
+			Tags:          r.Tags,
 			ObjectReading: ObjectReading{ObjectValue: r.ObjectValue},
 		}
 	case models.SimpleReading:
@@ -357,6 +361,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ProfileName:   r.ProfileName,
 			ValueType:     r.ValueType,
 			Units:         r.Units,
+			Tags:          r.Tags,
 			SimpleReading: SimpleReading{Value: r.Value},
 		}
 	}
