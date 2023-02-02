@@ -15,6 +15,4 @@ import (
 type GeneralClient interface {
 	// FetchConfiguration obtains configuration information from the target service.
 	FetchConfiguration(ctx context.Context) (common.ConfigResponse, errors.EdgeX)
-	// FetchMetrics obtains metrics information from the target service.
-	FetchMetrics(ctx context.Context) (common.MetricsResponse, errors.EdgeX)
 }

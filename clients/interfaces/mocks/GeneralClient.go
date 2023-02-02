@@ -40,29 +40,6 @@ func (_m *GeneralClient) FetchConfiguration(ctx context.Context) (common.ConfigR
 	return r0, r1
 }
 
-// FetchMetrics provides a mock function with given fields: ctx
-func (_m *GeneralClient) FetchMetrics(ctx context.Context) (common.MetricsResponse, errors.EdgeX) {
-	ret := _m.Called(ctx)
-
-	var r0 common.MetricsResponse
-	if rf, ok := ret.Get(0).(func(context.Context) common.MetricsResponse); ok {
-		r0 = rf(ctx)
-	} else {
-		r0 = ret.Get(0).(common.MetricsResponse)
-	}
-
-	var r1 errors.EdgeX
-	if rf, ok := ret.Get(1).(func(context.Context) errors.EdgeX); ok {
-		r1 = rf(ctx)
-	} else {
-		if ret.Get(1) != nil {
-			r1 = ret.Get(1).(errors.EdgeX)
-		}
-	}
-
-	return r0, r1
-}
-
 type mockConstructorTestingTNewGeneralClient interface {
 	mock.TestingT
 	Cleanup(func())

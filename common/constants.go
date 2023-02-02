@@ -101,7 +101,6 @@ const (
 	ApiTransmissionByNotificationIdRoute   = ApiTransmissionRoute + "/" + Notification + "/" + Id + "/{" + Id + "}"
 
 	ApiConfigRoute         = ApiBase + "/config"
-	ApiMetricsRoute        = ApiBase + "/metrics"
 	ApiPingRoute           = ApiBase + "/ping"
 	ApiVersionRoute        = ApiBase + "/version"
 	ApiSecretRoute         = ApiBase + "/secret"
@@ -125,11 +124,10 @@ const (
 	ApiIntervalActionByNameRoute   = ApiIntervalActionRoute + "/" + Name + "/{" + Name + "}"
 	ApiIntervalActionByTargetRoute = ApiIntervalActionRoute + "/" + Target + "/{" + Target + "}"
 
-	ApiSystemRoute       = ApiBase + "/system"
-	ApiOperationRoute    = ApiSystemRoute + "/operation"
-	ApiHealthRoute       = ApiSystemRoute + "/health"
-	ApiMultiMetricsRoute = ApiSystemRoute + "/metrics"
-	ApiMultiConfigRoute  = ApiSystemRoute + "/config"
+	ApiSystemRoute      = ApiBase + "/system"
+	ApiOperationRoute   = ApiSystemRoute + "/operation"
+	ApiHealthRoute      = ApiSystemRoute + "/health"
+	ApiMultiConfigRoute = ApiSystemRoute + "/config"
 )
 
 // Constants related to defined url path names and parameters in the v2 service APIs

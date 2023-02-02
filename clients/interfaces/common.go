@@ -15,8 +15,6 @@ import (
 type CommonClient interface {
 	// Configuration obtains configuration information from the target service.
 	Configuration(ctx context.Context) (common.ConfigResponse, errors.EdgeX)
-	// Metrics obtains metrics information from the target service.
-	Metrics(ctx context.Context) (common.MetricsResponse, errors.EdgeX)
 	// Ping tests whether the service is working
 	Ping(ctx context.Context) (common.PingResponse, errors.EdgeX)
 	// Version obtains version information from the target service.

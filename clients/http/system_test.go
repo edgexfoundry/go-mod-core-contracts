@@ -27,16 +27,6 @@ func TestSystemManagementClient_GetHealth(t *testing.T) {
 	require.IsType(t, []dtoCommon.BaseWithServiceNameResponse{}, res)
 }
 
-func TestSystemManagementClient_GetMetrics(t *testing.T) {
-	ts := newTestServer(http.MethodGet, common.ApiMultiMetricsRoute, []dtoCommon.BaseWithMetricsResponse{})
-	defer ts.Close()
-
-	client := NewSystemManagementClient(ts.URL)
-	res, err := client.GetMetrics(context.Background(), []string{"core-data"})
-	require.NoError(t, err)
-	require.IsType(t, []dtoCommon.BaseWithMetricsResponse{}, res)
-}
-
 func TestSystemManagementClient_GetConfig(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiMultiConfigRoute, []dtoCommon.BaseWithConfigResponse{})
 	defer ts.Close()

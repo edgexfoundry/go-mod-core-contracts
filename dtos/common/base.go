@@ -92,15 +92,6 @@ type BaseWithServiceNameResponse struct {
 	ServiceName  string `json:"serviceName"`
 }
 
-// BaseWithMetricsResponse defines the base content for response DTOs (data transfer objects).
-// This object and its properties correspond to the BaseWithMetricsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.1.0#/BaseWithMetricsResponse
-type BaseWithMetricsResponse struct {
-	BaseResponse `json:",inline"`
-	ServiceName  string      `json:"serviceName"`
-	Metrics      interface{} `json:"metrics"`
-}
-
 // BaseWithConfigResponse defines the base content for response DTOs (data transfer objects).
 // This object and its properties correspond to the BaseWithConfigResponse object in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.1.0#/BaseWithConfigResponse
