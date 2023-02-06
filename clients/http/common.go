@@ -35,15 +35,6 @@ func (cc *commonClient) Configuration(ctx context.Context) (dtoCommon.ConfigResp
 	return cr, nil
 }
 
-func (cc *commonClient) Metrics(ctx context.Context) (dtoCommon.MetricsResponse, errors.EdgeX) {
-	mr := dtoCommon.MetricsResponse{}
-	err := utils.GetRequest(ctx, &mr, cc.baseUrl, common.ApiMetricsRoute, nil)
-	if err != nil {
-		return mr, errors.NewCommonEdgeXWrapper(err)
-	}
-	return mr, nil
-}
-
 func (cc *commonClient) Ping(ctx context.Context) (dtoCommon.PingResponse, errors.EdgeX) {
 	pr := dtoCommon.PingResponse{}
 	err := utils.GetRequest(ctx, &pr, cc.baseUrl, common.ApiPingRoute, nil)

@@ -17,8 +17,6 @@ import (
 type SystemManagementClient interface {
 	// GetHealth obtain health information of services via registry by their name
 	GetHealth(ctx context.Context, services []string) ([]common.BaseWithServiceNameResponse, errors.EdgeX)
-	// GetMetrics obtain metrics information from services by their name
-	GetMetrics(ctx context.Context, services []string) ([]common.BaseWithMetricsResponse, errors.EdgeX)
 	// GetConfig obtain configuration from services by their name
 	GetConfig(ctx context.Context, services []string) ([]common.BaseWithConfigResponse, errors.EdgeX)
 	// DoOperation issue a start, stop, restart action to the targeted services

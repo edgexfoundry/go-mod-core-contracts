@@ -8,10 +8,11 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
@@ -28,17 +29,6 @@ func TestGetConfig(t *testing.T) {
 
 	gc := NewCommonClient(ts.URL)
 	response, err := gc.Configuration(context.Background())
-	require.NoError(t, err)
-	require.Equal(t, expected, response)
-}
-
-func TestGetMetrics(t *testing.T) {
-	expected := dtoCommon.MetricsResponse{}
-	ts := newTestServer(http.MethodGet, common.ApiMetricsRoute, dtoCommon.MetricsResponse{})
-	defer ts.Close()
-
-	gc := NewCommonClient(ts.URL)
-	response, err := gc.Metrics(context.Background())
 	require.NoError(t, err)
 	require.Equal(t, expected, response)
 }

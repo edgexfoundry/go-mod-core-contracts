@@ -33,12 +33,3 @@ func (g *generalClient) FetchConfiguration(ctx context.Context) (res dtoCommon.C
 
 	return res, nil
 }
-
-func (g *generalClient) FetchMetrics(ctx context.Context) (res dtoCommon.MetricsResponse, err errors.EdgeX) {
-	err = utils.GetRequest(ctx, &res, g.baseUrl, common.ApiMetricsRoute, nil)
-	if err != nil {
-		return res, errors.NewCommonEdgeXWrapper(err)
-	}
-
-	return res, nil
-}

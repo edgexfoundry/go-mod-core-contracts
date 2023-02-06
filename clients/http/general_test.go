@@ -25,13 +25,3 @@ func Test_generalClient_FetchConfiguration(t *testing.T) {
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.ConfigResponse{}, res)
 }
-
-func Test_generalClient_FetchMetrics(t *testing.T) {
-	ts := newTestServer(http.MethodGet, common.ApiMetricsRoute, dtoCommon.MetricsResponse{})
-	defer ts.Close()
-
-	client := NewGeneralClient(ts.URL)
-	res, err := client.FetchMetrics(context.Background())
-	require.NoError(t, err)
-	require.IsType(t, dtoCommon.MetricsResponse{}, res)
-}

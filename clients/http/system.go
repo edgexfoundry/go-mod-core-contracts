@@ -39,17 +39,6 @@ func (smc *SystemManagementClient) GetHealth(ctx context.Context, services []str
 	return
 }
 
-func (smc *SystemManagementClient) GetMetrics(ctx context.Context, services []string) (res []dtoCommon.BaseWithMetricsResponse, err errors.EdgeX) {
-	requestParams := url.Values{}
-	requestParams.Set(common.Services, strings.Join(services, common.CommaSeparator))
-	err = utils.GetRequest(ctx, &res, smc.baseUrl, common.ApiMultiMetricsRoute, requestParams)
-	if err != nil {
-		return res, errors.NewCommonEdgeXWrapper(err)
-	}
-
-	return
-}
-
 func (smc *SystemManagementClient) GetConfig(ctx context.Context, services []string) (res []dtoCommon.BaseWithConfigResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
 	requestParams.Set(common.Services, strings.Join(services, common.CommaSeparator))

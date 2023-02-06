@@ -94,31 +94,6 @@ func (_m *SystemManagementClient) GetHealth(ctx context.Context, services []stri
 	return r0, r1
 }
 
-// GetMetrics provides a mock function with given fields: ctx, services
-func (_m *SystemManagementClient) GetMetrics(ctx context.Context, services []string) ([]common.BaseWithMetricsResponse, errors.EdgeX) {
-	ret := _m.Called(ctx, services)
-
-	var r0 []common.BaseWithMetricsResponse
-	if rf, ok := ret.Get(0).(func(context.Context, []string) []common.BaseWithMetricsResponse); ok {
-		r0 = rf(ctx, services)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]common.BaseWithMetricsResponse)
-		}
-	}
-
-	var r1 errors.EdgeX
-	if rf, ok := ret.Get(1).(func(context.Context, []string) errors.EdgeX); ok {
-		r1 = rf(ctx, services)
-	} else {
-		if ret.Get(1) != nil {
-			r1 = ret.Get(1).(errors.EdgeX)
-		}
-	}
-
-	return r0, r1
-}
-
 type mockConstructorTestingTNewSystemManagementClient interface {
 	mock.TestingT
 	Cleanup(func())
