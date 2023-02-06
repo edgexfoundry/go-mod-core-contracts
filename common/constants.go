@@ -308,3 +308,16 @@ const (
 	ConfigStemDevice   = ConfigStemAll
 	ConfigStemSecurity = ConfigStemAll
 )
+
+// Constants related to topics for Commanding via MessageBus
+const (
+	CommandQueryRequestTopicKey           = "CommandQueryRequestTopic"
+	CommandQueryRequestTopicPrefixKey     = "CommandQueryRequestTopicPrefix"
+	CommandRequestTopicKey                = "CommandRequestTopic"
+	CommandRequestTopicPrefixKey          = "CommandRequestTopicPrefix"
+	DeviceCommandRequestTopicKey          = "DeviceCommandRequestTopic"
+	DeviceCommandRequestTopicPrefixKey    = "DeviceCommandRequestTopicPrefix"
+	ExternalCommandQueryResponseTopicKey  = "CommandQueryResponseTopic"
+	ExternalCommandResponseTopicPrefixKey = "CommandResponseTopicPrefix"
+	ResponseTopicPrefixKey                = "ResponseTopicPrefix"
+)
