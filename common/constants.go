@@ -295,10 +295,13 @@ const (
 
 // Constants related to System Events
 const (
-	DeviceSystemEventType         = "device"
-	DeviceSystemEventActionAdd    = "add"
-	DeviceSystemEventActionUpdate = "update"
-	DeviceSystemEventActionDelete = "delete"
+	DeviceSystemEventType           = "device"
+	DeviceProfileSystemEventType    = "deviceprofile"
+	DeviceServiceSystemEventType    = "deviceservice"
+	ProvisionWatcherSystemEventType = "provisionwatcher"
+	SystemEventActionAdd            = "add"
+	SystemEventActionUpdate         = "update"
+	SystemEventActionDelete         = "delete"
 )
 
 const (

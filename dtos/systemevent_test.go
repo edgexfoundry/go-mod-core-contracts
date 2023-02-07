@@ -27,7 +27,7 @@ import (
 
 var expectedApiVersion = common.ApiVersion
 var expectedType = common.DeviceSystemEventType
-var expectedAction = common.DeviceSystemEventActionAdd
+var expectedAction = common.SystemEventActionAdd
 var expectedSoonerTimestamp = time.Now().UnixNano()
 var expectedSource = "core-metadata"
 var expectedOwner = "device-onvif-camera"
