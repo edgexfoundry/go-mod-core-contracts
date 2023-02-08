@@ -35,7 +35,7 @@ var validRequest = SecretRequest{
 		RequestId:   TestUUID,
 		Versionable: NewVersionable(),
 	},
-	Path: "something",
+	SecretName: "something",
 	SecretData: []SecretDataKeyValue{
 		{Key: "username", Value: "User1"},
 		{Key: "password", Value: "password"},
@@ -52,7 +52,7 @@ var missingValueSecretData = []SecretDataKeyValue{
 
 func TestSecretsRequest_Validate(t *testing.T) {
 	validNoPath := validRequest
-	validNoPath.Path = ""
+	validNoPath.SecretName = ""
 	validWithPath := validRequest
 	validNoRequestId := validRequest
 	validNoRequestId.RequestId = ""

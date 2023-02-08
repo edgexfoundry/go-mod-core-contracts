@@ -58,7 +58,7 @@ func TestVersion(t *testing.T) {
 func TestAddSecret(t *testing.T) {
 	expected := dtoCommon.BaseResponse{}
 	req := dtoCommon.NewSecretRequest(
-		"testPath",
+		"testSecretName",
 		[]dtoCommon.SecretDataKeyValue{
 			{Key: "username", Value: "tester"},
 			{Key: "password", Value: "123"},

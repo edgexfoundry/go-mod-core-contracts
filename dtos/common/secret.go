@@ -30,11 +30,11 @@ type SecretDataKeyValue struct {
 	Value string `json:"value" validate:"required"`
 }
 
-// SecretRequest is the request DTO for storing supplied secret at specified Path in the Secret Store
+// SecretRequest is the request DTO for storing supplied secret at a given SecretName in the Secret Store
 // See detail specified by the V2 API swagger in openapi/v2
 type SecretRequest struct {
 	BaseRequest `json:",inline"`
-	Path        string               `json:"path" validate:"required"`
+	SecretName  string               `json:"secretName" validate:"required"`
 	SecretData  []SecretDataKeyValue `json:"secretData" validate:"required,gt=0,dive"`
 }
 
@@ -48,7 +48,7 @@ func (sr *SecretRequest) Validate() error {
 func (sr *SecretRequest) UnmarshalJSON(b []byte) error {
 	var alias struct {
 		BaseRequest
-		Path       string
+		SecretName string
 		SecretData []SecretDataKeyValue
 	}
 
@@ -65,10 +65,10 @@ func (sr *SecretRequest) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-func NewSecretRequest(path string, secretData []SecretDataKeyValue) SecretRequest {
+func NewSecretRequest(secretName string, secretData []SecretDataKeyValue) SecretRequest {
 	return SecretRequest{
 		BaseRequest: NewBaseRequest(),
-		Path:        path,
+		SecretName:  secretName,
 		SecretData:  secretData,
 	}
 }
