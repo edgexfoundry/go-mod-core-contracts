@@ -313,6 +313,7 @@ const (
 )
 
 // Constants related to topics for Commanding via MessageBus
+// TODO: Remove these once all services are using the constants in the next block
 const (
 	CommandQueryRequestTopicKey           = "CommandQueryRequestTopic"
 	CommandQueryRequestTopicPrefixKey     = "CommandQueryRequestTopicPrefix"
@@ -323,4 +324,42 @@ const (
 	ExternalCommandQueryResponseTopicKey  = "CommandQueryResponseTopic"
 	ExternalCommandResponseTopicPrefixKey = "CommandResponseTopicPrefix"
 	ResponseTopicPrefixKey                = "ResponseTopicPrefix"
+)
+
+// MessageBus Topics
+const (
+
+	// Common Topics
+	DefaultBaseTopic    = "edgex"     // Used if the base topic is not specified in MessageBus configuration
+	EventsPublishTopic  = "events"    // <ServiceType>/<DeviceServiceName>/<ProfileName>/<DeviceName>/<SourceName> are appended
+	ResponseTopic       = "response"  // <ServiceName>/<RequestId> are prepended
+	MetricsPublishTopic = "telemetry" // <ServiceName>/<MetricName> are prepended
+
+	// Core Data Topics
+	CoreDataEventSubscribeTopic = "events/device/#"
+
+	// Core Command Topics
+	CoreCommandDeviceRequestPublishTopic  = "device/command/request" // <DeviceServiceName>/<DeviceName>/<CommandName>/<CommandMethod> are appended
+	CoreCommandRequestSubscribeTopic      = "core/command/request/#"
+	CoreCommandQueryRequestSubscribeTopic = "core/commandquery/request/#"
+
+	// Command Client Topics
+	CoreCommandQueryRequestPublishTopic = "core/commandquery/request" // <deviceName>|all is prepended
+	CoreCommandRequestPublishTopic      = "core/command/request"      // <DeviceName>/<CommandName>/<CommandMethod> are appended
+
+	// Core Metadata Topics
+	CoreMetadataSystemEventPublishTopic = "system-events" // <SourceServiceName>/<SystemEventType>/<SystemEventAction><OwnerServiceName>/<ProfileName>
+
+	// Support Notifications
+	// No Topics Yet
+
+	// Support Scheduler
+	// No Topics Yet
+
+	// Device Services Topics
+	DeviceServiceCommandRequestSubscribeTopic = "device/command/request"               // <DeviceServiceName>/# is appended <
+	DeviceServiceSystemEventSubscribeTopic    = "system-events/core-metadata/device/+" // <DeviceServiceName>/# is appended
+
+	// App Service Topics
+	// App Service topics remain configurable inorder to filter by subscription.
 )

@@ -34,3 +34,8 @@ func NormalizeValueType(valueType string) (string, error) {
 	}
 	return "", errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("unable to normalize the unknown value type %s", valueType), nil)
 }
+
+// BuildTopic is a helper function to build MessageBus topic from multiple parts
+func BuildTopic(parts ...string) string {
+	return strings.Join(parts, "/")
+}
