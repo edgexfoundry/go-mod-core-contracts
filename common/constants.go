@@ -330,10 +330,11 @@ const (
 const (
 
 	// Common Topics
-	DefaultBaseTopic    = "edgex"     // Used if the base topic is not specified in MessageBus configuration
-	EventsPublishTopic  = "events"    // <ServiceType>/<DeviceServiceName>/<ProfileName>/<DeviceName>/<SourceName> are appended
-	ResponseTopic       = "response"  // <ServiceName>/<RequestId> are prepended
-	MetricsPublishTopic = "telemetry" // <ServiceName>/<MetricName> are prepended
+	DefaultBaseTopic        = "edgex"         // Used if the base topic is not specified in MessageBus configuration
+	EventsPublishTopic      = "events"        // <ServiceType>/<DeviceServiceName>/<ProfileName>/<DeviceName>/<SourceName> are appended
+	ResponseTopic           = "response"      // <ServiceName>/<RequestId> are prepended
+	MetricsPublishTopic     = "telemetry"     // <ServiceName>/<MetricName> are prepended
+	SystemEventPublishTopic = "system-events" // <SourceServiceName>/<SystemEventType>/<SystemEventAction><OwnerServiceName>/<ProfileName>
 
 	// Core Data Topics
 	CoreDataEventSubscribeTopic = "events/device/#"
@@ -347,9 +348,6 @@ const (
 	CoreCommandQueryRequestPublishTopic = "core/commandquery/request" // <deviceName>|all is prepended
 	CoreCommandRequestPublishTopic      = "core/command/request"      // <DeviceName>/<CommandName>/<CommandMethod> are appended
 
-	// Core Metadata Topics
-	CoreMetadataSystemEventPublishTopic = "system-events" // <SourceServiceName>/<SystemEventType>/<SystemEventAction><OwnerServiceName>/<ProfileName>
-
 	// Support Notifications
 	// No Topics Yet
 
@@ -357,8 +355,8 @@ const (
 	// No Topics Yet
 
 	// Device Services Topics
-	DeviceServiceCommandRequestSubscribeTopic = "device/command/request"               // <DeviceServiceName>/# is appended <
-	DeviceServiceSystemEventSubscribeTopic    = "system-events/core-metadata/device/+" // <DeviceServiceName>/# is appended
+	CommandRequestSubscribeTopic = "device/command/request" // <DeviceServiceName>/# is appended <
+	MetadataSystemSubscribeEvent = "system-events/core-metadata/#"
 
 	// App Service Topics
 	// App Service topics remain configurable inorder to filter by subscription.
