@@ -312,3 +312,93 @@ func TestValidateValueError(t *testing.T) {
 		})
 	}
 }
+
+func TestUnmarshalObjectValue(t *testing.T) {
+	expectedDeviceName := TestDeviceName
+	expectedProfileName := TestDeviceProfileName
+	expectedResourceName := TestDeviceResourceName
+	expectedValueType := common.ValueTypeObject
+	type testObjectType struct {
+		StringField       string
+		BoolField         bool
+		IntField          int
+		UintField         uint
+		Float32Field      float32
+		Float64Field      float64
+		BoolArrayField    []bool
+		IntArrayField     []int
+		UintArrayField    []uint
+		Float32ArrayField []float32
+		Float64ArrayField []float64
+	}
+	testObject := testObjectType{
+		StringField:       "yyz",
+		BoolField:         true,
+		IntField:          -45,
+		UintField:         45,
+		Float32Field:      float32(123.456),
+		Float64Field:      456.789,
+		BoolArrayField:    []bool{true, false, true},
+		IntArrayField:     []int{-1, 1, -1},
+		UintArrayField:    []uint{1, 1, 1},
+		Float32ArrayField: []float32{float32(111.222), float32(333.444), float32(555.666)},
+		Float64ArrayField: []float64{111.222, 333.444, 555.666},
+	}
+
+	actual := NewObjectReading(expectedProfileName, expectedDeviceName, expectedResourceName, testObject)
+
+	assert.NotEmpty(t, actual.Id)
+	assert.Equal(t, expectedProfileName, actual.ProfileName)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
+	assert.Equal(t, expectedResourceName, actual.ResourceName)
+	assert.Equal(t, expectedValueType, actual.ValueType)
+
+	target := testObjectType{}
+	assert.NoError(t, actual.UnmarshalObjectValue(&target))
+	assert.Equal(t, testObject, target)
+	assert.NotZero(t, actual.Origin)
+}
+
+func TestUnmarshalObjectValueError(t *testing.T) {
+	expectedDeviceName := TestDeviceName
+	expectedProfileName := TestDeviceProfileName
+	expectedResourceName := TestDeviceResourceName
+
+	tests := []struct {
+		name      string
+		valueType string
+		value     interface{}
+	}{
+		{"Invalid Simple Boolean", common.ValueTypeBool, true},
+		{"Invalid Simple Uint8", common.ValueTypeUint8, uint8(1)},
+		{"Invalid Simple Uint16", common.ValueTypeUint16, uint16(1)},
+		{"Invalid Simple Uint32", common.ValueTypeUint32, uint32(1)},
+		{"Invalid Simple uint64", common.ValueTypeUint64, uint64(1)},
+		{"Invalid Simple int8", common.ValueTypeInt8, int8(-1)},
+		{"Invalid Simple int16", common.ValueTypeInt16, int16(-1)},
+		{"Invalid Simple int32", common.ValueTypeInt32, int32(-1)},
+		{"Invalid Simple int64", common.ValueTypeInt64, int64(-1)},
+		{"Invalid Simple Float32", common.ValueTypeFloat32, float32(123.456)},
+		{"Invalid Simple Float64", common.ValueTypeFloat64, 123.456},
+		{"Invalid Simple Boolean Array", common.ValueTypeBoolArray, []bool{}},
+		{"Invalid Simple Uint8 Array", common.ValueTypeUint8Array, []uint8{}},
+		{"Invalid Simple Uint16 Array", common.ValueTypeUint16Array, []uint16{}},
+		{"Invalid Simple Uint32 Array", common.ValueTypeUint32Array, []uint32{}},
+		{"Invalid Simple Uint64 Array", common.ValueTypeUint64Array, []uint64{}},
+		{"Invalid Simple Int8 Array", common.ValueTypeInt8Array, []int8{}},
+		{"Invalid Simple Int16 Array", common.ValueTypeInt16Array, []int16{}},
+		{"Invalid Simple Int32 Array", common.ValueTypeInt32Array, []int32{}},
+		{"Invalid Simple Int64 Array", common.ValueTypeInt64Array, []int64{}},
+		{"Invalid Simple Float32 Array", common.ValueTypeFloat32Array, []float32{}},
+		{"Invalid Simple Float64 Array", common.ValueTypeFloat64Array, []float64{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			reading, err := NewSimpleReading(expectedProfileName, expectedDeviceName, expectedResourceName, tt.valueType, tt.value)
+			require.NoError(t, err)
+			target := ""
+			err = reading.UnmarshalObjectValue(&target)
+			require.Error(t, err)
+		})
+	}
+}

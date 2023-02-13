@@ -6,6 +6,7 @@
 package dtos
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -449,5 +450,27 @@ func parseArrayValue(valueType string, value string) (err error) {
 			return err
 		}
 	}
+	return nil
+}
+
+// UnmarshalObjectValue is a helper function used to unmarshal the ObjectValue of a reading to the passed in target type.
+// Note that this function will only work on readings with 'Object' valueType.  An error will be returned when invoking
+// this function on a reading with valueType other than 'Object'.
+func (b BaseReading) UnmarshalObjectValue(target any) error {
+	if b.ValueType == common.ValueTypeObject {
+		// marshal the current reading ObjectValue to JSON
+		jsonEncodedData, err := json.Marshal(b.ObjectValue)
+		if err != nil {
+			return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, "failed to encode the object value of reading to JSON", err)
+		}
+		// unmarshal the JSON into the passed in target
+		err = json.Unmarshal(jsonEncodedData, target)
+		if err != nil {
+			return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("failed to unmarshall the object value of reading into type %v", reflect.TypeOf(target).String()), err)
+		}
+	} else {
+		return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("invalid usage of UnmarshalObjectValue function invocation on reading with %v valueType", b.ValueType), nil)
+	}
+
 	return nil
 }
