@@ -355,9 +355,9 @@ const (
 	// No Topics Yet
 
 	// Device Services Topics
-	CommandRequestSubscribeTopic = "device/command/request"          // <DeviceServiceName>/# is appended <
-	MetadataSystemSubscribeEvent = "system-events/core-metadata/+/+" // <DeviceServiceName>/# is appended
-	ValidateDeviceSubscribeTopic = "validate/device"                 // <DeviceServiceName> is pre-pended
+	CommandRequestSubscribeTopic      = "device/command/request"          // <DeviceServiceName>/# is appended <
+	MetadataSystemEventSubscribeTopic = "system-events/core-metadata/+/+" // <DeviceServiceName>/# is appended
+	ValidateDeviceSubscribeTopic      = "validate/device"                 // <DeviceServiceName> is pre-pended
 
 	// App Service Topics
 	// App Service topics remain configurable inorder to filter by subscription.
