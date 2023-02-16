@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,13 +23,14 @@ import (
 )
 
 func TestAddEvent(t *testing.T) {
+	serviceName := "serviceName"
 	event := dtos.Event{ProfileName: "profileName", DeviceName: "deviceName"}
-	apiRoute := path.Join(common.ApiEventRoute, event.ProfileName, event.DeviceName)
+	apiRoute := path.Join(common.ApiEventRoute, serviceName, event.ProfileName, event.DeviceName, event.SourceName)
 	ts := newTestServer(http.MethodPost, apiRoute, dtoCommon.BaseWithIdResponse{})
 	defer ts.Close()
 
 	client := NewEventClient(ts.URL)
-	res, err := client.Add(context.Background(), requests.AddEventRequest{Event: event})
+	res, err := client.Add(context.Background(), serviceName, requests.AddEventRequest{Event: event})
 	require.NoError(t, err)
 	assert.IsType(t, dtoCommon.BaseWithIdResponse{}, res)
 }

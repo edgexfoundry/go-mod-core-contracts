@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ import (
 // EventClient defines the interface for interactions with the Event endpoint on the EdgeX Foundry core-data service.
 type EventClient interface {
 	// Add adds new event.
-	Add(ctx context.Context, req requests.AddEventRequest) (common.BaseWithIdResponse, errors.EdgeX)
+	Add(ctx context.Context, serviceName string, req requests.AddEventRequest) (common.BaseWithIdResponse, errors.EdgeX)
 	// AllEvents returns all events sorted in descending order of created time.
 	// The result can be limited in a certain range by specifying the offset and limit parameters.
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
