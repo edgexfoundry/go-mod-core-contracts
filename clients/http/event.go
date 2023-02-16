@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,9 +31,9 @@ func NewEventClient(baseUrl string) interfaces.EventClient {
 	}
 }
 
-func (ec *eventClient) Add(ctx context.Context, req requests.AddEventRequest) (
+func (ec *eventClient) Add(ctx context.Context, serviceName string, req requests.AddEventRequest) (
 	dtoCommon.BaseWithIdResponse, errors.EdgeX) {
-	path := path.Join(common.ApiEventRoute, req.Event.ProfileName, req.Event.DeviceName, req.Event.SourceName)
+	path := path.Join(common.ApiEventRoute, serviceName, req.Event.ProfileName, req.Event.DeviceName, req.Event.SourceName)
 	var br dtoCommon.BaseWithIdResponse
 
 	bytes, encoding, err := req.Encode()
