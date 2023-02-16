@@ -387,6 +387,8 @@ func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	assert.Nil(t, req.Device.AutoEvents)
 	assert.Nil(t, req.Device.Protocols)
 	assert.Nil(t, req.Device.Notify)
+	assert.Nil(t, req.Device.Tags)
+	assert.Nil(t, req.Device.Properties)
 }
 
 func TestUpdateDeviceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {

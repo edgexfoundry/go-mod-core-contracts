@@ -25,6 +25,7 @@ type Device struct {
 	AutoEvents     []AutoEvent
 	Notify         bool
 	Tags           map[string]any
+	Properties     map[string]any
 }
 
 // ProtocolProperties contains the device connection information in key/value pair

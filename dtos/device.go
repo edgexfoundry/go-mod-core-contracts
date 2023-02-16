@@ -27,6 +27,7 @@ type Device struct {
 	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" validate:"dive"`
 	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"required,gt=0"`
 	Tags           map[string]any                `json:"tags,omitempty"`
+	Properties     map[string]any                `json:"properties,omitempty"`
 }
 
 // UpdateDevice and its properties are defined in the APIv2 specification:
@@ -47,6 +48,7 @@ type UpdateDevice struct {
 	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"omitempty,gt=0"`
 	Notify         *bool                         `json:"notify"`
 	Tags           map[string]any                `json:"tags"`
+	Properties     map[string]any                `json:"properties"`
 }
 
 // ToDeviceModel transforms the Device DTO to the Device Model
@@ -66,6 +68,7 @@ func ToDeviceModel(dto Device) models.Device {
 	d.AutoEvents = ToAutoEventModels(dto.AutoEvents)
 	d.Protocols = ToProtocolModels(dto.Protocols)
 	d.Tags = dto.Tags
+	d.Properties = dto.Properties
 	return d
 }
 
@@ -87,6 +90,7 @@ func FromDeviceModelToDTO(d models.Device) Device {
 	dto.AutoEvents = FromAutoEventModelsToDTOs(d.AutoEvents)
 	dto.Protocols = FromProtocolModelsToDTOs(d.Protocols)
 	dto.Tags = d.Tags
+	dto.Properties = d.Properties
 	return dto
 }
 
@@ -110,6 +114,7 @@ func FromDeviceModelToUpdateDTO(d models.Device) UpdateDevice {
 		Labels:         d.Labels,
 		Notify:         &d.Notify,
 		Tags:           d.Tags,
+		Properties:     d.Properties,
 	}
 	return dto
 }

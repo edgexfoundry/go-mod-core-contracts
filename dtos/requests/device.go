@@ -128,6 +128,12 @@ func ReplaceDeviceModelFieldsWithDTO(device *models.Device, patch dtos.UpdateDev
 	if patch.Notify != nil {
 		device.Notify = *patch.Notify
 	}
+	if patch.Tags != nil {
+		device.Tags = patch.Tags
+	}
+	if patch.Properties != nil {
+		device.Properties = patch.Properties
+	}
 }
 
 func NewAddDeviceRequest(dto dtos.Device) AddDeviceRequest {
