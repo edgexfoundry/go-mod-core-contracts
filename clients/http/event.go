@@ -36,7 +36,7 @@ func NewEventClient(baseUrl string, authInjector interfaces.AuthenticationInject
 
 func (ec *eventClient) Add(ctx context.Context, serviceName string, req requests.AddEventRequest) (
 	dtoCommon.BaseWithIdResponse, errors.EdgeX) {
-	path := path.Join(common.ApiEventRoute, serviceName, req.Event.ProfileName, req.Event.DeviceName, req.Event.SourceName)
+	path := utils.EscapeAndJoinPath(common.ApiEventRoute, serviceName, req.Event.ProfileName, req.Event.DeviceName, req.Event.SourceName)
 	var br dtoCommon.BaseWithIdResponse
 
 	bytes, encoding, err := req.Encode()

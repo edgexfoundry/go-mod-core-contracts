@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -78,7 +78,7 @@ func (rc readingClient) ReadingsByDeviceName(ctx context.Context, name string, o
 }
 
 func (rc readingClient) ReadingsByResourceName(ctx context.Context, name string, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiReadingRoute, common.ResourceName, name)
+	requestPath := utils.EscapeAndJoinPath(common.ApiReadingRoute, common.ResourceName, name)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -105,7 +105,7 @@ func (rc readingClient) ReadingsByTimeRange(ctx context.Context, start, end, off
 
 // ReadingsByResourceNameAndTimeRange returns readings by resource name and specified time range. Readings are sorted in descending order of origin time.
 func (rc readingClient) ReadingsByResourceNameAndTimeRange(ctx context.Context, name string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiReadingRoute, common.ResourceName, name, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	requestPath := utils.EscapeAndJoinPath(common.ApiReadingRoute, common.ResourceName, name, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -118,7 +118,7 @@ func (rc readingClient) ReadingsByResourceNameAndTimeRange(ctx context.Context, 
 }
 
 func (rc readingClient) ReadingsByDeviceNameAndResourceName(ctx context.Context, deviceName, resourceName string, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.ResourceName, resourceName)
+	requestPath := utils.EscapeAndJoinPath(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.ResourceName, resourceName)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -132,7 +132,7 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceName(ctx context.Context,
 }
 
 func (rc readingClient) ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx context.Context, deviceName, resourceName string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.ResourceName, resourceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	requestPath := utils.EscapeAndJoinPath(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.ResourceName, resourceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -145,7 +145,7 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx cont
 }
 
 func (rc readingClient) ReadingsByDeviceNameAndResourceNamesAndTimeRange(ctx context.Context, deviceName string, resourceNames []string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	requestPath := utils.EscapeAndJoinPath(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

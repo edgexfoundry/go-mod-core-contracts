@@ -16,7 +16,7 @@ type DeviceCoreCommand struct {
 // CoreCommand and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-command/2.1.0#/CoreCommand
 type CoreCommand struct {
-	Name       string                 `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name       string                 `json:"name" validate:"required,edgex-dto-none-empty-string"`
 	Get        bool                   `json:"get,omitempty" validate:"required_without=Set"`
 	Set        bool                   `json:"set,omitempty" validate:"required_without=Get"`
 	Path       string                 `json:"path,omitempty"`

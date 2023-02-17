@@ -26,7 +26,7 @@ type BaseReading struct {
 	Id            string `json:"id,omitempty"`
 	Origin        int64  `json:"origin" validate:"required"`
 	DeviceName    string `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	ResourceName  string `json:"resourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	ResourceName  string `json:"resourceName" validate:"required"`
 	ProfileName   string `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ValueType     string `json:"valueType" validate:"required,edgex-dto-value-type"`
 	Units         string `json:"units,omitempty"`

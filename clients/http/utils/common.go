@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2022 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -75,11 +75,10 @@ func makeRequest(req *http.Request, authInjector interfaces.AuthenticationInject
 }
 
 func createRequest(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl)
+	u, err := url.Parse(baseUrl + requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
 	}
-	u.Path = path.Join(u.Path, requestPath)
 	if requestParams != nil {
 		u.RawQuery = requestParams.Encode()
 	}
@@ -92,11 +91,10 @@ func createRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 }
 
 func createRequestWithRawDataAndParams(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl)
+	u, err := url.Parse(baseUrl + requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
 	}
-	u.Path = path.Join(u.Path, requestPath)
 	if requestParams != nil {
 		u.RawQuery = requestParams.Encode()
 	}
@@ -120,11 +118,10 @@ func createRequestWithRawDataAndParams(ctx context.Context, httpMethod string, b
 }
 
 func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl)
+	u, err := url.Parse(baseUrl + requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
 	}
-	u.Path = path.Join(u.Path, requestPath)
 	if requestParams != nil {
 		u.RawQuery = requestParams.Encode()
 	}
@@ -149,11 +146,10 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl st
 }
 
 func createRequestWithEncodedData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl)
+	u, err := url.Parse(baseUrl + requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
 	}
-	u.Path = path.Join(u.Path, requestPath)
 
 	content := encoding
 	if content == "" {
@@ -171,11 +167,10 @@ func createRequestWithEncodedData(ctx context.Context, httpMethod string, baseUr
 
 // createRequestFromFilePath creates multipart/form-data request with the specified file
 func createRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl string, requestPath string, filePath string) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl)
+	u, err := url.Parse(baseUrl + requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
 	}
-	u.Path = path.Join(u.Path, requestPath)
 
 	fileContents, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -225,4 +220,14 @@ func sendRequest(ctx context.Context, req *http.Request, authInjector interfaces
 	msg := fmt.Sprintf("request failed, status code: %d, err: %s", resp.StatusCode, string(bodyBytes))
 	errKind := errors.KindMapping(resp.StatusCode)
 	return nil, errors.NewCommonEdgeX(errKind, msg, nil)
+}
+
+// EscapeAndJoinPath escape and join the path variables
+func EscapeAndJoinPath(apiRoutePath string, pathVariables ...string) string {
+	elements := make([]string, len(pathVariables)+1)
+	elements[0] = apiRoutePath // we don't need to escape the route path like /device, /reading, ...,etc.
+	for i, e := range pathVariables {
+		elements[i+1] = url.QueryEscape(e)
+	}
+	return path.Join(elements...)
 }
