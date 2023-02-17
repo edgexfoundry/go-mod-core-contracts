@@ -27,4 +27,5 @@ func TestFromDeviceModelToUpdateDTO(t *testing.T) {
 	assert.Equal(t, model.ProfileName, *dto.ProfileName)
 	assert.Equal(t, model.Location, dto.Location)
 	assert.Equal(t, model.Tags, dto.Tags)
+	assert.Equal(t, model.Properties, dto.Properties)
 }
