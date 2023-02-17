@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -100,12 +100,6 @@ func ReplaceDeviceModelFieldsWithDTO(device *models.Device, patch dtos.UpdateDev
 	}
 	if patch.OperatingState != nil {
 		device.OperatingState = models.OperatingState(*patch.OperatingState)
-	}
-	if patch.LastConnected != nil {
-		device.LastConnected = *patch.LastConnected
-	}
-	if patch.LastReported != nil {
-		device.LastReported = *patch.LastReported
 	}
 	if patch.ServiceName != nil {
 		device.ServiceName = *patch.ServiceName

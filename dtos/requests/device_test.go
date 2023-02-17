@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,13 +8,11 @@ package requests
 import (
 	"encoding/json"
 	"fmt"
-	"testing"
-	"time"
-
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -53,7 +51,6 @@ var testAddDevice = AddDeviceRequest{
 	},
 }
 
-var testNowTime = time.Now().Unix()
 var testUpdateDevice = UpdateDeviceRequest{
 	BaseRequest: dtoCommon.BaseRequest{
 		RequestId:   ExampleUUID,
@@ -76,8 +73,6 @@ func mockUpdateDevice() dtos.UpdateDevice {
 	d.Description = &testDescription
 	d.AdminState = &testAdminState
 	d.OperatingState = &testOperatingState
-	d.LastReported = &testNowTime
-	d.LastConnected = &testNowTime
 	d.ServiceName = &testDeviceServiceName
 	d.ProfileName = &testProfileName
 	d.Labels = testDeviceLabels
@@ -378,8 +373,6 @@ func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	assert.Nil(t, req.Device.Description)
 	assert.Nil(t, req.Device.AdminState)
 	assert.Nil(t, req.Device.OperatingState)
-	assert.Nil(t, req.Device.LastConnected)
-	assert.Nil(t, req.Device.LastReported)
 	assert.Nil(t, req.Device.ServiceName)
 	assert.Nil(t, req.Device.ProfileName)
 	assert.Nil(t, req.Device.Labels)
@@ -424,8 +417,6 @@ func TestReplaceDeviceModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, TestDescription, device.Description)
 	assert.Equal(t, models.AdminState(models.Locked), device.AdminState)
 	assert.Equal(t, models.OperatingState(models.Up), device.OperatingState)
-	assert.Equal(t, testNowTime, device.LastConnected)
-	assert.Equal(t, testNowTime, device.LastReported)
 	assert.Equal(t, TestDeviceServiceName, device.ServiceName)
 	assert.Equal(t, TestDeviceProfileName, device.ProfileName)
 	assert.Equal(t, testLabels, device.Labels)
