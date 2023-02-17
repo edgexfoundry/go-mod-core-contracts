@@ -18,8 +18,6 @@ type Device struct {
 	Description    string                        `json:"description,omitempty"`
 	AdminState     string                        `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 	OperatingState string                        `json:"operatingState" validate:"oneof='UP' 'DOWN' 'UNKNOWN'"`
-	LastConnected  int64                         `json:"lastConnected,omitempty"` // Deprecated: will be replaced by Metrics in v3
-	LastReported   int64                         `json:"lastReported,omitempty"`  // Deprecated: will be replaced by Metrics in v3
 	Labels         []string                      `json:"labels,omitempty"`
 	Location       interface{}                   `json:"location,omitempty"`
 	ServiceName    string                        `json:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
@@ -38,8 +36,6 @@ type UpdateDevice struct {
 	Description    *string                       `json:"description" validate:"omitempty"`
 	AdminState     *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 	OperatingState *string                       `json:"operatingState" validate:"omitempty,oneof='UP' 'DOWN' 'UNKNOWN'"`
-	LastConnected  *int64                        `json:"lastConnected"` // Deprecated: will be replaced by Metrics in v3
-	LastReported   *int64                        `json:"lastReported"`  // Deprecated: will be replaced by Metrics in v3
 	ServiceName    *string                       `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	ProfileName    *string                       `json:"profileName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Labels         []string                      `json:"labels"`
@@ -61,8 +57,6 @@ func ToDeviceModel(dto Device) models.Device {
 	d.ProfileName = dto.ProfileName
 	d.AdminState = models.AdminState(dto.AdminState)
 	d.OperatingState = models.OperatingState(dto.OperatingState)
-	d.LastReported = dto.LastReported
-	d.LastConnected = dto.LastConnected
 	d.Labels = dto.Labels
 	d.Location = dto.Location
 	d.AutoEvents = ToAutoEventModels(dto.AutoEvents)
@@ -83,8 +77,6 @@ func FromDeviceModelToDTO(d models.Device) Device {
 	dto.ProfileName = d.ProfileName
 	dto.AdminState = string(d.AdminState)
 	dto.OperatingState = string(d.OperatingState)
-	dto.LastReported = d.LastReported
-	dto.LastConnected = d.LastConnected
 	dto.Labels = d.Labels
 	dto.Location = d.Location
 	dto.AutoEvents = FromAutoEventModelsToDTOs(d.AutoEvents)
@@ -104,8 +96,6 @@ func FromDeviceModelToUpdateDTO(d models.Device) UpdateDevice {
 		Description:    &d.Description,
 		AdminState:     &adminState,
 		OperatingState: &operatingState,
-		LastConnected:  &d.LastConnected,
-		LastReported:   &d.LastReported,
 		ServiceName:    &d.ServiceName,
 		ProfileName:    &d.ProfileName,
 		Location:       d.Location,

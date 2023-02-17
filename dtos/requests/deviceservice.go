@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -94,12 +94,6 @@ func (ds *UpdateDeviceServiceRequest) UnmarshalJSON(b []byte) error {
 func ReplaceDeviceServiceModelFieldsWithDTO(ds *models.DeviceService, patch dtos.UpdateDeviceService) {
 	if patch.Description != nil {
 		ds.Description = *patch.Description
-	}
-	if patch.LastConnected != nil {
-		ds.LastConnected = *patch.LastConnected
-	}
-	if patch.LastReported != nil {
-		ds.LastReported = *patch.LastReported
 	}
 	if patch.AdminState != nil {
 		ds.AdminState = models.AdminState(*patch.AdminState)
