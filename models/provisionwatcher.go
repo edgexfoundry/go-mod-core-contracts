@@ -19,4 +19,5 @@ type ProvisionWatcher struct {
 	ServiceName         string
 	AdminState          AdminState
 	AutoEvents          []AutoEvent
+	Properties          map[string]any
 }

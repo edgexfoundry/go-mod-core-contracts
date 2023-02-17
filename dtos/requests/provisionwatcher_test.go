@@ -301,6 +301,7 @@ func TestUpdateProvisionWatcherRequest_UnmarshalJSON_NilField(t *testing.T) {
 	assert.Nil(t, req.ProvisionWatcher.ProfileName)
 	assert.Nil(t, req.ProvisionWatcher.AdminState)
 	assert.Nil(t, req.ProvisionWatcher.AutoEvents)
+	assert.Nil(t, req.ProvisionWatcher.Properties)
 }
 
 func TestUpdateProvisionWatcherRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
