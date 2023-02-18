@@ -37,6 +37,7 @@ var testDeviceProfile = models.DeviceProfile{
 		Properties: models.ResourceProperties{
 			ValueType: common.ValueTypeInt16,
 			ReadWrite: common.ReadWrite_RW,
+			Others:    testTags,
 		},
 		Tags: testTags,
 	}},
@@ -67,6 +68,7 @@ func profileData() DeviceProfile {
 			Properties: ResourceProperties{
 				ValueType: common.ValueTypeInt16,
 				ReadWrite: common.ReadWrite_RW,
+				Others:    testTags,
 			},
 			Tags: testTags,
 		}},
