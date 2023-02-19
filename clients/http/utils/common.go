@@ -61,8 +61,6 @@ func makeRequest(req *http.Request, authInjector interfaces.AuthenticationInject
 		if err := authInjector.AddAuthenticationData(req); err != nil {
 			return nil, errors.NewCommonEdgeXWrapper(err)
 		}
-	} else {
-		fmt.Printf(" ** FIXME - REMOVE: No auth provider supplied")
 	}
 
 	client := &http.Client{}
