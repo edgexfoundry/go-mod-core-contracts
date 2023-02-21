@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +25,7 @@ func TestQueryAllReadings(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllReadingRoute, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.AllReadings(context.Background(), 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
@@ -34,7 +35,7 @@ func TestQueryReadingCount(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiReadingCountRoute, dtoCommon.CountResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingCount(context.Background())
 	require.NoError(t, err)
 	assert.IsType(t, dtoCommon.CountResponse{}, res)
@@ -46,7 +47,7 @@ func TestQueryReadingCountByDeviceName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, path, dtoCommon.CountResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingCountByDeviceName(context.Background(), deviceName)
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.CountResponse{}, res)
@@ -58,7 +59,7 @@ func TestQueryReadingsByDeviceName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingsByDeviceName(context.Background(), deviceName, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
@@ -70,7 +71,7 @@ func TestQueryReadingsByResourceName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingsByResourceName(context.Background(), resourceName, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
@@ -83,7 +84,7 @@ func TestQueryReadingsByTimeRange(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingsByTimeRange(context.Background(), start, end, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
@@ -97,7 +98,7 @@ func TestQueryReadingsByResourceNameAndTimeRange(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingsByResourceNameAndTimeRange(context.Background(), resourceName, start, end, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
@@ -110,7 +111,7 @@ func TestQueryReadingsByDeviceNameAndResourceName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingsByDeviceNameAndResourceName(context.Background(), deviceName, resourceName, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
@@ -125,7 +126,7 @@ func TestQueryReadingsByDeviceNameAndResourceNameAndTimeRange(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingsByDeviceNameAndResourceNameAndTimeRange(context.Background(), deviceName, resourceName, start, end, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
@@ -140,7 +141,7 @@ func TestQueryReadingsByDeviceNameAndResourceNamesAndTimeRange(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
-	client := NewReadingClient(ts.URL)
+	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ReadingsByDeviceNameAndResourceNamesAndTimeRange(context.Background(), deviceName, resourceNames, start, end, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)

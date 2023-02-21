@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +23,7 @@ func TestProvisionWatcherClient_Add(t *testing.T) {
 	ts := newTestServer(http.MethodPost, common.ApiProvisionWatcherRoute, []dtoCommon.BaseWithIdResponse{})
 	defer ts.Close()
 
-	client := NewProvisionWatcherClient(ts.URL)
+	client := NewProvisionWatcherClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.Add(context.Background(), []requests.AddProvisionWatcherRequest{})
 	require.NoError(t, err)
 	require.IsType(t, []dtoCommon.BaseWithIdResponse{}, res)
@@ -32,7 +33,7 @@ func TestProvisionWatcherClient_Update(t *testing.T) {
 	ts := newTestServer(http.MethodPatch, common.ApiProvisionWatcherRoute, []dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewProvisionWatcherClient(ts.URL)
+	client := NewProvisionWatcherClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.Update(context.Background(), []requests.UpdateProvisionWatcherRequest{})
 	require.NoError(t, err)
 	require.IsType(t, []dtoCommon.BaseResponse{}, res)
@@ -42,7 +43,7 @@ func TestProvisionWatcherClient_AllProvisionWatchers(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllProvisionWatcherRoute, responses.MultiProvisionWatchersResponse{})
 	defer ts.Close()
 
-	client := NewProvisionWatcherClient(ts.URL)
+	client := NewProvisionWatcherClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.AllProvisionWatchers(context.Background(), []string{"label1", "label2"}, 1, 10)
 	require.NoError(t, err)
 	require.IsType(t, responses.MultiProvisionWatchersResponse{}, res)
@@ -54,7 +55,7 @@ func TestProvisionWatcherClient_ProvisionWatcherByName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.ProvisionWatcherResponse{})
 	defer ts.Close()
 
-	client := NewProvisionWatcherClient(ts.URL)
+	client := NewProvisionWatcherClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ProvisionWatcherByName(context.Background(), pwName)
 	require.NoError(t, err)
 	require.IsType(t, responses.ProvisionWatcherResponse{}, res)
@@ -66,7 +67,7 @@ func TestProvisionWatcherClient_DeleteProvisionWatcherByName(t *testing.T) {
 	ts := newTestServer(http.MethodDelete, urlPath, dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewProvisionWatcherClient(ts.URL)
+	client := NewProvisionWatcherClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.DeleteProvisionWatcherByName(context.Background(), pwName)
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.BaseResponse{}, res)
@@ -78,7 +79,7 @@ func TestProvisionWatcherClient_ProvisionWatchersByProfileName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiProvisionWatchersResponse{})
 	defer ts.Close()
 
-	client := NewProvisionWatcherClient(ts.URL)
+	client := NewProvisionWatcherClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ProvisionWatchersByProfileName(context.Background(), profileName, 1, 10)
 	require.NoError(t, err)
 	require.IsType(t, responses.MultiProvisionWatchersResponse{}, res)
@@ -90,7 +91,7 @@ func TestProvisionWatcherClient_ProvisionWatchersByServiceName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiProvisionWatchersResponse{})
 	defer ts.Close()
 
-	client := NewProvisionWatcherClient(ts.URL)
+	client := NewProvisionWatcherClient(ts.URL, NewNullAuthenticationInjector())
 	res, err := client.ProvisionWatchersByServiceName(context.Background(), serviceName, 1, 10)
 	require.NoError(t, err)
 	require.IsType(t, responses.MultiProvisionWatchersResponse{}, res)
