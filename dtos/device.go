@@ -42,7 +42,6 @@ type UpdateDevice struct {
 	Location       interface{}                   `json:"location"`
 	AutoEvents     []AutoEvent                   `json:"autoEvents" validate:"dive"`
 	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"omitempty,gt=0"`
-	Notify         *bool                         `json:"notify"`
 	Tags           map[string]any                `json:"tags"`
 	Properties     map[string]any                `json:"properties"`
 }
@@ -102,7 +101,6 @@ func FromDeviceModelToUpdateDTO(d models.Device) UpdateDevice {
 		AutoEvents:     FromAutoEventModelsToDTOs(d.AutoEvents),
 		Protocols:      FromProtocolModelsToDTOs(d.Protocols),
 		Labels:         d.Labels,
-		Notify:         &d.Notify,
 		Tags:           d.Tags,
 		Properties:     d.Properties,
 	}

@@ -119,9 +119,6 @@ func ReplaceDeviceModelFieldsWithDTO(device *models.Device, patch dtos.UpdateDev
 	if patch.Protocols != nil {
 		device.Protocols = dtos.ToProtocolModels(patch.Protocols)
 	}
-	if patch.Notify != nil {
-		device.Notify = *patch.Notify
-	}
 	if patch.Tags != nil {
 		device.Tags = patch.Tags
 	}

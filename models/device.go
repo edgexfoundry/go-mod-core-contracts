@@ -21,7 +21,6 @@ type Device struct {
 	ServiceName    string
 	ProfileName    string
 	AutoEvents     []AutoEvent
-	Notify         bool
 	Tags           map[string]any
 	Properties     map[string]any
 }
