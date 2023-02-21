@@ -22,6 +22,7 @@ type ProvisionWatcher struct {
 	ServiceName         string              `json:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	AdminState          string              `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 	AutoEvents          []AutoEvent         `json:"autoEvents,omitempty" validate:"dive"`
+	Properties          map[string]any      `json:"properties,omitempty"`
 }
 
 // UpdateProvisionWatcher and its properties are defined in the APIv2 specification:
@@ -36,6 +37,7 @@ type UpdateProvisionWatcher struct {
 	ServiceName         *string             `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	AdminState          *string             `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 	AutoEvents          []AutoEvent         `json:"autoEvents" validate:"dive"`
+	Properties          map[string]any      `json:"properties"`
 }
 
 // ToProvisionWatcherModel transforms the ProvisionWatcher DTO to the ProvisionWatcher model
@@ -51,6 +53,7 @@ func ToProvisionWatcherModel(dto ProvisionWatcher) models.ProvisionWatcher {
 		ServiceName:         dto.ServiceName,
 		AdminState:          models.AdminState(dto.AdminState),
 		AutoEvents:          ToAutoEventModels(dto.AutoEvents),
+		Properties:          dto.Properties,
 	}
 }
 
@@ -67,6 +70,7 @@ func FromProvisionWatcherModelToDTO(pw models.ProvisionWatcher) ProvisionWatcher
 		ServiceName:         pw.ServiceName,
 		AdminState:          string(pw.AdminState),
 		AutoEvents:          FromAutoEventModelsToDTOs(pw.AutoEvents),
+		Properties:          pw.Properties,
 	}
 }
 
@@ -83,6 +87,7 @@ func FromProvisionWatcherModelToUpdateDTO(pw models.ProvisionWatcher) UpdateProv
 		Labels:              pw.Labels,
 		Identifiers:         pw.Identifiers,
 		BlockingIdentifiers: pw.BlockingIdentifiers,
+		Properties:          pw.Properties,
 	}
 	return dto
 }
