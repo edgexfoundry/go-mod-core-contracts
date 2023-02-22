@@ -15,12 +15,12 @@ type ResourceProperties struct {
 	Minimum      string
 	Maximum      string
 	DefaultValue string
-	Mask         string
-	Shift        string
-	Scale        string
-	Offset       string
-	Base         string
+	Mask         uint64
+	Shift        int64
+	Scale        float64
+	Offset       float64
+	Base         float64
 	Assertion    string
 	MediaType    string
-	Others       map[string]any
+	Optional     map[string]any
 }

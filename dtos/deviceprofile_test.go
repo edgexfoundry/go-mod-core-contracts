@@ -23,6 +23,7 @@ var testAttributes = map[string]interface{}{
 }
 var testMappings = map[string]string{"0": "off", "1": "on"}
 var testTags = map[string]any{"TestTagsKey": "TestTagsValue"}
+var testOptional = map[string]any{"isVirtual": false}
 
 var testDeviceProfile = models.DeviceProfile{
 	Name:         TestDeviceProfileName,
@@ -37,7 +38,7 @@ var testDeviceProfile = models.DeviceProfile{
 		Properties: models.ResourceProperties{
 			ValueType: common.ValueTypeInt16,
 			ReadWrite: common.ReadWrite_RW,
-			Others:    testTags,
+			Optional:  testOptional,
 		},
 		Tags: testTags,
 	}},
@@ -68,7 +69,7 @@ func profileData() DeviceProfile {
 			Properties: ResourceProperties{
 				ValueType: common.ValueTypeInt16,
 				ReadWrite: common.ReadWrite_RW,
-				Others:    testTags,
+				Optional:  testOptional,
 			},
 			Tags: testTags,
 		}},
