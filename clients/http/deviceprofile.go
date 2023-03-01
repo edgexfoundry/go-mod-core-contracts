@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2022 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -162,7 +162,7 @@ func (client *DeviceProfileClient) DeviceResourceByProfileNameAndResourceName(ct
 	if exists {
 		return res, nil
 	}
-	requestPath := path.Join(common.ApiDeviceResourceRoute, common.Profile, profileName, common.Resource, resourceName)
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceResourceRoute, common.Profile, profileName, common.Resource, resourceName)
 	err := utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -223,7 +223,7 @@ func (client *DeviceProfileClient) UpdateDeviceProfileResource(ctx context.Conte
 // DeleteDeviceResourceByName deletes device resource by name
 func (client *DeviceProfileClient) DeleteDeviceResourceByName(ctx context.Context, profileName string, resourceName string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := path.Join(common.ApiDeviceProfileRoute, common.Name, url.QueryEscape(profileName), common.Resource, url.QueryEscape(resourceName))
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceProfileRoute, common.Name, url.QueryEscape(profileName), common.Resource, url.QueryEscape(resourceName))
 	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
@@ -254,7 +254,7 @@ func (client *DeviceProfileClient) UpdateDeviceProfileDeviceCommand(ctx context.
 // DeleteDeviceCommandByName deletes device command by name
 func (client *DeviceProfileClient) DeleteDeviceCommandByName(ctx context.Context, profileName string, commandName string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := path.Join(common.ApiDeviceProfileRoute, common.Name, url.QueryEscape(profileName), common.DeviceCommand, url.QueryEscape(commandName))
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceProfileRoute, common.Name, url.QueryEscape(profileName), common.DeviceCommand, url.QueryEscape(commandName))
 	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)

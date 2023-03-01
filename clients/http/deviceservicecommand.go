@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,7 +10,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/url"
-	"path"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/interfaces"
@@ -35,7 +34,7 @@ func NewDeviceServiceCommandClient(authInjector interfaces.AuthenticationInjecto
 
 // GetCommand sends HTTP request to execute the Get command
 func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string) (*responses.EventResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiDeviceRoute, common.Name, deviceName, commandName)
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, commandName)
 	params, err := url.ParseQuery(queryParams)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
@@ -65,7 +64,7 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 // SetCommand sends HTTP request to execute the Set command
 func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := path.Join(common.ApiDeviceRoute, common.Name, deviceName, commandName)
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, commandName)
 	params, err := url.ParseQuery(queryParams)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
@@ -80,7 +79,7 @@ func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUr
 // SetCommandWithObject invokes device service's set command API and the settings supports object value type
 func (client *deviceServiceCommandClient) SetCommandWithObject(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]interface{}) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := path.Join(common.ApiDeviceRoute, common.Name, deviceName, commandName)
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, commandName)
 	params, err := url.ParseQuery(queryParams)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)

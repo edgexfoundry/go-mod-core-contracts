@@ -22,7 +22,7 @@ type Event struct {
 	Id                 string        `json:"id" validate:"required,uuid"`
 	DeviceName         string        `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
 	ProfileName        string        `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	SourceName         string        `json:"sourceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	SourceName         string        `json:"sourceName" validate:"required"`
 	Origin             int64         `json:"origin" validate:"required"`
 	Readings           []BaseReading `json:"readings" validate:"gt=0,dive,required"`
 	Tags               Tags          `json:"tags,omitempty"`
