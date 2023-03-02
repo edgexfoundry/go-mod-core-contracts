@@ -11,6 +11,9 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 )
 
+// AuthMethod controls the authentication method to be applied to outbound http requests for interval actions
+type AuthMethod string
+
 // IntervalAction and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/IntervalAction
 // Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
@@ -23,6 +26,7 @@ type IntervalAction struct {
 	ContentType  string
 	Address      Address
 	AdminState   AdminState
+	AuthMethod   AuthMethod
 }
 
 func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
@@ -35,6 +39,7 @@ func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
 		ContentType  string
 		Address      interface{}
 		AdminState   AdminState
+		AuthMethod   AuthMethod
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal intervalAction.", err)
@@ -53,6 +58,7 @@ func (intervalAction *IntervalAction) UnmarshalJSON(b []byte) error {
 		ContentType:  alias.ContentType,
 		Address:      address,
 		AdminState:   alias.AdminState,
+		AuthMethod:   alias.AuthMethod,
 	}
 	return nil
 }

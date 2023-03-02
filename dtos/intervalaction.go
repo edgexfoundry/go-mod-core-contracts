@@ -20,6 +20,7 @@ type IntervalAction struct {
 	Content      string  `json:"content,omitempty"`
 	ContentType  string  `json:"contentType,omitempty"`
 	AdminState   string  `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
+	AuthMethod   string  `json:"authMethod" validate:"oneof='' 'NONE' 'JWT'"`
 }
 
 // NewIntervalAction creates intervalAction DTO with required fields
@@ -42,6 +43,7 @@ type UpdateIntervalAction struct {
 	ContentType  *string  `json:"contentType"`
 	Address      *Address `json:"address"`
 	AdminState   *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	AuthMethod   *string  `json:"authMethod" validate:"omitempty,oneof='' 'NONE' 'JWT'"`
 }
 
 // NewUpdateIntervalAction creates updateIntervalAction DTO with required field
@@ -59,6 +61,7 @@ func ToIntervalActionModel(dto IntervalAction) models.IntervalAction {
 	model.ContentType = dto.ContentType
 	model.Address = ToAddressModel(dto.Address)
 	model.AdminState = models.AdminState(dto.AdminState)
+	model.AuthMethod = models.AuthMethod(dto.AuthMethod)
 	return model
 }
 
@@ -73,5 +76,6 @@ func FromIntervalActionModelToDTO(model models.IntervalAction) IntervalAction {
 	dto.ContentType = model.ContentType
 	dto.Address = FromAddressModelToDTO(model.Address)
 	dto.AdminState = string(model.AdminState)
+	dto.AuthMethod = string(model.AuthMethod)
 	return dto
 }
