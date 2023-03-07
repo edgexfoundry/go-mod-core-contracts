@@ -26,7 +26,7 @@ type Device struct {
 }
 
 // ProtocolProperties contains the device connection information in key/value pair
-type ProtocolProperties map[string]string
+type ProtocolProperties map[string]any
 
 // AdminState controls the range of values which constitute valid administrative states for a device
 type AdminState string
