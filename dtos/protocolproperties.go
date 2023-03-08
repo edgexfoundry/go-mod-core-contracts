@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +8,7 @@ package dtos
 import "github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 
 // ProtocolProperties contains the device connection information in key/value pair
-type ProtocolProperties map[string]string
+type ProtocolProperties map[string]any
 
 // ToProtocolPropertiesModel transforms the ProtocolProperties DTO to the ProtocolProperties model
 func ToProtocolPropertiesModel(p ProtocolProperties) models.ProtocolProperties {
