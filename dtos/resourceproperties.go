@@ -18,14 +18,14 @@ type ResourceProperties struct {
 	Minimum      string         `json:"minimum,omitempty" yaml:"minimum"`
 	Maximum      string         `json:"maximum,omitempty" yaml:"maximum"`
 	DefaultValue string         `json:"defaultValue,omitempty" yaml:"defaultValue"`
-	Mask         string         `json:"mask,omitempty" yaml:"mask"`
-	Shift        string         `json:"shift,omitempty" yaml:"shift"`
-	Scale        string         `json:"scale,omitempty" yaml:"scale"`
-	Offset       string         `json:"offset,omitempty" yaml:"offset"`
-	Base         string         `json:"base,omitempty" yaml:"base"`
+	Mask         uint64         `json:"mask,omitempty" yaml:"mask"`
+	Shift        int64          `json:"shift,omitempty" yaml:"shift"`
+	Scale        float64        `json:"scale,omitempty" yaml:"scale"`
+	Offset       float64        `json:"offset,omitempty" yaml:"offset"`
+	Base         float64        `json:"base,omitempty" yaml:"base"`
 	Assertion    string         `json:"assertion,omitempty" yaml:"assertion"`
 	MediaType    string         `json:"mediaType,omitempty" yaml:"mediaType"`
-	Others       map[string]any `json:"others,omitempty" yaml:"others"`
+	Optional     map[string]any `json:"optional,omitempty" yaml:"optional"`
 }
 
 // ToResourcePropertiesModel transforms the ResourceProperties DTO to the ResourceProperties model
@@ -44,7 +44,7 @@ func ToResourcePropertiesModel(p ResourceProperties) models.ResourceProperties {
 		Base:         p.Base,
 		Assertion:    p.Assertion,
 		MediaType:    p.MediaType,
-		Others:       p.Others,
+		Optional:     p.Optional,
 	}
 }
 
@@ -64,6 +64,6 @@ func FromResourcePropertiesModelToDTO(p models.ResourceProperties) ResourcePrope
 		Base:         p.Base,
 		Assertion:    p.Assertion,
 		MediaType:    p.MediaType,
-		Others:       p.Others,
+		Optional:     p.Optional,
 	}
 }
