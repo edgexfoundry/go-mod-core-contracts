@@ -1,6 +1,6 @@
 module github.com/edgexfoundry/go-mod-core-contracts/v3
 
-go 1.18
+go 1.20
 
 require (
 	github.com/fxamacker/cbor/v2 v2.4.0
