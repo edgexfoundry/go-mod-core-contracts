@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,16 +13,16 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/ProvisionWatcher
 type ProvisionWatcher struct {
 	DBTimestamp         `json:",inline"`
-	Id                  string              `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name                string              `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Labels              []string            `json:"labels,omitempty"`
-	Identifiers         map[string]string   `json:"identifiers" validate:"gt=0,dive,keys,required,endkeys,required"`
-	BlockingIdentifiers map[string][]string `json:"blockingIdentifiers,omitempty"`
-	ProfileName         string              `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ServiceName         string              `json:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	AdminState          string              `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
-	AutoEvents          []AutoEvent         `json:"autoEvents,omitempty" validate:"dive"`
-	Properties          map[string]any      `json:"properties,omitempty"`
+	Id                  string              `json:"id,omitempty" yaml:"id,omitempty" validate:"omitempty,uuid"`
+	Name                string              `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Labels              []string            `json:"labels,omitempty" yaml:"labels,omitempty"`
+	Identifiers         map[string]string   `json:"identifiers" yaml:"identifiers" validate:"gt=0,dive,keys,required,endkeys,required"`
+	BlockingIdentifiers map[string][]string `json:"blockingIdentifiers,omitempty" yaml:"blockingIdentifiers,omitempty"`
+	ProfileName         string              `json:"profileName" yaml:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ServiceName         string              `json:"serviceName" yaml:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	AdminState          string              `json:"adminState" yaml:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
+	AutoEvents          []AutoEvent         `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
+	Properties          map[string]any      `json:"properties,omitempty" yaml:"properties,omitempty"`
 }
 
 // UpdateProvisionWatcher and its properties are defined in the APIv2 specification:
