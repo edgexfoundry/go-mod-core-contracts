@@ -12,8 +12,8 @@ type ResourceProperties struct {
 	ValueType    string
 	ReadWrite    string
 	Units        string
-	Minimum      string
-	Maximum      string
+	Minimum      float64
+	Maximum      float64
 	DefaultValue string
 	Mask         uint64
 	Shift        int64
