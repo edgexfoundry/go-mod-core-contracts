@@ -15,8 +15,8 @@ type ResourceProperties struct {
 	ValueType    string         `json:"valueType" yaml:"valueType" validate:"required,edgex-dto-value-type"`
 	ReadWrite    string         `json:"readWrite" yaml:"readWrite" validate:"required,oneof='R' 'W' 'RW' 'WR'"`
 	Units        string         `json:"units,omitempty" yaml:"units"`
-	Minimum      float64        `json:"minimum,omitempty" yaml:"minimum"`
-	Maximum      float64        `json:"maximum,omitempty" yaml:"maximum"`
+	Minimum      string         `json:"minimum,omitempty" yaml:"minimum"`
+	Maximum      string         `json:"maximum,omitempty" yaml:"maximum"`
 	DefaultValue string         `json:"defaultValue,omitempty" yaml:"defaultValue"`
 	Mask         uint64         `json:"mask,omitempty" yaml:"mask"`
 	Shift        int64          `json:"shift,omitempty" yaml:"shift"`
