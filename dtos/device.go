@@ -13,19 +13,19 @@ import (
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/Device
 type Device struct {
 	DBTimestamp    `json:",inline"`
-	Id             string                        `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name           string                        `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Description    string                        `json:"description,omitempty"`
-	AdminState     string                        `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
-	OperatingState string                        `json:"operatingState" validate:"oneof='UP' 'DOWN' 'UNKNOWN'"`
-	Labels         []string                      `json:"labels,omitempty"`
-	Location       interface{}                   `json:"location,omitempty"`
-	ServiceName    string                        `json:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ProfileName    string                        `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" validate:"dive"`
-	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"required,gt=0"`
-	Tags           map[string]any                `json:"tags,omitempty"`
-	Properties     map[string]any                `json:"properties,omitempty"`
+	Id             string                        `json:"id,omitempty" yaml:"id,omitempty" validate:"omitempty,uuid"`
+	Name           string                        `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Description    string                        `json:"description,omitempty" yaml:"description,omitempty"`
+	AdminState     string                        `json:"adminState" yaml:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
+	OperatingState string                        `json:"operatingState" yaml:"operatingState" validate:"oneof='UP' 'DOWN' 'UNKNOWN'"`
+	Labels         []string                      `json:"labels,omitempty" yaml:"labels,omitempty"`
+	Location       interface{}                   `json:"location,omitempty" yaml:"location,omitempty"`
+	ServiceName    string                        `json:"serviceName" yaml:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName    string                        `json:"profileName" yaml:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
+	Protocols      map[string]ProtocolProperties `json:"protocols" yaml:"protocols" validate:"required,gt=0"`
+	Tags           map[string]any                `json:"tags,omitempty" yaml:"tags,omitempty"`
+	Properties     map[string]any                `json:"properties,omitempty" yaml:"properties,omitempty"`
 }
 
 // UpdateDevice and its properties are defined in the APIv2 specification:
