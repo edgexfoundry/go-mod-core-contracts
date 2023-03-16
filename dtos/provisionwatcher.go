@@ -18,26 +18,20 @@ type ProvisionWatcher struct {
 	Labels              []string            `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Identifiers         map[string]string   `json:"identifiers" yaml:"identifiers" validate:"gt=0,dive,keys,required,endkeys,required"`
 	BlockingIdentifiers map[string][]string `json:"blockingIdentifiers,omitempty" yaml:"blockingIdentifiers,omitempty"`
-	ProfileName         string              `json:"profileName" yaml:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ServiceName         string              `json:"serviceName" yaml:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	AdminState          string              `json:"adminState" yaml:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
-	AutoEvents          []AutoEvent         `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
-	Properties          map[string]any      `json:"properties,omitempty" yaml:"properties,omitempty"`
+	DiscoveredDevice    DiscoveredDevice    `json:"discoveredDevice" yaml:"discoveredDevice" validate:"dive"`
 }
 
 // UpdateProvisionWatcher and its properties are defined in the APIv2 specification:
 // https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/UpdateProvisionWatcher
 type UpdateProvisionWatcher struct {
-	Id                  *string             `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name                *string             `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	Labels              []string            `json:"labels"`
-	Identifiers         map[string]string   `json:"identifiers" validate:"omitempty,gt=0,dive,keys,required,endkeys,required"`
-	BlockingIdentifiers map[string][]string `json:"blockingIdentifiers"`
-	ProfileName         *string             `json:"profileName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ServiceName         *string             `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	AdminState          *string             `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
-	AutoEvents          []AutoEvent         `json:"autoEvents" validate:"dive"`
-	Properties          map[string]any      `json:"properties"`
+	Id                  *string                `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name                *string                `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Labels              []string               `json:"labels"`
+	Identifiers         map[string]string      `json:"identifiers" validate:"omitempty,gt=0,dive,keys,required,endkeys,required"`
+	BlockingIdentifiers map[string][]string    `json:"blockingIdentifiers"`
+	AdminState          *string                `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	DiscoveredDevice    UpdateDiscoveredDevice `json:"discoveredDevice"`
 }
 
 // ToProvisionWatcherModel transforms the ProvisionWatcher DTO to the ProvisionWatcher model
@@ -49,11 +43,8 @@ func ToProvisionWatcherModel(dto ProvisionWatcher) models.ProvisionWatcher {
 		Labels:              dto.Labels,
 		Identifiers:         dto.Identifiers,
 		BlockingIdentifiers: dto.BlockingIdentifiers,
-		ProfileName:         dto.ProfileName,
-		ServiceName:         dto.ServiceName,
 		AdminState:          models.AdminState(dto.AdminState),
-		AutoEvents:          ToAutoEventModels(dto.AutoEvents),
-		Properties:          dto.Properties,
+		DiscoveredDevice:    ToDiscoveredDeviceModel(dto.DiscoveredDevice),
 	}
 }
 
@@ -66,11 +57,8 @@ func FromProvisionWatcherModelToDTO(pw models.ProvisionWatcher) ProvisionWatcher
 		Labels:              pw.Labels,
 		Identifiers:         pw.Identifiers,
 		BlockingIdentifiers: pw.BlockingIdentifiers,
-		ProfileName:         pw.ProfileName,
-		ServiceName:         pw.ServiceName,
 		AdminState:          string(pw.AdminState),
-		AutoEvents:          FromAutoEventModelsToDTOs(pw.AutoEvents),
-		Properties:          pw.Properties,
+		DiscoveredDevice:    FromDiscoveredDeviceModelToDTO(pw.DiscoveredDevice),
 	}
 }
 
@@ -80,14 +68,11 @@ func FromProvisionWatcherModelToUpdateDTO(pw models.ProvisionWatcher) UpdateProv
 	dto := UpdateProvisionWatcher{
 		Id:                  &pw.Id,
 		Name:                &pw.Name,
-		ProfileName:         &pw.ProfileName,
-		ServiceName:         &pw.ServiceName,
-		AdminState:          &adminState,
-		AutoEvents:          FromAutoEventModelsToDTOs(pw.AutoEvents),
 		Labels:              pw.Labels,
 		Identifiers:         pw.Identifiers,
 		BlockingIdentifiers: pw.BlockingIdentifiers,
-		Properties:          pw.Properties,
+		AdminState:          &adminState,
+		DiscoveredDevice:    FromDiscoveredDeviceModelToUpdateDTO(pw.DiscoveredDevice),
 	}
 	return dto
 }

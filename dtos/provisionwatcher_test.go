@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,8 +21,10 @@ func TestFromProvisionWatcherModelToUpdateDTO(t *testing.T) {
 	assert.Equal(t, model.Labels, dto.Labels)
 	assert.Nil(t, model.Identifiers, dto.Identifiers)
 	assert.Nil(t, model.BlockingIdentifiers, dto.BlockingIdentifiers)
-	assert.Equal(t, model.ProfileName, *dto.ProfileName)
-	assert.Equal(t, model.ServiceName, *dto.ServiceName)
 	assert.EqualValues(t, model.AdminState, *dto.AdminState)
-	assert.Equal(t, model.Properties, dto.Properties)
+	assert.Equal(t, model.DiscoveredDevice.ProfileName, *dto.DiscoveredDevice.ProfileName)
+	assert.Equal(t, model.DiscoveredDevice.ServiceName, *dto.DiscoveredDevice.ServiceName)
+	assert.EqualValues(t, model.DiscoveredDevice.AdminState, *dto.DiscoveredDevice.AdminState)
+	assert.Zero(t, model.DiscoveredDevice.AutoEvents)
+	assert.Equal(t, model.DiscoveredDevice.Properties, dto.DiscoveredDevice.Properties)
 }

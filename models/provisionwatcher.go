@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,9 +15,6 @@ type ProvisionWatcher struct {
 	Labels              []string
 	Identifiers         map[string]string
 	BlockingIdentifiers map[string][]string
-	ProfileName         string
-	ServiceName         string
 	AdminState          AdminState
-	AutoEvents          []AutoEvent
-	Properties          map[string]any
+	DiscoveredDevice    DiscoveredDevice
 }
