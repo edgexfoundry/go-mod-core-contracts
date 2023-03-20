@@ -15,14 +15,14 @@ type ResourceProperties struct {
 	ValueType    string         `json:"valueType" yaml:"valueType" validate:"required,edgex-dto-value-type"`
 	ReadWrite    string         `json:"readWrite" yaml:"readWrite" validate:"required,oneof='R' 'W' 'RW' 'WR'"`
 	Units        string         `json:"units,omitempty" yaml:"units"`
-	Minimum      string         `json:"minimum,omitempty" yaml:"minimum"`
-	Maximum      string         `json:"maximum,omitempty" yaml:"maximum"`
+	Minimum      *float64       `json:"minimum,omitempty" yaml:"minimum"`
+	Maximum      *float64       `json:"maximum,omitempty" yaml:"maximum"`
 	DefaultValue string         `json:"defaultValue,omitempty" yaml:"defaultValue"`
-	Mask         uint64         `json:"mask,omitempty" yaml:"mask"`
-	Shift        int64          `json:"shift,omitempty" yaml:"shift"`
-	Scale        float64        `json:"scale,omitempty" yaml:"scale"`
-	Offset       float64        `json:"offset,omitempty" yaml:"offset"`
-	Base         float64        `json:"base,omitempty" yaml:"base"`
+	Mask         *uint64        `json:"mask,omitempty" yaml:"mask"`
+	Shift        *int64         `json:"shift,omitempty" yaml:"shift"`
+	Scale        *float64       `json:"scale,omitempty" yaml:"scale"`
+	Offset       *float64       `json:"offset,omitempty" yaml:"offset"`
+	Base         *float64       `json:"base,omitempty" yaml:"base"`
 	Assertion    string         `json:"assertion,omitempty" yaml:"assertion"`
 	MediaType    string         `json:"mediaType,omitempty" yaml:"mediaType"`
 	Optional     map[string]any `json:"optional,omitempty" yaml:"optional"`
