@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +7,7 @@ package common
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
@@ -25,7 +26,7 @@ var valueTypes = []string{
 	ValueTypeObject,
 }
 
-// // NormalizeValueType normalizes the valueType to upper camel case
+// NormalizeValueType normalizes the valueType to upper camel case
 func NormalizeValueType(valueType string) (string, error) {
 	for _, v := range valueTypes {
 		if strings.EqualFold(valueType, v) {
@@ -38,4 +39,15 @@ func NormalizeValueType(valueType string) (string, error) {
 // BuildTopic is a helper function to build MessageBus topic from multiple parts
 func BuildTopic(parts ...string) string {
 	return strings.Join(parts, "/")
+}
+
+// URLEncode encodes the input string with additional common character support
+func URLEncode(s string) string {
+	res := url.QueryEscape(s)
+	res = strings.Replace(res, "-", "%2D", -1)
+	res = strings.Replace(res, ".", "%2E", -1)
+	res = strings.Replace(res, "_", "%5F", -1)
+	res = strings.Replace(res, "~", "%7E", -1)
+
+	return res
 }
