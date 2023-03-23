@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,7 @@ type AddProvisionWatcherRequest struct {
 }
 
 // Validate satisfies the Validator interface
-func (pw AddProvisionWatcherRequest) Validate() error {
+func (pw *AddProvisionWatcherRequest) Validate() error {
 	err := common.Validate(pw)
 	return err
 }
@@ -66,7 +66,7 @@ type UpdateProvisionWatcherRequest struct {
 }
 
 // Validate satisfies the Validator interface
-func (pw UpdateProvisionWatcherRequest) Validate() error {
+func (pw *UpdateProvisionWatcherRequest) Validate() error {
 	err := common.Validate(pw)
 	return err
 }
@@ -101,20 +101,23 @@ func ReplaceProvisionWatcherModelFieldsWithDTO(pw *models.ProvisionWatcher, patc
 	if patch.BlockingIdentifiers != nil {
 		pw.BlockingIdentifiers = patch.BlockingIdentifiers
 	}
-	if patch.ProfileName != nil {
-		pw.ProfileName = *patch.ProfileName
-	}
-	if patch.ServiceName != nil {
-		pw.ServiceName = *patch.ServiceName
-	}
 	if patch.AdminState != nil {
 		pw.AdminState = models.AdminState(*patch.AdminState)
 	}
-	if patch.AutoEvents != nil {
-		pw.AutoEvents = dtos.ToAutoEventModels(patch.AutoEvents)
+	if patch.DiscoveredDevice.ProfileName != nil {
+		pw.DiscoveredDevice.ProfileName = *patch.DiscoveredDevice.ProfileName
 	}
-	if patch.Properties != nil {
-		pw.Properties = patch.Properties
+	if patch.DiscoveredDevice.ServiceName != nil {
+		pw.DiscoveredDevice.ServiceName = *patch.DiscoveredDevice.ServiceName
+	}
+	if patch.DiscoveredDevice.AdminState != nil {
+		pw.DiscoveredDevice.AdminState = models.AdminState(*patch.DiscoveredDevice.AdminState)
+	}
+	if patch.DiscoveredDevice.AutoEvents != nil {
+		pw.DiscoveredDevice.AutoEvents = dtos.ToAutoEventModels(patch.DiscoveredDevice.AutoEvents)
+	}
+	if patch.DiscoveredDevice.Properties != nil {
+		pw.DiscoveredDevice.Properties = patch.DiscoveredDevice.Properties
 	}
 }
 

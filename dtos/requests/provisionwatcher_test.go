@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,10 +37,13 @@ var testAddProvisionWatcher = AddProvisionWatcherRequest{
 		Labels:              testProvisionWatcherLabels,
 		Identifiers:         testIdentifiers,
 		BlockingIdentifiers: testBlockingIdentifiers,
-		ServiceName:         TestDeviceServiceName,
-		ProfileName:         TestDeviceProfileName,
 		AdminState:          models.Locked,
-		AutoEvents:          testAutoEvents,
+		DiscoveredDevice: dtos.DiscoveredDevice{
+			ProfileName: TestDeviceProfileName,
+			ServiceName: TestDeviceServiceName,
+			AdminState:  models.Locked,
+			AutoEvents:  testAutoEvents,
+		},
 	},
 }
 
@@ -64,10 +67,11 @@ func mockUpdateProvisionWatcher() dtos.UpdateProvisionWatcher {
 	d.Labels = testProvisionWatcherLabels
 	d.Identifiers = testIdentifiers
 	d.BlockingIdentifiers = testBlockingIdentifiers
-	d.ServiceName = &testDeviceServiceName
-	d.ProfileName = &testProfileName
 	d.AdminState = &testAdminState
-	d.AutoEvents = testAutoEvents
+	d.DiscoveredDevice.ServiceName = &testDeviceServiceName
+	d.DiscoveredDevice.ProfileName = &testProfileName
+	d.DiscoveredDevice.AdminState = &testAdminState
+	d.DiscoveredDevice.AutoEvents = testAutoEvents
 	return d
 }
 
@@ -94,19 +98,19 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 		"key": "",
 	}
 	noServiceName := testAddProvisionWatcher
-	noServiceName.ProvisionWatcher.ServiceName = emptyString
+	noServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = emptyString
 	noProfileName := testAddProvisionWatcher
-	noProfileName.ProvisionWatcher.ProfileName = emptyString
+	noProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = emptyString
 	invalidFrequency := testAddProvisionWatcher
-	invalidFrequency.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
+	invalidFrequency.ProvisionWatcher.DiscoveredDevice.AutoEvents = []dtos.AutoEvent{
 		{SourceName: "TestDevice", Interval: "-1", OnChange: true},
 	}
 	noAutoEventFrequency := testAddProvisionWatcher
-	noAutoEventFrequency.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
+	noAutoEventFrequency.ProvisionWatcher.DiscoveredDevice.AutoEvents = []dtos.AutoEvent{
 		{SourceName: "TestDevice", OnChange: true},
 	}
 	noAutoEventResource := testAddProvisionWatcher
-	noAutoEventResource.ProvisionWatcher.AutoEvents = []dtos.AutoEvent{
+	noAutoEventResource.ProvisionWatcher.DiscoveredDevice.AutoEvents = []dtos.AutoEvent{
 		{Interval: "300ms", OnChange: true},
 	}
 
@@ -181,11 +185,14 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 			BlockingIdentifiers: map[string][]string{
 				"port": {"397", "398", "399"},
 			},
-			ServiceName: TestDeviceServiceName,
-			ProfileName: TestDeviceProfileName,
-			AdminState:  models.Locked,
-			AutoEvents: []models.AutoEvent{
-				{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
+			AdminState: models.Locked,
+			DiscoveredDevice: models.DiscoveredDevice{
+				ProfileName: TestDeviceProfileName,
+				ServiceName: TestDeviceServiceName,
+				AdminState:  models.Locked,
+				AutoEvents: []models.AutoEvent{
+					{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
+				},
 			},
 		},
 	}
@@ -229,20 +236,20 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 	invalidEmptyIdentifiers.ProvisionWatcher.Identifiers = emptyMap
 	// ServiceName
 	validNilServiceName := valid
-	validNilServiceName.ProvisionWatcher.ServiceName = nil
+	validNilServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = nil
 	invalidEmptyServiceName := valid
-	invalidEmptyServiceName.ProvisionWatcher.ServiceName = &emptyString
+	invalidEmptyServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = &emptyString
 	// ProfileName
 	validNilProfileName := valid
-	validNilProfileName.ProvisionWatcher.ProfileName = nil
+	validNilProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = nil
 	invalidEmptyProfileName := valid
-	invalidEmptyProfileName.ProvisionWatcher.ProfileName = &emptyString
+	invalidEmptyProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = &emptyString
 
 	invalidState := "invalid state"
 	invalidAdminState := valid
 	invalidAdminState.ProvisionWatcher.AdminState = &invalidState
 	invalidFrequency := valid
-	invalidFrequency.ProvisionWatcher.AutoEvents = testAutoEventsWithInvalidFrequency
+	invalidFrequency.ProvisionWatcher.DiscoveredDevice.AutoEvents = testAutoEventsWithInvalidFrequency
 
 	tests := []struct {
 		name        string
@@ -297,11 +304,11 @@ func TestUpdateProvisionWatcherRequest_UnmarshalJSON_NilField(t *testing.T) {
 	assert.Nil(t, req.ProvisionWatcher.Labels)
 	assert.Nil(t, req.ProvisionWatcher.Identifiers)
 	assert.Nil(t, req.ProvisionWatcher.BlockingIdentifiers)
-	assert.Nil(t, req.ProvisionWatcher.ServiceName)
-	assert.Nil(t, req.ProvisionWatcher.ProfileName)
+	assert.Nil(t, req.ProvisionWatcher.DiscoveredDevice.ServiceName)
+	assert.Nil(t, req.ProvisionWatcher.DiscoveredDevice.ProfileName)
 	assert.Nil(t, req.ProvisionWatcher.AdminState)
-	assert.Nil(t, req.ProvisionWatcher.AutoEvents)
-	assert.Nil(t, req.ProvisionWatcher.Properties)
+	assert.Nil(t, req.ProvisionWatcher.DiscoveredDevice.AutoEvents)
+	assert.Nil(t, req.ProvisionWatcher.DiscoveredDevice.Properties)
 }
 
 func TestUpdateProvisionWatcherRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
@@ -312,7 +319,9 @@ func TestUpdateProvisionWatcherRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 			"apiVersion" : "v2",
 			"name":"test-watcher",
 			"labels":[],
-			"autoEvents":[]
+			"discoveredDevice":{
+				"autoEvents":[]
+			}
 		}
 	}`
 	var req UpdateProvisionWatcherRequest
@@ -322,7 +331,7 @@ func TestUpdateProvisionWatcherRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	require.NoError(t, err)
 	// Empty slice is used to remove the data
 	assert.NotNil(t, req.ProvisionWatcher.Labels)
-	assert.NotNil(t, req.ProvisionWatcher.AutoEvents)
+	assert.NotNil(t, req.ProvisionWatcher.DiscoveredDevice.AutoEvents)
 }
 
 func TestReplaceProvisionWatcherModelFieldsWithDTO(t *testing.T) {
@@ -337,8 +346,8 @@ func TestReplaceProvisionWatcherModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, testProvisionWatcherLabels, provisionWatcher.Labels)
 	assert.Equal(t, testIdentifiers, provisionWatcher.Identifiers)
 	assert.Equal(t, testBlockingIdentifiers, provisionWatcher.BlockingIdentifiers)
-	assert.Equal(t, TestDeviceServiceName, provisionWatcher.ServiceName)
-	assert.Equal(t, TestDeviceProfileName, provisionWatcher.ProfileName)
+	assert.Equal(t, TestDeviceServiceName, provisionWatcher.DiscoveredDevice.ServiceName)
+	assert.Equal(t, TestDeviceProfileName, provisionWatcher.DiscoveredDevice.ProfileName)
 	assert.Equal(t, models.AdminState(models.Locked), provisionWatcher.AdminState)
-	assert.Equal(t, dtos.ToAutoEventModels(testAutoEvents), provisionWatcher.AutoEvents)
+	assert.Equal(t, dtos.ToAutoEventModels(testAutoEvents), provisionWatcher.DiscoveredDevice.AutoEvents)
 }
