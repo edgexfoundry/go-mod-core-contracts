@@ -9,8 +9,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 )
 
-// Device and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/Device
 type Device struct {
 	DBTimestamp    `json:",inline"`
 	Id             string                        `json:"id,omitempty" yaml:"id,omitempty" validate:"omitempty,uuid"`
@@ -28,8 +26,6 @@ type Device struct {
 	Properties     map[string]any                `json:"properties,omitempty" yaml:"properties,omitempty"`
 }
 
-// UpdateDevice and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/UpdateDevice
 type UpdateDevice struct {
 	Id             *string                       `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name           *string                       `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`

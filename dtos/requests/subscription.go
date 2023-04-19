@@ -18,8 +18,6 @@ import (
 var supportedChannelTypes = []string{common.EMAIL, common.REST}
 
 // AddSubscriptionRequest defines the Request Content for POST Subscription DTO.
-// This object and its properties correspond to the AddSubscriptionRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/AddSubscriptionRequest
 type AddSubscriptionRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	Subscription          dtos.Subscription `json:"subscription"`
@@ -71,8 +69,6 @@ func AddSubscriptionReqToSubscriptionModels(reqs []AddSubscriptionRequest) (s []
 }
 
 // UpdateSubscriptionRequest defines the Request Content for PUT event as pushed DTO.
-// This object and its properties correspond to the UpdateSubscriptionRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/UpdateSubscriptionRequest
 type UpdateSubscriptionRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	Subscription          dtos.UpdateSubscription `json:"subscription"`

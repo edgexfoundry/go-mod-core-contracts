@@ -11,8 +11,6 @@ import (
 )
 
 // IntervalActionResponse defines the Response Content for GET IntervalAction DTOs.
-// This object and its properties correspond to the IntervalActionResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.1.0#/IntervalActionResponse
 type IntervalActionResponse struct {
 	common.BaseResponse `json:",inline"`
 	Action              dtos.IntervalAction `json:"action"`
@@ -26,8 +24,6 @@ func NewIntervalActionResponse(requestId string, message string, statusCode int,
 }
 
 // MultiIntervalActionsResponse defines the Response Content for GET multiple IntervalAction DTOs.
-// This object and its properties correspond to the MultiIntervalActionsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.1.0#/MultiIntervalActionsResponse
 type MultiIntervalActionsResponse struct {
 	common.BaseWithTotalCountResponse `json:",inline"`
 	Actions                           []dtos.IntervalAction `json:"actions"`

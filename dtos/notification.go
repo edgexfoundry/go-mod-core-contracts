@@ -11,8 +11,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// Notification and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/Notification
 type Notification struct {
 	DBTimestamp `json:",inline"`
 	Id          string   `json:"id,omitempty" validate:"omitempty,uuid"`

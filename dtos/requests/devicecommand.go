@@ -16,8 +16,6 @@ import (
 )
 
 // AddDeviceCommandRequest defines the Request Content for POST DeviceCommand DTO.
-// This object and its properties correspond to the DeviceCommandRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.2.0#/DeviceCommandRequest
 type AddDeviceCommandRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	ProfileName           string             `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
@@ -51,8 +49,6 @@ func (dc *AddDeviceCommandRequest) UnmarshalJSON(b []byte) error {
 }
 
 // UpdateDeviceCommandRequest defines the Request Content for PATCH DeviceCommand DTO.
-// This object and its properties correspond to the DeviceCommandRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.2.0#/DeviceCommandRequest
 type UpdateDeviceCommandRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	ProfileName           string                   `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`

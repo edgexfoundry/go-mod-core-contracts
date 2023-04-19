@@ -7,8 +7,6 @@ package dtos
 
 import "github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 
-// DeviceResource and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/DeviceResource
 type DeviceResource struct {
 	Description string                 `json:"description" yaml:"description"`
 	Name        string                 `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string"`
@@ -18,8 +16,6 @@ type DeviceResource struct {
 	Tags        map[string]any         `json:"tags,omitempty" yaml:"tags,omitempty"`
 }
 
-// UpdateDeviceResource and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.2.0#/DeviceResource
 type UpdateDeviceResource struct {
 	Description *string `json:"description"`
 	Name        *string `json:"name" validate:"required,edgex-dto-none-empty-string"`

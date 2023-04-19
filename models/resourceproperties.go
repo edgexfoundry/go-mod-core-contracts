@@ -5,9 +5,6 @@
 
 package models
 
-// ResourceProperties and its properties care defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.x#/ResourceProperties
-// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type ResourceProperties struct {
 	ValueType    string
 	ReadWrite    string

@@ -15,9 +15,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 )
 
-// DeviceResourceRequest defines the Request Content for POST DeviceResource DTO.
-// This object and its properties correspond to the DeviceResourceRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.2.0#/DeviceResourceRequest
+// AddDeviceResourceRequest defines the Request Content for POST DeviceResource DTO.
 type AddDeviceResourceRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	ProfileName           string              `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
@@ -50,8 +48,6 @@ func (dr *AddDeviceResourceRequest) UnmarshalJSON(b []byte) error {
 }
 
 // UpdateDeviceResourceRequest defines the Request Content for PATCH DeviceResource DTO.
-// This object and its properties correspond to the DeviceResourceRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.2.0#/DeviceResourceRequest
 type UpdateDeviceResourceRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	ProfileName           string                    `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
