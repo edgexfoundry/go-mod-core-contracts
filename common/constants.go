@@ -6,10 +6,10 @@
 
 package common
 
-// Constants related to defined routes in the v2 service APIs
+// Constants related to defined routes in the v3 service APIs
 const (
-	ApiVersion = "v2"
-	ApiBase    = "/api/v2"
+	ApiVersion = "v3"
+	ApiBase    = "/api/v3"
 
 	ApiEventRoute                                           = ApiBase + "/event"
 	ApiEventServiceNameProfileNameDeviceNameSourceNameRoute = ApiEventRoute + "/{" + ServiceName + "}" + "/{" + ProfileName + "}" + "/{" + DeviceName + "}" + "/{" + SourceName + "}"
@@ -131,7 +131,7 @@ const (
 	ApiMultiConfigRoute = ApiSystemRoute + "/config"
 )
 
-// Constants related to defined url path names and parameters in the v2 service APIs
+// Constants related to defined url path names and parameters in the v3 service APIs
 const (
 	All           = "all"
 	Id            = "id"
@@ -185,7 +185,7 @@ const (
 	RegexCommand = "ds-regexcmd"    //query string to specify if the command name is in regular expression format
 )
 
-// Constants related to the default value of query strings in the v2 service APIs
+// Constants related to the default value of query strings in the v3 service APIs
 const (
 	DefaultOffset  = 0
 	DefaultLimit   = 20

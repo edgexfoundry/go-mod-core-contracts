@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -230,9 +230,9 @@ func TestUpdateIntervalRequest_Validate(t *testing.T) {
 
 func TestUpdateIntervalRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
-		"apiVersion" : "v2",
+		"apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"interval":{"apiVersion":"v2", "name":"TestInterval"}
+		"interval":{"apiVersion":"v3", "name":"TestInterval"}
 	}`
 	var req UpdateIntervalRequest
 

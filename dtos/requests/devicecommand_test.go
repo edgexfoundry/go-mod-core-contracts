@@ -148,7 +148,7 @@ func TestUpdateDeviceCommandRequest_Validate(t *testing.T) {
 
 func TestUpdateDeviceCommandRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
-	    "apiVersion" : "v2",
+	    "apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
         "profileName": "TestProfile",
 		"deviceCommand":{"name":"TestCommand"}

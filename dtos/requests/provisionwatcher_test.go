@@ -291,9 +291,9 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 
 func TestUpdateProvisionWatcherRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
-		"apiVersion" : "v2",
+		"apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"provisionWatcher":{"apiVersion" : "v2","name":"test-watcher"}
+		"provisionWatcher":{"apiVersion" : "v3","name":"test-watcher"}
 	}`
 	var req UpdateProvisionWatcherRequest
 
@@ -313,10 +313,10 @@ func TestUpdateProvisionWatcherRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 func TestUpdateProvisionWatcherRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
-		"apiVersion" : "v2",
+		"apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"provisionWatcher":{
-			"apiVersion" : "v2",
+			"apiVersion" : "v3",
 			"name":"test-watcher",
 			"labels":[],
 			"discoveredDevice":{
