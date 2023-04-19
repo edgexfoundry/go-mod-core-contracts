@@ -9,24 +9,21 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/fxamacker/cbor/v2"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
-	"github.com/fxamacker/cbor/v2"
 )
 
 // EventResponse defines the Response Content for GET event DTOs.
-// This object and its properties correspond to the EventResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/EventResponse
 type EventResponse struct {
 	dtoCommon.BaseResponse `json:",inline"`
 	Event                  dtos.Event `json:"event"`
 }
 
 // MultiEventsResponse defines the Response Content for GET multiple event DTOs.
-// This object and its properties correspond to the MultiEventsResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/MultiEventsResponse
 type MultiEventsResponse struct {
 	dtoCommon.BaseWithTotalCountResponse `json:",inline"`
 	Events                               []dtos.Event `json:"events"`

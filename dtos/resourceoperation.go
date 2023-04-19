@@ -7,8 +7,6 @@ package dtos
 
 import "github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 
-// ResourceOperation and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/ResourceOperation
 type ResourceOperation struct {
 	DeviceResource string            `json:"deviceResource" yaml:"deviceResource" validate:"required"` // The replacement of Object field
 	DefaultValue   string            `json:"defaultValue" yaml:"defaultValue"`

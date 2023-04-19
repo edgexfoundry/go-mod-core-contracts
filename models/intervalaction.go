@@ -14,9 +14,6 @@ import (
 // AuthMethod controls the authentication method to be applied to outbound http requests for interval actions
 type AuthMethod string
 
-// IntervalAction and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.x#/IntervalAction
-// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type IntervalAction struct {
 	DBTimestamp
 	Id           string

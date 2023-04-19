@@ -21,11 +21,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 )
 
 func TestNewMetric(t *testing.T) {
 	expectedTimestamp := time.Now().UnixNano()
-	expectedApiVersion := "v2"
+	expectedApiVersion := common.ApiVersion
 	expectedName := "my-metric"
 
 	validFields := []MetricField{

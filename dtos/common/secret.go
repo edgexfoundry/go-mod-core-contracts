@@ -24,14 +24,12 @@ import (
 )
 
 // SecretDataKeyValue is a key/value pair to be stored in the Secret Store as part of the Secret Data
-// See detail specified by the V2 API swagger in openapi/v2
 type SecretDataKeyValue struct {
 	Key   string `json:"key" validate:"required"`
 	Value string `json:"value" validate:"required"`
 }
 
 // SecretRequest is the request DTO for storing supplied secret at a given SecretName in the Secret Store
-// See detail specified by the V2 API swagger in openapi/v2
 type SecretRequest struct {
 	BaseRequest `json:",inline"`
 	SecretName  string               `json:"secretName" validate:"required"`

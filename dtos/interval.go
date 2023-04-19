@@ -9,8 +9,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 )
 
-// Interval and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.1.0#/Interval
 type Interval struct {
 	DBTimestamp `json:",inline"`
 	Id          string `json:"id,omitempty" validate:"omitempty,uuid"`
@@ -25,8 +23,6 @@ func NewInterval(name, interval string) Interval {
 	return Interval{Name: name, Interval: interval}
 }
 
-// UpdateInterval and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-scheduler/2.1.0#/UpdateInterval
 type UpdateInterval struct {
 	Id       *string `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name     *string `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`

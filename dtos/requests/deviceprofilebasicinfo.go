@@ -16,8 +16,6 @@ import (
 )
 
 // DeviceProfileBasicInfoRequest defines the Request Content for PATCH UpdateDeviceProfileBasicInfo DTO.
-// This object and its properties correspond to the DeviceProfileBasicInfoRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.2.0#/DeviceProfileBasicInfoRequest
 type DeviceProfileBasicInfoRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
 	BasicInfo             dtos.UpdateDeviceProfileBasicInfo `json:"basicinfo"`

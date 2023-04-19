@@ -11,9 +11,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 )
 
-// Transmission and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.x#/Transmission
-// Model fields are same as the DTOs documented by this swagger. Exceptions, if any, are noted below.
 type Transmission struct {
 	Created          int64
 	Id               string

@@ -12,8 +12,6 @@ import (
 )
 
 // BaseRequest defines the base content for request DTOs (data transfer objects).
-// This object and its properties correspond to the BaseRequest object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/BaseRequest
 type BaseRequest struct {
 	Versionable `json:",inline"`
 	RequestId   string `json:"requestId" validate:"len=0|uuid"`
@@ -27,8 +25,6 @@ func NewBaseRequest() BaseRequest {
 }
 
 // BaseResponse defines the base content for response DTOs (data transfer objects).
-// This object and its properties correspond to the BaseResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/BaseResponse
 type BaseResponse struct {
 	Versionable `json:",inline"`
 	RequestId   string `json:"requestId,omitempty"`
@@ -42,8 +38,6 @@ type Versionable struct {
 }
 
 // BaseWithIdResponse defines the base content for response DTOs (data transfer objects).
-// This object and its properties correspond to the BaseWithIdResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/BaseWithIdResponse
 type BaseWithIdResponse struct {
 	BaseResponse `json:",inline"`
 	Id           string `json:"id"`
@@ -70,8 +64,6 @@ func NewBaseWithIdResponse(requestId string, message string, statusCode int, id 
 }
 
 // BaseWithTotalCountResponse defines the base content for response DTOs (data transfer objects).
-// This object and its properties correspond to the BaseWithTotalCountResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-data/2.1.0#/BaseWithTotalCountResponse
 type BaseWithTotalCountResponse struct {
 	BaseResponse `json:",inline"`
 	TotalCount   uint32 `json:"totalCount"`
@@ -85,16 +77,12 @@ func NewBaseWithTotalCountResponse(requestId string, message string, statusCode 
 }
 
 // BaseWithServiceNameResponse defines the base content for response DTOs (data transfer objects).
-// This object and its properties correspond to the BaseWithServiceNameResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.1.0#/BaseWithServiceNameResponse
 type BaseWithServiceNameResponse struct {
 	BaseResponse `json:",inline"`
 	ServiceName  string `json:"serviceName"`
 }
 
 // BaseWithConfigResponse defines the base content for response DTOs (data transfer objects).
-// This object and its properties correspond to the BaseWithConfigResponse object in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/system-agent/2.1.0#/BaseWithConfigResponse
 type BaseWithConfigResponse struct {
 	BaseResponse `json:",inline"`
 	ServiceName  string      `json:"serviceName"`

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2022 IOTech Ltd
+// Copyright (C) 2022-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,12 +8,13 @@ package requests
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 var testBasicInfoRequest = DeviceProfileBasicInfoRequest{
@@ -114,7 +115,7 @@ func TestDeviceProfileBasicInfoRequest_Validate(t *testing.T) {
 
 func TestDeviceProfileBasicInfoRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
-	    "apiVersion" : "v2",
+	    "apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"basicinfo": {
           "name": "TestProfile"
@@ -134,7 +135,7 @@ func TestDeviceProfileBasicInfoRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 func TestDeviceProfileBasicInfoRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
-	    "apiVersion" : "v2",
+	    "apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"basicinfo": {
           "name": "TestProfile",

@@ -9,8 +9,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 )
 
-// Transmission and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/support-notifications/2.1.0#/Transmission
 type Transmission struct {
 	Created          int64                `json:"created,omitempty"`
 	Id               string               `json:"id,omitempty" validate:"omitempty,uuid"`

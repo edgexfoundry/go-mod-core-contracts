@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -283,10 +283,10 @@ func TestUpdateDeviceServiceRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 func TestUpdateDeviceServiceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
-		"apiVersion" : "v2",
+		"apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"service":{
-			"apiVersion":"v2",
+			"apiVersion":"v3",
 			"name":"TestDevice",
 			"labels":[]
 		}

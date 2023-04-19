@@ -8,11 +8,12 @@ package requests
 import (
 	"encoding/json"
 	"fmt"
+	"testing"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -360,9 +361,9 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 
 func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 	reqJson := `{
-		"apiVersion" : "v2",
+		"apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		"device":{"apiVersion":"v2", "name":"TestDevice"}
+		"device":{"apiVersion":"v3", "name":"TestDevice"}
 	}`
 	var req UpdateDeviceRequest
 
@@ -385,10 +386,10 @@ func TestUpdateDeviceRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 func TestUpdateDeviceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 	reqJson := `{
-		"apiVersion" : "v2",
+		"apiVersion" : "v3",
         "requestId":"7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
 		"device":{
-			"apiVersion":"v2",
+			"apiVersion":"v3",
 			"name":"TestDevice",
 			"labels":[],
 			"autoEvents":[]

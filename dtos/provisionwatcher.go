@@ -9,8 +9,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 )
 
-// ProvisionWatcher and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/ProvisionWatcher
 type ProvisionWatcher struct {
 	DBTimestamp         `json:",inline"`
 	Id                  string              `json:"id,omitempty" yaml:"id,omitempty" validate:"omitempty,uuid"`
@@ -22,8 +20,6 @@ type ProvisionWatcher struct {
 	DiscoveredDevice    DiscoveredDevice    `json:"discoveredDevice" yaml:"discoveredDevice" validate:"dive"`
 }
 
-// UpdateProvisionWatcher and its properties are defined in the APIv2 specification:
-// https://app.swaggerhub.com/apis-docs/EdgeXFoundry1/core-metadata/2.1.0#/UpdateProvisionWatcher
 type UpdateProvisionWatcher struct {
 	Id                  *string                `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name                *string                `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
