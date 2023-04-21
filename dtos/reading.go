@@ -35,7 +35,7 @@ type BaseReading struct {
 }
 
 type SimpleReading struct {
-	Value string `json:"value" validate:"required"`
+	Value string `json:"value"`
 }
 
 type BinaryReading struct {
