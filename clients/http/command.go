@@ -76,7 +76,7 @@ func (client *CommandClient) IssueGetCommandByNameWithQueryParams(ctx context.Co
 		requestParams.Set(k, v)
 	}
 
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, url.QueryEscape(deviceName), url.QueryEscape(commandName))
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, commandName)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
