@@ -43,7 +43,7 @@ func BuildTopic(parts ...string) string {
 
 // URLEncode encodes the input string with additional common character support
 func URLEncode(s string) string {
-	res := url.QueryEscape(s)
+	res := url.PathEscape(s)
 	res = strings.Replace(res, "-", "%2D", -1)
 	res = strings.Replace(res, ".", "%2E", -1)
 	res = strings.Replace(res, "_", "%5F", -1)
