@@ -76,7 +76,7 @@ func mockUpdateProvisionWatcher() dtos.UpdateProvisionWatcher {
 }
 
 func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
-	emptyString := " "
+	whiteSpace := " "
 	emptyMap := make(map[string]string)
 	valid := testAddProvisionWatcher
 	noReqId := testAddProvisionWatcher
@@ -84,7 +84,7 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 	invalidReqId := testAddProvisionWatcher
 	invalidReqId.RequestId = "abc"
 	noProvisionWatcherName := testAddProvisionWatcher
-	noProvisionWatcherName.ProvisionWatcher.Name = emptyString
+	noProvisionWatcherName.ProvisionWatcher.Name = whiteSpace
 	provisionWatcherNameWithReservedChar := testAddProvisionWatcher
 	provisionWatcherNameWithReservedChar.ProvisionWatcher.Name = namesWithReservedChar[0]
 	noIdentifiers := testAddProvisionWatcher
@@ -98,9 +98,11 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 		"key": "",
 	}
 	noServiceName := testAddProvisionWatcher
-	noServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = emptyString
+	noServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = whiteSpace
 	noProfileName := testAddProvisionWatcher
-	noProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = emptyString
+	noProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = whiteSpace
+	emptyStringProfileName := testAddProvisionWatcher
+	emptyStringProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = ""
 	invalidFrequency := testAddProvisionWatcher
 	invalidFrequency.ProvisionWatcher.DiscoveredDevice.AutoEvents = []dtos.AutoEvent{
 		{SourceName: "TestDevice", Interval: "-1", OnChange: true},
@@ -129,6 +131,7 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 		{"invalid AddProvisionWatcherRequest, missing Identifiers value", missingIdentifiersValue, true},
 		{"invalid AddProvisionWatcherRequest, no ServiceName", noServiceName, true},
 		{"invalid AddProvisionWatcherRequest, no ProfileName", noProfileName, true},
+		{"invalid AddProvisionWatcherRequest, empty string ProfileName", emptyStringProfileName, false},
 		{"invalid AddProvisionWatcherRequest, invalid autoEvent frequency", invalidFrequency, true},
 		{"invalid AddProvisionWatcherRequest, no AutoEvent frequency", noAutoEventFrequency, true},
 		{"invalid AddProvisionWatcherRequest, no AutoEvent resource", noAutoEventResource, true},
@@ -201,7 +204,7 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 }
 
 func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
-	emptyString := " "
+	whiteSpace := " "
 	emptyMap := make(map[string]string)
 	invalidUUID := "invalidUUID"
 
@@ -220,9 +223,9 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 	validOnlyName := valid
 	validOnlyName.ProvisionWatcher.Id = nil
 	nameAndEmptyId := valid
-	nameAndEmptyId.ProvisionWatcher.Id = &emptyString
+	nameAndEmptyId.ProvisionWatcher.Id = &whiteSpace
 	invalidEmptyName := valid
-	invalidEmptyName.ProvisionWatcher.Name = &emptyString
+	invalidEmptyName.ProvisionWatcher.Name = &whiteSpace
 	invalidReservedName := valid
 	invalidReservedName.ProvisionWatcher.Name = &namesWithReservedChar[0]
 	// no id and name
@@ -238,12 +241,15 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 	validNilServiceName := valid
 	validNilServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = nil
 	invalidEmptyServiceName := valid
-	invalidEmptyServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = &emptyString
+	invalidEmptyServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = &whiteSpace
 	// ProfileName
 	validNilProfileName := valid
 	validNilProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = nil
 	invalidEmptyProfileName := valid
-	invalidEmptyProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = &emptyString
+	invalidEmptyProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = &whiteSpace
+	emptyStringProfileName := valid
+	emptyString := ""
+	emptyStringProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = &emptyString
 
 	invalidState := "invalid state"
 	invalidAdminState := valid
@@ -277,6 +283,7 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 
 		{"valid, nil profile name", validNilProfileName, false},
 		{"invalid, empty profile name", invalidEmptyProfileName, true},
+		{"valid, empty string profile name", emptyStringProfileName, false},
 
 		{"invalid, invalid admin state", invalidAdminState, true},
 		{"invalid, invalid autoEvent frequency", invalidFrequency, true},
