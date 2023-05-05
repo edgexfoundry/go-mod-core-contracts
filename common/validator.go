@@ -23,12 +23,13 @@ import (
 var val *validator.Validate
 
 const (
-	dtoDurationTag              = "edgex-dto-duration"
-	dtoUuidTag                  = "edgex-dto-uuid"
-	dtoNoneEmptyStringTag       = "edgex-dto-none-empty-string"
-	dtoValueType                = "edgex-dto-value-type"
-	dtoRFC3986UnreservedCharTag = "edgex-dto-rfc3986-unreserved-chars"
-	dtoInterDatetimeTag         = "edgex-dto-interval-datetime"
+	dtoDurationTag                     = "edgex-dto-duration"
+	dtoUuidTag                         = "edgex-dto-uuid"
+	dtoNoneEmptyStringTag              = "edgex-dto-none-empty-string"
+	dtoValueType                       = "edgex-dto-value-type"
+	dtoRFC3986UnreservedCharTag        = "edgex-dto-rfc3986-unreserved-chars"
+	emptyOrDtoRFC3986UnreservedCharTag = "len=0|" + dtoRFC3986UnreservedCharTag
+	dtoInterDatetimeTag                = "edgex-dto-interval-datetime"
 )
 
 const (
@@ -94,7 +95,7 @@ func getErrorMessage(e validator.FieldError) string {
 		msg = fmt.Sprintf("%s field needs a uuid", fieldName)
 	case dtoNoneEmptyStringTag:
 		msg = fmt.Sprintf("%s field should not be empty string", fieldName)
-	case dtoRFC3986UnreservedCharTag:
+	case dtoRFC3986UnreservedCharTag, emptyOrDtoRFC3986UnreservedCharTag:
 		msg = fmt.Sprintf("%s field only allows unreserved characters which are ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_~:;=", fieldName)
 	default:
 		msg = fmt.Sprintf("%s field validation failed on the %s tag", fieldName, tag)
