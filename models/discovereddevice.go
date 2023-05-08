@@ -7,7 +7,6 @@ package models
 
 type DiscoveredDevice struct {
 	ProfileName string
-	ServiceName string
 	AdminState  AdminState
 	AutoEvents  []AutoEvent
 	Properties  map[string]any

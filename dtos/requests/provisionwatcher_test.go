@@ -34,13 +34,13 @@ var testAddProvisionWatcher = AddProvisionWatcherRequest{
 	},
 	ProvisionWatcher: dtos.ProvisionWatcher{
 		Name:                testProvisionWatcherName,
+		ServiceName:         TestDeviceServiceName,
 		Labels:              testProvisionWatcherLabels,
 		Identifiers:         testIdentifiers,
 		BlockingIdentifiers: testBlockingIdentifiers,
 		AdminState:          models.Locked,
 		DiscoveredDevice: dtos.DiscoveredDevice{
 			ProfileName: TestDeviceProfileName,
-			ServiceName: TestDeviceServiceName,
 			AdminState:  models.Locked,
 			AutoEvents:  testAutoEvents,
 		},
@@ -64,11 +64,11 @@ func mockUpdateProvisionWatcher() dtos.UpdateProvisionWatcher {
 	d := dtos.UpdateProvisionWatcher{}
 	d.Id = &testId
 	d.Name = &testName
+	d.ServiceName = &testDeviceServiceName
 	d.Labels = testProvisionWatcherLabels
 	d.Identifiers = testIdentifiers
 	d.BlockingIdentifiers = testBlockingIdentifiers
 	d.AdminState = &testAdminState
-	d.DiscoveredDevice.ServiceName = &testDeviceServiceName
 	d.DiscoveredDevice.ProfileName = &testProfileName
 	d.DiscoveredDevice.AdminState = &testAdminState
 	d.DiscoveredDevice.AutoEvents = testAutoEvents
@@ -98,7 +98,7 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 		"key": "",
 	}
 	noServiceName := testAddProvisionWatcher
-	noServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = whiteSpace
+	noServiceName.ProvisionWatcher.ServiceName = whiteSpace
 	noProfileName := testAddProvisionWatcher
 	noProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = whiteSpace
 	emptyStringProfileName := testAddProvisionWatcher
@@ -179,8 +179,9 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 	requests := []AddProvisionWatcherRequest{testAddProvisionWatcher}
 	expectedProvisionWatcherModel := []models.ProvisionWatcher{
 		{
-			Name:   testProvisionWatcherName,
-			Labels: testProvisionWatcherLabels,
+			Name:        testProvisionWatcherName,
+			ServiceName: TestDeviceServiceName,
+			Labels:      testProvisionWatcherLabels,
 			Identifiers: map[string]string{
 				"address": "localhost",
 				"port":    "3[0-9]{2}",
@@ -191,7 +192,6 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 			AdminState: models.Locked,
 			DiscoveredDevice: models.DiscoveredDevice{
 				ProfileName: TestDeviceProfileName,
-				ServiceName: TestDeviceServiceName,
 				AdminState:  models.Locked,
 				AutoEvents: []models.AutoEvent{
 					{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
@@ -239,9 +239,9 @@ func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
 	invalidEmptyIdentifiers.ProvisionWatcher.Identifiers = emptyMap
 	// ServiceName
 	validNilServiceName := valid
-	validNilServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = nil
+	validNilServiceName.ProvisionWatcher.ServiceName = nil
 	invalidEmptyServiceName := valid
-	invalidEmptyServiceName.ProvisionWatcher.DiscoveredDevice.ServiceName = &whiteSpace
+	invalidEmptyServiceName.ProvisionWatcher.ServiceName = &whiteSpace
 	// ProfileName
 	validNilProfileName := valid
 	validNilProfileName.ProvisionWatcher.DiscoveredDevice.ProfileName = nil
@@ -308,10 +308,10 @@ func TestUpdateProvisionWatcherRequest_UnmarshalJSON_NilField(t *testing.T) {
 
 	require.NoError(t, err)
 	// Nil field checking is used to update with patch
+	assert.Nil(t, req.ProvisionWatcher.ServiceName)
 	assert.Nil(t, req.ProvisionWatcher.Labels)
 	assert.Nil(t, req.ProvisionWatcher.Identifiers)
 	assert.Nil(t, req.ProvisionWatcher.BlockingIdentifiers)
-	assert.Nil(t, req.ProvisionWatcher.DiscoveredDevice.ServiceName)
 	assert.Nil(t, req.ProvisionWatcher.DiscoveredDevice.ProfileName)
 	assert.Nil(t, req.ProvisionWatcher.AdminState)
 	assert.Nil(t, req.ProvisionWatcher.DiscoveredDevice.AutoEvents)
@@ -350,10 +350,10 @@ func TestReplaceProvisionWatcherModelFieldsWithDTO(t *testing.T) {
 
 	ReplaceProvisionWatcherModelFieldsWithDTO(&provisionWatcher, patch)
 
+	assert.Equal(t, TestDeviceServiceName, provisionWatcher.ServiceName)
 	assert.Equal(t, testProvisionWatcherLabels, provisionWatcher.Labels)
 	assert.Equal(t, testIdentifiers, provisionWatcher.Identifiers)
 	assert.Equal(t, testBlockingIdentifiers, provisionWatcher.BlockingIdentifiers)
-	assert.Equal(t, TestDeviceServiceName, provisionWatcher.DiscoveredDevice.ServiceName)
 	assert.Equal(t, TestDeviceProfileName, provisionWatcher.DiscoveredDevice.ProfileName)
 	assert.Equal(t, models.AdminState(models.Locked), provisionWatcher.AdminState)
 	assert.Equal(t, dtos.ToAutoEventModels(testAutoEvents), provisionWatcher.DiscoveredDevice.AutoEvents)
