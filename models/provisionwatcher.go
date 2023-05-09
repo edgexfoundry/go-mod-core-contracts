@@ -9,6 +9,7 @@ type ProvisionWatcher struct {
 	DBTimestamp
 	Id                  string
 	Name                string
+	ServiceName         string
 	Labels              []string
 	Identifiers         map[string]string
 	BlockingIdentifiers map[string][]string

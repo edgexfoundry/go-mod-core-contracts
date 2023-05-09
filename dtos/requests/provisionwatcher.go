@@ -103,8 +103,8 @@ func ReplaceProvisionWatcherModelFieldsWithDTO(pw *models.ProvisionWatcher, patc
 	if patch.DiscoveredDevice.ProfileName != nil {
 		pw.DiscoveredDevice.ProfileName = *patch.DiscoveredDevice.ProfileName
 	}
-	if patch.DiscoveredDevice.ServiceName != nil {
-		pw.DiscoveredDevice.ServiceName = *patch.DiscoveredDevice.ServiceName
+	if patch.ServiceName != nil {
+		pw.ServiceName = *patch.ServiceName
 	}
 	if patch.DiscoveredDevice.AdminState != nil {
 		pw.DiscoveredDevice.AdminState = models.AdminState(*patch.DiscoveredDevice.AdminState)
