@@ -75,9 +75,9 @@ func makeRequest(req *http.Request, authInjector interfaces.AuthenticationInject
 }
 
 func createRequest(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl + requestPath)
+	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
 	}
 	if requestParams != nil {
 		u.RawQuery = requestParams.Encode()
@@ -91,9 +91,9 @@ func createRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 }
 
 func createRequestWithRawDataAndParams(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl + requestPath)
+	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
 	}
 	if requestParams != nil {
 		u.RawQuery = requestParams.Encode()
@@ -118,9 +118,9 @@ func createRequestWithRawDataAndParams(ctx context.Context, httpMethod string, b
 }
 
 func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl + requestPath)
+	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
 	}
 	if requestParams != nil {
 		u.RawQuery = requestParams.Encode()
@@ -146,9 +146,9 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl st
 }
 
 func createRequestWithEncodedData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl + requestPath)
+	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
 	}
 
 	content := encoding
@@ -167,9 +167,9 @@ func createRequestWithEncodedData(ctx context.Context, httpMethod string, baseUr
 
 // createRequestFromFilePath creates multipart/form-data request with the specified file
 func createRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl string, requestPath string, filePath string) (*http.Request, errors.EdgeX) {
-	u, err := url.Parse(baseUrl + requestPath)
+	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
-		return nil, errors.NewCommonEdgeX(errors.KindServerError, "fail to parse baseUrl", err)
+		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
 	}
 
 	fileContents, err := os.ReadFile(filePath)
@@ -230,4 +230,12 @@ func EscapeAndJoinPath(apiRoutePath string, pathVariables ...string) string {
 		elements[i+1] = common.URLEncode(e)
 	}
 	return path.Join(elements...)
+}
+
+func parseBaseUrlAndRequestPath(baseUrl, requestPath string) (*url.URL, error) {
+	fullPath, err := url.JoinPath(baseUrl, requestPath)
+	if err != nil {
+		return nil, err
+	}
+	return url.Parse(fullPath)
 }
