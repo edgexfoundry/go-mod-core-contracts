@@ -7,6 +7,50 @@
 
 ### Features ✨
 
+- Using url.PathEscape for http client request path ([#6bcf78a](https://github.com/edgexfoundry/go-mod-core-contracts/commit/6bcf78aee2db63f4e9ae3a03b8b24e3626f753db))
+  ```text
+  BREAKING CHANGE: To consist with the change for MQTT topic path encoding, use PathEscape to encode the API path because the url.QueryEscape encode the empty space to plus sign, and plus sign is invalid for publishing the MQTT message.
+  ```
+- Update API version to v3 ([#4f0fdd](https://github.com/edgexfoundry/go-mod-core-contracts/commit/4f0fddbe1238861d7d4ba45b7dfce325304839c5))
+  ```text
+  BREAKING CHANGE: all EdgeX base API version is changed to v3 for REST endpoints
+  ```
+- Add 'discoveredDevice' for discovered device fields ([#f889069](https://github.com/edgexfoundry/go-mod-core-contracts/commit/f8890694ba2443089107554beff12780e39f030e))
+  ```text
+  BREAKING CHANGE: add 'DiscoveredDevice' field which includes profileName,adminState,autoEvents and properties for discovered device
+  ```
+- Update maximum and minimum to float64 data type ([#1af2d52](https://github.com/edgexfoundry/go-mod-core-contracts/commit/1af2d52b2805dd8b31ab8a74952bd92a1b93e9d7))
+  ```text
+  BREAKING CHANGE: update maximum and minimum data type from string to float64
+  ```
+- Update ProtocolProperties to have typed values ([#d9af69a](https://github.com/edgexfoundry/go-mod-core-contracts/commit/d9af69a8b2a38abe867dc9f255879174cd6f5be6))
+  ```text
+  BREAKING CHANGE: update ProtocolProperties type from 'map[string]string' to 'map[string]any'
+  ```
+- Update data type in ResourceProperties ([#9353c25](https://github.com/edgexfoundry/go-mod-core-contracts/commit/9353c25cfaefc34f37012e8b0a65cde6e012df1b))
+  ```text
+  BREAKING CHANGE: update mask,shift,base,scale,offset to numeric data type also rename 'Others' to 'Optional' for the consistency with
+  message broker settings.
+  ```
+- Remove Notify out of Device DTO/Model ([#cb18066](https://github.com/edgexfoundry/go-mod-core-contracts/commit/cb18066d493742bdfaf8f31a0eded08ce169db02))
+  ```text
+  Since core-metadata will publish system event message when device is created or updated, notify is no longer needed and should be removed.
+  ```
+- Add interface for injecting authentication data to outgoing requests ([#dc21b6](https://github.com/edgexfoundry/go-mod-core-contracts/commit/dc21b6ba2c81931ffc3ae0ec228443a46b7c8900))
+  ```text
+  BREAKING CHANGE: This change adds an AuthenticationInjector interface to all http clients. If non-nil, the interface is invoked to add authentication data to the outgoing HTTP request.
+  
+  While the change does affect the public interface of the HTTP clients, actual requests are only mutated by the authentication injector, which is provided by the consumer.
+  ```
+- Remove LastConnected and LastReported from Device/DeviceService ([#fbdba8c3e](https://github.com/edgexfoundry/go-mod-core-contracts/commit/fbdba8c3ee7a5841e5299dff2aa29aa4bea36a71))
+  ```text
+  BREAKING CHANGE: LastConnected and LastReported removed from device and device service DTOs and models
+  ```
+- Add device service name in Add Event API endpoint ([#61bd91](https://github.com/edgexfoundry/go-mod-core-contracts/commit/61bd91ab058f1c855ec180b3d64afd937c6ababb))
+  ```text
+  BREAKING CHANGE: Update EventClient 'Add' method signature
+  ```
+- Remove SimpleReading value required validation for empty string ([#0e331f](https://github.com/edgexfoundry/go-mod-core-contracts/commit/0e331f41e0d4903de81972c1cae15627e716c4a2))
 - Allow Device Profile to be empty string in ProvisionWatcher ([#d0b069d](https://github.com/edgexfoundry/go-mod-core-contracts/commits/d0b069d))
 - Add URLEncode helper function ([#cb6c3dd](https://github.com/edgexfoundry/go-mod-core-contracts/commits/cb6c3dd))
 - Add YAML tag for Device and ProvisionWatcher ([#19c4f32](https://github.com/edgexfoundry/go-mod-core-contracts/commits/19c4f32))
@@ -24,11 +68,40 @@
 
 ### Code Refactoring ♻
 
+- Modify the numeric data type in Value Properties to pointer ([#dc7210](https://github.com/edgexfoundry/go-mod-core-contracts/commit/dc72102d704193154e31b181131103b75868c7cc))
+  ```text
+  BREAKING CHANGE:
+  - update mask,shift,base,scale,offset to pointer
+  - update maximum and minimum data type from string to float64 pointer
+  ```
+- Change Config stem constants to flatten config layout ([#f0cd4eda](https://github.com/edgexfoundry/go-mod-core-contracts/commit/f0cd4eda7020d5e86576b480fb0804a1016453ed))
+  ```text
+  BREAKING CHANGE: Location of service configuartion in Config Provider (Consul) has changed
+  ```
+- Refactor Secret DTO to rename Path property to SecretName ([#36dc869](https://github.com/edgexfoundry/go-mod-core-contracts/commits/36dc869))
+  ```text
+    BREAKING CHANGE: Path property renamed to SecretName
+  ```
+- Remove SystemManagementClient ([#4228851](https://github.com/edgexfoundry/go-mod-core-contracts/commit/42288514cea911c59a0e58050476491dcc7c96d8))
+  ```text
+  BREAKING CHANGE: SystemManagementClient no longer available
+  ```
+- Remove old common Metrics DTO and route constant ([#3eccfbd9](https://github.com/edgexfoundry/go-mod-core-contracts/commit/3eccfbd97ef867018de46b5e3b273bb9958dbcdc))
+  ```text
+  BREAKING CHANGE: /metrics endpoint no longer available for any service
+  ```
+- Use true/false for command parameters to be more consistent ([#a2a49d7b](https://github.com/edgexfoundry/go-mod-core-contracts/commit/a2a49d7ba2e55cefcdc8c66b99d348e67c20079e))
+  ```text
+  BREAKING CHANGE: ds-pushevent and ds-returnevent to use true/false instead of yes/no
+  ```
+- Update module to v3 ([#60a23e1e](https://github.com/edgexfoundry/go-mod-core-contracts/commit/60a23e1e32adaf99c37a33ef7dcfe888a31e5e2f))
+  ```text
+  BREAKING CHANGE: Import paths will need to change to v3
+  ```
 - Add new system event type constants and rename action constants ([#d129ffd](https://github.com/edgexfoundry/go-mod-core-contracts/commits/d129ffd))
 - Remove obsolete swagger doc reference ([#73cc6cf](https://github.com/edgexfoundry/go-mod-core-contracts/commits/73cc6cf))
 - Rename dummy_validator.go to fake_validator.go ([#5a07d2b](https://github.com/edgexfoundry/go-mod-core-contracts/commits/5a07d2b))
 - Changed config version from 3.0 to v3 ([#78cc929](https://github.com/edgexfoundry/go-mod-core-contracts/commits/78cc929))
-- Refactor Secret DTO to rename Path property to SecretName ([#36dc869](https://github.com/edgexfoundry/go-mod-core-contracts/commits/36dc869))
 
 ### Build 👷
 
