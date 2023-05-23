@@ -3,6 +3,37 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
+## [v3.0.0] - 2023-05-31
+
+### Features ✨
+
+- Allow Device Profile to be empty string in ProvisionWatcher ([#d0b069d](https://github.com/edgexfoundry/go-mod-core-contracts/commits/d0b069d))
+- Add URLEncode helper function ([#cb6c3dd](https://github.com/edgexfoundry/go-mod-core-contracts/commits/cb6c3dd))
+- Add YAML tag for Device and ProvisionWatcher ([#19c4f32](https://github.com/edgexfoundry/go-mod-core-contracts/commits/19c4f32))
+- Add 'ds-regexcmd' query parameter ([#6582a37](https://github.com/edgexfoundry/go-mod-core-contracts/commits/6582a37))
+- Add ability to authenticate outbound IntervalActions ([#b2c2176](https://github.com/edgexfoundry/go-mod-core-contracts/commits/b2c2176))
+- Use URL escape for device command name and resource name ([#1450102](https://github.com/edgexfoundry/go-mod-core-contracts/commits/1450102))
+- Add 'Others' field in ResourceProperties ([#6eb51bb](https://github.com/edgexfoundry/go-mod-core-contracts/commits/6eb51bb))
+- Add new Properties field to ProvisionWatcher DTO and Model ([#4695302](https://github.com/edgexfoundry/go-mod-core-contracts/commits/4695302))
+- Add new Properties field to Device DTO and Model ([#66fa623](https://github.com/edgexfoundry/go-mod-core-contracts/commits/66fa623))
+- Added ValidateDeviceSubscribeTopic ([#7d63dd3](https://github.com/edgexfoundry/go-mod-core-contracts/commits/7d63dd3))
+- Add UnmarshalObjectValue helper function to Reading DTO ([#baf7df4](https://github.com/edgexfoundry/go-mod-core-contracts/commits/baf7df4))
+- Add topic constants that will replace configured topics ([#f8aa83a](https://github.com/edgexfoundry/go-mod-core-contracts/commits/f8aa83a))
+- Add service key for new core-common-config-bootstrapper service ([#28efaad](https://github.com/edgexfoundry/go-mod-core-contracts/commits/28efaad))
+- Implement xml Marshaller interface for event/reading tags ([#809b610](https://github.com/edgexfoundry/go-mod-core-contracts/commits/809b610))
+
+### Code Refactoring ♻
+
+- Add new system event type constants and rename action constants ([#d129ffd](https://github.com/edgexfoundry/go-mod-core-contracts/commits/d129ffd))
+- Remove obsolete swagger doc reference ([#73cc6cf](https://github.com/edgexfoundry/go-mod-core-contracts/commits/73cc6cf))
+- Rename dummy_validator.go to fake_validator.go ([#5a07d2b](https://github.com/edgexfoundry/go-mod-core-contracts/commits/5a07d2b))
+- Changed config version from 3.0 to v3 ([#78cc929](https://github.com/edgexfoundry/go-mod-core-contracts/commits/78cc929))
+- Refactor Secret DTO to rename Path property to SecretName ([#36dc869](https://github.com/edgexfoundry/go-mod-core-contracts/commits/36dc869))
+
+### Build 👷
+
+- Update to Go 1.20 and linter v1.51.2 ([#46cc121](https://github.com/edgexfoundry/go-mod-core-contracts/commits/46cc121))
+
 ## [v2.3.0] - 2022-11-09
 
 ### Features ✨
