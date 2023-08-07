@@ -6,6 +6,7 @@
 package common
 
 // Constants related to defined routes with path params in the v3 service APIs for Echo
+// TODO: Remove in EdgeX 4.0 and will use the original API constant names defined in constants.go
 const (
 	ApiEventServiceNameProfileNameDeviceNameSourceNameEchoRoute = ApiEventRoute + "/:" + ServiceName + "/:" + ProfileName + "/:" + DeviceName + "/:" + SourceName
 	ApiEventIdEchoRoute                                         = ApiEventRoute + "/" + Id + "/:" + Id
