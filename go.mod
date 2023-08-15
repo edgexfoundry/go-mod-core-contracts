@@ -3,7 +3,7 @@ module github.com/edgexfoundry/go-mod-core-contracts/v3
 go 1.20
 
 require (
-	github.com/fxamacker/cbor/v2 v2.4.0
+	github.com/fxamacker/cbor/v2 v2.5.0
 	github.com/go-kit/log v0.2.1
 	github.com/go-playground/validator/v10 v10.15.0
 	github.com/google/uuid v1.3.0
