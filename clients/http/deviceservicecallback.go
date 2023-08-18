@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2022 IOTech Ltd
+// Copyright (C) 2020-2023 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -97,7 +97,7 @@ func (client *deviceServiceCallbackClient) UpdateProvisionWatcherCallback(ctx co
 
 func (client *deviceServiceCallbackClient) DeleteProvisionWatcherCallback(ctx context.Context, name string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := path.Join(common.ApiWatcherCallbackRoute, common.Name, name)
+	requestPath := utils.EscapeAndJoinPath(common.ApiWatcherCallbackRoute, common.Name, name)
 	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)

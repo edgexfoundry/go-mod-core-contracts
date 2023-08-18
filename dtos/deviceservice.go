@@ -12,7 +12,7 @@ import (
 type DeviceService struct {
 	DBTimestamp `json:",inline"`
 	Id          string   `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name        string   `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name        string   `json:"name" validate:"required,edgex-dto-none-empty-string"`
 	Description string   `json:"description,omitempty"`
 	Labels      []string `json:"labels,omitempty"`
 	BaseAddress string   `json:"baseAddress" validate:"required,uri"`
@@ -21,7 +21,7 @@ type DeviceService struct {
 
 type UpdateDeviceService struct {
 	Id          *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name        *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name        *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
 	Description *string  `json:"description"`
 	BaseAddress *string  `json:"baseAddress" validate:"omitempty,uri"`
 	Labels      []string `json:"labels"`

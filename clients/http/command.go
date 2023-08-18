@@ -9,7 +9,6 @@ package http
 import (
 	"context"
 	"net/url"
-	"path"
 	"strconv"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/http/utils"
@@ -49,7 +48,7 @@ func (client *CommandClient) AllDeviceCoreCommands(ctx context.Context, offset i
 // DeviceCoreCommandsByDeviceName returns all commands associated with the specified device name.
 func (client *CommandClient) DeviceCoreCommandsByDeviceName(ctx context.Context, name string) (
 	res responses.DeviceCoreCommandResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiDeviceRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

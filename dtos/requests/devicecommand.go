@@ -18,7 +18,7 @@ import (
 // AddDeviceCommandRequest defines the Request Content for POST DeviceCommand DTO.
 type AddDeviceCommandRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
-	ProfileName           string             `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName           string             `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
 	DeviceCommand         dtos.DeviceCommand `json:"deviceCommand"`
 }
 
@@ -51,7 +51,7 @@ func (dc *AddDeviceCommandRequest) UnmarshalJSON(b []byte) error {
 // UpdateDeviceCommandRequest defines the Request Content for PATCH DeviceCommand DTO.
 type UpdateDeviceCommandRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
-	ProfileName           string                   `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName           string                   `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
 	DeviceCommand         dtos.UpdateDeviceCommand `json:"deviceCommand"`
 }
 

@@ -9,7 +9,6 @@ package http
 import (
 	"context"
 	"net/url"
-	"path"
 	"strconv"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/http/utils"
@@ -70,7 +69,7 @@ func (client IntervalClient) AllIntervals(ctx context.Context, offset int, limit
 // IntervalByName query the interval by name
 func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 	res responses.IntervalResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiIntervalRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiIntervalRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -81,7 +80,7 @@ func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 // DeleteIntervalByName delete the interval by name
 func (client IntervalClient) DeleteIntervalByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiIntervalRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiIntervalRoute, common.Name, name)
 	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

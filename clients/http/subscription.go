@@ -105,7 +105,7 @@ func (client *SubscriptionClient) SubscriptionsByReceiver(ctx context.Context, r
 
 // SubscriptionByName query subscription by name.
 func (client *SubscriptionClient) SubscriptionByName(ctx context.Context, name string) (res responses.SubscriptionResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiSubscriptionRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiSubscriptionRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -115,7 +115,7 @@ func (client *SubscriptionClient) SubscriptionByName(ctx context.Context, name s
 
 // DeleteSubscriptionByName deletes a subscription by name.
 func (client *SubscriptionClient) DeleteSubscriptionByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiSubscriptionRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiSubscriptionRoute, common.Name, name)
 	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

@@ -9,7 +9,6 @@ package http
 import (
 	"context"
 	"net/url"
-	"path"
 	"strconv"
 	"strings"
 
@@ -69,7 +68,7 @@ func (pwc ProvisionWatcherClient) AllProvisionWatchers(ctx context.Context, labe
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatcherByName(ctx context.Context, name string) (res responses.ProvisionWatcherResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiProvisionWatcherRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiProvisionWatcherRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, pwc.baseUrl, path, nil, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -79,7 +78,7 @@ func (pwc ProvisionWatcherClient) ProvisionWatcherByName(ctx context.Context, na
 }
 
 func (pwc ProvisionWatcherClient) DeleteProvisionWatcherByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiProvisionWatcherRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiProvisionWatcherRoute, common.Name, name)
 	err = utils.DeleteRequest(ctx, &res, pwc.baseUrl, path, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -89,7 +88,7 @@ func (pwc ProvisionWatcherClient) DeleteProvisionWatcherByName(ctx context.Conte
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatchersByProfileName(ctx context.Context, name string, offset int, limit int) (res responses.MultiProvisionWatchersResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiProvisionWatcherRoute, common.Profile, common.Name, name)
+	requestPath := utils.EscapeAndJoinPath(common.ApiProvisionWatcherRoute, common.Profile, common.Name, name)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -102,7 +101,7 @@ func (pwc ProvisionWatcherClient) ProvisionWatchersByProfileName(ctx context.Con
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatchersByServiceName(ctx context.Context, name string, offset int, limit int) (res responses.MultiProvisionWatchersResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiProvisionWatcherRoute, common.Service, common.Name, name)
+	requestPath := utils.EscapeAndJoinPath(common.ApiProvisionWatcherRoute, common.Service, common.Name, name)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

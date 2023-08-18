@@ -83,7 +83,7 @@ func (client *DeviceProfileClient) UpdateByYaml(ctx context.Context, yamlFilePat
 // DeleteByName deletes the device profile by name
 func (client *DeviceProfileClient) DeleteByName(ctx context.Context, name string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := path.Join(common.ApiDeviceProfileRoute, common.Name, name)
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceProfileRoute, common.Name, name)
 	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
@@ -93,7 +93,7 @@ func (client *DeviceProfileClient) DeleteByName(ctx context.Context, name string
 
 // DeviceProfileByName queries the device profile by name
 func (client *DeviceProfileClient) DeviceProfileByName(ctx context.Context, name string) (res responses.DeviceProfileResponse, edgexError errors.EdgeX) {
-	requestPath := path.Join(common.ApiDeviceProfileRoute, common.Name, name)
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceProfileRoute, common.Name, name)
 	err := utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

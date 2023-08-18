@@ -12,8 +12,8 @@ import (
 type IntervalAction struct {
 	DBTimestamp  `json:",inline"`
 	Id           string  `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name         string  `json:"name" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	IntervalName string  `json:"intervalName" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name         string  `json:"name" validate:"edgex-dto-none-empty-string"`
+	IntervalName string  `json:"intervalName" validate:"edgex-dto-none-empty-string"`
 	Address      Address `json:"address" validate:"required"`
 	Content      string  `json:"content,omitempty"`
 	ContentType  string  `json:"contentType,omitempty"`
@@ -33,8 +33,8 @@ func NewIntervalAction(name string, intervalName string, address Address) Interv
 
 type UpdateIntervalAction struct {
 	Id           *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name         *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	IntervalName *string  `json:"intervalName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name         *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
+	IntervalName *string  `json:"intervalName" validate:"omitempty,edgex-dto-none-empty-string"`
 	Content      *string  `json:"content"`
 	ContentType  *string  `json:"contentType"`
 	Address      *Address `json:"address"`
