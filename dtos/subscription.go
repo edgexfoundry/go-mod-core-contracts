@@ -12,7 +12,7 @@ import (
 type Subscription struct {
 	DBTimestamp    `json:",inline"`
 	Id             string    `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name           string    `json:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name           string    `json:"name" validate:"required,edgex-dto-none-empty-string"`
 	Channels       []Address `json:"channels" validate:"required,gt=0,dive"`
 	Receiver       string    `json:"receiver" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Categories     []string  `json:"categories,omitempty" validate:"required_without=Labels,omitempty,gt=0,dive,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
@@ -25,7 +25,7 @@ type Subscription struct {
 
 type UpdateSubscription struct {
 	Id             *string   `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name           *string   `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name           *string   `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
 	Channels       []Address `json:"channels" validate:"omitempty,gt=0,dive"`
 	Receiver       *string   `json:"receiver" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
 	Categories     []string  `json:"categories" validate:"omitempty,dive,gt=0,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`

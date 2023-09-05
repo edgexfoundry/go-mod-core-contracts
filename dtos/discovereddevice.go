@@ -8,14 +8,14 @@ package dtos
 import "github.com/edgexfoundry/go-mod-core-contracts/v3/models"
 
 type DiscoveredDevice struct {
-	ProfileName string         `json:"profileName" yaml:"profileName" validate:"len=0|edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName string         `json:"profileName" yaml:"profileName" validate:"len=0|edgex-dto-none-empty-string"`
 	AdminState  string         `json:"adminState" yaml:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 	AutoEvents  []AutoEvent    `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
 	Properties  map[string]any `json:"properties,omitempty" yaml:"properties,omitempty"`
 }
 
 type UpdateDiscoveredDevice struct {
-	ProfileName *string        `json:"profileName" validate:"omitempty,len=0|edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName *string        `json:"profileName" validate:"omitempty,len=0|edgex-dto-none-empty-string"`
 	AdminState  *string        `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 	AutoEvents  []AutoEvent    `json:"autoEvents" validate:"dive"`
 	Properties  map[string]any `json:"properties"`

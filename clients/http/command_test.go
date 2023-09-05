@@ -11,7 +11,6 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/http/utils"
 	"net/http"
 	"net/http/httptest"
-	"path"
 	"strconv"
 	"testing"
 
@@ -33,7 +32,7 @@ func TestQueryDeviceCoreCommands(t *testing.T) {
 
 func TestQueryDeviceCoreCommandsByDeviceName(t *testing.T) {
 	deviceName := "Simple-Device01"
-	path := path.Join(common.ApiDeviceRoute, common.Name, deviceName)
+	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName)
 	ts := newTestServer(http.MethodGet, path, responses.DeviceCoreCommandResponse{})
 	defer ts.Close()
 	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector())

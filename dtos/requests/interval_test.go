@@ -87,7 +87,7 @@ func TestAddIntervalRequest_Validate(t *testing.T) {
 		{"valid AddIntervalRequest", valid, false},
 		{"valid AddIntervalRequest, no Request Id", noReqId, false},
 		{"valid AddIntervalRequest, interval name containing unreserved chars", intervalNameWithUnreservedChars, false},
-		{"invalid AddIntervalRequest, interval name containing reserved chars", intervalNameWithReservedChars, true},
+		{"valid AddIntervalRequest, interval name containing reserved chars", intervalNameWithReservedChars, false},
 		{"invalid AddIntervalRequest, Request Id is not an uuid", invalidReqId, true},
 		{"invalid AddIntervalRequest, no IntervalName", noIntervalName, true},
 		{"invalid AddIntervalRequest, invalid frequency", invalidFrequency, true},

@@ -6,8 +6,8 @@
 package dtos
 
 type DeviceCoreCommand struct {
-	DeviceName   string        `json:"deviceName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
-	ProfileName  string        `json:"profileName" validate:"required,edgex-dto-rfc3986-unreserved-chars"`
+	DeviceName   string        `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
+	ProfileName  string        `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
 	CoreCommands []CoreCommand `json:"coreCommands,omitempty" validate:"dive"`
 }
 

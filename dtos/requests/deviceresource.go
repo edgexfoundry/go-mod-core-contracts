@@ -18,7 +18,7 @@ import (
 // AddDeviceResourceRequest defines the Request Content for POST DeviceResource DTO.
 type AddDeviceResourceRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
-	ProfileName           string              `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName           string              `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
 	Resource              dtos.DeviceResource `json:"resource"`
 }
 
@@ -50,7 +50,7 @@ func (dr *AddDeviceResourceRequest) UnmarshalJSON(b []byte) error {
 // UpdateDeviceResourceRequest defines the Request Content for PATCH DeviceResource DTO.
 type UpdateDeviceResourceRequest struct {
 	dtoCommon.BaseRequest `json:",inline"`
-	ProfileName           string                    `json:"profileName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	ProfileName           string                    `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
 	Resource              dtos.UpdateDeviceResource `json:"resource"`
 }
 

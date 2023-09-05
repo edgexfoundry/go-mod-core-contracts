@@ -12,7 +12,7 @@ import (
 type Interval struct {
 	DBTimestamp `json:",inline"`
 	Id          string `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name        string `json:"name" validate:"edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name        string `json:"name" validate:"edgex-dto-none-empty-string"`
 	Start       string `json:"start,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	End         string `json:"end,omitempty" validate:"omitempty,edgex-dto-interval-datetime"`
 	Interval    string `json:"interval" validate:"required,edgex-dto-duration"`
@@ -25,7 +25,7 @@ func NewInterval(name, interval string) Interval {
 
 type UpdateInterval struct {
 	Id       *string `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name     *string `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name     *string `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
 	Start    *string `json:"start" validate:"omitempty,edgex-dto-interval-datetime"`
 	End      *string `json:"end" validate:"omitempty,edgex-dto-interval-datetime"`
 	Interval *string `json:"interval" validate:"omitempty,edgex-dto-duration"`

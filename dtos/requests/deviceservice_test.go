@@ -98,13 +98,13 @@ func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 	err := serviceNameWithUnreservedChars.Validate()
 	assert.NoError(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
 
-	// Following tests verify if service name containing reserved characters should be detected with an error
+	// Following tests verify if service name containing reserved characters should be detected without an error
 	for _, n := range namesWithReservedChar {
 		serviceNameWithReservedChar := testAddDeviceService
 		serviceNameWithReservedChar.Service.Name = n
 
 		err := serviceNameWithReservedChar.Validate()
-		assert.Error(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))
+		assert.NoError(t, err, fmt.Sprintf("AddDeviceServiceRequest with service name containing reserved char %s should nout return error during validation", n))
 	}
 }
 
@@ -253,13 +253,13 @@ func TestUpdateDeviceServiceRequest_Validate(t *testing.T) {
 	err := serviceNameWithUnreservedChars.Validate()
 	assert.NoError(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing unreserved chars %s should pass validation", nameWithUnreservedChars))
 
-	// Following tests verify if service name containing reserved characters should be detected with an error
+	// Following tests verify if service name containing reserved characters should not be detected with an error
 	for i, n := range namesWithReservedChar {
 		serviceNameWithReservedChar := testUpdateDeviceService
 		serviceNameWithReservedChar.Service.Name = &namesWithReservedChar[i]
 
 		err := serviceNameWithReservedChar.Validate()
-		assert.Error(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing reserved char %s should return error during validation", n))
+		assert.NoError(t, err, fmt.Sprintf("UpdateDeviceServiceRequest with service name containing reserved char %s should not return error during validation", n))
 	}
 }
 

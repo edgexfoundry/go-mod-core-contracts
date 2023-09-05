@@ -9,7 +9,6 @@ package http
 import (
 	"context"
 	"net/url"
-	"path"
 	"strconv"
 	"strings"
 
@@ -66,7 +65,7 @@ func (dc DeviceClient) AllDevices(ctx context.Context, labels []string, offset i
 }
 
 func (dc DeviceClient) DeviceNameExists(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiDeviceRoute, common.Check, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Check, common.Name, name)
 	err = utils.GetRequest(ctx, &res, dc.baseUrl, path, nil, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -75,7 +74,7 @@ func (dc DeviceClient) DeviceNameExists(ctx context.Context, name string) (res d
 }
 
 func (dc DeviceClient) DeviceByName(ctx context.Context, name string) (res responses.DeviceResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiDeviceRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, name)
 	err = utils.GetRequest(ctx, &res, dc.baseUrl, path, nil, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -84,7 +83,7 @@ func (dc DeviceClient) DeviceByName(ctx context.Context, name string) (res respo
 }
 
 func (dc DeviceClient) DeleteDeviceByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := path.Join(common.ApiDeviceRoute, common.Name, name)
+	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, name)
 	err = utils.DeleteRequest(ctx, &res, dc.baseUrl, path, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -93,7 +92,7 @@ func (dc DeviceClient) DeleteDeviceByName(ctx context.Context, name string) (res
 }
 
 func (dc DeviceClient) DevicesByProfileName(ctx context.Context, name string, offset int, limit int) (res responses.MultiDevicesResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiDeviceRoute, common.Profile, common.Name, name)
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Profile, common.Name, name)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -105,7 +104,7 @@ func (dc DeviceClient) DevicesByProfileName(ctx context.Context, name string, of
 }
 
 func (dc DeviceClient) DevicesByServiceName(ctx context.Context, name string, offset int, limit int) (res responses.MultiDevicesResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiDeviceRoute, common.Service, common.Name, name)
+	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Service, common.Name, name)
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

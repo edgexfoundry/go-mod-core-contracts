@@ -12,8 +12,8 @@ import (
 type ProvisionWatcher struct {
 	DBTimestamp         `json:",inline"`
 	Id                  string              `json:"id,omitempty" yaml:"id,omitempty" validate:"omitempty,uuid"`
-	Name                string              `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ServiceName         string              `json:"serviceName" yaml:"serviceName" validate:"required,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name                string              `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string"`
+	ServiceName         string              `json:"serviceName" yaml:"serviceName" validate:"required,edgex-dto-none-empty-string"`
 	Labels              []string            `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Identifiers         map[string]string   `json:"identifiers" yaml:"identifiers" validate:"gt=0,dive,keys,required,endkeys,required"`
 	BlockingIdentifiers map[string][]string `json:"blockingIdentifiers,omitempty" yaml:"blockingIdentifiers,omitempty"`
@@ -23,8 +23,8 @@ type ProvisionWatcher struct {
 
 type UpdateProvisionWatcher struct {
 	Id                  *string                `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name                *string                `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
-	ServiceName         *string                `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string,edgex-dto-rfc3986-unreserved-chars"`
+	Name                *string                `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
+	ServiceName         *string                `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string"`
 	Labels              []string               `json:"labels"`
 	Identifiers         map[string]string      `json:"identifiers" validate:"omitempty,gt=0,dive,keys,required,endkeys,required"`
 	BlockingIdentifiers map[string][]string    `json:"blockingIdentifiers"`

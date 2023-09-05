@@ -90,7 +90,7 @@ func TestAddIntervalActionRequest_Validate(t *testing.T) {
 		{"valid AddIntervalActionRequest", valid, false},
 		{"valid AddIntervalActionRequest, no Request Id", noReqId, false},
 		{"valid AddIntervalActionRequest, interval name containing unreserved chars", intervalNameWithUnreservedChars, false},
-		{"invalid AddIntervalActionRequest, interval name containing reserved chars", intervalNameWithReservedChars, true},
+		{"valid AddIntervalActionRequest, interval name containing reserved chars", intervalNameWithReservedChars, false},
 		{"invalid AddIntervalActionRequest, Request Id is not an uuid", invalidReqId, true},
 		{"invalid AddIntervalActionRequest, no IntervalActionName", noIntervalActionName, true},
 		{"invalid AddIntervalActionRequest, no IntervalActionName", noIntervalName, true},
