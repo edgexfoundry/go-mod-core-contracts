@@ -22,15 +22,17 @@ import (
 )
 
 type ProvisionWatcherClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewProvisionWatcherClient creates an instance of ProvisionWatcherClient
-func NewProvisionWatcherClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.ProvisionWatcherClient {
+func NewProvisionWatcherClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ProvisionWatcherClient {
 	return &ProvisionWatcherClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
@@ -68,7 +70,8 @@ func (pwc ProvisionWatcherClient) AllProvisionWatchers(ctx context.Context, labe
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatcherByName(ctx context.Context, name string) (res responses.ProvisionWatcherResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiProvisionWatcherRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(pwc.enableNameFieldEscape).
+		SetPath(common.ApiProvisionWatcherRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.GetRequest(ctx, &res, pwc.baseUrl, path, nil, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -78,7 +81,8 @@ func (pwc ProvisionWatcherClient) ProvisionWatcherByName(ctx context.Context, na
 }
 
 func (pwc ProvisionWatcherClient) DeleteProvisionWatcherByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiProvisionWatcherRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(pwc.enableNameFieldEscape).
+		SetPath(common.ApiProvisionWatcherRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.DeleteRequest(ctx, &res, pwc.baseUrl, path, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -88,7 +92,8 @@ func (pwc ProvisionWatcherClient) DeleteProvisionWatcherByName(ctx context.Conte
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatchersByProfileName(ctx context.Context, name string, offset int, limit int) (res responses.MultiProvisionWatchersResponse, err errors.EdgeX) {
-	requestPath := utils.EscapeAndJoinPath(common.ApiProvisionWatcherRoute, common.Profile, common.Name, name)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(pwc.enableNameFieldEscape).
+		SetPath(common.ApiProvisionWatcherRoute).SetPath(common.Profile).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -101,7 +106,8 @@ func (pwc ProvisionWatcherClient) ProvisionWatchersByProfileName(ctx context.Con
 }
 
 func (pwc ProvisionWatcherClient) ProvisionWatchersByServiceName(ctx context.Context, name string, offset int, limit int) (res responses.MultiProvisionWatchersResponse, err errors.EdgeX) {
-	requestPath := utils.EscapeAndJoinPath(common.ApiProvisionWatcherRoute, common.Service, common.Name, name)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(pwc.enableNameFieldEscape).
+		SetPath(common.ApiProvisionWatcherRoute).SetPath(common.Service).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

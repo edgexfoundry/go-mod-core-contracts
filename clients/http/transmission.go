@@ -21,15 +21,17 @@ import (
 )
 
 type TransmissionClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewTransmissionClient creates an instance of TransmissionClient
-func NewTransmissionClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.TransmissionClient {
+func NewTransmissionClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.TransmissionClient {
 	return &TransmissionClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 

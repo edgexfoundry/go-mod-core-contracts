@@ -22,21 +22,24 @@ import (
 )
 
 type eventClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewEventClient creates an instance of EventClient
-func NewEventClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.EventClient {
+func NewEventClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.EventClient {
 	return &eventClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
 func (ec *eventClient) Add(ctx context.Context, serviceName string, req requests.AddEventRequest) (
 	dtoCommon.BaseWithIdResponse, errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiEventRoute, serviceName, req.Event.ProfileName, req.Event.DeviceName, req.Event.SourceName)
+	path := common.NewPathBuilder().EnableNameFieldEscape(ec.enableNameFieldEscape).
+		SetPath(common.ApiEventRoute).SetNameFieldPath(serviceName).SetNameFieldPath(req.Event.ProfileName).SetNameFieldPath(req.Event.DeviceName).SetNameFieldPath(req.Event.SourceName).BuildPath()
 	var br dtoCommon.BaseWithIdResponse
 
 	bytes, encoding, err := req.Encode()

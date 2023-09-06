@@ -27,7 +27,7 @@ func TestAddIntervalActions(t *testing.T) {
 	defer ts.Close()
 	dto := dtos.NewIntervalAction(TestIntervalActionName, TestIntervalName, dtos.NewRESTAddress(TestHost, TestPort, TestHTTPMethod))
 	request := []requests.AddIntervalActionRequest{requests.NewAddIntervalActionRequest(dto)}
-	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.Add(context.Background(), request)
 
@@ -40,7 +40,7 @@ func TestPatchIntervalActions(t *testing.T) {
 	defer ts.Close()
 	dto := dtos.NewUpdateIntervalAction(TestIntervalActionName)
 	request := []requests.UpdateIntervalActionRequest{requests.NewUpdateIntervalActionRequest(dto)}
-	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.Update(context.Background(), request)
 
@@ -51,7 +51,7 @@ func TestPatchIntervalActions(t *testing.T) {
 func TestQueryAllIntervalActions(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllIntervalActionRoute, responses.MultiIntervalActionsResponse{})
 	defer ts.Close()
-	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.AllIntervalActions(context.Background(), 0, 10)
 
@@ -63,7 +63,7 @@ func TestQueryIntervalActionByName(t *testing.T) {
 	path := path.Join(common.ApiIntervalActionRoute, common.Name, TestIntervalActionName)
 	ts := newTestServer(http.MethodGet, path, responses.DeviceResponse{})
 	defer ts.Close()
-	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.IntervalActionByName(context.Background(), TestIntervalActionName)
 
@@ -75,7 +75,7 @@ func TestDeleteIntervalActionByName(t *testing.T) {
 	path := path.Join(common.ApiIntervalActionRoute, common.Name, TestIntervalActionName)
 	ts := newTestServer(http.MethodDelete, path, dtoCommon.BaseResponse{})
 	defer ts.Close()
-	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalActionClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.DeleteIntervalActionByName(context.Background(), TestIntervalActionName)
 

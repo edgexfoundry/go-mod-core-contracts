@@ -22,19 +22,22 @@ import (
 )
 
 type deviceServiceCommandClient struct {
-	authInjector interfaces.AuthenticationInjector
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewDeviceServiceCommandClient creates an instance of deviceServiceCommandClient
-func NewDeviceServiceCommandClient(authInjector interfaces.AuthenticationInjector) interfaces.DeviceServiceCommandClient {
+func NewDeviceServiceCommandClient(authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.DeviceServiceCommandClient {
 	return &deviceServiceCommandClient{
-		authInjector: authInjector,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
 // GetCommand sends HTTP request to execute the Get command
 func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string) (*responses.EventResponse, errors.EdgeX) {
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, commandName)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetNameFieldPath(commandName).BuildPath()
 	params, err := url.ParseQuery(queryParams)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
@@ -64,7 +67,8 @@ func (client *deviceServiceCommandClient) GetCommand(ctx context.Context, baseUr
 // SetCommand sends HTTP request to execute the Set command
 func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, commandName)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetNameFieldPath(commandName).BuildPath()
 	params, err := url.ParseQuery(queryParams)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
@@ -79,7 +83,8 @@ func (client *deviceServiceCommandClient) SetCommand(ctx context.Context, baseUr
 // SetCommandWithObject invokes device service's set command API and the settings supports object value type
 func (client *deviceServiceCommandClient) SetCommandWithObject(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]interface{}) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, commandName)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetNameFieldPath(commandName).BuildPath()
 	params, err := url.ParseQuery(queryParams)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)

@@ -22,15 +22,17 @@ import (
 )
 
 type SubscriptionClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewSubscriptionClient creates an instance of SubscriptionClient
-func NewSubscriptionClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.SubscriptionClient {
+func NewSubscriptionClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.SubscriptionClient {
 	return &SubscriptionClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
@@ -105,7 +107,8 @@ func (client *SubscriptionClient) SubscriptionsByReceiver(ctx context.Context, r
 
 // SubscriptionByName query subscription by name.
 func (client *SubscriptionClient) SubscriptionByName(ctx context.Context, name string) (res responses.SubscriptionResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiSubscriptionRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiSubscriptionRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -115,7 +118,8 @@ func (client *SubscriptionClient) SubscriptionByName(ctx context.Context, name s
 
 // DeleteSubscriptionByName deletes a subscription by name.
 func (client *SubscriptionClient) DeleteSubscriptionByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiSubscriptionRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiSubscriptionRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

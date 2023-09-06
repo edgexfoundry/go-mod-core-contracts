@@ -52,3 +52,35 @@ func URLEncode(s string) string {
 
 	return res
 }
+
+type pathBuilder struct {
+	sb                    strings.Builder
+	enableNameFieldEscape bool
+}
+
+func NewPathBuilder() *pathBuilder {
+	return &pathBuilder{}
+}
+
+func (b *pathBuilder) EnableNameFieldEscape(enableNameFieldEscape bool) *pathBuilder {
+	b.enableNameFieldEscape = enableNameFieldEscape
+	return b
+}
+
+func (b *pathBuilder) SetPath(path string) *pathBuilder {
+	b.sb.WriteString(path + "/")
+	return b
+}
+
+// SetNameFieldPath set name path, such as device name, profile name, interval name
+func (b *pathBuilder) SetNameFieldPath(namePath string) *pathBuilder {
+	if b.enableNameFieldEscape {
+		namePath = URLEncode(namePath)
+	}
+	b.sb.WriteString(namePath + "/")
+	return b
+}
+
+func (b *pathBuilder) BuildPath() string {
+	return strings.TrimSuffix(b.sb.String(), "/")
+}

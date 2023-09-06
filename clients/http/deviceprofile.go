@@ -25,18 +25,20 @@ import (
 )
 
 type DeviceProfileClient struct {
-	baseUrl        string
-	authInjector   interfaces.AuthenticationInjector
-	resourcesCache map[string]responses.DeviceResourceResponse
-	mux            sync.RWMutex
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	resourcesCache        map[string]responses.DeviceResourceResponse
+	mux                   sync.RWMutex
+	enableNameFieldEscape bool
 }
 
 // NewDeviceProfileClient creates an instance of DeviceProfileClient
-func NewDeviceProfileClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.DeviceProfileClient {
+func NewDeviceProfileClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.DeviceProfileClient {
 	return &DeviceProfileClient{
-		baseUrl:        baseUrl,
-		authInjector:   authInjector,
-		resourcesCache: make(map[string]responses.DeviceResourceResponse),
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		resourcesCache:        make(map[string]responses.DeviceResourceResponse),
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
@@ -83,7 +85,8 @@ func (client *DeviceProfileClient) UpdateByYaml(ctx context.Context, yamlFilePat
 // DeleteByName deletes the device profile by name
 func (client *DeviceProfileClient) DeleteByName(ctx context.Context, name string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceProfileRoute, common.Name, name)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceProfileRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
@@ -93,7 +96,8 @@ func (client *DeviceProfileClient) DeleteByName(ctx context.Context, name string
 
 // DeviceProfileByName queries the device profile by name
 func (client *DeviceProfileClient) DeviceProfileByName(ctx context.Context, name string) (res responses.DeviceProfileResponse, edgexError errors.EdgeX) {
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceProfileRoute, common.Name, name)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceProfileRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err := utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -162,7 +166,8 @@ func (client *DeviceProfileClient) DeviceResourceByProfileNameAndResourceName(ct
 	if exists {
 		return res, nil
 	}
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceResourceRoute, common.Profile, profileName, common.Resource, resourceName)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceResourceRoute).SetPath(common.Profile).SetNameFieldPath(profileName).SetPath(common.Resource).SetNameFieldPath(resourceName).BuildPath()
 	err := utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -223,7 +228,8 @@ func (client *DeviceProfileClient) UpdateDeviceProfileResource(ctx context.Conte
 // DeleteDeviceResourceByName deletes device resource by name
 func (client *DeviceProfileClient) DeleteDeviceResourceByName(ctx context.Context, profileName string, resourceName string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceProfileRoute, common.Name, profileName, common.Resource, resourceName)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceProfileRoute).SetPath(common.Name).SetNameFieldPath(profileName).SetPath(common.Resource).SetNameFieldPath(resourceName).BuildPath()
 	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
@@ -254,7 +260,8 @@ func (client *DeviceProfileClient) UpdateDeviceProfileDeviceCommand(ctx context.
 // DeleteDeviceCommandByName deletes device command by name
 func (client *DeviceProfileClient) DeleteDeviceCommandByName(ctx context.Context, profileName string, commandName string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := utils.EscapeAndJoinPath(common.ApiDeviceProfileRoute, common.Name, profileName, common.DeviceCommand, commandName)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceProfileRoute).SetPath(common.Name).SetNameFieldPath(profileName).SetPath(common.DeviceCommand).SetNameFieldPath(commandName).BuildPath()
 	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)

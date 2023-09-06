@@ -48,7 +48,7 @@ func TestGetCommand(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiDeviceRoute+"/"+common.Name+"/"+TestDeviceName+"/"+TestCommandName, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector())
+	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector(), false)
 	res, err := client.GetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, "")
 
 	require.NoError(t, err)
@@ -61,7 +61,7 @@ func TestSetCommand(t *testing.T) {
 	ts := newTestServer(http.MethodPut, common.ApiDeviceRoute+"/"+common.Name+"/"+TestDeviceName+"/"+TestCommandName, expectedResponse)
 	defer ts.Close()
 
-	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector())
+	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector(), false)
 	res, err := client.SetCommand(context.Background(), ts.URL, TestDeviceName, TestCommandName, "", nil)
 
 	require.NoError(t, err)
@@ -80,7 +80,7 @@ func TestSetCommandWithObject(t *testing.T) {
 		},
 	}
 
-	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector())
+	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector(), false)
 	res, err := client.SetCommandWithObject(context.Background(), ts.URL, TestDeviceName, TestCommandName, "", settings)
 
 	require.NoError(t, err)

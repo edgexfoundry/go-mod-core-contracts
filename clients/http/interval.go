@@ -21,15 +21,17 @@ import (
 )
 
 type IntervalClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewIntervalClient creates an instance of IntervalClient
-func NewIntervalClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.IntervalClient {
+func NewIntervalClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.IntervalClient {
 	return &IntervalClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
@@ -69,7 +71,8 @@ func (client IntervalClient) AllIntervals(ctx context.Context, offset int, limit
 // IntervalByName query the interval by name
 func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 	res responses.IntervalResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiIntervalRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiIntervalRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -80,7 +83,8 @@ func (client IntervalClient) IntervalByName(ctx context.Context, name string) (
 // DeleteIntervalByName delete the interval by name
 func (client IntervalClient) DeleteIntervalByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiIntervalRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiIntervalRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

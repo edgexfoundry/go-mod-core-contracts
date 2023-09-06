@@ -22,15 +22,17 @@ import (
 )
 
 type NotificationClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewNotificationClient creates an instance of NotificationClient
-func NewNotificationClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.NotificationClient {
+func NewNotificationClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.NotificationClient {
 	return &NotificationClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 

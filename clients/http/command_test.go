@@ -8,7 +8,6 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/http/utils"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -24,7 +23,7 @@ import (
 func TestQueryDeviceCoreCommands(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllDeviceRoute, responses.MultiDeviceCoreCommandsResponse{})
 	defer ts.Close()
-	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.AllDeviceCoreCommands(context.Background(), 0, 10)
 	require.NoError(t, err)
 	require.IsType(t, responses.MultiDeviceCoreCommandsResponse{}, res)
@@ -32,10 +31,11 @@ func TestQueryDeviceCoreCommands(t *testing.T) {
 
 func TestQueryDeviceCoreCommandsByDeviceName(t *testing.T) {
 	deviceName := "Simple-Device01"
-	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName)
+	path := common.NewPathBuilder().EnableNameFieldEscape(false).
+		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).BuildPath()
 	ts := newTestServer(http.MethodGet, path, responses.DeviceCoreCommandResponse{})
 	defer ts.Close()
-	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.DeviceCoreCommandsByDeviceName(context.Background(), deviceName)
 	require.NoError(t, err)
 	require.IsType(t, responses.DeviceCoreCommandResponse{}, res)
@@ -44,10 +44,11 @@ func TestQueryDeviceCoreCommandsByDeviceName(t *testing.T) {
 func TestIssueGetCommandByName(t *testing.T) {
 	deviceName := "Simple-Device01"
 	cmdName := "SwitchButton"
-	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, cmdName)
+	path := common.NewPathBuilder().EnableNameFieldEscape(false).
+		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetNameFieldPath(cmdName).BuildPath()
 	ts := newTestServer(http.MethodGet, path, &responses.EventResponse{})
 	defer ts.Close()
-	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector(), false)
 	pushEvent, err := strconv.ParseBool(common.ValueTrue)
 	require.NoError(t, err)
 	notReturnEvent, err := strconv.ParseBool(common.ValueFalse)
@@ -75,7 +76,7 @@ func TestIssueGetCommandByNameWithQueryParams(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.IssueGetCommandByNameWithQueryParams(context.Background(), deviceName, cmdName, testQueryParams)
 	require.NoError(t, err)
 	require.IsType(t, &responses.EventResponse{}, res)
@@ -87,10 +88,11 @@ func TestIssueIssueSetCommandByName(t *testing.T) {
 	settings := map[string]string{
 		"SwitchButton": "true",
 	}
-	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, cmdName)
+	path := common.NewPathBuilder().EnableNameFieldEscape(false).
+		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetNameFieldPath(cmdName).BuildPath()
 	ts := newTestServer(http.MethodPut, path, dtoCommon.BaseResponse{})
 	defer ts.Close()
-	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.IssueSetCommandByName(context.Background(), deviceName, cmdName, settings)
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.BaseResponse{}, res)
@@ -105,10 +107,11 @@ func TestIssueIssueSetCommandByNameWithObject(t *testing.T) {
 			"value": "on",
 		},
 	}
-	path := utils.EscapeAndJoinPath(common.ApiDeviceRoute, common.Name, deviceName, cmdName)
+	path := common.NewPathBuilder().EnableNameFieldEscape(false).
+		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetNameFieldPath(cmdName).BuildPath()
 	ts := newTestServer(http.MethodPut, path, dtoCommon.BaseResponse{})
 	defer ts.Close()
-	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.IssueSetCommandByNameWithObject(context.Background(), deviceName, cmdName, settings)
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.BaseResponse{}, res)
