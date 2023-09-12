@@ -315,20 +315,6 @@ const (
 	ConfigStemSecurity = ConfigStemAll
 )
 
-// Constants related to topics for Commanding via MessageBus
-// TODO: Remove these once all services are using the constants in the next block
-const (
-	CommandQueryRequestTopicKey           = "CommandQueryRequestTopic"
-	CommandQueryRequestTopicPrefixKey     = "CommandQueryRequestTopicPrefix"
-	CommandRequestTopicKey                = "CommandRequestTopic"
-	CommandRequestTopicPrefixKey          = "CommandRequestTopicPrefix"
-	DeviceCommandRequestTopicKey          = "DeviceCommandRequestTopic"
-	DeviceCommandRequestTopicPrefixKey    = "DeviceCommandRequestTopicPrefix"
-	ExternalCommandQueryResponseTopicKey  = "CommandQueryResponseTopic"
-	ExternalCommandResponseTopicPrefixKey = "CommandResponseTopicPrefix"
-	ResponseTopicPrefixKey                = "ResponseTopicPrefix"
-)
-
 // MessageBus Topics
 const (
 
