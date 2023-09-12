@@ -21,15 +21,17 @@ import (
 )
 
 type IntervalActionClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewIntervalActionClient creates an instance of IntervalActionClient
-func NewIntervalActionClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.IntervalActionClient {
+func NewIntervalActionClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.IntervalActionClient {
 	return &IntervalActionClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
@@ -69,7 +71,8 @@ func (client IntervalActionClient) AllIntervalActions(ctx context.Context, offse
 // IntervalActionByName query the intervalAction by name
 func (client IntervalActionClient) IntervalActionByName(ctx context.Context, name string) (
 	res responses.IntervalActionResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiIntervalActionRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiIntervalActionRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -80,7 +83,8 @@ func (client IntervalActionClient) IntervalActionByName(ctx context.Context, nam
 // DeleteIntervalActionByName delete the intervalAction by name
 func (client IntervalActionClient) DeleteIntervalActionByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiIntervalActionRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiIntervalActionRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

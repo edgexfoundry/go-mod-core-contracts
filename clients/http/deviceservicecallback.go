@@ -19,15 +19,17 @@ import (
 )
 
 type deviceServiceCallbackClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewDeviceServiceCallbackClient creates an instance of deviceServiceCallbackClient
-func NewDeviceServiceCallbackClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.DeviceServiceCallbackClient {
+func NewDeviceServiceCallbackClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.DeviceServiceCallbackClient {
 	return &deviceServiceCallbackClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
@@ -97,7 +99,8 @@ func (client *deviceServiceCallbackClient) UpdateProvisionWatcherCallback(ctx co
 
 func (client *deviceServiceCallbackClient) DeleteProvisionWatcherCallback(ctx context.Context, name string) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	requestPath := utils.EscapeAndJoinPath(common.ApiWatcherCallbackRoute, common.Name, name)
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiWatcherCallbackRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err := utils.DeleteRequest(ctx, &response, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)

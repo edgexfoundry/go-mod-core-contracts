@@ -22,15 +22,17 @@ import (
 )
 
 type DeviceServiceClient struct {
-	baseUrl      string
-	authInjector interfaces.AuthenticationInjector
+	baseUrl               string
+	authInjector          interfaces.AuthenticationInjector
+	enableNameFieldEscape bool
 }
 
 // NewDeviceServiceClient creates an instance of DeviceServiceClient
-func NewDeviceServiceClient(baseUrl string, authInjector interfaces.AuthenticationInjector) interfaces.DeviceServiceClient {
+func NewDeviceServiceClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.DeviceServiceClient {
 	return &DeviceServiceClient{
-		baseUrl:      baseUrl,
-		authInjector: authInjector,
+		baseUrl:               baseUrl,
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
@@ -69,7 +71,8 @@ func (dsc DeviceServiceClient) AllDeviceServices(ctx context.Context, labels []s
 
 func (dsc DeviceServiceClient) DeviceServiceByName(ctx context.Context, name string) (
 	res responses.DeviceServiceResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiDeviceServiceRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(dsc.enableNameFieldEscape).
+		SetPath(common.ApiDeviceServiceRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.GetRequest(ctx, &res, dsc.baseUrl, path, nil, dsc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
@@ -79,7 +82,8 @@ func (dsc DeviceServiceClient) DeviceServiceByName(ctx context.Context, name str
 
 func (dsc DeviceServiceClient) DeleteByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := utils.EscapeAndJoinPath(common.ApiDeviceServiceRoute, common.Name, name)
+	path := common.NewPathBuilder().EnableNameFieldEscape(dsc.enableNameFieldEscape).
+		SetPath(common.ApiDeviceServiceRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	err = utils.DeleteRequest(ctx, &res, dsc.baseUrl, path, dsc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)

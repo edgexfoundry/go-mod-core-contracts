@@ -27,7 +27,7 @@ func TestAddIntervals(t *testing.T) {
 	defer ts.Close()
 	dto := dtos.NewInterval(TestIntervalName, TestFrequency)
 	request := []requests.AddIntervalRequest{requests.NewAddIntervalRequest(dto)}
-	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.Add(context.Background(), request)
 
@@ -40,7 +40,7 @@ func TestPatchIntervals(t *testing.T) {
 	defer ts.Close()
 	dto := dtos.NewUpdateInterval(TestIntervalName)
 	request := []requests.UpdateIntervalRequest{requests.NewUpdateIntervalRequest(dto)}
-	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.Update(context.Background(), request)
 
@@ -51,7 +51,7 @@ func TestPatchIntervals(t *testing.T) {
 func TestQueryAllIntervals(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllIntervalRoute, responses.MultiIntervalsResponse{})
 	defer ts.Close()
-	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.AllIntervals(context.Background(), 0, 10)
 
@@ -64,7 +64,7 @@ func TestQueryIntervalByName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, path, responses.DeviceResponse{})
 	defer ts.Close()
 
-	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.IntervalByName(context.Background(), TestIntervalName)
 	require.NoError(t, err)
@@ -75,7 +75,7 @@ func TestDeleteIntervalByName(t *testing.T) {
 	path := path.Join(common.ApiIntervalRoute, common.Name, TestIntervalName)
 	ts := newTestServer(http.MethodDelete, path, dtoCommon.BaseResponse{})
 	defer ts.Close()
-	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewIntervalClient(ts.URL, NewNullAuthenticationInjector(), false)
 
 	res, err := client.DeleteIntervalByName(context.Background(), TestIntervalName)
 

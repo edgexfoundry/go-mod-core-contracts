@@ -25,12 +25,12 @@ import (
 
 func TestAddEvent(t *testing.T) {
 	serviceName := "serviceName"
-	event := dtos.Event{ProfileName: "profileName", DeviceName: "deviceName"}
+	event := dtos.Event{ProfileName: "profileName", DeviceName: "deviceName", SourceName: "sourceName"}
 	apiRoute := path.Join(common.ApiEventRoute, serviceName, event.ProfileName, event.DeviceName, event.SourceName)
 	ts := newTestServer(http.MethodPost, apiRoute, dtoCommon.BaseWithIdResponse{})
 	defer ts.Close()
 
-	client := NewEventClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.Add(context.Background(), serviceName, requests.AddEventRequest{Event: event})
 	require.NoError(t, err)
 	assert.IsType(t, dtoCommon.BaseWithIdResponse{}, res)
@@ -40,7 +40,7 @@ func TestQueryAllEvents(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllEventRoute, responses.MultiEventsResponse{})
 	defer ts.Close()
 
-	client := NewEventClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.AllEvents(context.Background(), 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
@@ -50,7 +50,7 @@ func TestQueryEventCount(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiEventCountRoute, dtoCommon.CountResponse{})
 	defer ts.Close()
 
-	client := NewEventClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.EventCount(context.Background())
 	require.NoError(t, err)
 	assert.IsType(t, dtoCommon.CountResponse{}, res)
@@ -62,7 +62,7 @@ func TestQueryEventCountByDeviceName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, path, dtoCommon.CountResponse{})
 	defer ts.Close()
 
-	client := NewEventClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.EventCountByDeviceName(context.Background(), deviceName)
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.CountResponse{}, res)
@@ -74,7 +74,7 @@ func TestQueryEventsByDeviceName(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiEventsResponse{})
 	defer ts.Close()
 
-	client := NewEventClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.EventsByDeviceName(context.Background(), deviceName, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
@@ -86,7 +86,7 @@ func TestDeleteEventsByDeviceName(t *testing.T) {
 	ts := newTestServer(http.MethodDelete, path, dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewEventClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.DeleteByDeviceName(context.Background(), deviceName)
 	require.NoError(t, err)
 	assert.IsType(t, dtoCommon.BaseResponse{}, res)
@@ -99,7 +99,7 @@ func TestQueryEventsByTimeRange(t *testing.T) {
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiEventsResponse{})
 	defer ts.Close()
 
-	client := NewEventClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.EventsByTimeRange(context.Background(), start, end, 1, 10)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
@@ -111,7 +111,7 @@ func TestDeleteEventsByAge(t *testing.T) {
 	ts := newTestServer(http.MethodDelete, path, dtoCommon.BaseResponse{})
 	defer ts.Close()
 
-	client := NewEventClient(ts.URL, NewNullAuthenticationInjector())
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.DeleteByAge(context.Background(), age)
 	require.NoError(t, err)
 	assert.IsType(t, dtoCommon.BaseResponse{}, res)
