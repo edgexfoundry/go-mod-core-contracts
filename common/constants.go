@@ -315,6 +315,13 @@ const (
 	ConfigStemSecurity = ConfigStemAll
 )
 
+const (
+	CommandQueryRequestTopicKey       = "CommandQueryRequestTopic" // #nosec G101
+	CommandQueryRequestTopicPrefixKey = "CommandQueryRequestTopicPrefix"
+	CommandRequestTopicKey            = "CommandRequestTopic"
+	CommandRequestTopicPrefixKey      = "CommandRequestTopicPrefix"
+)
+
 // MessageBus Topics
 const (
 
