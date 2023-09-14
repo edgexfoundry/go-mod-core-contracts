@@ -407,9 +407,10 @@ func parseSimpleValue(valueType string, value string) (err error) {
 }
 
 func parseArrayValue(valueType string, value string) (err error) {
-	arrayValue := strings.Split(value[1:len(value)-1], ", ") // trim "[" and "]"
+	arrayValue := strings.Split(value[1:len(value)-1], ",") // trim "[" and "]"
 
 	for _, v := range arrayValue {
+		v = strings.TrimSpace(v)
 		switch valueType {
 		case common.ValueTypeBoolArray:
 			err = parseSimpleValue(common.ValueTypeBool, v)

@@ -276,6 +276,30 @@ func TestValidateValue(t *testing.T) {
 	}
 }
 
+func TestValidateArrayValue(t *testing.T) {
+	tests := []struct {
+		name        string
+		valueType   string
+		value       string
+		expectError bool
+	}{
+		{"Valid separator (comma followed by a space)", common.ValueTypeBoolArray, "[true, false]", false},
+		{"Valid separator (comma)", common.ValueTypeBoolArray, "[true,false]", false},
+		{"Invalid separator", common.ValueTypeBoolArray, "[true@false]", true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := ValidateValue(tt.valueType, tt.value)
+			if tt.expectError {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
 func TestValidateValueError(t *testing.T) {
 	invalidValue := "invalid"
 	tests := []struct {
