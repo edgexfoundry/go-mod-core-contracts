@@ -316,10 +316,10 @@ const (
 )
 
 const (
-	CommandQueryRequestTopicKey       = "CommandQueryRequestTopic" // #nosec G101
-	CommandQueryRequestTopicPrefixKey = "CommandQueryRequestTopicPrefix"
-	CommandRequestTopicKey            = "CommandRequestTopic"
-	CommandRequestTopicPrefixKey      = "CommandRequestTopicPrefix"
+	CommandQueryRequestTopicKey   = "CommandQueryRequestTopic" // #nosec G101
+	CommandQueryResponseTopicKey  = "CommandQueryResponseTopic"
+	CommandRequestTopicKey        = "CommandRequestTopic"
+	CommandResponseTopicPrefixKey = "CommandResponseTopicPrefix"
 )
 
 // MessageBus Topics
