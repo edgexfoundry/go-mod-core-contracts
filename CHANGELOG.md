@@ -3,6 +3,28 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
+## [v3.1.0] - 2023-11-15
+
+### ✨  Features
+
+- Allow NameFieldEscape configurable ([b0688fa…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/b0688fa74e6493f4ada8b41961a83322533a5983))
+- Use URL escape for DTO name field ([fe869c7…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/fe869c73d3d455c6bcd8a80f44612dba226c759b))
+- Add new API route constants for Echo ([ba4bcab…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/ba4bcab7d7f1689a3ec3108d74c56bd728437987))
+
+
+### 🐛 Bug Fixes
+
+- Restore core-command topic key ([a82334f…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/a82334f329341628846807d6925db64d8d201a8c))
+- Use comma without a space as separator to parse array value ([2452e70…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/2452e706a7425134e876c397f528274d17037f0e))
+- Restore previously removed constants that are still used. ([bd81a3f…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/bd81a3fbba0437829623a4306ad2f488cd216166))
+- Add todo comment for the new Echo API const ([e1baa79…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/e1baa79db8796fb641862e2e1fc0f29cb6a78ab5))
+
+
+### 👷 Build
+
+- Upgrade to go 1.21 and linter 1.54.2 ([aae349d…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/aae349de27787b263ac536cb84a85526ba2e88ac))
+
+
 ## [v3.0.0] - 2023-05-31
 
 ### Features ✨
