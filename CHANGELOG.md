@@ -14,9 +14,7 @@
 
 ### 🐛 Bug Fixes
 
-- Restore core-command topic key ([a82334f…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/a82334f329341628846807d6925db64d8d201a8c))
 - Use comma without a space as separator to parse array value ([2452e70…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/2452e706a7425134e876c397f528274d17037f0e))
-- Restore previously removed constants that are still used. ([bd81a3f…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/bd81a3fbba0437829623a4306ad2f488cd216166))
 - Add todo comment for the new Echo API const ([e1baa79…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/e1baa79db8796fb641862e2e1fc0f29cb6a78ab5))
 
 
