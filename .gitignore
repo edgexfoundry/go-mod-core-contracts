@@ -1,7 +1,6 @@
 *~
 *.log
 glide.lock
-vendor
 .idea
 coverage.out
 *.DS_Store
