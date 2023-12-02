@@ -99,6 +99,32 @@ func (_m *EventClient) DeleteByAge(ctx context.Context, age int) (common.BaseRes
 	return r0, r1
 }
 
+// DeleteById provides a mock function with given fields: ctx, id
+func (_m *EventClient) DeleteById(ctx context.Context, id string) (common.BaseResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, id)
+
+	var r0 common.BaseResponse
+	var r1 errors.EdgeX
+	if rf, ok := ret.Get(0).(func(context.Context, string) (common.BaseResponse, errors.EdgeX)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) common.BaseResponse); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(common.BaseResponse)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) errors.EdgeX); ok {
+		r1 = rf(ctx, id)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(errors.EdgeX)
+		}
+	}
+
+	return r0, r1
+}
+
 // DeleteByDeviceName provides a mock function with given fields: ctx, name
 func (_m *EventClient) DeleteByDeviceName(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX) {
 	ret := _m.Called(ctx, name)
