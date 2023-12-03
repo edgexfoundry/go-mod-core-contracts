@@ -116,3 +116,15 @@ func TestDeleteEventsByAge(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, dtoCommon.BaseResponse{}, res)
 }
+
+func TestDeleteEventById(t *testing.T) {
+	id := "1234-5678-90fa-keid"
+	path := path.Join(common.ApiEventRoute, common.Id, id)
+	ts := newTestServer(http.MethodDelete, path, dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
+	res, err := client.DeleteById(context.Background(), id)
+	require.NoError(t, err)
+	assert.IsType(t, dtoCommon.BaseResponse{}, res)
+}

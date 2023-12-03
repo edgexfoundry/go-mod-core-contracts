@@ -132,3 +132,13 @@ func (ec *eventClient) DeleteByAge(ctx context.Context, age int) (dtoCommon.Base
 	}
 	return res, nil
 }
+
+func (ec *eventClient) DeleteById(ctx context.Context, id string) (dtoCommon.BaseResponse, errors.EdgeX) {
+	path := path.Join(common.ApiEventRoute, common.Id, id)
+	res := dtoCommon.BaseResponse{}
+	err := utils.DeleteRequest(ctx, &res, ec.baseUrl, path, ec.authInjector)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}

@@ -40,4 +40,6 @@ type EventClient interface {
 	EventsByTimeRange(ctx context.Context, start, end, offset, limit int) (responses.MultiEventsResponse, errors.EdgeX)
 	// DeleteByAge deletes events that are older than the given age. Age is supposed in milliseconds from created timestamp.
 	DeleteByAge(ctx context.Context, age int) (common.BaseResponse, errors.EdgeX)
+	// DeleteById deletes an event by its id
+	DeleteById(ctx context.Context, id string) (common.BaseResponse, errors.EdgeX)
 }
