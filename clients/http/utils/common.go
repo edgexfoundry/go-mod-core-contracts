@@ -63,7 +63,8 @@ func makeRequest(req *http.Request, authInjector interfaces.AuthenticationInject
 		}
 	}
 
-	client := &http.Client{}
+	client := &http.Client{Transport: authInjector.RoundTripper()}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServiceUnavailable, "failed to send a http request", err)
