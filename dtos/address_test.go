@@ -38,6 +38,17 @@ var testRESTAddress = Address{
 	},
 }
 
+var testRESTAddressWithAuthInject = Address{
+	Type: common.REST,
+	Host: testHost,
+	Port: testPort,
+	RESTAddress: RESTAddress{
+		Path:            testPath,
+		HTTPMethod:      testHTTPMethod,
+		InjectEdgeXAuth: true,
+	},
+}
+
 var testMQTTPubAddress = Address{
 	Type: common.MQTT,
 	Host: testHost,
@@ -61,6 +72,11 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 		testRESTAddress.Type, testRESTAddress.Host, testRESTAddress.Port,
 		testRESTAddress.Path, testRESTAddress.HTTPMethod,
 	)
+	restWithInjectJsonStr := fmt.Sprintf(
+		`{"type":"%s","host":"%s","port":%d,"path":"%s","httpMethod":"%s","injectEdgeXAuth":%v}`,
+		testRESTAddressWithAuthInject.Type, testRESTAddressWithAuthInject.Host, testRESTAddressWithAuthInject.Port,
+		testRESTAddressWithAuthInject.Path, testRESTAddressWithAuthInject.HTTPMethod, testRESTAddressWithAuthInject.InjectEdgeXAuth,
+	)
 	mqttJsonStr := fmt.Sprintf(
 		`{"type":"%s","host":"%s","port":%d,"Publisher":"%s","Topic":"%s"}`,
 		testMQTTPubAddress.Type, testMQTTPubAddress.Host, testMQTTPubAddress.Port,
@@ -75,6 +91,7 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 		wantErr  bool
 	}{
 		{"unmarshal RESTAddress with success", testRESTAddress, []byte(restJsonStr), false},
+		{"unmarshal RESTAddressWithAuthInject with success", testRESTAddressWithAuthInject, []byte(restWithInjectJsonStr), false},
 		{"unmarshal MQTTPubAddress with success", testMQTTPubAddress, []byte(mqttJsonStr), false},
 		{"unmarshal EmailAddress with success", testEmailAddress, []byte(emailJsonStr), false},
 		{"unmarshal invalid Address, empty data", Address{}, []byte{}, true},
@@ -163,6 +180,16 @@ func TestAddress_marshalJSON(t *testing.T) {
 		`{"type":"%s","host":"%s","port":%d,"httpMethod":"%s"}`,
 		restAddress.Type, restAddress.Host, restAddress.Port, restAddress.HTTPMethod,
 	)
+	restAddressWithAuthInject := Address{
+		Type: common.REST,
+		Host: testHost, Port: testPort,
+		RESTAddress: RESTAddress{HTTPMethod: testHTTPMethod, InjectEdgeXAuth: true},
+	}
+	expectedRESTWithAuthInjectJsonStr := fmt.Sprintf(
+		`{"type":"%s","host":"%s","port":%d,"httpMethod":"%s","injectEdgeXAuth":%v}`,
+		restAddressWithAuthInject.Type, restAddressWithAuthInject.Host, restAddressWithAuthInject.Port,
+		restAddressWithAuthInject.HTTPMethod, restAddressWithAuthInject.InjectEdgeXAuth,
+	)
 	mattAddress := Address{
 		Type: common.MQTT,
 		Host: testHost, Port: testPort,
@@ -192,6 +219,7 @@ func TestAddress_marshalJSON(t *testing.T) {
 		expectedJSONStr string
 	}{
 		{"marshal REST address", restAddress, expectedRESTJsonStr},
+		{"marshal REST address with auth inject", restAddressWithAuthInject, expectedRESTWithAuthInjectJsonStr},
 		{"marshal MQTT address", mattAddress, expectedMQTTJsonStr},
 		{"marshal Email address", emailAddress, expectedEmailJsonStr},
 	}

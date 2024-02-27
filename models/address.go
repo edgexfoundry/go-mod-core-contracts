@@ -70,8 +70,9 @@ type BaseAddress struct {
 // RESTAddress is a REST specific struct
 type RESTAddress struct {
 	BaseAddress
-	Path       string
-	HTTPMethod string
+	Path            string
+	HTTPMethod      string
+	InjectEdgeXAuth bool
 }
 
 func (a RESTAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }
