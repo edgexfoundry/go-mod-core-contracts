@@ -23,3 +23,8 @@ func (_ *emptyAuthenticationInjector) AddAuthenticationData(_ *http.Request) err
 	// Do nothing to the request; used for unit tests
 	return nil
 }
+
+func (_ *emptyAuthenticationInjector) RoundTripper() http.RoundTripper {
+	// Do nothing to the request; used for unit tests
+	return nil
+}
