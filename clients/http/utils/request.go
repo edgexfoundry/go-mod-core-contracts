@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -225,6 +225,23 @@ func PutByFileRequest(
 // DeleteRequest makes the delete request and return the body
 func DeleteRequest(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
 	req, err := createRequest(ctx, http.MethodDelete, baseUrl, requestPath, nil)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	res, err := sendRequest(ctx, req, authInjector)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
+	}
+	return nil
+}
+
+// DeleteRequestWithParams makes the delete request with URL query params and return the body
+func DeleteRequestWithParams(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, requestParams url.Values, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
+	req, err := createRequest(ctx, http.MethodDelete, baseUrl, requestPath, requestParams)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}

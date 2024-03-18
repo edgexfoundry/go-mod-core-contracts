@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -80,4 +80,7 @@ const (
 	ApiIntervalByNameEchoRoute         = ApiIntervalRoute + "/" + Name + "/:" + Name
 	ApiIntervalActionByNameEchoRoute   = ApiIntervalActionRoute + "/" + Name + "/:" + Name
 	ApiIntervalActionByTargetEchoRoute = ApiIntervalActionRoute + "/" + Target + "/:" + Target
+
+	ApiKVSByKeyEchoRoute                = ApiKVSRoute + "/" + Key + "/:" + Key
+	ApiRegistrationByServiceIdEchoRoute = ApiRegisterRoute + "/" + ServiceId + "/:" + ServiceId
 )
