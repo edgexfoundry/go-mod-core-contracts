@@ -17,7 +17,8 @@ import (
 type KVSClient interface {
 	// UpdateValuesByKey updates values of the specified key and the child keys defined in the request payload.
 	// If no key exists at the given path, the key(s) will be created.
-	UpdateValuesByKey(ctx context.Context, key string, reqs requests.UpdateKeysRequest) (responses.KeysResponse, errors.EdgeX)
+	// If 'flatten' is true, the request json object would be flattened before storing into database.
+	UpdateValuesByKey(ctx context.Context, key string, flatten bool, reqs requests.UpdateKeysRequest) (responses.KeysResponse, errors.EdgeX)
 	// ValuesByKey returns the values of the specified key prefix.
 	ValuesByKey(ctx context.Context, key string) (responses.MultiKeyValueResponse, errors.EdgeX)
 	// ListKeys returns the list of the keys with the specified key prefix.

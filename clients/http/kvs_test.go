@@ -24,7 +24,7 @@ func TestUpdateValuesByKey(t *testing.T) {
 	defer ts.Close()
 
 	client := NewKVSClient(ts.URL, NewNullAuthenticationInjector())
-	res, err := client.UpdateValuesByKey(context.Background(), TestKey, requests.UpdateKeysRequest{})
+	res, err := client.UpdateValuesByKey(context.Background(), TestKey, true, requests.UpdateKeysRequest{})
 
 	require.NoError(t, err)
 	require.IsType(t, responses.KeysResponse{}, res)
