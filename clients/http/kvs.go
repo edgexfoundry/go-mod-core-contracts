@@ -8,6 +8,7 @@ package http
 import (
 	"context"
 	"net/url"
+	"strconv"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/interfaces"
@@ -33,10 +34,10 @@ func NewKVSClient(baseUrl string, authInjector interfaces.AuthenticationInjector
 
 // UpdateValuesByKey updates values of the specified key and the child keys defined in the request payload.
 // If no key exists at the given path, the key(s) will be created.
-func (kc KVSClient) UpdateValuesByKey(ctx context.Context, key string, req requests.UpdateKeysRequest) (res responses.KeysResponse, err errors.EdgeX) {
+func (kc KVSClient) UpdateValuesByKey(ctx context.Context, key string, flatten bool, req requests.UpdateKeysRequest) (res responses.KeysResponse, err errors.EdgeX) {
 	path := utils.EscapeAndJoinPath(common.ApiKVSRoute, common.Key, key)
 	queryParams := url.Values{}
-	queryParams.Set(common.Flatten, common.ValueTrue)
+	queryParams.Set(common.Flatten, strconv.FormatBool(flatten))
 	err = utils.PutRequest(ctx, &res, kc.baseUrl, path, queryParams, req, kc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
