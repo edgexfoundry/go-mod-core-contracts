@@ -183,6 +183,7 @@ const (
 	PushEvent    = "ds-pushevent"   //query string to specify if an event should be pushed to the EdgeX system
 	ReturnEvent  = "ds-returnevent" //query string to specify if an event should be returned from device service
 	RegexCommand = "ds-regexcmd"    //query string to specify if the command name is in regular expression format
+	Parent       = "descendantsOf"  //Limit returned devices to those who have parent, grandparent, etc. of the given device name
 )
 
 // Constants related to the default value of query strings in the v3 service APIs

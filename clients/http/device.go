@@ -66,6 +66,21 @@ func (dc DeviceClient) AllDevices(ctx context.Context, labels []string, offset i
 	return res, nil
 }
 
+func (dc DeviceClient) AllDevicesWithChildren(ctx context.Context, parent string, labels []string, offset int, limit int) (res responses.MultiDevicesResponse, err errors.EdgeX) {
+	requestParams := url.Values{}
+	if len(labels) > 0 {
+		requestParams.Set(common.Labels, strings.Join(labels, common.CommaSeparator))
+	}
+	requestParams.Set(common.Parent, parent)
+	requestParams.Set(common.Offset, strconv.Itoa(offset))
+	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	err = utils.GetRequest(ctx, &res, dc.baseUrl, common.ApiAllDeviceRoute, requestParams, dc.authInjector)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
 func (dc DeviceClient) DeviceNameExists(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := common.NewPathBuilder().EnableNameFieldEscape(dc.enableNameFieldEscape).
 		SetPath(common.ApiDeviceRoute).SetPath(common.Check).SetPath(common.Name).SetNameFieldPath(name).BuildPath()

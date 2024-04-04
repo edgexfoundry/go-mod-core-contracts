@@ -25,6 +25,12 @@ type DeviceClient interface {
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
 	AllDevices(ctx context.Context, labels []string, offset int, limit int) (responses.MultiDevicesResponse, errors.EdgeX)
+	// AllDevicesWithChildren returns all devices who have parent, grandparent, etc. of the
+	// given device name. Devices can also be filtered by labels.
+	// The result can be limited in a certain range by specifying the offset and limit parameters.
+	// offset: The number of items to skip before starting to collect the result set. Default is 0.
+	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
+	AllDevicesWithChildren(ctx context.Context, parent string, labels []string, offset int, limit int) (responses.MultiDevicesResponse, errors.EdgeX)
 	// DeviceNameExists checks whether the device exists.
 	DeviceNameExists(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX)
 	// DeviceByName returns a device by device name.

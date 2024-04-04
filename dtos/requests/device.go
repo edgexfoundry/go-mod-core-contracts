@@ -91,6 +91,9 @@ func ReplaceDeviceModelFieldsWithDTO(device *models.Device, patch dtos.UpdateDev
 	if patch.Description != nil {
 		device.Description = *patch.Description
 	}
+	if patch.Parent != nil {
+		device.Parent = *patch.Parent
+	}
 	if patch.AdminState != nil {
 		device.AdminState = models.AdminState(*patch.AdminState)
 	}
