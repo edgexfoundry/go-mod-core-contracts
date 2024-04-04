@@ -78,7 +78,10 @@ var testUpdateDto = UpdateDevice{
 
 func TestDeviceDTOtoModel(t *testing.T) {
 	dto := ToDeviceModel(testDeviceDto)
-	assert.Equal(t, testDeviceModel, dto)
+	// All fields should propagate except DBTimestamp
+	testDeviceModelWithoutTime := testDeviceModel
+	testDeviceModelWithoutTime.DBTimestamp = models.DBTimestamp{}
+	assert.Equal(t, testDeviceModelWithoutTime, dto)
 }
 
 func TestDeviceModeltoDTO(t *testing.T) {

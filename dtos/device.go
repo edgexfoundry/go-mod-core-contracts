@@ -47,7 +47,6 @@ type UpdateDevice struct {
 // ToDeviceModel transforms the Device DTO to the Device Model
 func ToDeviceModel(dto Device) models.Device {
 	var d models.Device
-	d.DBTimestamp = models.DBTimestamp(dto.DBTimestamp)
 	d.Id = dto.Id
 	d.Name = dto.Name
 	d.Parent = dto.Parent
