@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -25,18 +25,7 @@ func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl str
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
-	if err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
-	}
-	// Check the response content length to avoid json unmarshal error
-	if len(res) == 0 {
-		return nil
-	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
-	}
-	return nil
+	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
 // GetRequestAndReturnBinaryRes makes the get request and return the binary response and content type(i.e., application/json, application/cbor, ... )
@@ -76,14 +65,7 @@ func GetRequestWithBodyRawData(ctx context.Context, returnValuePointer interface
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
-	if err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
-	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
-	}
-	return nil
+	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
 // PostRequest makes the post request with encoded data and return the body
@@ -99,14 +81,7 @@ func PostRequest(
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
-	if err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
-	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
-	}
-	return nil
+	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
 // PostRequestWithRawData makes the post JSON request with raw data and return the body
@@ -122,14 +97,7 @@ func PostRequestWithRawData(
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
-	if err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
-	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
-	}
-	return nil
+	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
 // PutRequest makes the put JSON request and return the body
@@ -145,14 +113,7 @@ func PutRequest(
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
-	if err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
-	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
-	}
-	return nil
+	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
 // PatchRequest makes a PATCH request and unmarshals the response to the returnValuePointer
@@ -168,14 +129,7 @@ func PatchRequest(
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
-	if err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
-	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
-	}
-	return nil
+	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
 // PostByFileRequest makes the post file request and return the body
@@ -190,14 +144,7 @@ func PostByFileRequest(
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
-	if err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
-	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
-	}
-	return nil
+	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
 // PutByFileRequest makes the put file request and return the body
@@ -212,14 +159,7 @@ func PutByFileRequest(
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
-	if err != nil {
-		return errors.NewCommonEdgeXWrapper(err)
-	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
-	}
-	return nil
+	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
 // DeleteRequest makes the delete request and return the body
@@ -229,11 +169,31 @@ func DeleteRequest(ctx context.Context, returnValuePointer interface{}, baseUrl 
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 
-	res, err := sendRequest(ctx, req, authInjector)
+	return processRequest(ctx, returnValuePointer, req, authInjector)
+}
+
+// DeleteRequestWithParams makes the delete request with URL query params and return the body
+func DeleteRequestWithParams(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, requestParams url.Values, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
+	req, err := createRequest(ctx, http.MethodDelete, baseUrl, requestPath, requestParams)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
-	if err := json.Unmarshal(res, returnValuePointer); err != nil {
+
+	return processRequest(ctx, returnValuePointer, req, authInjector)
+}
+
+// processRequest is a helper function to process the request and get the return value
+func processRequest(ctx context.Context,
+	returnValuePointer any, req *http.Request, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
+	resp, err := sendRequest(ctx, req, authInjector)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+	// Check the response content length to avoid json unmarshal error
+	if len(resp) == 0 {
+		return nil
+	}
+	if err := json.Unmarshal(resp, returnValuePointer); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "failed to parse the response body", err)
 	}
 	return nil

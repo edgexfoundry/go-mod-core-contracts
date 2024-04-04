@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -129,6 +129,12 @@ const (
 	ApiOperationRoute   = ApiSystemRoute + "/operation"
 	ApiHealthRoute      = ApiSystemRoute + "/health"
 	ApiMultiConfigRoute = ApiSystemRoute + "/config"
+
+	ApiKVSRoute                     = ApiBase + "/kvs"
+	ApiKVSByKeyRoute                = ApiKVSRoute + "/" + Key + "/{" + Key + "}"
+	ApiRegisterRoute                = ApiBase + "/registry"
+	ApiAllRegistrationsRoute        = ApiRegisterRoute + "/" + All
+	ApiRegistrationByServiceIdRoute = ApiRegisterRoute + "/" + ServiceId + "/{" + ServiceId + "}"
 )
 
 // Constants related to defined url path names and parameters in the v3 service APIs
@@ -176,6 +182,8 @@ const (
 	Sender        = "sender"
 	Severity      = "severity"
 	Interval      = "interval"
+	Key           = "key"
+	ServiceId     = "serviceId"
 
 	Offset       = "offset"         //query string to specify the number of items to skip before starting to collect the result set.
 	Limit        = "limit"          //query string to specify the numbers of items to return
@@ -184,6 +192,10 @@ const (
 	ReturnEvent  = "ds-returnevent" //query string to specify if an event should be returned from device service
 	RegexCommand = "ds-regexcmd"    //query string to specify if the command name is in regular expression format
 	Parent       = "descendantsOf"  //Limit returned devices to those who have parent, grandparent, etc. of the given device name
+	Flatten      = "flatten"        //query string to specify if the request json payload should be flattened to update multiple keys with the same prefix
+	KeyOnly      = "keyOnly"        //query string to specify if the response will only return the keys of the specified query key prefix, without values and metadata
+	Plaintext    = "plaintext"      //query string to specify if the response will return the stored plain text value of the key(s) without any encoding
+	Deregistered = "deregistered"   //query string to specify if the response will return the registries of deregistered services
 )
 
 // Constants related to the default value of query strings in the v3 service APIs
@@ -271,6 +283,7 @@ const (
 	CoreDataServiceKey                  = "core-data"
 	CoreMetaDataServiceKey              = "core-metadata"
 	CoreCommonConfigServiceKey          = "core-common-config-bootstrapper"
+	CoreKeeperServiceKey                = "core-keeper"
 	SupportLoggingServiceKey            = "support-logging"
 	SupportNotificationsServiceKey      = "support-notifications"
 	SystemManagementAgentServiceKey     = "sys-mgmt-agent"

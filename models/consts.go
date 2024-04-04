@@ -50,3 +50,6 @@ const (
 	Down    = "DOWN"
 	Unknown = "UNKNOWN"
 )
+
+// Constant for Keeper health status
+const Halt = "HALT"
