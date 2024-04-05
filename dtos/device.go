@@ -13,7 +13,7 @@ type Device struct {
 	DBTimestamp    `json:",inline"`
 	Id             string                        `json:"id,omitempty" yaml:"id,omitempty" validate:"omitempty,uuid"`
 	Name           string                        `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string"`
-	Parent		   string                        `json:"parent,omitempty" yaml:"parent,omitempty"`
+	Parent         string                        `json:"parent,omitempty" yaml:"parent,omitempty"`
 	Description    string                        `json:"description,omitempty" yaml:"description,omitempty"`
 	AdminState     string                        `json:"adminState" yaml:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 	OperatingState string                        `json:"operatingState" yaml:"operatingState" validate:"oneof='UP' 'DOWN' 'UNKNOWN'"`
@@ -30,7 +30,7 @@ type Device struct {
 type UpdateDevice struct {
 	Id             *string                       `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
 	Name           *string                       `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
-	Parent		   *string                       `json:"parent,omitempty" yaml:"parent,omitempty"`
+	Parent         *string                       `json:"parent,omitempty" yaml:"parent,omitempty"`
 	Description    *string                       `json:"description" validate:"omitempty"`
 	AdminState     *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 	OperatingState *string                       `json:"operatingState" validate:"omitempty,oneof='UP' 'DOWN' 'UNKNOWN'"`
@@ -92,7 +92,7 @@ func FromDeviceModelToUpdateDTO(d models.Device) UpdateDevice {
 	dto := UpdateDevice{
 		Id:             &d.Id,
 		Name:           &d.Name,
-		Parent:			&d.Parent,
+		Parent:         &d.Parent,
 		Description:    &d.Description,
 		AdminState:     &adminState,
 		OperatingState: &operatingState,

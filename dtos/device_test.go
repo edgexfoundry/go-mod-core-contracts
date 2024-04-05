@@ -24,56 +24,56 @@ var testServiceName = "ServiceName"
 var testProfileName = "ProfileName"
 
 var testDeviceDto = Device{
-	DBTimestamp: DBTimestamp{Created: 123, Modified: 456},
-	Id:          testId,
-	Name:        testName,
-	Parent:      testParent,
-	Description: testDescription,
-	AdminState:  testAdminState,
+	DBTimestamp:    DBTimestamp{Created: 123, Modified: 456},
+	Id:             testId,
+	Name:           testName,
+	Parent:         testParent,
+	Description:    testDescription,
+	AdminState:     testAdminState,
 	OperatingState: testOperatingState,
-	Labels:      []string{"label1", "label2"},
-	Location:    testLocation,
-	ServiceName: testServiceName,
-	ProfileName: testProfileName,
-	AutoEvents:  []AutoEvent{{Interval: "5m", OnChange: false, SourceName: "sourceName"}},
-	Protocols:   map[string]ProtocolProperties{"protocol": {"key": "value"}},
-	Tags:        map[string]any{"tag": "value"},
-	Properties:  map[string]any{"property": "value"},
+	Labels:         []string{"label1", "label2"},
+	Location:       testLocation,
+	ServiceName:    testServiceName,
+	ProfileName:    testProfileName,
+	AutoEvents:     []AutoEvent{{Interval: "5m", OnChange: false, SourceName: "sourceName"}},
+	Protocols:      map[string]ProtocolProperties{"protocol": {"key": "value"}},
+	Tags:           map[string]any{"tag": "value"},
+	Properties:     map[string]any{"property": "value"},
 }
 
 var testDeviceModel = models.Device{
-	DBTimestamp: models.DBTimestamp{Created: 123, Modified: 456},
-	Id:          testId,
-	Name:        testName,
-	Parent:      testParent,
-	Description: testDescription,
-	AdminState:  models.AdminState(testAdminState),
+	DBTimestamp:    models.DBTimestamp{Created: 123, Modified: 456},
+	Id:             testId,
+	Name:           testName,
+	Parent:         testParent,
+	Description:    testDescription,
+	AdminState:     models.AdminState(testAdminState),
 	OperatingState: models.OperatingState(testOperatingState),
-	Labels:      []string{"label1", "label2"},
-	Location:    testLocation,
-	ServiceName: testServiceName,
-	ProfileName: testProfileName,
-	AutoEvents:  []models.AutoEvent{{Interval: "5m", OnChange: false, SourceName: "sourceName"}},
-	Protocols:   map[string]models.ProtocolProperties{"protocol": {"key": "value"}},
-	Tags:        map[string]any{"tag": "value"},
-	Properties:  map[string]any{"property": "value"},
+	Labels:         []string{"label1", "label2"},
+	Location:       testLocation,
+	ServiceName:    testServiceName,
+	ProfileName:    testProfileName,
+	AutoEvents:     []models.AutoEvent{{Interval: "5m", OnChange: false, SourceName: "sourceName"}},
+	Protocols:      map[string]models.ProtocolProperties{"protocol": {"key": "value"}},
+	Tags:           map[string]any{"tag": "value"},
+	Properties:     map[string]any{"property": "value"},
 }
 
 var testUpdateDto = UpdateDevice{
-	Id:          &testId,
-	Name:        &testName,
-	Parent:      &testParent,
-	Description: &testDescription,
-	AdminState:  &testAdminState,
+	Id:             &testId,
+	Name:           &testName,
+	Parent:         &testParent,
+	Description:    &testDescription,
+	AdminState:     &testAdminState,
 	OperatingState: &testOperatingState,
-	Labels:      []string{"label1", "label2"},
-	Location:    testLocation,
-	ServiceName: &testServiceName,
-	ProfileName: &testProfileName,
-	AutoEvents:  []AutoEvent{{Interval: "5m", OnChange: false, SourceName: "sourceName"}},
-	Protocols:   map[string]ProtocolProperties{"protocol": {"key": "value"}},
-	Tags:        map[string]any{"tag": "value"},
-	Properties:  map[string]any{"property": "value"},
+	Labels:         []string{"label1", "label2"},
+	Location:       testLocation,
+	ServiceName:    &testServiceName,
+	ProfileName:    &testProfileName,
+	AutoEvents:     []AutoEvent{{Interval: "5m", OnChange: false, SourceName: "sourceName"}},
+	Protocols:      map[string]ProtocolProperties{"protocol": {"key": "value"}},
+	Tags:           map[string]any{"tag": "value"},
+	Properties:     map[string]any{"property": "value"},
 }
 
 func TestDeviceDTOtoModel(t *testing.T) {
@@ -89,7 +89,6 @@ func TestDeviceModeltoDTO(t *testing.T) {
 	dto := FromDeviceModelToDTO(model)
 	assert.Equal(t, testDeviceDto, dto)
 }
-
 
 func TestFromDeviceModelToUpdateDTO(t *testing.T) {
 	model := testDeviceModel
