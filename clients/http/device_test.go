@@ -106,7 +106,7 @@ func TestQueryDeviceTree(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllDeviceRoute, responses.MultiDevicesResponse{})
 	defer ts.Close()
 	client := NewDeviceClient(ts.URL, NewNullAuthenticationInjector(), false)
-	res, err := client.AllDevicesWithChildren(context.Background(), "MyRoot", []string{"label1", "label2"}, 1, 10)
+	res, err := client.AllDevicesWithChildren(context.Background(), "MyRoot", 3, []string{"label1", "label2"}, 1, 10)
 	require.NoError(t, err)
 	require.IsType(t, responses.MultiDevicesResponse{}, res)
 }

@@ -66,12 +66,13 @@ func (dc DeviceClient) AllDevices(ctx context.Context, labels []string, offset i
 	return res, nil
 }
 
-func (dc DeviceClient) AllDevicesWithChildren(ctx context.Context, parent string, labels []string, offset int, limit int) (res responses.MultiDevicesResponse, err errors.EdgeX) {
+func (dc DeviceClient) AllDevicesWithChildren(ctx context.Context, parent string, maxLevels uint, labels []string, offset int, limit int) (res responses.MultiDevicesResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
 	if len(labels) > 0 {
 		requestParams.Set(common.Labels, strings.Join(labels, common.CommaSeparator))
 	}
-	requestParams.Set(common.Parent, parent)
+	requestParams.Set(common.DescendantsOf, parent)
+	requestParams.Set(common.MaxLevels, strconv.FormatUint(uint64(maxLevels), 10))
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	err = utils.GetRequest(ctx, &res, dc.baseUrl, common.ApiAllDeviceRoute, requestParams, dc.authInjector)

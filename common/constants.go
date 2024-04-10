@@ -185,17 +185,18 @@ const (
 	Key           = "key"
 	ServiceId     = "serviceId"
 
-	Offset       = "offset"         //query string to specify the number of items to skip before starting to collect the result set.
-	Limit        = "limit"          //query string to specify the numbers of items to return
-	Labels       = "labels"         //query string to specify associated user-defined labels for querying a given object. More than one label may be specified via a comma-delimited list
-	PushEvent    = "ds-pushevent"   //query string to specify if an event should be pushed to the EdgeX system
-	ReturnEvent  = "ds-returnevent" //query string to specify if an event should be returned from device service
-	RegexCommand = "ds-regexcmd"    //query string to specify if the command name is in regular expression format
-	Parent       = "descendantsOf"  //Limit returned devices to those who have parent, grandparent, etc. of the given device name
-	Flatten      = "flatten"        //query string to specify if the request json payload should be flattened to update multiple keys with the same prefix
-	KeyOnly      = "keyOnly"        //query string to specify if the response will only return the keys of the specified query key prefix, without values and metadata
-	Plaintext    = "plaintext"      //query string to specify if the response will return the stored plain text value of the key(s) without any encoding
-	Deregistered = "deregistered"   //query string to specify if the response will return the registries of deregistered services
+	Offset        = "offset"         //query string to specify the number of items to skip before starting to collect the result set.
+	Limit         = "limit"          //query string to specify the numbers of items to return
+	Labels        = "labels"         //query string to specify associated user-defined labels for querying a given object. More than one label may be specified via a comma-delimited list
+	PushEvent     = "ds-pushevent"   //query string to specify if an event should be pushed to the EdgeX system
+	ReturnEvent   = "ds-returnevent" //query string to specify if an event should be returned from device service
+	RegexCommand  = "ds-regexcmd"    //query string to specify if the command name is in regular expression format
+	DescendantsOf = "descendantsOf"  //Limit returned devices to those who have parent, grandparent, etc. of the given device name
+	MaxLevels     = "maxLevels"      //Limit returned devices to this many levels below 'descendantsOf' (0=unlimited)
+	Flatten       = "flatten"        //query string to specify if the request json payload should be flattened to update multiple keys with the same prefix
+	KeyOnly       = "keyOnly"        //query string to specify if the response will only return the keys of the specified query key prefix, without values and metadata
+	Plaintext     = "plaintext"      //query string to specify if the response will return the stored plain text value of the key(s) without any encoding
+	Deregistered  = "deregistered"   //query string to specify if the response will return the registries of deregistered services
 )
 
 // Constants related to the default value of query strings in the v3 service APIs
