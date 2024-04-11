@@ -9,6 +9,7 @@ type Device struct {
 	DBTimestamp
 	Id             string
 	Name           string
+	Parent         string
 	Description    string
 	AdminState     AdminState
 	OperatingState OperatingState
