@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,8 +18,12 @@ import (
 type DeviceClient interface {
 	// Add adds new devices.
 	Add(ctx context.Context, reqs []requests.AddDeviceRequest) ([]common.BaseWithIdResponse, errors.EdgeX)
+	// AddWithQueryParams adds new devices with query parameters.
+	AddWithQueryParams(ctx context.Context, reqs []requests.AddDeviceRequest, queryParams map[string]string) ([]common.BaseWithIdResponse, errors.EdgeX)
 	// Update updates devices.
 	Update(ctx context.Context, reqs []requests.UpdateDeviceRequest) ([]common.BaseResponse, errors.EdgeX)
+	// UpdateWithQueryParams updates devices with query parameters.
+	UpdateWithQueryParams(ctx context.Context, reqs []requests.UpdateDeviceRequest, queryParams map[string]string) ([]common.BaseResponse, errors.EdgeX)
 	// AllDevices returns all devices. Devices can also be filtered by labels.
 	// The result can be limited in a certain range by specifying the offset and limit parameters.
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.

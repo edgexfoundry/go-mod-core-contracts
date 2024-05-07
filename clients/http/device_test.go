@@ -1,6 +1,7 @@
 //
 // Copyright (C) 2020-2021 Unknown author
 // Copyright (C) 2023 Intel Corporation
+// Copyright (C) 2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,11 +30,29 @@ func TestAddDevices(t *testing.T) {
 	require.IsType(t, []dtoCommon.BaseWithIdResponse{}, res)
 }
 
+func TestAddDevicesWithQueryParams(t *testing.T) {
+	ts := newTestServer(http.MethodPost, common.ApiDeviceRoute, []dtoCommon.BaseWithIdResponse{})
+	defer ts.Close()
+	client := NewDeviceClient(ts.URL, NewNullAuthenticationInjector(), false)
+	res, err := client.AddWithQueryParams(context.Background(), []requests.AddDeviceRequest{}, map[string]string{"foo": "bar"})
+	require.NoError(t, err)
+	require.IsType(t, []dtoCommon.BaseWithIdResponse{}, res)
+}
+
 func TestPatchDevices(t *testing.T) {
 	ts := newTestServer(http.MethodPatch, common.ApiDeviceRoute, []dtoCommon.BaseResponse{})
 	defer ts.Close()
 	client := NewDeviceClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.Update(context.Background(), []requests.UpdateDeviceRequest{})
+	require.NoError(t, err)
+	require.IsType(t, []dtoCommon.BaseResponse{}, res)
+}
+
+func TestPatchDevicesWithQueryParams(t *testing.T) {
+	ts := newTestServer(http.MethodPatch, common.ApiDeviceRoute, []dtoCommon.BaseResponse{})
+	defer ts.Close()
+	client := NewDeviceClient(ts.URL, NewNullAuthenticationInjector(), false)
+	res, err := client.UpdateWithQueryParams(context.Background(), []requests.UpdateDeviceRequest{}, map[string]string{"foo": "bar"})
 	require.NoError(t, err)
 	require.IsType(t, []dtoCommon.BaseResponse{}, res)
 }

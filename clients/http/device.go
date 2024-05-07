@@ -1,6 +1,7 @@
 //
 // Copyright (C) 2020-2021 Unknown author
 // Copyright (C) 2023 Intel Corporation
+// Copyright (C) 2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,8 +45,32 @@ func (dc DeviceClient) Add(ctx context.Context, reqs []requests.AddDeviceRequest
 	return res, nil
 }
 
+func (dc DeviceClient) AddWithQueryParams(ctx context.Context, reqs []requests.AddDeviceRequest, queryParams map[string]string) (res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
+	requestParams := url.Values{}
+	for k, v := range queryParams {
+		requestParams.Set(k, v)
+	}
+	err = utils.PostRequestWithRawData(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, requestParams, reqs, dc.authInjector)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
 func (dc DeviceClient) Update(ctx context.Context, reqs []requests.UpdateDeviceRequest) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
 	err = utils.PatchRequest(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, nil, reqs, dc.authInjector)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
+func (dc DeviceClient) UpdateWithQueryParams(ctx context.Context, reqs []requests.UpdateDeviceRequest, queryParams map[string]string) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
+	requestParams := url.Values{}
+	for k, v := range queryParams {
+		requestParams.Set(k, v)
+	}
+	err = utils.PatchRequest(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, requestParams, reqs, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
