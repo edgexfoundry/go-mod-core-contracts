@@ -123,7 +123,7 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 		{"invalid AddDeviceRequest, no DeviceName", noDeviceName, true},
 		{"invalid AddDeviceRequest, no ServiceName", noServiceName, true},
 		{"invalid AddDeviceRequest, no ProfileName", noProfileName, true},
-		{"invalid AddDeviceRequest, no Protocols", noProtocols, true},
+		{"valid AddDeviceRequest, no Protocols", noProtocols, false},
 		{"invalid AddDeviceRequest, no AutoEvent frequency", noAutoEventFrequency, true},
 		{"invalid AddDeviceRequest, no AutoEvent resource", noAutoEventResource, true},
 	}
@@ -359,7 +359,7 @@ func TestUpdateDeviceRequest_Validate(t *testing.T) {
 		{"invalid, invalid operating state", invalidOperatingState, true},
 		{"invalid, invalid autoEvent frequency", invalidFrequency, true},
 
-		{"invalid, empty protocols", emptyProtocols, true},
+		{"valid, empty protocols", emptyProtocols, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

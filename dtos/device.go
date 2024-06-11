@@ -22,7 +22,7 @@ type Device struct {
 	ServiceName    string                        `json:"serviceName" yaml:"serviceName" validate:"required,edgex-dto-none-empty-string"`
 	ProfileName    string                        `json:"profileName" yaml:"profileName" validate:"required,edgex-dto-none-empty-string"`
 	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
-	Protocols      map[string]ProtocolProperties `json:"protocols" yaml:"protocols" validate:"required,gt=0"`
+	Protocols      map[string]ProtocolProperties `json:"protocols" yaml:"protocols" validate:"required"`
 	Tags           map[string]any                `json:"tags,omitempty" yaml:"tags,omitempty"`
 	Properties     map[string]any                `json:"properties,omitempty" yaml:"properties,omitempty"`
 }
@@ -39,7 +39,7 @@ type UpdateDevice struct {
 	Labels         []string                      `json:"labels"`
 	Location       interface{}                   `json:"location"`
 	AutoEvents     []AutoEvent                   `json:"autoEvents" validate:"dive"`
-	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"omitempty,gt=0"`
+	Protocols      map[string]ProtocolProperties `json:"protocols" validate:"omitempty"`
 	Tags           map[string]any                `json:"tags"`
 	Properties     map[string]any                `json:"properties"`
 }
