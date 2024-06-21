@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -109,7 +109,7 @@ func TestNewSimpleReading(t *testing.T) {
 	tests := []struct {
 		name              string
 		expectedValueType string
-		value             interface{}
+		value             any
 		expectedValue     string
 	}{
 		{"Simple Boolean (true)", common.ValueTypeBool, true, "true"},
@@ -158,7 +158,7 @@ func TestNewSimpleReadingError(t *testing.T) {
 	tests := []struct {
 		name              string
 		expectedValueType string
-		value             interface{}
+		value             any
 	}{
 		{"Invalid Simple Boolean", common.ValueTypeBool, 123},
 		{"Invalid Simple String", common.ValueTypeString, 234},
@@ -219,13 +219,39 @@ func TestNewObjectReading(t *testing.T) {
 	expectedProfileName := TestDeviceProfileName
 	expectedResourceName := TestDeviceResourceName
 	expectedValueType := common.ValueTypeObject
-	expectedValue := map[string]interface{}{
+	expectedValue := map[string]any{
 		"Attr1": "yyz",
 		"Attr2": -45,
-		"Attr3": []interface{}{255, 1, 0},
+		"Attr3": []any{255, 1, 0},
 	}
 
 	actual := NewObjectReading(expectedProfileName, expectedDeviceName, expectedResourceName, expectedValue)
+
+	assert.NotEmpty(t, actual.Id)
+	assert.Equal(t, expectedProfileName, actual.ProfileName)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
+	assert.Equal(t, expectedResourceName, actual.ResourceName)
+	assert.Equal(t, expectedValueType, actual.ValueType)
+	assert.Equal(t, expectedValue, actual.ObjectValue)
+	assert.NotZero(t, actual.Origin)
+}
+
+func TestNewObjectReadingWithArray(t *testing.T) {
+	expectedDeviceName := TestDeviceName
+	expectedProfileName := TestDeviceProfileName
+	expectedResourceName := TestDeviceResourceName
+	expectedValueType := common.ValueTypeObjectArray
+	expectedValue := []map[string]any{{
+		"Attr1": "yyz",
+		"Attr2": -45,
+		"Attr3": []any{255, 1, 0},
+	}, {
+		"Attr1": "cwq",
+		"Attr2": 75,
+		"Attr3": []any{3255, -1, 0},
+	}}
+
+	actual := NewObjectReadingWithArray(expectedProfileName, expectedDeviceName, expectedResourceName, expectedValue)
 
 	assert.NotEmpty(t, actual.Id)
 	assert.Equal(t, expectedProfileName, actual.ProfileName)
@@ -383,6 +409,67 @@ func TestUnmarshalObjectValue(t *testing.T) {
 	assert.NotZero(t, actual.Origin)
 }
 
+func TestUnmarshalObjectValueWithArray(t *testing.T) {
+	expectedDeviceName := TestDeviceName
+	expectedProfileName := TestDeviceProfileName
+	expectedResourceName := TestDeviceResourceName
+	expectedValueType := common.ValueTypeObjectArray
+	type testObjectType struct {
+		StringField       string
+		BoolField         bool
+		IntField          int
+		UintField         uint
+		Float32Field      float32
+		Float64Field      float64
+		BoolArrayField    []bool
+		IntArrayField     []int
+		UintArrayField    []uint
+		Float32ArrayField []float32
+		Float64ArrayField []float64
+	}
+	testObjectArray := []testObjectType{
+		{
+			StringField:       "yyz",
+			BoolField:         true,
+			IntField:          -45,
+			UintField:         45,
+			Float32Field:      float32(123.456),
+			Float64Field:      456.789,
+			BoolArrayField:    []bool{true, false, true},
+			IntArrayField:     []int{-1, 1, -1},
+			UintArrayField:    []uint{1, 1, 1},
+			Float32ArrayField: []float32{float32(111.222), float32(333.444), float32(555.666)},
+			Float64ArrayField: []float64{111.222, 333.444, 555.666},
+		},
+		{
+			StringField:       "te3d",
+			BoolField:         false,
+			IntField:          -8745,
+			UintField:         3545,
+			Float32Field:      float32(5123.456),
+			Float64Field:      7456.7829,
+			BoolArrayField:    []bool{true, false, true},
+			IntArrayField:     []int{-21, 1, -1, 7},
+			UintArrayField:    []uint{1, 1, 1, 8},
+			Float32ArrayField: []float32{float32(111.222), float32(333.444), float32(555.666)},
+			Float64ArrayField: []float64{111.222, 333.444, 555.666, 552445.44521},
+		},
+	}
+
+	actual := NewObjectReadingWithArray(expectedProfileName, expectedDeviceName, expectedResourceName, testObjectArray)
+
+	assert.NotEmpty(t, actual.Id)
+	assert.Equal(t, expectedProfileName, actual.ProfileName)
+	assert.Equal(t, expectedDeviceName, actual.DeviceName)
+	assert.Equal(t, expectedResourceName, actual.ResourceName)
+	assert.Equal(t, expectedValueType, actual.ValueType)
+
+	var target []testObjectType
+	assert.NoError(t, actual.UnmarshalObjectValue(&target))
+	assert.Equal(t, testObjectArray, target)
+	assert.NotZero(t, actual.Origin)
+}
+
 func TestUnmarshalObjectValueError(t *testing.T) {
 	expectedDeviceName := TestDeviceName
 	expectedProfileName := TestDeviceProfileName
@@ -391,7 +478,7 @@ func TestUnmarshalObjectValueError(t *testing.T) {
 	tests := []struct {
 		name      string
 		valueType string
-		value     interface{}
+		value     any
 	}{
 		{"Invalid Simple Boolean", common.ValueTypeBool, true},
 		{"Invalid Simple Uint8", common.ValueTypeUint8, uint8(1)},

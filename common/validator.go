@@ -98,7 +98,7 @@ func getErrorMessage(e validator.FieldError) string {
 	case dtoRFC3986UnreservedCharTag, emptyOrDtoRFC3986UnreservedCharTag:
 		msg = fmt.Sprintf("%s field only allows unreserved characters which are ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_~:;=", fieldName)
 	default:
-		msg = fmt.Sprintf("%s field validation failed on the %s tag", fieldName, tag)
+		msg = fmt.Sprintf("%s field validation failed on the %s tag with value '%s'", fieldName, tag, fieldValue)
 	}
 	return msg
 }

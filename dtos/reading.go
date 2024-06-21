@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +44,7 @@ type BinaryReading struct {
 }
 
 type ObjectReading struct {
-	ObjectValue interface{} `json:"objectValue,omitempty" validate:"required"`
+	ObjectValue any `json:"objectValue,omitempty" validate:"required"`
 }
 
 func newBaseReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
@@ -59,7 +59,7 @@ func newBaseReading(profileName string, deviceName string, resourceName string, 
 }
 
 // NewSimpleReading creates and returns a new initialized BaseReading with its SimpleReading initialized
-func NewSimpleReading(profileName string, deviceName string, resourceName string, valueType string, value interface{}) (BaseReading, error) {
+func NewSimpleReading(profileName string, deviceName string, resourceName string, valueType string, value any) (BaseReading, error) {
 	stringValue, err := convertInterfaceValue(valueType, value)
 	if err != nil {
 		return BaseReading{}, err
@@ -83,7 +83,7 @@ func NewBinaryReading(profileName string, deviceName string, resourceName string
 }
 
 // NewObjectReading creates and returns a new initialized BaseReading with its ObjectReading initialized
-func NewObjectReading(profileName string, deviceName string, resourceName string, objectValue interface{}) BaseReading {
+func NewObjectReading(profileName string, deviceName string, resourceName string, objectValue any) BaseReading {
 	reading := newBaseReading(profileName, deviceName, resourceName, common.ValueTypeObject)
 	reading.ObjectReading = ObjectReading{
 		ObjectValue: objectValue,
@@ -91,7 +91,16 @@ func NewObjectReading(profileName string, deviceName string, resourceName string
 	return reading
 }
 
-func convertInterfaceValue(valueType string, value interface{}) (string, error) {
+// NewObjectReadingWithArray creates and returns a new initialized BaseReading with its ObjectReading initialized with ObjectArray valueType
+func NewObjectReadingWithArray(profileName string, deviceName string, resourceName string, objectValue any) BaseReading {
+	reading := newBaseReading(profileName, deviceName, resourceName, common.ValueTypeObjectArray)
+	reading.ObjectReading = ObjectReading{
+		ObjectValue: objectValue,
+	}
+	return reading
+}
+
+func convertInterfaceValue(valueType string, value any) (string, error) {
 	switch valueType {
 	case common.ValueTypeBool:
 		return convertSimpleValue(valueType, reflect.Bool, value)
@@ -164,7 +173,7 @@ func convertInterfaceValue(valueType string, value interface{}) (string, error) 
 	}
 }
 
-func convertSimpleValue(valueType string, kind reflect.Kind, value interface{}) (string, error) {
+func convertSimpleValue(valueType string, kind reflect.Kind, value any) (string, error) {
 	if err := validateType(valueType, kind, value); err != nil {
 		return "", err
 	}
@@ -172,7 +181,7 @@ func convertSimpleValue(valueType string, kind reflect.Kind, value interface{}) 
 	return fmt.Sprintf("%v", value), nil
 }
 
-func convertFloatValue(valueType string, kind reflect.Kind, value interface{}) (string, error) {
+func convertFloatValue(valueType string, kind reflect.Kind, value any) (string, error) {
 	if err := validateType(valueType, kind, value); err != nil {
 		return "", err
 	}
@@ -180,7 +189,7 @@ func convertFloatValue(valueType string, kind reflect.Kind, value interface{}) (
 	return fmt.Sprintf("%e", value), nil
 }
 
-func convertSimpleArrayValue(valueType string, kind reflect.Kind, value interface{}) (string, error) {
+func convertSimpleArrayValue(valueType string, kind reflect.Kind, value any) (string, error) {
 	if err := validateType(valueType, kind, value); err != nil {
 		return "", err
 	}
@@ -242,7 +251,7 @@ func convertFloat64ArrayValue(values []float64) (string, error) {
 	return result.String(), nil
 }
 
-func validateType(valueType string, kind reflect.Kind, value interface{}) error {
+func validateType(valueType string, kind reflect.Kind, value any) error {
 	if reflect.TypeOf(value).Kind() == reflect.Slice {
 		if kind != reflect.TypeOf(value).Elem().Kind() {
 			return fmt.Errorf("slice of type of value `%s` not a match for specified ValueType '%s", kind.String(), valueType)
@@ -265,7 +274,7 @@ func (b BaseReading) Validate() error {
 		if err := common.Validate(binaryReading); err != nil {
 			return err
 		}
-	} else if b.ValueType == common.ValueTypeObject {
+	} else if b.ValueType == common.ValueTypeObject || b.ValueType == common.ValueTypeObjectArray {
 		// validate the inner ObjectReading struct
 		objectReading := b.ObjectReading
 		if err := common.Validate(objectReading); err != nil {
@@ -304,7 +313,7 @@ func ToReadingModel(r BaseReading) models.Reading {
 			BinaryValue: r.BinaryValue,
 			MediaType:   r.MediaType,
 		}
-	} else if r.ValueType == common.ValueTypeObject {
+	} else if r.ValueType == common.ValueTypeObject || r.ValueType == common.ValueTypeObjectArray {
 		readingModel = models.ObjectReading{
 			BaseReading: br,
 			ObjectValue: r.ObjectValue,
@@ -437,7 +446,6 @@ func parseArrayValue(valueType string, value string) (err error) {
 			err = parseSimpleValue(common.ValueTypeFloat32, v)
 		case common.ValueTypeFloat64Array:
 			err = parseSimpleValue(common.ValueTypeFloat64, v)
-
 		}
 		if err != nil {
 			return err
@@ -447,10 +455,10 @@ func parseArrayValue(valueType string, value string) (err error) {
 }
 
 // UnmarshalObjectValue is a helper function used to unmarshal the ObjectValue of a reading to the passed in target type.
-// Note that this function will only work on readings with 'Object' valueType.  An error will be returned when invoking
-// this function on a reading with valueType other than 'Object'.
+// Note that this function will only work on readings with 'Object' or 'ObjectArray' valueType.  An error will be returned when invoking
+// this function on a reading with valueType other than 'Object' or 'ObjectArray'.
 func (b BaseReading) UnmarshalObjectValue(target any) error {
-	if b.ValueType == common.ValueTypeObject {
+	if b.ValueType == common.ValueTypeObject || b.ValueType == common.ValueTypeObjectArray {
 		// marshal the current reading ObjectValue to JSON
 		jsonEncodedData, err := json.Marshal(b.ObjectValue)
 		if err != nil {

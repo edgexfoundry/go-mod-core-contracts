@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,7 +29,7 @@ type SimpleReading struct {
 
 type ObjectReading struct {
 	BaseReading `json:",inline"`
-	ObjectValue interface{}
+	ObjectValue any
 }
 
 // Reading is an abstract interface to be implemented by BinaryReading/SimpleReading
