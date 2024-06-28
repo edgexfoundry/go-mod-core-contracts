@@ -20,7 +20,7 @@ type Device struct {
 	Labels         []string                      `json:"labels,omitempty" yaml:"labels,omitempty"`
 	Location       interface{}                   `json:"location,omitempty" yaml:"location,omitempty"`
 	ServiceName    string                        `json:"serviceName" yaml:"serviceName" validate:"required,edgex-dto-none-empty-string"`
-	ProfileName    string                        `json:"profileName" yaml:"profileName" validate:"required,edgex-dto-none-empty-string"`
+	ProfileName    string                        `json:"profileName,omitempty" yaml:"profileName,omitempty"`
 	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
 	Protocols      map[string]ProtocolProperties `json:"protocols" yaml:"protocols" validate:"required"`
 	Tags           map[string]any                `json:"tags,omitempty" yaml:"tags,omitempty"`
@@ -35,7 +35,7 @@ type UpdateDevice struct {
 	AdminState     *string                       `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 	OperatingState *string                       `json:"operatingState" validate:"omitempty,oneof='UP' 'DOWN' 'UNKNOWN'"`
 	ServiceName    *string                       `json:"serviceName" validate:"omitempty,edgex-dto-none-empty-string"`
-	ProfileName    *string                       `json:"profileName" validate:"omitempty,edgex-dto-none-empty-string"`
+	ProfileName    *string                       `json:"profileName" validate:"omitempty"`
 	Labels         []string                      `json:"labels"`
 	Location       interface{}                   `json:"location"`
 	AutoEvents     []AutoEvent                   `json:"autoEvents" validate:"dive"`
