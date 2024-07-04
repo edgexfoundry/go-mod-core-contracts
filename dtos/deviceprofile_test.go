@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021-2023 IOTech Ltd
+// Copyright (C) 2021-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -88,6 +88,11 @@ func profileData() DeviceProfile {
 func TestFromDeviceProfileModelToDTO(t *testing.T) {
 	result := FromDeviceProfileModelToDTO(testDeviceProfile)
 	assert.Equal(t, profileData(), result, "FromDeviceProfileModelToDTO did not result in expected device profile DTO.")
+}
+
+func TestFromDeviceProfileModelToBasicInfoDTO(t *testing.T) {
+	result := FromDeviceProfileModelToBasicInfoDTO(testDeviceProfile)
+	assert.Equal(t, profileData().DeviceProfileBasicInfo, result, "FromDeviceProfileModelToBasicInfoDTO did not result in expected device profile basic info DTO.")
 }
 
 func TestDeviceProfileDTOValidation(t *testing.T) {

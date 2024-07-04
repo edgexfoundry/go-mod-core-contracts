@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -91,6 +91,18 @@ func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfi
 		},
 		DeviceResources: FromDeviceResourceModelsToDTOs(deviceProfile.DeviceResources),
 		DeviceCommands:  FromDeviceCommandModelsToDTOs(deviceProfile.DeviceCommands),
+	}
+}
+
+// FromDeviceProfileModelToBasicInfoDTO transforms the DeviceProfile Model to the DeviceProfileBasicInfo DTO
+func FromDeviceProfileModelToBasicInfoDTO(deviceProfile models.DeviceProfile) DeviceProfileBasicInfo {
+	return DeviceProfileBasicInfo{
+		Id:           deviceProfile.Id,
+		Name:         deviceProfile.Name,
+		Description:  deviceProfile.Description,
+		Manufacturer: deviceProfile.Manufacturer,
+		Model:        deviceProfile.Model,
+		Labels:       deviceProfile.Labels,
 	}
 }
 
