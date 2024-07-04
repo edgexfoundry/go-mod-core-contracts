@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,4 +42,22 @@ func TestNewMultiDeviceProfilesResponse(t *testing.T) {
 	assert.Equal(t, expectedMessage, actual.Message)
 	assert.Equal(t, expectedTotalCount, actual.TotalCount)
 	assert.Equal(t, expectedDeviceProfiles, actual.Profiles)
+}
+
+func TestNewMultiDeviceProfileBasicInfosResponse(t *testing.T) {
+	expectedRequestId := "123456"
+	expectedStatusCode := 200
+	expectedMessage := "unit test message"
+	expectedDeviceProfileBasicInfos := []dtos.DeviceProfileBasicInfo{
+		{Name: "test device profile1"},
+		{Name: "test device profile2"},
+	}
+	expectedTotalCount := uint32(2)
+	actual := NewMultiDeviceProfileBasicInfosResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedDeviceProfileBasicInfos)
+
+	assert.Equal(t, expectedRequestId, actual.RequestId)
+	assert.Equal(t, expectedStatusCode, actual.StatusCode)
+	assert.Equal(t, expectedMessage, actual.Message)
+	assert.Equal(t, expectedTotalCount, actual.TotalCount)
+	assert.Equal(t, expectedDeviceProfileBasicInfos, actual.Profiles)
 }

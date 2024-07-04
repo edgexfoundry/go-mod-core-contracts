@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -33,5 +33,18 @@ func NewMultiDeviceProfilesResponse(requestId string, message string, statusCode
 	return MultiDeviceProfilesResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Profiles:                   deviceProfiles,
+	}
+}
+
+// MultiDeviceProfileBasicInfoResponse defines the Response Content for GET multiple DeviceProfileBasicInfo DTOs.
+type MultiDeviceProfileBasicInfoResponse struct {
+	common.BaseWithTotalCountResponse `json:",inline"`
+	Profiles                          []dtos.DeviceProfileBasicInfo `json:"profiles"`
+}
+
+func NewMultiDeviceProfileBasicInfosResponse(requestId string, message string, statusCode int, totalCount uint32, deviceProfileBasicInfos []dtos.DeviceProfileBasicInfo) MultiDeviceProfileBasicInfoResponse {
+	return MultiDeviceProfileBasicInfoResponse{
+		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
+		Profiles:                   deviceProfileBasicInfos,
 	}
 }

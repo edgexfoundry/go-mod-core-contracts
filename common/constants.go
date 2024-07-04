@@ -35,6 +35,7 @@ const (
 
 	ApiDeviceProfileRoute                       = ApiBase + "/deviceprofile"
 	ApiDeviceProfileBasicInfoRoute              = ApiDeviceProfileRoute + "/basicinfo"
+	ApiAllDeviceProfileBasicInfoRoute           = ApiDeviceProfileBasicInfoRoute + "/" + All
 	ApiDeviceProfileDeviceCommandRoute          = ApiDeviceProfileRoute + "/" + DeviceCommand
 	ApiDeviceProfileResourceRoute               = ApiDeviceProfileRoute + "/" + Resource
 	ApiDeviceProfileUploadFileRoute             = ApiDeviceProfileRoute + "/uploadfile"
