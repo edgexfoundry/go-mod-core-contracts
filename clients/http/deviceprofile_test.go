@@ -1,6 +1,7 @@
 //
 // Copyright (C) 2020-2021 Unknown author
 // Copyright (C) 2023 Intel Corporation
+// Copyright (C) 2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -200,6 +201,14 @@ func TestQueryAllDeviceProfiles(t *testing.T) {
 	defer ts.Close()
 	client := NewDeviceProfileClient(ts.URL, NewNullAuthenticationInjector(), false)
 	_, err := client.AllDeviceProfiles(context.Background(), []string{"testLabel1", "testLabel2"}, 1, 10)
+	require.NoError(t, err)
+}
+
+func TestQueryAllDeviceProfileBasicInfos(t *testing.T) {
+	ts := newTestServer(http.MethodGet, common.ApiAllDeviceProfileBasicInfoRoute, responses.MultiDeviceProfilesResponse{})
+	defer ts.Close()
+	client := NewDeviceProfileClient(ts.URL, NewNullAuthenticationInjector(), false)
+	_, err := client.AllDeviceProfileBasicInfos(context.Background(), []string{"testLabel1", "testLabel2"}, 1, 10)
 	require.NoError(t, err)
 }
 

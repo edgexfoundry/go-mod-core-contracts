@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2022 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,6 +30,8 @@ type DeviceProfileClient interface {
 	DeviceProfileByName(ctx context.Context, name string) (responses.DeviceProfileResponse, errors.EdgeX)
 	// AllDeviceProfiles queries all profiles
 	AllDeviceProfiles(ctx context.Context, labels []string, offset int, limit int) (responses.MultiDeviceProfilesResponse, errors.EdgeX)
+	// AllDeviceProfileBasicInfos queries all profile basic infos
+	AllDeviceProfileBasicInfos(ctx context.Context, labels []string, offset int, limit int) (responses.MultiDeviceProfileBasicInfoResponse, errors.EdgeX)
 	// DeviceProfilesByModel queries profiles by model
 	DeviceProfilesByModel(ctx context.Context, model string, offset int, limit int) (responses.MultiDeviceProfilesResponse, errors.EdgeX)
 	// DeviceProfilesByManufacturer queries profiles by manufacturer
