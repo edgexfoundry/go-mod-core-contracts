@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -114,6 +114,21 @@ func (client *DeviceProfileClient) AllDeviceProfiles(ctx context.Context, labels
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	err := utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllDeviceProfileRoute, requestParams, client.authInjector)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
+// AllDeviceProfileBasicInfos queries the device profile basic infos with offset, and limit
+func (client *DeviceProfileClient) AllDeviceProfileBasicInfos(ctx context.Context, labels []string, offset int, limit int) (res responses.MultiDeviceProfileBasicInfoResponse, edgexError errors.EdgeX) {
+	requestParams := url.Values{}
+	if len(labels) > 0 {
+		requestParams.Set(common.Labels, strings.Join(labels, common.CommaSeparator))
+	}
+	requestParams.Set(common.Offset, strconv.Itoa(offset))
+	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	err := utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllDeviceProfileBasicInfoRoute, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
