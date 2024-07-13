@@ -6,6 +6,7 @@
 package dtos
 
 type DeviceProfileBasicInfo struct {
+	DBTimestamp  `json:",inline"`
 	Id           string   `json:"id" validate:"omitempty,uuid"`
 	Name         string   `json:"name" yaml:"name" validate:"required,edgex-dto-none-empty-string"`
 	Manufacturer string   `json:"manufacturer" yaml:"manufacturer"`
