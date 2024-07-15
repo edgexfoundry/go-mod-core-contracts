@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/requests"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/responses"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 )
@@ -21,4 +22,6 @@ type DeviceServiceCommandClient interface {
 	SetCommand(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]string) (common.BaseResponse, errors.EdgeX)
 	// SetCommandWithObject invokes device service's set command API and the settings supports object value type
 	SetCommandWithObject(ctx context.Context, baseUrl string, deviceName string, commandName string, queryParams string, settings map[string]interface{}) (common.BaseResponse, errors.EdgeX)
+	// ProfileScan sends an HTTP POST request to the device service's profile scan API endpoint.
+	ProfileScan(ctx context.Context, baseUrl string, req requests.ProfileScanRequest) (common.BaseResponse, errors.EdgeX)
 }

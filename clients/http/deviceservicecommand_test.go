@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2024 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,6 +14,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/requests"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/responses"
 
 	"github.com/google/uuid"
@@ -85,4 +86,18 @@ func TestSetCommandWithObject(t *testing.T) {
 
 	require.NoError(t, err)
 	assert.Equal(t, requestId, res.RequestId)
+}
+
+func TestProfileScan(t *testing.T) {
+	requestId := uuid.New().String()
+	expectedResponse := dtoCommon.NewBaseResponse(requestId, "", http.StatusAccepted)
+	ts := newTestServer(http.MethodPost, common.ApiProfileScan, expectedResponse)
+	defer ts.Close()
+
+	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector(), false)
+	res, err := client.ProfileScan(context.Background(), ts.URL, requests.ProfileScanRequest{})
+
+	require.NoError(t, err)
+	assert.Equal(t, requestId, res.RequestId)
+	require.NoError(t, err)
 }
