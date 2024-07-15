@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021-2023 IOTech Ltd
+// Copyright (C) 2021-2024 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,6 +15,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/requests"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/responses"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 
@@ -90,6 +91,16 @@ func (client *deviceServiceCommandClient) SetCommandWithObject(ctx context.Conte
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
 	err = utils.PutRequest(ctx, &response, baseUrl, requestPath, params, settings, client.authInjector)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
+}
+
+// ProfileScan sends an HTTP POST request to the device service's profile scan API endpoint.
+func (client *deviceServiceCommandClient) ProfileScan(ctx context.Context, baseUrl string, req requests.ProfileScanRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
+	var response dtoCommon.BaseResponse
+	err := utils.PostRequestWithRawData(ctx, &response, baseUrl, common.ApiProfileScan, nil, req, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}

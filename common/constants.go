@@ -117,6 +117,7 @@ const (
 	ApiServiceCallbackRoute     = ApiBase + "/callback/service"
 	ApiDiscoveryRoute           = ApiBase + "/discovery"
 	ApiDeviceValidationRoute    = ApiBase + "/validate/device"
+	ApiProfileScan              = ApiBase + "/profilescan"
 
 	ApiIntervalRoute               = ApiBase + "/interval"
 	ApiAllIntervalRoute            = ApiIntervalRoute + "/" + All
