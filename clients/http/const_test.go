@@ -18,4 +18,10 @@ const (
 	TestCategory         = "health-check"
 	TestLabel            = "rest"
 	ExampleUUID          = "82eb2e26-0f24-48aa-ae4c-de9dac3fb9bc"
+
+	TestScheduleJobName = "TestScheduleJobName"
+	TestInterval        = "10m"
+	TestCrontab         = "0 0 1 1 *"
+	TestTopic           = "TestTopic"
+	TestAddress         = "TestAddress"
 )
