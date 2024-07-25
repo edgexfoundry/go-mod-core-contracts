@@ -297,6 +297,7 @@ const (
 	SecurityProxySetupServiceKey        = "security-proxy-setup"
 	SecurityFileTokenProviderServiceKey = "security-file-token-provider"
 	SecurityBootstrapperKey             = "security-bootstrapper"
+	SecurityBootstrapperPostgresKey     = "security-bootstrapper-postgres"
 	SecurityBootstrapperRedisKey        = "security-bootstrapper-redis"
 	SecuritySpiffeTokenProviderKey      = "security-spiffe-token-provider" // nolint:gosec
 )
