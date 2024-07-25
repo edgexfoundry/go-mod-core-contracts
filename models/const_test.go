@@ -8,6 +8,7 @@ package models
 const (
 	ExampleUUID            = "82eb2e26-0f24-48aa-ae4c-de9dac3fb9bc"
 	TestIntervalName       = "TestInterval"
+	TestInterval           = "10m"
 	TestIntervalActionName = "TestIntervalAction"
 	TestHost               = "localhost"
 	TestPort               = 48089
@@ -17,4 +18,13 @@ const (
 
 	TestSubscriptionName     = "TestSubscriptionName"
 	TestSubscriptionReceiver = "TestReceiver"
+
+	TestScheduleJobName            = "TestScheduleJob"
+	TestCrontab                    = "0 0 1 1 *"
+	TestContentType                = "application/json"
+	TestPayload                    = "eyJ0ZXN0I"
+	TestAddress                    = "http://localhost:12345/test/address"
+	TestDeviceName                 = "TestDeviceName"
+	TestSourceName                 = "TestSourceName"
+	TestScheduleActionRecordStatus = "SUCCEED"
 )
