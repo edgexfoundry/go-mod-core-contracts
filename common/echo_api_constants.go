@@ -83,4 +83,16 @@ const (
 
 	ApiKVSByKeyEchoRoute                = ApiKVSRoute + "/" + Key + "/:" + Key
 	ApiRegistrationByServiceIdEchoRoute = ApiRegisterRoute + "/" + ServiceId + "/:" + ServiceId
+
+	ApiScheduleJobEchoRoute              = ApiBase + "/job"
+	ApiAllScheduleJobEchoRoute           = ApiScheduleJobRoute + "/" + All
+	ApiTriggerScheduleJobByNameEchoRoute = ApiScheduleJobRoute + "/" + Trigger + "/" + Name + "/:" + Name
+	ApiScheduleJobByNameEchoRoute        = ApiScheduleJobRoute + "/" + Name + "/:" + Name
+
+	ApiScheduleActionRecordEchoRoute                        = ApiBase + "/scheduleactionrecord"
+	ApiAllScheduleActionRecordEchoRoute                     = ApiScheduleActionRecordRoute + "/" + All
+	ApiLatestScheduleActionRecordEchoRoute                  = ApiScheduleActionRecordRoute + "/" + Latest
+	ApiScheduleActionRecordRouteByStatusEchoRoute           = ApiScheduleActionRecordRoute + "/" + Status + "/:" + Status
+	ApiScheduleActionRecordRouteByJobNameEchoRoute          = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name
+	ApiScheduleActionRecordRouteByJobNameAndStatusEchoRoute = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name + Status + "/:" + Status
 )
