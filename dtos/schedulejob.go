@@ -85,7 +85,7 @@ func (s *ScheduleDef) Validate() error {
 }
 
 type IntervalScheduleDef struct {
-	Interval string `json:"duration" validate:"required,edgex-dto-duration"`
+	Interval string `json:"interval" validate:"required,edgex-dto-duration"`
 }
 
 type CronScheduleDef struct {
@@ -135,6 +135,7 @@ type EdgeXMessageBusAction struct {
 
 type RESTAction struct {
 	Address         string `json:"address" validate:"required"`
+	Method          string `json:"method" validate:"required"`
 	InjectEdgeXAuth bool   `json:"injectEdgeXAuth,omitempty"`
 }
 

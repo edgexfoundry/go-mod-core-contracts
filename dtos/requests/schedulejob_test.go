@@ -7,6 +7,7 @@ package requests
 
 import (
 	"encoding/json"
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -41,6 +42,7 @@ var (
 			Payload:     nil,
 			RESTAction: dtos.RESTAction{
 				Address: "testAddress",
+				Method:  http.MethodGet,
 			},
 		},
 	}
