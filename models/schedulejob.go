@@ -198,6 +198,7 @@ func (m EdgeXMessageBusAction) WithEmptyPayload() ScheduleAction {
 type RESTAction struct {
 	BaseScheduleAction
 	Address         string
+	Method          string
 	InjectEdgeXAuth bool
 }
 
