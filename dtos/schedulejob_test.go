@@ -6,6 +6,7 @@
 package dtos
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -45,6 +46,7 @@ var scheduleActionRest = ScheduleAction{
 	Payload:     []byte(payload),
 	RESTAction: RESTAction{
 		Address: testPath,
+		Method:  http.MethodGet,
 	},
 }
 
@@ -55,6 +57,7 @@ var scheduleActionRestModel = models.RESTAction{
 		Payload:     []byte(payload),
 	},
 	Address: testPath,
+	Method:  http.MethodGet,
 }
 
 var scheduleActionDeviceControl = ScheduleAction{
