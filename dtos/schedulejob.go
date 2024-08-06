@@ -231,6 +231,7 @@ func ToScheduleActionModel(dto ScheduleAction) models.ScheduleAction {
 				ContentType: dto.ContentType,
 				Payload:     dto.Payload,
 			},
+			Method:          dto.Method,
 			Address:         dto.Address,
 			InjectEdgeXAuth: dto.InjectEdgeXAuth,
 		}
@@ -271,6 +272,7 @@ func FromScheduleActionModelToDTO(model models.ScheduleAction) ScheduleAction {
 			Payload:     restModel.Payload,
 			RESTAction: RESTAction{
 				Address:         restModel.Address,
+				Method:          restModel.Method,
 				InjectEdgeXAuth: restModel.InjectEdgeXAuth,
 			},
 		}
