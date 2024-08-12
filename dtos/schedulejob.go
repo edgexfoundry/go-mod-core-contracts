@@ -8,6 +8,8 @@ package dtos
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
@@ -138,7 +140,7 @@ func (s *ScheduleAction) UnmarshalJSON(b []byte) error {
 			return err
 		}
 	default:
-		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal ScheduleAction, unsupported payload type.", nil)
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("Failed to unmarshal ScheduleAction, unsupported payload type: %s.", v), nil)
 	}
 
 	return nil
