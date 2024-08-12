@@ -6,6 +6,10 @@
 package dtos
 
 import (
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
@@ -17,7 +21,7 @@ type ScheduleJob struct {
 	Name        string           `json:"name" validate:"edgex-dto-none-empty-string"`
 	Definition  ScheduleDef      `json:"definition" validate:"required"`
 	Actions     []ScheduleAction `json:"actions" validate:"required,gt=0,dive"`
-	AdminState  string           `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
+	AdminState  string           `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 	Labels      []string         `json:"labels,omitempty"`
 	Properties  map[string]any   `json:"properties,omitempty"`
 }
@@ -85,11 +89,11 @@ func (s *ScheduleDef) Validate() error {
 }
 
 type IntervalScheduleDef struct {
-	Interval string `json:"interval" validate:"required,edgex-dto-duration"`
+	Interval string `json:"interval,omitempty" validate:"required,edgex-dto-duration"`
 }
 
 type CronScheduleDef struct {
-	Crontab string `json:"crontab" validate:"required"`
+	Crontab string `json:"crontab,omitempty" validate:"required"`
 }
 
 type ScheduleAction struct {
@@ -100,6 +104,46 @@ type ScheduleAction struct {
 	EdgeXMessageBusAction `json:",inline" validate:"-"`
 	RESTAction            `json:",inline" validate:"-"`
 	DeviceControlAction   `json:",inline" validate:"-"`
+}
+
+func (s *ScheduleAction) UnmarshalJSON(b []byte) error {
+	type Alias ScheduleAction
+	alias := &struct {
+		Payload any `json:"payload,omitempty"`
+		*Alias
+	}{
+		Alias: (*Alias)(s),
+	}
+
+	if err := json.Unmarshal(b, &alias); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal ScheduleAction as JSON.", err)
+	}
+
+	if alias.Payload == nil {
+		return nil
+	}
+
+	switch v := alias.Payload.(type) {
+	case string:
+		// Check if payload is a base64 encoded string
+		if decoded, err := base64.StdEncoding.DecodeString(v); err == nil {
+			s.Payload = decoded
+		} else {
+			// Or just a plain string
+			s.Payload = []byte(v)
+		}
+	case map[string]any:
+		// If payload is a JSON object then marshal it
+		if encoded, err := json.Marshal(v); err == nil {
+			s.Payload = encoded
+		} else {
+			return err
+		}
+	default:
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("Failed to unmarshal ScheduleAction, unsupported payload type: %s.", v), nil)
+	}
+
+	return nil
 }
 
 func (s *ScheduleAction) Validate() error {
@@ -130,18 +174,18 @@ func (s *ScheduleAction) Validate() error {
 }
 
 type EdgeXMessageBusAction struct {
-	Topic string `json:"topic" validate:"required"`
+	Topic string `json:"topic,omitempty" validate:"required"`
 }
 
 type RESTAction struct {
-	Address         string `json:"address" validate:"required"`
-	Method          string `json:"method" validate:"required"`
+	Address         string `json:"address,omitempty" validate:"required"`
+	Method          string `json:"method,omitempty" validate:"required"`
 	InjectEdgeXAuth bool   `json:"injectEdgeXAuth,omitempty"`
 }
 
 type DeviceControlAction struct {
-	DeviceName string `json:"deviceName" validate:"required"`
-	SourceName string `json:"sourceName" validate:"required"`
+	DeviceName string `json:"deviceName,omitempty" validate:"required"`
+	SourceName string `json:"sourceName,omitempty" validate:"required"`
 }
 
 func ToScheduleJobModel(dto ScheduleJob) models.ScheduleJob {
@@ -150,7 +194,7 @@ func ToScheduleJobModel(dto ScheduleJob) models.ScheduleJob {
 	model.Name = dto.Name
 	model.Definition = ToScheduleDefModel(dto.Definition)
 	model.Actions = ToScheduleActionModels(dto.Actions)
-	model.AdminState = models.AdminState(dto.AdminState)
+	model.AdminState = models.AssignAdminState(dto.AdminState)
 	model.Labels = dto.Labels
 	model.Properties = dto.Properties
 

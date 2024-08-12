@@ -207,6 +207,30 @@ func TestScheduleJob_Validate(t *testing.T) {
 	}
 }
 
+func TestScheduleAction_UnmarshalJSON(t *testing.T) {
+	tests := []struct {
+		name        string
+		request     string
+		expectedErr bool
+	}{
+		{"valid Schedule Action with base64 encoding payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":"eyJrZXkiOiAiVmFsdWUifQ==","topic":"mock-topic"}`, false},
+		{"valid Schedule Action with JSON string payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":"{\"key\": \"Value\"}","topic":"mock-topic"}`, false},
+		{"valid Schedule Action with JSON object payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":{"key": "Value"},"topic":"mock-topic"}`, false},
+		{"invalid Schedule Action with invalid payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":{key: "Value"},"topic":"mock-topic"}`, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var a ScheduleAction
+			err := a.UnmarshalJSON([]byte(tt.request))
+			if tt.expectedErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
 func TestToScheduleJobModel(t *testing.T) {
 	result := ToScheduleJobModel(scheduleJob)
 	assert.Equal(t, scheduleJobModel, result, "ToScheduleJobModel did not result in ScheduleJob model")
