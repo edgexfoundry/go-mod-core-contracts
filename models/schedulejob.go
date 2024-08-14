@@ -141,10 +141,10 @@ func instantiateScheduleAction(i any) (action ScheduleAction, err error) {
 	if err != nil {
 		return action, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to marshal ScheduleAction.", err)
 	}
-	return unmarshalScheduleAction(a)
+	return UnmarshalScheduleAction(a)
 }
 
-func unmarshalScheduleAction(b []byte) (action ScheduleAction, err error) {
+func UnmarshalScheduleAction(b []byte) (action ScheduleAction, err error) {
 	var alias struct {
 		Type string
 	}
