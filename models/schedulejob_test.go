@@ -17,14 +17,18 @@ import (
 
 var intervalScheduleDef = IntervalScheduleDef{
 	BaseScheduleDef: BaseScheduleDef{
-		Type: common.DefInterval,
+		Type:           common.DefInterval,
+		StartTimestamp: TestStartTimestamp,
+		EndTimestamp:   TestEndTimestamp,
 	},
 	Interval: TestInterval,
 }
 
 var cronScheduleDef = CronScheduleDef{
 	BaseScheduleDef: BaseScheduleDef{
-		Type: common.DefCron,
+		Type:           common.DefCron,
+		StartTimestamp: TestStartTimestamp,
+		EndTimestamp:   TestEndTimestamp,
 	},
 	Crontab: TestCrontab,
 }
@@ -34,6 +38,8 @@ var scheduleJobWithInvalidIntervalScheduleDef = `{
 	"name": "TestScheduleJob",
 	"definition": {
 		"Type": "INTERVAL",
+		"StartTimestamp": 1724052774,
+		"EndTimestamp": 1824052774,
 		"Interval": ["123"]
 	},
 	"actions": []
@@ -44,6 +50,8 @@ var scheduleJobWithInvalidCronScheduleDef = `{
 	"name": "TestScheduleJob",
 	"definition": {
 		"Type": "CRON",
+		"StartTimestamp": 1724052774,
+		"EndTimestamp": 1824052774,
 		"Crontab": ["123"]
 	},
 	"actions": []
@@ -54,6 +62,8 @@ var scheduleJobWithUnsupportedScheduleDef = `{
 	"name": "TestScheduleJob",
 	"definition": {
 		"Type": "NOT_SUPPORTED",
+		"StartTimestamp": 1724052774,
+		"EndTimestamp": 1824052774,
 		"Interval": "10m"
 	},
 	"actions": []
@@ -71,6 +81,8 @@ var scheduleJobWithInvalidEdgeXMessageBusAction = `{
 	"name": "TestScheduleJob",
 	"definition": {
 		"Type": "INTERVAL",
+		"StartTimestamp": 1724052774,
+		"EndTimestamp": 1824052774,
 		"Interval": "10m"
 	},
 	"actions": [
@@ -88,6 +100,8 @@ var scheduleJobWithInvalidRestAction = `{
 	"name": "TestScheduleJob",
 	"definition": {
 		"Type": "INTERVAL",
+		"StartTimestamp": 1724052774,
+		"EndTimestamp": 1824052774,
 		"Interval": "10m"
 	},
 	"actions": [
@@ -105,6 +119,8 @@ var scheduleJobWithInvalidDeviceControlAction = `{
 	"name": "TestScheduleJob",
 	"definition": {
 		"Type": "INTERVAL",
+		"StartTimestamp": 1724052774,
+		"EndTimestamp": 1824052774,
 		"Interval": "10m"
 	},
 	"actions": [
@@ -123,6 +139,8 @@ var scheduleJobWithUnsupportedAction = `{
 	"name": "TestScheduleJob",
 	"definition": {
 		"Type": "INTERVAL",
+		"StartTimestamp": 1724052774,
+		"EndTimestamp": 1824052774,
 		"Interval": "10m"
 	},
 	"actions": [
@@ -137,6 +155,8 @@ var scheduleJobWithInvalidScheduleAction = `{
 	"name": "TestScheduleJob",
 	"definition": {
 		"Type": "INTERVAL",
+		"StartTimestamp": 1724052774,
+		"EndTimestamp": 1824052774,
 		"Interval": "10m"
 	},
 	"actions": ["123"]

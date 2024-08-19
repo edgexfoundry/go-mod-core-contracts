@@ -59,7 +59,9 @@ func (s *ScheduleJob) Validate() error {
 }
 
 type ScheduleDef struct {
-	Type string `json:"type" validate:"oneof='INTERVAL' 'CRON'"`
+	Type           string `json:"type" validate:"oneof='INTERVAL' 'CRON'"`
+	StartTimestamp int64  `json:"startTimestamp,omitempty"`
+	EndTimestamp   int64  `json:"endTimestamp,omitempty"`
 
 	IntervalScheduleDef `json:",inline" validate:"-"`
 	CronScheduleDef     `json:",inline" validate:"-"`
@@ -82,6 +84,12 @@ func (s *ScheduleDef) Validate() error {
 		err = common.Validate(s.CronScheduleDef)
 		if err != nil {
 			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid CronScheduleDef.", err)
+		}
+	}
+
+	if s.EndTimestamp != 0 {
+		if s.EndTimestamp < s.StartTimestamp {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, "endTimestamp must be greater than startTimestamp", nil)
 		}
 	}
 
@@ -221,13 +229,21 @@ func ToScheduleDefModel(dto ScheduleDef) models.ScheduleDef {
 	switch dto.Type {
 	case common.DefInterval:
 		model = models.IntervalScheduleDef{
-			BaseScheduleDef: models.BaseScheduleDef{Type: common.DefInterval},
-			Interval:        dto.Interval,
+			BaseScheduleDef: models.BaseScheduleDef{
+				Type:           common.DefInterval,
+				StartTimestamp: dto.StartTimestamp,
+				EndTimestamp:   dto.EndTimestamp,
+			},
+			Interval: dto.Interval,
 		}
 	case common.DefCron:
 		model = models.CronScheduleDef{
-			BaseScheduleDef: models.BaseScheduleDef{Type: common.DefCron},
-			Crontab:         dto.Crontab,
+			BaseScheduleDef: models.BaseScheduleDef{
+				Type:           common.DefCron,
+				StartTimestamp: dto.StartTimestamp,
+				EndTimestamp:   dto.EndTimestamp,
+			},
+			Crontab: dto.Crontab,
 		}
 	}
 
@@ -242,12 +258,16 @@ func FromScheduleDefModelToDTO(model models.ScheduleDef) ScheduleDef {
 		durationModel := model.(models.IntervalScheduleDef)
 		dto = ScheduleDef{
 			Type:                common.DefInterval,
+			StartTimestamp:      durationModel.StartTimestamp,
+			EndTimestamp:        durationModel.EndTimestamp,
 			IntervalScheduleDef: IntervalScheduleDef{Interval: durationModel.Interval},
 		}
 	case common.DefCron:
 		cronModel := model.(models.CronScheduleDef)
 		dto = ScheduleDef{
 			Type:            common.DefCron,
+			StartTimestamp:  cronModel.StartTimestamp,
+			EndTimestamp:    cronModel.EndTimestamp,
 			CronScheduleDef: CronScheduleDef{Crontab: cronModel.Crontab},
 		}
 	}

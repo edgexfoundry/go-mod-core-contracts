@@ -106,7 +106,9 @@ func unmarshalScheduleDef(b []byte) (def ScheduleDef, err error) {
 }
 
 type BaseScheduleDef struct {
-	Type ScheduleDefType
+	Type           ScheduleDefType
+	StartTimestamp int64
+	EndTimestamp   int64
 }
 
 type IntervalScheduleDef struct {
@@ -177,6 +179,8 @@ func UnmarshalScheduleAction(b []byte) (action ScheduleAction, err error) {
 }
 
 type BaseScheduleAction struct {
+	// Id is the identifier of the action, no need to be in the DTO
+	Id          string
 	Type        ScheduleActionType
 	ContentType string
 	Payload     []byte

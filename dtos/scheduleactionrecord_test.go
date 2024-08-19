@@ -79,7 +79,17 @@ func TestToScheduleActionRecordModel(t *testing.T) {
 	assert.Equal(t, scheduleActionRecordModel, result, "ToScheduleActionRecordModel did not result in ScheduleActionRecord model")
 }
 
+func TestToScheduleActionRecordModels(t *testing.T) {
+	result := ToScheduleActionRecordModels([]ScheduleActionRecord{scheduleActionRecord})
+	assert.Equal(t, []models.ScheduleActionRecord{scheduleActionRecordModel}, result, "ToScheduleActionRecordModels did not result in ScheduleActionRecord model slice")
+}
+
 func TestFromScheduleActionRecordModelToDTO(t *testing.T) {
 	result := FromScheduleActionRecordModelToDTO(scheduleActionRecordModel)
 	assert.Equal(t, scheduleActionRecord, result, "FromScheduleActionRecordModelToDTO did not result in ScheduleActionRecord dto")
+}
+
+func TestFromScheduleActionRecordModelsToDTOs(t *testing.T) {
+	result := FromScheduleActionRecordModelsToDTOs([]models.ScheduleActionRecord{scheduleActionRecordModel})
+	assert.Equal(t, []ScheduleActionRecord{scheduleActionRecord}, result, "FromScheduleActionRecordModelsToDTOs did not result in ScheduleActionRecord dto slice")
 }
