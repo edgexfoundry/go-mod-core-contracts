@@ -16,10 +16,12 @@ import (
 )
 
 const (
-	jobName = "mock-job-name"
-	payload = "eyJ0ZXN0I"
-	topic   = "mock-topic"
-	crontab = "0 0 0 1 1 *"
+	jobName        = "mock-job-name"
+	payload        = "eyJ0ZXN0I"
+	topic          = "mock-topic"
+	crontab        = "0 0 0 1 1 *"
+	startTimestamp = 1724052774
+	endTimestamp   = 1824052774
 )
 
 var scheduleActionEdgeXMessageBus = ScheduleAction{
@@ -81,7 +83,9 @@ var scheduleActionDeviceControlModel = models.DeviceControlAction{
 }
 
 var scheduleIntervalDef = ScheduleDef{
-	Type: common.DefInterval,
+	Type:           common.DefInterval,
+	StartTimestamp: startTimestamp,
+	EndTimestamp:   endTimestamp,
 	IntervalScheduleDef: IntervalScheduleDef{
 		Interval: interval,
 	},
@@ -89,13 +93,17 @@ var scheduleIntervalDef = ScheduleDef{
 
 var scheduleIntervalDefModel = models.IntervalScheduleDef{
 	BaseScheduleDef: models.BaseScheduleDef{
-		Type: common.DefInterval,
+		Type:           common.DefInterval,
+		StartTimestamp: startTimestamp,
+		EndTimestamp:   endTimestamp,
 	},
 	Interval: interval,
 }
 
 var scheduleCronDef = ScheduleDef{
-	Type: common.DefCron,
+	Type:           common.DefCron,
+	StartTimestamp: startTimestamp,
+	EndTimestamp:   endTimestamp,
 	CronScheduleDef: CronScheduleDef{
 		Crontab: crontab,
 	},
@@ -103,7 +111,9 @@ var scheduleCronDef = ScheduleDef{
 
 var scheduleCronDefModel = models.CronScheduleDef{
 	BaseScheduleDef: models.BaseScheduleDef{
-		Type: common.DefCron,
+		Type:           common.DefCron,
+		StartTimestamp: startTimestamp,
+		EndTimestamp:   endTimestamp,
 	},
 	Crontab: crontab,
 }
@@ -149,6 +159,15 @@ func TestScheduleJob_Validate(t *testing.T) {
 			Crontab: "",
 		},
 	}
+	invalidDef := scheduleJob
+	invalidDef.Definition = ScheduleDef{
+		Type:           common.DefCron,
+		StartTimestamp: endTimestamp,
+		EndTimestamp:   startTimestamp,
+		CronScheduleDef: CronScheduleDef{
+			Crontab: "",
+		},
+	}
 	emptyActions := scheduleJob
 	emptyActions.Actions = nil
 	invalidEdgeXMessageBusAction := scheduleJob
@@ -189,6 +208,7 @@ func TestScheduleJob_Validate(t *testing.T) {
 		{"invalid ScheduleJob, empty Definition", emptyDef, true},
 		{"invalid ScheduleJob, invalid Interval Definition", invalidIntervalDef, true},
 		{"invalid ScheduleJob, invalid Cron Definition", invalidCronDef, true},
+		{"invalid ScheduleJob, invalid Definition, endTimestamp must be greater than startTimestamp", invalidDef, true},
 		{"invalid ScheduleJob, empty Actions", emptyActions, true},
 		{"invalid ScheduleJob, invalid EdgeXMessageBus Actions", invalidEdgeXMessageBusAction, true},
 		{"invalid ScheduleJob, invalid REST Actions", invalidRestAction, true},

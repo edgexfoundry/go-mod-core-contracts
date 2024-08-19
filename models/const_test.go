@@ -19,12 +19,13 @@ const (
 	TestSubscriptionName     = "TestSubscriptionName"
 	TestSubscriptionReceiver = "TestReceiver"
 
-	TestScheduleJobName            = "TestScheduleJob"
-	TestCrontab                    = "0 0 1 1 *"
-	TestContentType                = "application/json"
-	TestPayload                    = "eyJ0ZXN0I"
-	TestAddress                    = "http://localhost:12345/test/address"
-	TestDeviceName                 = "TestDeviceName"
-	TestSourceName                 = "TestSourceName"
-	TestScheduleActionRecordStatus = "SUCCEED"
+	TestScheduleJobName = "TestScheduleJob"
+	TestCrontab         = "0 0 1 1 *"
+	TestContentType     = "application/json"
+	TestPayload         = "eyJ0ZXN0I"
+	TestAddress         = "http://localhost:12345/test/address"
+	TestDeviceName      = "TestDeviceName"
+	TestSourceName      = "TestSourceName"
+	TestStartTimestamp  = 1724052774
+	TestEndTimestamp    = 1824052774
 )
