@@ -110,7 +110,7 @@ const (
 
 	ApiScheduleActionRecordRoute                   = ApiBase + "/scheduleactionrecord"
 	ApiAllScheduleActionRecordRoute                = ApiScheduleActionRecordRoute + "/" + All
-	ApiLatestScheduleActionRecordRoute             = ApiScheduleActionRecordRoute + "/" + Latest
+	ApiLatestScheduleActionRecordByJobNameRoute    = ApiScheduleActionRecordRoute + "/" + Latest + "/" + Job + "/" + Name + "/{" + Name + "}"
 	ApiScheduleActionRecordRouteByStatusRoute      = ApiScheduleActionRecordRoute + "/" + Status + "/{" + Status + "}"
 	ApiScheduleActionRecordRouteByJobNameRoute     = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/{" + Name + "}"
 	ApiScheduleActionRecordByJobNameAndStatusRoute = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/{" + Name + "}/" + Status + "/{" + Status + "}"

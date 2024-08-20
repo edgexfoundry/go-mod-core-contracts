@@ -91,8 +91,8 @@ const (
 
 	ApiScheduleActionRecordEchoRoute                        = ApiBase + "/scheduleactionrecord"
 	ApiAllScheduleActionRecordEchoRoute                     = ApiScheduleActionRecordRoute + "/" + All
-	ApiLatestScheduleActionRecordEchoRoute                  = ApiScheduleActionRecordRoute + "/" + Latest
+	ApiLatestScheduleActionRecordByJobNameEchoRoute         = ApiScheduleActionRecordRoute + "/" + Latest + "/" + Job + "/" + Name + "/:" + Name
 	ApiScheduleActionRecordRouteByStatusEchoRoute           = ApiScheduleActionRecordRoute + "/" + Status + "/:" + Status
 	ApiScheduleActionRecordRouteByJobNameEchoRoute          = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name
-	ApiScheduleActionRecordRouteByJobNameAndStatusEchoRoute = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name + Status + "/:" + Status
+	ApiScheduleActionRecordRouteByJobNameAndStatusEchoRoute = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name + "/" + Status + "/:" + Status
 )

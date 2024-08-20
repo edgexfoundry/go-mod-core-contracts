@@ -47,27 +47,27 @@ func (_m *ScheduleActionRecordClient) AllScheduleActionRecords(ctx context.Conte
 	return r0, r1
 }
 
-// LatestScheduleActionRecords provides a mock function with given fields: ctx, offset, limit
-func (_m *ScheduleActionRecordClient) LatestScheduleActionRecords(ctx context.Context, offset int, limit int) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX) {
-	ret := _m.Called(ctx, offset, limit)
+// LatestScheduleActionRecordsByJobName provides a mock function with given fields: ctx, jobName
+func (_m *ScheduleActionRecordClient) LatestScheduleActionRecordsByJobName(ctx context.Context, jobName string) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, jobName)
 
 	if len(ret) == 0 {
-		panic("no return value specified for LatestScheduleActionRecords")
+		panic("no return value specified for LatestScheduleActionRecordsByJobName")
 	}
 
 	var r0 responses.MultiScheduleActionRecordsResponse
 	var r1 errors.EdgeX
-	if rf, ok := ret.Get(0).(func(context.Context, int, int) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX)); ok {
-		return rf(ctx, offset, limit)
+	if rf, ok := ret.Get(0).(func(context.Context, string) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX)); ok {
+		return rf(ctx, jobName)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int, int) responses.MultiScheduleActionRecordsResponse); ok {
-		r0 = rf(ctx, offset, limit)
+	if rf, ok := ret.Get(0).(func(context.Context, string) responses.MultiScheduleActionRecordsResponse); ok {
+		r0 = rf(ctx, jobName)
 	} else {
 		r0 = ret.Get(0).(responses.MultiScheduleActionRecordsResponse)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int, int) errors.EdgeX); ok {
-		r1 = rf(ctx, offset, limit)
+	if rf, ok := ret.Get(1).(func(context.Context, string) errors.EdgeX); ok {
+		r1 = rf(ctx, jobName)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(errors.EdgeX)
