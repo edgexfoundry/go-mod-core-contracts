@@ -7,6 +7,7 @@ package models
 
 import (
 	"encoding/json"
+	"github.com/google/uuid"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
@@ -135,6 +136,8 @@ type ScheduleAction interface {
 	GetBaseScheduleAction() BaseScheduleAction
 	// WithEmptyPayload returns a copy of the ScheduleAction with empty payload, which is used by ScheduleActionRecord to remove the payload before storing the record into database
 	WithEmptyPayload() ScheduleAction
+	// WithId returns a copy of the ScheduleAction with ID or generates a new ID if the ID is empty, which is used to identify the action and record in the database
+	WithId() ScheduleAction
 }
 
 // instantiateScheduleAction instantiate the interface to the corresponding schedule action type
@@ -198,6 +201,12 @@ func (m EdgeXMessageBusAction) WithEmptyPayload() ScheduleAction {
 	m.Payload = nil
 	return m
 }
+func (m EdgeXMessageBusAction) WithId() ScheduleAction {
+	if len(m.Id) == 0 {
+		m.Id = uuid.New().String()
+	}
+	return m
+}
 
 type RESTAction struct {
 	BaseScheduleAction
@@ -213,6 +222,12 @@ func (r RESTAction) WithEmptyPayload() ScheduleAction {
 	r.Payload = nil
 	return r
 }
+func (r RESTAction) WithId() ScheduleAction {
+	if len(r.Id) == 0 {
+		r.Id = uuid.New().String()
+	}
+	return r
+}
 
 type DeviceControlAction struct {
 	BaseScheduleAction
@@ -225,6 +240,12 @@ func (d DeviceControlAction) GetBaseScheduleAction() BaseScheduleAction {
 }
 func (d DeviceControlAction) WithEmptyPayload() ScheduleAction {
 	d.Payload = nil
+	return d
+}
+func (d DeviceControlAction) WithId() ScheduleAction {
+	if len(d.Id) == 0 {
+		d.Id = uuid.New().String()
+	}
 	return d
 }
 

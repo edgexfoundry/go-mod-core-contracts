@@ -27,11 +27,13 @@ func TestScheduleActionRecordClient_AllScheduleActionRecords(t *testing.T) {
 	require.IsType(t, responses.MultiScheduleActionRecordsResponse{}, res)
 }
 
-func TestScheduleActionRecordClient_LatestScheduleActionRecords(t *testing.T) {
-	ts := newTestServer(http.MethodGet, common.ApiLatestScheduleActionRecordRoute, responses.MultiScheduleActionRecordsResponse{})
+func TestScheduleActionRecordClient_LatestScheduleActionRecordsByJobName(t *testing.T) {
+	jobName := TestScheduleJobName
+	urlPath := path.Join(common.ApiScheduleActionRecordRoute, common.Latest, common.Job, common.Name, jobName)
+	ts := newTestServer(http.MethodGet, urlPath, responses.MultiScheduleActionRecordsResponse{})
 	defer ts.Close()
 	client := NewScheduleActionRecordClient(ts.URL, NewNullAuthenticationInjector(), false)
-	res, err := client.LatestScheduleActionRecords(context.Background(), 0, 10)
+	res, err := client.LatestScheduleActionRecordsByJobName(context.Background(), jobName)
 	require.NoError(t, err)
 	require.IsType(t, responses.MultiScheduleActionRecordsResponse{}, res)
 }

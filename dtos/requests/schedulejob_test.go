@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	testScheduleJonName   = "jobName"
+	testScheduleJobName   = "jobName"
 	testScheduleJobLabels = []string{"label"}
 	testScheduleDef       = dtos.ScheduleDef{
 		Type: common.DefInterval,
@@ -50,7 +50,7 @@ var (
 
 func addScheduleJobRequestData() AddScheduleJobRequest {
 	return NewAddScheduleJobRequest(dtos.ScheduleJob{
-		Name:       testScheduleJonName,
+		Name:       testScheduleJobName,
 		Definition: testScheduleDef,
 		Actions:    testScheduleActions,
 		AdminState: models.Unlocked,
@@ -60,7 +60,7 @@ func addScheduleJobRequestData() AddScheduleJobRequest {
 
 func updateScheduleJobData() dtos.UpdateScheduleJob {
 	id := ExampleUUID
-	name := testScheduleJonName
+	name := testScheduleJobName
 	definition := testScheduleDef
 	actions := testScheduleActions
 	labels := testScheduleJobLabels
@@ -252,7 +252,7 @@ func TestUpdateScheduleJobRequest_UnmarshalJSON(t *testing.T) {
 func TestReplaceScheduleJobModelFieldsWithDTO(t *testing.T) {
 	job := models.ScheduleJob{
 		Id:   "7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		Name: testScheduleJonName,
+		Name: testScheduleJobName,
 	}
 	patch := updateScheduleJobData()
 
@@ -260,7 +260,7 @@ func TestReplaceScheduleJobModelFieldsWithDTO(t *testing.T) {
 
 	expectedActions := dtos.ToScheduleActionModels(patch.Actions)
 	expectedDef := dtos.ToScheduleDefModel(*patch.Definition)
-	assert.Equal(t, testScheduleJonName, job.Name)
+	assert.Equal(t, testScheduleJobName, job.Name)
 	assert.Equal(t, expectedActions, job.Actions)
 	assert.Equal(t, expectedDef, job.Definition)
 }

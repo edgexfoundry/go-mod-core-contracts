@@ -16,8 +16,8 @@ import (
 type ScheduleActionRecordClient interface {
 	// AllScheduleActionRecords query schedule action records with start, end, offset, and limit
 	AllScheduleActionRecords(ctx context.Context, start, end int64, offset, limit int) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX)
-	// LatestScheduleActionRecords query the latest schedule action records of each schedule job with offset, and limit
-	LatestScheduleActionRecords(ctx context.Context, offset, limit int) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX)
+	// LatestScheduleActionRecordsByJobName query the latest schedule action records by job name
+	LatestScheduleActionRecordsByJobName(ctx context.Context, jobName string) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX)
 	// ScheduleActionRecordsByStatus queries schedule action records with status, start, end, offset, and limit
 	ScheduleActionRecordsByStatus(ctx context.Context, status string, start, end int64, offset, limit int) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX)
 	// ScheduleActionRecordsByJobName query schedule action records with jobName, start, end, offset, and limit

@@ -47,12 +47,12 @@ func (client *ScheduleActionRecordClient) AllScheduleActionRecords(ctx context.C
 	return res, nil
 }
 
-// LatestScheduleActionRecords query the latest schedule action records of each schedule job with offset, and limit
-func (client *ScheduleActionRecordClient) LatestScheduleActionRecords(ctx context.Context, offset, limit int) (res responses.MultiScheduleActionRecordsResponse, err errors.EdgeX) {
+// LatestScheduleActionRecordsByJobName query the latest schedule action records by job name
+func (client *ScheduleActionRecordClient) LatestScheduleActionRecordsByJobName(ctx context.Context, jobName string) (res responses.MultiScheduleActionRecordsResponse, err errors.EdgeX) {
+	requestPath := path.Join(common.ApiScheduleActionRecordRoute, common.Latest, common.Job, common.Name, jobName)
 	requestParams := url.Values{}
-	requestParams.Set(common.Offset, strconv.Itoa(offset))
-	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiLatestScheduleActionRecordRoute, requestParams, client.authInjector)
+	requestParams.Set(common.Name, jobName)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

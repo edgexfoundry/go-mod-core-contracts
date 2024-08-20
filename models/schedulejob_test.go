@@ -334,3 +334,20 @@ func TestScheduleAction_WithEmptyPayload(t *testing.T) {
 		})
 	}
 }
+
+func TestScheduleAction_SetIdIfNotExists(t *testing.T) {
+	tests := []struct {
+		name   string
+		action ScheduleAction
+	}{
+		{"EdgeXMessageBusAction", edgeXMessageBusAction},
+		{"RESTAction", restAction},
+		{"DeviceControlAction", deviceControlAction},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.action.WithId()
+			assert.NotEmpty(t, result.GetBaseScheduleAction().Id, "WithId did not set Id.")
+		})
+	}
+}
