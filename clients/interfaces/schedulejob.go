@@ -24,7 +24,7 @@ type ScheduleJobClient interface {
 	// The result can be limited in a certain range by specifying the offset and limit parameters.
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
-	AllScheduleJobs(ctx context.Context, offset int, limit int) (responses.MultiScheduleJobsResponse, errors.EdgeX)
+	AllScheduleJobs(ctx context.Context, labels []string, offset int, limit int) (responses.MultiScheduleJobsResponse, errors.EdgeX)
 	// ScheduleJobByName returns a schedule job by name.
 	ScheduleJobByName(ctx context.Context, name string) (responses.ScheduleJobResponse, errors.EdgeX)
 	// DeleteScheduleJobByName deletes a schedule job by name.

@@ -53,9 +53,9 @@ func (_m *ScheduleJobClient) Add(ctx context.Context, reqs []requests.AddSchedul
 	return r0, r1
 }
 
-// AllScheduleJobs provides a mock function with given fields: ctx, offset, limit
-func (_m *ScheduleJobClient) AllScheduleJobs(ctx context.Context, offset int, limit int) (responses.MultiScheduleJobsResponse, errors.EdgeX) {
-	ret := _m.Called(ctx, offset, limit)
+// AllScheduleJobs provides a mock function with given fields: ctx, labels, offset, limit
+func (_m *ScheduleJobClient) AllScheduleJobs(ctx context.Context, labels []string, offset int, limit int) (responses.MultiScheduleJobsResponse, errors.EdgeX) {
+	ret := _m.Called(ctx, labels, offset, limit)
 
 	if len(ret) == 0 {
 		panic("no return value specified for AllScheduleJobs")
@@ -63,17 +63,17 @@ func (_m *ScheduleJobClient) AllScheduleJobs(ctx context.Context, offset int, li
 
 	var r0 responses.MultiScheduleJobsResponse
 	var r1 errors.EdgeX
-	if rf, ok := ret.Get(0).(func(context.Context, int, int) (responses.MultiScheduleJobsResponse, errors.EdgeX)); ok {
-		return rf(ctx, offset, limit)
+	if rf, ok := ret.Get(0).(func(context.Context, []string, int, int) (responses.MultiScheduleJobsResponse, errors.EdgeX)); ok {
+		return rf(ctx, labels, offset, limit)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int, int) responses.MultiScheduleJobsResponse); ok {
-		r0 = rf(ctx, offset, limit)
+	if rf, ok := ret.Get(0).(func(context.Context, []string, int, int) responses.MultiScheduleJobsResponse); ok {
+		r0 = rf(ctx, labels, offset, limit)
 	} else {
 		r0 = ret.Get(0).(responses.MultiScheduleJobsResponse)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int, int) errors.EdgeX); ok {
-		r1 = rf(ctx, offset, limit)
+	if rf, ok := ret.Get(1).(func(context.Context, []string, int, int) errors.EdgeX); ok {
+		r1 = rf(ctx, labels, offset, limit)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(errors.EdgeX)
