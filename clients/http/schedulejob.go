@@ -9,6 +9,7 @@ import (
 	"context"
 	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/interfaces"
@@ -55,9 +56,12 @@ func (client ScheduleJobClient) Update(ctx context.Context, reqs []requests.Upda
 }
 
 // AllScheduleJobs queries the schedule jobs with offset, limit
-func (client ScheduleJobClient) AllScheduleJobs(ctx context.Context, offset int, limit int) (
+func (client ScheduleJobClient) AllScheduleJobs(ctx context.Context, labels []string, offset, limit int) (
 	res responses.MultiScheduleJobsResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
+	if len(labels) > 0 {
+		requestParams.Set(common.Labels, strings.Join(labels, common.CommaSeparator))
+	}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllScheduleJobRoute, requestParams, client.authInjector)
@@ -70,9 +74,9 @@ func (client ScheduleJobClient) AllScheduleJobs(ctx context.Context, offset int,
 // ScheduleJobByName queries the schedule job by name
 func (client ScheduleJobClient) ScheduleJobByName(ctx context.Context, name string) (
 	res responses.ScheduleJobResponse, err errors.EdgeX) {
-	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
 		SetPath(common.ApiScheduleJobRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.GetRequest(ctx, &res, client.baseUrl, path, nil, client.authInjector)
+	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -82,9 +86,9 @@ func (client ScheduleJobClient) ScheduleJobByName(ctx context.Context, name stri
 // DeleteScheduleJobByName deletes the schedule job by name
 func (client ScheduleJobClient) DeleteScheduleJobByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
 		SetPath(common.ApiScheduleJobRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.DeleteRequest(ctx, &res, client.baseUrl, path, client.authInjector)
+	err = utils.DeleteRequest(ctx, &res, client.baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -94,9 +98,9 @@ func (client ScheduleJobClient) DeleteScheduleJobByName(ctx context.Context, nam
 // TriggerScheduleJobByName triggers the schedule job by name
 func (client ScheduleJobClient) TriggerScheduleJobByName(ctx context.Context, name string) (
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
-	path := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
 		SetPath(common.ApiTriggerScheduleJobRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, path, nil, nil, client.authInjector)
+	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, requestPath, nil, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
