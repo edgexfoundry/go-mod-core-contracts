@@ -134,8 +134,8 @@ func (c CronScheduleDef) GetBaseScheduleDef() BaseScheduleDef {
 
 type ScheduleAction interface {
 	GetBaseScheduleAction() BaseScheduleAction
-	// WithEmptyPayload returns a copy of the ScheduleAction with empty payload, which is used by ScheduleActionRecord to remove the payload before storing the record into database
-	WithEmptyPayload() ScheduleAction
+	// WithEmptyPayloadAndId returns a copy of the ScheduleAction with empty payload and Id, which is used by ScheduleActionRecord to remove the payload and id before storing the record into database
+	WithEmptyPayloadAndId() ScheduleAction
 	// WithId returns a copy of the ScheduleAction with ID or generates a new ID if the ID is empty, which is used to identify the action and record in the database
 	WithId() ScheduleAction
 }
@@ -197,7 +197,8 @@ type EdgeXMessageBusAction struct {
 func (m EdgeXMessageBusAction) GetBaseScheduleAction() BaseScheduleAction {
 	return m.BaseScheduleAction
 }
-func (m EdgeXMessageBusAction) WithEmptyPayload() ScheduleAction {
+func (m EdgeXMessageBusAction) WithEmptyPayloadAndId() ScheduleAction {
+	m.Id = ""
 	m.Payload = nil
 	return m
 }
@@ -218,7 +219,8 @@ type RESTAction struct {
 func (r RESTAction) GetBaseScheduleAction() BaseScheduleAction {
 	return r.BaseScheduleAction
 }
-func (r RESTAction) WithEmptyPayload() ScheduleAction {
+func (r RESTAction) WithEmptyPayloadAndId() ScheduleAction {
+	r.Id = ""
 	r.Payload = nil
 	return r
 }
@@ -238,7 +240,8 @@ type DeviceControlAction struct {
 func (d DeviceControlAction) GetBaseScheduleAction() BaseScheduleAction {
 	return d.BaseScheduleAction
 }
-func (d DeviceControlAction) WithEmptyPayload() ScheduleAction {
+func (d DeviceControlAction) WithEmptyPayloadAndId() ScheduleAction {
+	d.Id = ""
 	d.Payload = nil
 	return d
 }

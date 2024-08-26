@@ -164,6 +164,7 @@ var scheduleJobWithInvalidScheduleAction = `{
 
 var edgeXMessageBusAction = EdgeXMessageBusAction{
 	BaseScheduleAction: BaseScheduleAction{
+		Id:          ExampleUUID,
 		Type:        common.ActionEdgeXMessageBus,
 		ContentType: TestContentType,
 		Payload:     []byte(TestPayload),
@@ -173,6 +174,7 @@ var edgeXMessageBusAction = EdgeXMessageBusAction{
 
 var restAction = RESTAction{
 	BaseScheduleAction: BaseScheduleAction{
+		Id:          ExampleUUID,
 		Type:        common.ActionREST,
 		ContentType: TestContentType,
 		Payload:     []byte(TestPayload),
@@ -182,6 +184,7 @@ var restAction = RESTAction{
 
 var deviceControlAction = DeviceControlAction{
 	BaseScheduleAction: BaseScheduleAction{
+		Id:          ExampleUUID,
 		Type:        common.ActionDeviceControl,
 		ContentType: TestContentType,
 		Payload:     []byte(TestPayload),
@@ -317,20 +320,21 @@ func TestScheduleAction_GetBaseScheduleAction(t *testing.T) {
 	}
 }
 
-func TestScheduleAction_WithEmptyPayload(t *testing.T) {
+func TestScheduleAction_WithEmptyPayloadAndId(t *testing.T) {
 	tests := []struct {
 		name     string
 		action   ScheduleAction
 		expected ScheduleAction
 	}{
-		{"EdgeXMessageBusAction", edgeXMessageBusAction, edgeXMessageBusAction.WithEmptyPayload()},
-		{"RESTAction", restAction, restAction.WithEmptyPayload()},
-		{"DeviceControlAction", deviceControlAction, deviceControlAction.WithEmptyPayload()},
+		{"EdgeXMessageBusAction", edgeXMessageBusAction, edgeXMessageBusAction.WithEmptyPayloadAndId()},
+		{"RESTAction", restAction, restAction.WithEmptyPayloadAndId()},
+		{"DeviceControlAction", deviceControlAction, deviceControlAction.WithEmptyPayloadAndId()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := tt.action.WithEmptyPayload()
-			assert.Nil(t, result.GetBaseScheduleAction().Payload, "WithEmptyPayload did not result in empty Payload.")
+			result := tt.action.WithEmptyPayloadAndId()
+			assert.Nil(t, result.GetBaseScheduleAction().Payload, "WithEmptyPayloadAndId did not result in empty Payload.")
+			assert.Equal(t, "", result.GetBaseScheduleAction().Id, "WithEmptyPayloadAndId did not result in empty Id.")
 		})
 	}
 }
