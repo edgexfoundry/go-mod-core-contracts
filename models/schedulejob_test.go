@@ -350,7 +350,7 @@ func TestScheduleAction_SetIdIfNotExists(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := tt.action.WithId()
+			result := tt.action.WithId("")
 			assert.NotEmpty(t, result.GetBaseScheduleAction().Id, "WithId did not set Id.")
 		})
 	}

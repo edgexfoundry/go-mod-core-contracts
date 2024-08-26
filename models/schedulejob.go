@@ -137,7 +137,7 @@ type ScheduleAction interface {
 	// WithEmptyPayloadAndId returns a copy of the ScheduleAction with empty payload and Id, which is used by ScheduleActionRecord to remove the payload and id before storing the record into database
 	WithEmptyPayloadAndId() ScheduleAction
 	// WithId returns a copy of the ScheduleAction with ID or generates a new ID if the ID is empty, which is used to identify the action and record in the database
-	WithId() ScheduleAction
+	WithId(id string) ScheduleAction
 }
 
 // instantiateScheduleAction instantiate the interface to the corresponding schedule action type
@@ -202,9 +202,13 @@ func (m EdgeXMessageBusAction) WithEmptyPayloadAndId() ScheduleAction {
 	m.Payload = nil
 	return m
 }
-func (m EdgeXMessageBusAction) WithId() ScheduleAction {
+func (m EdgeXMessageBusAction) WithId(id string) ScheduleAction {
 	if len(m.Id) == 0 {
-		m.Id = uuid.New().String()
+		if id != "" {
+			m.Id = id
+		} else {
+			m.Id = uuid.New().String()
+		}
 	}
 	return m
 }
@@ -224,9 +228,13 @@ func (r RESTAction) WithEmptyPayloadAndId() ScheduleAction {
 	r.Payload = nil
 	return r
 }
-func (r RESTAction) WithId() ScheduleAction {
+func (r RESTAction) WithId(id string) ScheduleAction {
 	if len(r.Id) == 0 {
-		r.Id = uuid.New().String()
+		if id != "" {
+			r.Id = id
+		} else {
+			r.Id = uuid.New().String()
+		}
 	}
 	return r
 }
@@ -245,9 +253,13 @@ func (d DeviceControlAction) WithEmptyPayloadAndId() ScheduleAction {
 	d.Payload = nil
 	return d
 }
-func (d DeviceControlAction) WithId() ScheduleAction {
+func (d DeviceControlAction) WithId(id string) ScheduleAction {
 	if len(d.Id) == 0 {
-		d.Id = uuid.New().String()
+		if id != "" {
+			d.Id = id
+		} else {
+			d.Id = uuid.New().String()
+		}
 	}
 	return d
 }
