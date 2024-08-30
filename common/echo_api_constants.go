@@ -37,15 +37,17 @@ const (
 	ApiDeviceServiceByNameEchoRoute = ApiDeviceServiceRoute + "/" + Name + "/:" + Name
 	ApiDeviceServiceByIdEchoRoute   = ApiDeviceServiceRoute + "/" + Id + "/:" + Id
 
-	ApiDeviceIdExistsEchoRoute        = ApiDeviceRoute + "/" + Check + "/" + Id + "/:" + Id
-	ApiDeviceNameExistsEchoRoute      = ApiDeviceRoute + "/" + Check + "/" + Name + "/:" + Name
-	ApiDeviceByIdEchoRoute            = ApiDeviceRoute + "/" + Id + "/:" + Id
-	ApiDeviceByNameEchoRoute          = ApiDeviceRoute + "/" + Name + "/:" + Name
-	ApiDeviceByProfileIdEchoRoute     = ApiDeviceRoute + "/" + Profile + "/" + Id + "/:" + Id
-	ApiDeviceByProfileNameEchoRoute   = ApiDeviceRoute + "/" + Profile + "/" + Name + "/:" + Name
-	ApiDeviceByServiceIdEchoRoute     = ApiDeviceRoute + "/" + Service + "/" + Id + "/:" + Id
-	ApiDeviceByServiceNameEchoRoute   = ApiDeviceRoute + "/" + Service + "/" + Name + "/:" + Name
-	ApiDeviceNameCommandNameEchoRoute = ApiDeviceByNameEchoRoute + "/:" + Command
+	ApiDeviceIdExistsEchoRoute          = ApiDeviceRoute + "/" + Check + "/" + Id + "/:" + Id
+	ApiDeviceNameExistsEchoRoute        = ApiDeviceRoute + "/" + Check + "/" + Name + "/:" + Name
+	ApiDeviceByIdEchoRoute              = ApiDeviceRoute + "/" + Id + "/:" + Id
+	ApiDeviceByNameEchoRoute            = ApiDeviceRoute + "/" + Name + "/:" + Name
+	ApiDeviceByProfileIdEchoRoute       = ApiDeviceRoute + "/" + Profile + "/" + Id + "/:" + Id
+	ApiDeviceByProfileNameEchoRoute     = ApiDeviceRoute + "/" + Profile + "/" + Name + "/:" + Name
+	ApiDeviceByServiceIdEchoRoute       = ApiDeviceRoute + "/" + Service + "/" + Id + "/:" + Id
+	ApiDeviceByServiceNameEchoRoute     = ApiDeviceRoute + "/" + Service + "/" + Name + "/:" + Name
+	ApiDeviceNameCommandNameEchoRoute   = ApiDeviceByNameEchoRoute + "/:" + Command
+	ApiDiscoveryByIdEchoRoute           = ApiDiscoveryRoute + "/" + RequestId + "/:" + RequestId
+	ApiProfileScanByDeviceNameEchoRoute = ApiProfileScanRoute + "/" + Device + "/" + Name + "/:" + Name
 
 	ApiProvisionWatcherByIdEchoRoute          = ApiProvisionWatcherRoute + "/" + Id + "/:" + Id
 	ApiProvisionWatcherByNameEchoRoute        = ApiProvisionWatcherRoute + "/" + Name + "/:" + Name

@@ -9,6 +9,7 @@ package http
 import (
 	"context"
 	"net/http"
+	"path"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
@@ -91,7 +92,7 @@ func TestSetCommandWithObject(t *testing.T) {
 func TestProfileScan(t *testing.T) {
 	requestId := uuid.New().String()
 	expectedResponse := dtoCommon.NewBaseResponse(requestId, "", http.StatusAccepted)
-	ts := newTestServer(http.MethodPost, common.ApiProfileScan, expectedResponse)
+	ts := newTestServer(http.MethodPost, common.ApiProfileScanRoute, expectedResponse)
 	defer ts.Close()
 
 	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector(), false)
@@ -99,5 +100,43 @@ func TestProfileScan(t *testing.T) {
 
 	require.NoError(t, err)
 	assert.Equal(t, requestId, res.RequestId)
+}
+
+func TestStopDeviceDiscovery(t *testing.T) {
+	id := uuid.New().String()
+	requestRoute := path.Join(common.ApiDiscoveryRoute, common.RequestId, id)
+
+	tests := []struct {
+		name      string
+		requestId string
+		route     string
+	}{
+		{"stop device discovery", "", common.ApiDiscoveryRoute},
+		{"stop device discovery with request id", id, requestRoute},
+	}
+	for _, testCase := range tests {
+		t.Run(testCase.name, func(t *testing.T) {
+			ts := newTestServer(http.MethodDelete, testCase.route, dtoCommon.BaseResponse{})
+			//defer ts.Close()
+
+			client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector(), false)
+			res, err := client.StopDeviceDiscovery(context.Background(), ts.URL, testCase.requestId, nil)
+
+			require.NoError(t, err)
+			assert.IsType(t, dtoCommon.BaseResponse{}, res)
+			ts.Close()
+		})
+	}
+}
+
+func TestStopProfileScan(t *testing.T) {
+	route := path.Join(common.ApiProfileScanRoute, common.Device, common.Name, TestDeviceName)
+	ts := newTestServer(http.MethodDelete, route, dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceServiceCommandClient(NewNullAuthenticationInjector(), false)
+	res, err := client.StopProfileScan(context.Background(), ts.URL, TestDeviceName, nil)
+
 	require.NoError(t, err)
+	assert.IsType(t, dtoCommon.BaseResponse{}, res)
 }
