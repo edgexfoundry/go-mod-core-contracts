@@ -121,16 +121,18 @@ const (
 	ApiSecretRoute         = ApiBase + "/secret"
 	ApiUnitsOfMeasureRoute = ApiBase + "/uom"
 
-	ApiDeviceCallbackRoute      = ApiBase + "/callback/device"
-	ApiDeviceCallbackNameRoute  = ApiBase + "/callback/device/name/{name}"
-	ApiProfileCallbackRoute     = ApiBase + "/callback/profile"
-	ApiProfileCallbackNameRoute = ApiBase + "/callback/profile/name/{name}"
-	ApiWatcherCallbackRoute     = ApiBase + "/callback/watcher"
-	ApiWatcherCallbackNameRoute = ApiBase + "/callback/watcher/name/{name}"
-	ApiServiceCallbackRoute     = ApiBase + "/callback/service"
-	ApiDiscoveryRoute           = ApiBase + "/discovery"
-	ApiDeviceValidationRoute    = ApiBase + "/validate/device"
-	ApiProfileScan              = ApiBase + "/profilescan"
+	ApiDeviceCallbackRoute          = ApiBase + "/callback/device"
+	ApiDeviceCallbackNameRoute      = ApiBase + "/callback/device/name/{name}"
+	ApiProfileCallbackRoute         = ApiBase + "/callback/profile"
+	ApiProfileCallbackNameRoute     = ApiBase + "/callback/profile/name/{name}"
+	ApiWatcherCallbackRoute         = ApiBase + "/callback/watcher"
+	ApiWatcherCallbackNameRoute     = ApiBase + "/callback/watcher/name/{name}"
+	ApiServiceCallbackRoute         = ApiBase + "/callback/service"
+	ApiDiscoveryRoute               = ApiBase + "/discovery"
+	ApiDeviceValidationRoute        = ApiBase + "/validate/device"
+	ApiProfileScanRoute             = ApiBase + "/profilescan"
+	ApiDiscoveryByIdRoute           = ApiDiscoveryRoute + "/" + RequestId + "/{" + RequestId + "}"
+	ApiProfileScanByDeviceNameRoute = ApiProfileScanRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
 
 	ApiIntervalRoute               = ApiBase + "/interval"
 	ApiAllIntervalRoute            = ApiIntervalRoute + "/" + All
@@ -168,6 +170,7 @@ const (
 	Check         = "check"
 	Profile       = "profile"
 	Resource      = "resource"
+	RequestId     = "requestId"
 	Service       = "service"
 	Services      = "services"
 	Command       = "command"
@@ -350,6 +353,8 @@ const (
 	SystemEventActionAdd            = "add"
 	SystemEventActionUpdate         = "update"
 	SystemEventActionDelete         = "delete"
+	SystemEventActionDiscovery      = "discovery"
+	SystemEventActionProfileScan    = "profilescan"
 )
 
 const (

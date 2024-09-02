@@ -97,10 +97,52 @@ func (client *deviceServiceCommandClient) SetCommandWithObject(ctx context.Conte
 	return response, nil
 }
 
+func (client *deviceServiceCommandClient) Discovery(ctx context.Context, baseUrl string) (dtoCommon.BaseResponse, errors.EdgeX) {
+	var response dtoCommon.BaseResponse
+	err := utils.PostRequest(ctx, &response, baseUrl, common.ApiDiscoveryRoute, nil, "", client.authInjector)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
+}
+
 // ProfileScan sends an HTTP POST request to the device service's profile scan API endpoint.
 func (client *deviceServiceCommandClient) ProfileScan(ctx context.Context, baseUrl string, req requests.ProfileScanRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
 	var response dtoCommon.BaseResponse
-	err := utils.PostRequestWithRawData(ctx, &response, baseUrl, common.ApiProfileScan, nil, req, client.authInjector)
+	err := utils.PostRequestWithRawData(ctx, &response, baseUrl, common.ApiProfileScanRoute, nil, req, client.authInjector)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
+}
+
+func (client *deviceServiceCommandClient) StopDeviceDiscovery(ctx context.Context, baseUrl string, requestId string, queryParams map[string]string) (dtoCommon.BaseResponse, errors.EdgeX) {
+	requestPath := common.ApiDiscoveryRoute
+	if len(requestId) != 0 {
+		requestPath = common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+			SetPath(common.ApiDiscoveryRoute).SetPath(common.RequestId).SetNameFieldPath(requestId).BuildPath()
+	}
+	response := dtoCommon.BaseResponse{}
+	params := url.Values{}
+	for k, v := range queryParams {
+		params.Set(k, v)
+	}
+	err := utils.DeleteRequestWithParams(ctx, &response, baseUrl, requestPath, params, client.authInjector)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
+}
+
+func (client *deviceServiceCommandClient) StopProfileScan(ctx context.Context, baseUrl string, deviceName string, queryParams map[string]string) (dtoCommon.BaseResponse, errors.EdgeX) {
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiProfileScanRoute).SetPath(common.Device).SetPath(common.Name).SetNameFieldPath(deviceName).BuildPath()
+	response := dtoCommon.BaseResponse{}
+	params := url.Values{}
+	for k, v := range queryParams {
+		params.Set(k, v)
+	}
+	err := utils.DeleteRequestWithParams(ctx, &response, baseUrl, requestPath, params, client.authInjector)
 	if err != nil {
 		return response, errors.NewCommonEdgeXWrapper(err)
 	}
