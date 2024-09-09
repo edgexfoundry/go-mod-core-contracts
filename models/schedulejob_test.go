@@ -195,21 +195,23 @@ var deviceControlAction = DeviceControlAction{
 
 func scheduleJobWithINTERVALScheduleDef() ScheduleJob {
 	return ScheduleJob{
-		DBTimestamp: DBTimestamp{},
-		Id:          ExampleUUID,
-		Name:        TestScheduleJobName,
-		Definition:  intervalScheduleDef,
-		Actions:     []ScheduleAction{},
+		DBTimestamp:              DBTimestamp{},
+		Id:                       ExampleUUID,
+		Name:                     TestScheduleJobName,
+		Definition:               intervalScheduleDef,
+		AutoTriggerMissedRecords: true,
+		Actions:                  []ScheduleAction{},
 	}
 }
 
 func scheduleJobWithCRONScheduleDef() ScheduleJob {
 	return ScheduleJob{
-		DBTimestamp: DBTimestamp{},
-		Id:          ExampleUUID,
-		Name:        TestScheduleJobName,
-		Definition:  cronScheduleDef,
-		Actions:     []ScheduleAction{},
+		DBTimestamp:              DBTimestamp{},
+		Id:                       ExampleUUID,
+		Name:                     TestScheduleJobName,
+		Definition:               cronScheduleDef,
+		AutoTriggerMissedRecords: false,
+		Actions:                  []ScheduleAction{},
 	}
 }
 
@@ -225,21 +227,23 @@ func scheduleJobWithEDGEXMESSAGEBUSScheduleAction() ScheduleJob {
 
 func scheduleJobWithRESTScheduleAction() ScheduleJob {
 	return ScheduleJob{
-		DBTimestamp: DBTimestamp{},
-		Id:          ExampleUUID,
-		Name:        TestScheduleJobName,
-		Definition:  intervalScheduleDef,
-		Actions:     []ScheduleAction{restAction},
+		DBTimestamp:              DBTimestamp{},
+		Id:                       ExampleUUID,
+		Name:                     TestScheduleJobName,
+		Definition:               intervalScheduleDef,
+		AutoTriggerMissedRecords: true,
+		Actions:                  []ScheduleAction{restAction},
 	}
 }
 
 func scheduleJobWithDEVICECONTROLScheduleAction() ScheduleJob {
 	return ScheduleJob{
-		DBTimestamp: DBTimestamp{},
-		Id:          ExampleUUID,
-		Name:        TestScheduleJobName,
-		Definition:  intervalScheduleDef,
-		Actions:     []ScheduleAction{deviceControlAction},
+		DBTimestamp:              DBTimestamp{},
+		Id:                       ExampleUUID,
+		Name:                     TestScheduleJobName,
+		Definition:               intervalScheduleDef,
+		AutoTriggerMissedRecords: false,
+		Actions:                  []ScheduleAction{deviceControlAction},
 	}
 }
 

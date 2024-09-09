@@ -16,24 +16,26 @@ import (
 )
 
 type ScheduleJob struct {
-	DBTimestamp `json:",inline"`
-	Id          string           `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name        string           `json:"name" validate:"edgex-dto-none-empty-string"`
-	Definition  ScheduleDef      `json:"definition" validate:"required"`
-	Actions     []ScheduleAction `json:"actions" validate:"required,gt=0,dive"`
-	AdminState  string           `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
-	Labels      []string         `json:"labels,omitempty"`
-	Properties  map[string]any   `json:"properties,omitempty"`
+	DBTimestamp              `json:",inline"`
+	Id                       string           `json:"id,omitempty" validate:"omitempty,uuid"`
+	Name                     string           `json:"name" validate:"edgex-dto-none-empty-string"`
+	Definition               ScheduleDef      `json:"definition" validate:"required"`
+	AutoTriggerMissedRecords bool             `json:"autoTriggerMissedRecords,omitempty"`
+	Actions                  []ScheduleAction `json:"actions" validate:"required,gt=0,dive"`
+	AdminState               string           `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Labels                   []string         `json:"labels,omitempty"`
+	Properties               map[string]any   `json:"properties,omitempty"`
 }
 
 type UpdateScheduleJob struct {
-	Id         *string          `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name       *string          `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
-	Definition *ScheduleDef     `json:"definition" validate:"omitempty"`
-	Actions    []ScheduleAction `json:"actions,omitempty"`
-	AdminState *string          `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
-	Labels     []string         `json:"labels,omitempty"`
-	Properties map[string]any   `json:"properties,omitempty"`
+	Id                       *string          `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name                     *string          `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
+	Definition               *ScheduleDef     `json:"definition" validate:"omitempty"`
+	AutoTriggerMissedRecords *bool            `json:"autoTriggerMissedRecords,omitempty"`
+	Actions                  []ScheduleAction `json:"actions,omitempty"`
+	AdminState               *string          `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Labels                   []string         `json:"labels,omitempty"`
+	Properties               map[string]any   `json:"properties,omitempty"`
 }
 
 // Validate satisfies the Validator interface
@@ -201,6 +203,7 @@ func ToScheduleJobModel(dto ScheduleJob) models.ScheduleJob {
 	model.Id = dto.Id
 	model.Name = dto.Name
 	model.Definition = ToScheduleDefModel(dto.Definition)
+	model.AutoTriggerMissedRecords = dto.AutoTriggerMissedRecords
 	model.Actions = ToScheduleActionModels(dto.Actions)
 	model.AdminState = models.AssignAdminState(dto.AdminState)
 	model.Labels = dto.Labels
@@ -215,6 +218,7 @@ func FromScheduleJobModelToDTO(model models.ScheduleJob) ScheduleJob {
 	dto.Id = model.Id
 	dto.Name = model.Name
 	dto.Definition = FromScheduleDefModelToDTO(model.Definition)
+	dto.AutoTriggerMissedRecords = model.AutoTriggerMissedRecords
 	dto.Actions = FromScheduleActionModelsToDTOs(model.Actions)
 	dto.AdminState = string(model.AdminState)
 	dto.Labels = model.Labels
