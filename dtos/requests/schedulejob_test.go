@@ -46,6 +46,7 @@ var (
 			},
 		},
 	}
+	testAutoTriggerMissedRecords = true
 )
 
 func addScheduleJobRequestData() AddScheduleJobRequest {
@@ -64,12 +65,14 @@ func updateScheduleJobData() dtos.UpdateScheduleJob {
 	definition := testScheduleDef
 	actions := testScheduleActions
 	labels := testScheduleJobLabels
+	autoTriggerMissedRecords := testAutoTriggerMissedRecords
 	return dtos.UpdateScheduleJob{
-		Id:         &id,
-		Name:       &name,
-		Definition: &definition,
-		Actions:    actions,
-		Labels:     labels,
+		Id:                       &id,
+		Name:                     &name,
+		Definition:               &definition,
+		Actions:                  actions,
+		AutoTriggerMissedRecords: &autoTriggerMissedRecords,
+		Labels:                   labels,
 	}
 }
 
@@ -262,5 +265,6 @@ func TestReplaceScheduleJobModelFieldsWithDTO(t *testing.T) {
 	expectedDef := dtos.ToScheduleDefModel(*patch.Definition)
 	assert.Equal(t, testScheduleJobName, job.Name)
 	assert.Equal(t, expectedActions, job.Actions)
+	assert.Equal(t, testAutoTriggerMissedRecords, job.AutoTriggerMissedRecords)
 	assert.Equal(t, expectedDef, job.Definition)
 }

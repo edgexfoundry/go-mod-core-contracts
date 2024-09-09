@@ -97,6 +97,9 @@ func ReplaceScheduleJobModelFieldsWithDTO(ds *models.ScheduleJob, patch dtos.Upd
 	if patch.AdminState != nil {
 		ds.AdminState = models.AdminState(*patch.AdminState)
 	}
+	if patch.AutoTriggerMissedRecords != nil {
+		ds.AutoTriggerMissedRecords = *patch.AutoTriggerMissedRecords
+	}
 	if patch.Labels != nil {
 		ds.Labels = patch.Labels
 	}
