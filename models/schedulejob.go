@@ -15,25 +15,27 @@ import (
 
 type ScheduleJob struct {
 	DBTimestamp
-	Id         string
-	Name       string
-	Definition ScheduleDef
-	Actions    []ScheduleAction
-	AdminState AdminState
-	Labels     []string
-	Properties map[string]any
+	Id                       string
+	Name                     string
+	Definition               ScheduleDef
+	AutoTriggerMissedRecords bool
+	Actions                  []ScheduleAction
+	AdminState               AdminState
+	Labels                   []string
+	Properties               map[string]any
 }
 
 func (scheduleJob *ScheduleJob) UnmarshalJSON(b []byte) error {
 	var alias struct {
 		DBTimestamp
-		Id         string
-		Name       string
-		Definition any
-		Actions    []any
-		AdminState AdminState
-		Labels     []string
-		Properties map[string]any
+		Id                       string
+		Name                     string
+		Definition               any
+		AutoTriggerMissedRecords bool
+		Actions                  []any
+		AdminState               AdminState
+		Labels                   []string
+		Properties               map[string]any
 	}
 
 	if err := json.Unmarshal(b, &alias); err != nil {
@@ -55,14 +57,15 @@ func (scheduleJob *ScheduleJob) UnmarshalJSON(b []byte) error {
 	}
 
 	*scheduleJob = ScheduleJob{
-		DBTimestamp: alias.DBTimestamp,
-		Id:          alias.Id,
-		Name:        alias.Name,
-		Definition:  def,
-		Actions:     actions,
-		AdminState:  alias.AdminState,
-		Labels:      alias.Labels,
-		Properties:  alias.Properties,
+		DBTimestamp:              alias.DBTimestamp,
+		Id:                       alias.Id,
+		Name:                     alias.Name,
+		Definition:               def,
+		AutoTriggerMissedRecords: alias.AutoTriggerMissedRecords,
+		Actions:                  actions,
+		AdminState:               alias.AdminState,
+		Labels:                   alias.Labels,
+		Properties:               alias.Properties,
 	}
 	return nil
 }

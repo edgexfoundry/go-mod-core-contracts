@@ -120,20 +120,22 @@ var scheduleCronDefModel = models.CronScheduleDef{
 
 var (
 	scheduleJob = ScheduleJob{
-		DBTimestamp: DBTimestamp{},
-		Id:          TestUUID,
-		Name:        jobName,
-		Definition:  scheduleIntervalDef,
-		Actions:     []ScheduleAction{scheduleActionEdgeXMessageBus},
-		AdminState:  testAdminState,
+		DBTimestamp:              DBTimestamp{},
+		Id:                       TestUUID,
+		Name:                     jobName,
+		Definition:               scheduleIntervalDef,
+		AutoTriggerMissedRecords: true,
+		Actions:                  []ScheduleAction{scheduleActionEdgeXMessageBus},
+		AdminState:               testAdminState,
 	}
 	scheduleJobModel = models.ScheduleJob{
-		DBTimestamp: models.DBTimestamp{},
-		Id:          TestUUID,
-		Name:        jobName,
-		Definition:  scheduleIntervalDefModel,
-		Actions:     []models.ScheduleAction{scheduleActionEdgeXMessageBusModel},
-		AdminState:  models.AdminState(testAdminState),
+		DBTimestamp:              models.DBTimestamp{},
+		Id:                       TestUUID,
+		Name:                     jobName,
+		Definition:               scheduleIntervalDefModel,
+		AutoTriggerMissedRecords: true,
+		Actions:                  []models.ScheduleAction{scheduleActionEdgeXMessageBusModel},
+		AdminState:               models.AdminState(testAdminState),
 	}
 )
 
