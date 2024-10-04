@@ -42,6 +42,9 @@ func (a AddEventRequest) Validate() error {
 	// Otherwise error will occur as only one of them exists
 	// Therefore, need to validate the nested BinaryReading and SimpleReading struct here
 	for _, r := range a.Event.Readings {
+		if r.Value == nil {
+			continue // since we support nil value, skip checking
+		}
 		if err := r.Validate(); err != nil {
 			return err
 		}
