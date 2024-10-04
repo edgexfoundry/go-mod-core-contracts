@@ -35,7 +35,7 @@ type BaseReading struct {
 }
 
 type SimpleReading struct {
-	Value string `json:"value"`
+	Value *string `json:"value"`
 }
 
 type BinaryReading struct {
@@ -60,14 +60,20 @@ func newBaseReading(profileName string, deviceName string, resourceName string, 
 
 // NewSimpleReading creates and returns a new initialized BaseReading with its SimpleReading initialized
 func NewSimpleReading(profileName string, deviceName string, resourceName string, valueType string, value any) (BaseReading, error) {
-	stringValue, err := convertInterfaceValue(valueType, value)
-	if err != nil {
-		return BaseReading{}, err
+	var val *string
+	if value == nil {
+		val = nil
+	} else {
+		stringValue, err := convertInterfaceValue(valueType, value)
+		if err != nil {
+			return BaseReading{}, err
+		}
+		val = &stringValue
 	}
 
 	reading := newBaseReading(profileName, deviceName, resourceName, valueType)
 	reading.SimpleReading = SimpleReading{
-		Value: stringValue,
+		Value: val,
 	}
 	return reading, nil
 }
@@ -286,7 +292,7 @@ func (b BaseReading) Validate() error {
 		if err := common.Validate(simpleReading); err != nil {
 			return err
 		}
-		if err := ValidateValue(b.ValueType, simpleReading.Value); err != nil {
+		if err := ValidateValue(b.ValueType, *simpleReading.Value); err != nil {
 			return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("The value does not match the %v valueType", b.ValueType), nil)
 		}
 	}
@@ -321,7 +327,7 @@ func ToReadingModel(r BaseReading) models.Reading {
 	} else {
 		readingModel = models.SimpleReading{
 			BaseReading: br,
-			Value:       r.Value,
+			Value:       *r.Value,
 		}
 	}
 	return readingModel
@@ -364,7 +370,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ValueType:     r.ValueType,
 			Units:         r.Units,
 			Tags:          r.Tags,
-			SimpleReading: SimpleReading{Value: r.Value},
+			SimpleReading: SimpleReading{Value: &r.Value},
 		}
 	}
 

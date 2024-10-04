@@ -77,7 +77,7 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	invalidReadingInvalidValueType.Event.Readings[0].ValueType = "BadType"
 
 	invalidSimpleReadingNoValue := eventRequestData()
-	invalidSimpleReadingNoValue.Event.Readings[0].SimpleReading.Value = ""
+	invalidSimpleReadingNoValue.Event.Readings[0].SimpleReading.Value = &emptyString
 
 	invalidBinaryReadingNoValue := eventRequestData()
 	invalidBinaryReadingNoValue.Event.Readings[0].ValueType = common.ValueTypeBinary

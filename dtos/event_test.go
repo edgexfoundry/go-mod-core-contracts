@@ -151,7 +151,7 @@ func TestEvent_AddSimpleReading(t *testing.T) {
 		assert.Equal(t, expectedDeviceName, actual.DeviceName)
 		assert.Equal(t, expectedReadingDetails[index].resourceName, actual.ResourceName)
 		assert.Equal(t, expectedReadingDetails[index].valueType, actual.ValueType)
-		assert.Equal(t, expectedReadingDetails[index].value, actual.Value)
+		assert.Equal(t, expectedReadingDetails[index].value, *actual.Value)
 		assert.NotZero(t, actual.Origin)
 	}
 }
