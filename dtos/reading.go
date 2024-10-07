@@ -327,7 +327,7 @@ func ToReadingModel(r BaseReading) models.Reading {
 	} else {
 		readingModel = models.SimpleReading{
 			BaseReading: br,
-			Value:       *r.Value,
+			Value:       r.Value,
 		}
 	}
 	return readingModel
@@ -370,7 +370,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			ValueType:     r.ValueType,
 			Units:         r.Units,
 			Tags:          r.Tags,
-			SimpleReading: SimpleReading{Value: &r.Value},
+			SimpleReading: SimpleReading{Value: r.Value},
 		}
 	}
 
