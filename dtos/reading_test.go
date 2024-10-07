@@ -45,7 +45,7 @@ func Test_ToReadingModel(t *testing.T) {
 			Units:        TestUnit,
 			Tags:         testTags,
 		},
-		Value: TestValue,
+		Value: &TestSimpleValue,
 	}
 	tests := []struct {
 		name    string
@@ -73,7 +73,7 @@ func TestFromReadingModelToDTO(t *testing.T) {
 			Units:        TestUnit,
 			Tags:         testTags,
 		},
-		Value: TestValue,
+		Value: &TestSimpleValue,
 	}
 	expectedDTO := BaseReading{
 		Id:           TestUUID,

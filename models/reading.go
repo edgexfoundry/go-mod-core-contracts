@@ -24,7 +24,7 @@ type BinaryReading struct {
 
 type SimpleReading struct {
 	BaseReading `json:",inline"`
-	Value       string
+	Value       *string
 }
 
 type ObjectReading struct {

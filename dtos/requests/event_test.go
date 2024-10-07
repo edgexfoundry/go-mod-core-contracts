@@ -281,6 +281,7 @@ func TestAddEvent_UnmarshalCBOR(t *testing.T) {
 
 func Test_AddEventReqToEventModels(t *testing.T) {
 	valid := eventRequestData()
+	testReadingValue := "45"
 	s := models.SimpleReading{
 		BaseReading: models.BaseReading{
 			Id:           ExampleUUID,
@@ -290,7 +291,7 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 			Origin:       TestOriginTime,
 			ValueType:    common.ValueTypeUint8,
 		},
-		Value: TestReadingValue,
+		Value: &testReadingValue,
 	}
 	expectedEventModel := models.Event{
 		Id:          ExampleUUID,
