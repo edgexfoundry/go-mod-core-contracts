@@ -182,6 +182,9 @@ func TestUpdateScheduleJobRequest_Validate(t *testing.T) {
 	unsupportedDefinitionType.ScheduleJob.Definition = &unsupportedDefinition
 	validWithoutDefinition := NewUpdateScheduleJobRequest(updateScheduleJobData())
 	validWithoutDefinition.ScheduleJob.Definition = nil
+	invalidStartAndEndTimestamp := NewUpdateScheduleJobRequest(updateScheduleJobData())
+	invalidStartAndEndTimestamp.ScheduleJob.Definition.StartTimestamp = 1727690062000
+	invalidStartAndEndTimestamp.ScheduleJob.Definition.EndTimestamp = 1727689822000
 	invalidEmptyDefinition := NewUpdateScheduleJobRequest(updateScheduleJobData())
 	emptyDefinition := dtos.ScheduleDef{}
 	invalidEmptyDefinition.ScheduleJob.Definition = &emptyDefinition
@@ -195,6 +198,18 @@ func TestUpdateScheduleJobRequest_Validate(t *testing.T) {
 	emptyActions.ScheduleJob.Actions = []dtos.ScheduleAction{}
 	emptyLabels := NewUpdateScheduleJobRequest(updateScheduleJobData())
 	emptyLabels.ScheduleJob.Labels = []string{}
+
+	invalidActions := NewUpdateScheduleJobRequest(updateScheduleJobData())
+	invalidActions.ScheduleJob.Actions = []dtos.ScheduleAction{
+		{
+			Type:        "invalid",
+			ContentType: common.ContentTypeJSON,
+			Payload:     nil,
+			EdgeXMessageBusAction: dtos.EdgeXMessageBusAction{
+				Topic: "testTopic",
+			},
+		},
+	}
 
 	tests := []struct {
 		name        string
@@ -211,11 +226,13 @@ func TestUpdateScheduleJobRequest_Validate(t *testing.T) {
 		{"invalid, empty name", invalidEmptyName, true},
 		{"invalid, unsupported definition type", unsupportedDefinitionType, true},
 		{"valid, without definition", validWithoutDefinition, false},
+		{"invalid, endTimestamp must be greater than startTimestamp", invalidStartAndEndTimestamp, true},
 		{"invalid, empty definition", invalidEmptyDefinition, true},
 		{"valid, no actions", noActions, false},
 		{"valid, no labels", noLabels, false},
 		{"valid, empty actions", emptyActions, false},
 		{"valid, empty labels", emptyLabels, false},
+		{"invalid, invalid action type", invalidActions, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

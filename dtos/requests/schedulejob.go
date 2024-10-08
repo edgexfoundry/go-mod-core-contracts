@@ -61,10 +61,26 @@ type UpdateScheduleJobRequest struct {
 }
 
 // Validate satisfies the Validator interface
-func (a *UpdateScheduleJobRequest) Validate() error {
-	err := common.Validate(a)
+func (u *UpdateScheduleJobRequest) Validate() error {
+	err := common.Validate(u)
 	if err != nil {
 		return err
+	}
+
+	if u.ScheduleJob.Definition != nil {
+		err = u.ScheduleJob.Definition.Validate()
+		if err != nil {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid ScheduleDef.", err)
+		}
+	}
+
+	if u.ScheduleJob.Actions != nil {
+		for _, action := range u.ScheduleJob.Actions {
+			err = action.Validate()
+			if err != nil {
+				return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid ScheduleAction.", err)
+			}
+		}
 	}
 
 	return nil
