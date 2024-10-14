@@ -32,10 +32,11 @@ type BaseReading struct {
 	BinaryReading `json:",inline" validate:"-"`
 	SimpleReading `json:",inline" validate:"-"`
 	ObjectReading `json:",inline" validate:"-"`
+	NullReading   `json:",inline" validate:"-"`
 }
 
 type SimpleReading struct {
-	Value *string `json:"value"`
+	Value string `json:"value"`
 }
 
 type BinaryReading struct {
@@ -45,6 +46,10 @@ type BinaryReading struct {
 
 type ObjectReading struct {
 	ObjectValue any `json:"objectValue,omitempty"`
+}
+
+type NullReading struct {
+	isNull bool // indicate the reading value should be null in the JSON payload
 }
 
 func newBaseReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
@@ -60,20 +65,14 @@ func newBaseReading(profileName string, deviceName string, resourceName string, 
 
 // NewSimpleReading creates and returns a new initialized BaseReading with its SimpleReading initialized
 func NewSimpleReading(profileName string, deviceName string, resourceName string, valueType string, value any) (BaseReading, error) {
-	var val *string
-	if value == nil {
-		val = nil
-	} else {
-		stringValue, err := convertInterfaceValue(valueType, value)
-		if err != nil {
-			return BaseReading{}, err
-		}
-		val = &stringValue
+	stringValue, err := convertInterfaceValue(valueType, value)
+	if err != nil {
+		return BaseReading{}, err
 	}
 
 	reading := newBaseReading(profileName, deviceName, resourceName, valueType)
 	reading.SimpleReading = SimpleReading{
-		Value: val,
+		Value: stringValue,
 	}
 	return reading, nil
 }
@@ -103,6 +102,13 @@ func NewObjectReadingWithArray(profileName string, deviceName string, resourceNa
 	reading.ObjectReading = ObjectReading{
 		ObjectValue: objectValue,
 	}
+	return reading
+}
+
+// NewNullReading creates and returns a new initialized BaseReading with null
+func NewNullReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
+	reading := newBaseReading(profileName, deviceName, resourceName, valueType)
+	reading.isNull = true
 	return reading
 }
 
@@ -274,6 +280,9 @@ func validateType(valueType string, kind reflect.Kind, value any) error {
 
 // Validate satisfies the Validator interface
 func (b BaseReading) Validate() error {
+	if b.isNull {
+		return nil
+	}
 	if b.ValueType == common.ValueTypeBinary {
 		// validate the inner BinaryReading struct
 		binaryReading := b.BinaryReading
@@ -289,13 +298,10 @@ func (b BaseReading) Validate() error {
 	} else {
 		// validate the inner SimpleReading struct
 		simpleReading := b.SimpleReading
-		if simpleReading.Value == nil {
-			return nil
-		}
 		if err := common.Validate(simpleReading); err != nil {
 			return err
 		}
-		if err := ValidateValue(b.ValueType, *simpleReading.Value); err != nil {
+		if err := ValidateValue(b.ValueType, simpleReading.Value); err != nil {
 			return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("The value does not match the %v valueType", b.ValueType), nil)
 		}
 	}
@@ -315,6 +321,9 @@ func ToReadingModel(r BaseReading) models.Reading {
 		ValueType:    r.ValueType,
 		Units:        r.Units,
 		Tags:         r.Tags,
+	}
+	if r.NullReading.isNull {
+		return models.NewNullReading(br)
 	}
 	if r.ValueType == common.ValueTypeBinary {
 		readingModel = models.BinaryReading{
@@ -374,6 +383,18 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			Units:         r.Units,
 			Tags:          r.Tags,
 			SimpleReading: SimpleReading{Value: r.Value},
+		}
+	case models.NullReading:
+		baseReading = BaseReading{
+			Id:           r.Id,
+			Origin:       r.Origin,
+			DeviceName:   r.DeviceName,
+			ResourceName: r.ResourceName,
+			ProfileName:  r.ProfileName,
+			ValueType:    r.ValueType,
+			Units:        r.Units,
+			Tags:         r.Tags,
+			NullReading:  NullReading{isNull: true},
 		}
 	}
 
@@ -482,5 +503,103 @@ func (b BaseReading) UnmarshalObjectValue(target any) error {
 		return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, fmt.Sprintf("invalid usage of UnmarshalObjectValue function invocation on reading with %v valueType", b.ValueType), nil)
 	}
 
+	return nil
+}
+
+func (b BaseReading) MarshalJSON() ([]byte, error) {
+	type reading struct {
+		Id           string `json:"id,omitempty"`
+		Origin       int64  `json:"origin"`
+		DeviceName   string `json:"deviceName"`
+		ResourceName string `json:"resourceName"`
+		ProfileName  string `json:"profileName"`
+		ValueType    string `json:"valueType"`
+		Units        string `json:"units,omitempty"`
+		Tags         Tags   `json:"tags,omitempty"`
+	}
+	if b.isNull {
+		return json.Marshal(&struct {
+			reading     `json:",inline"`
+			Value       any `json:"value"`
+			BinaryValue any `json:"binaryValue"`
+			ObjectValue any `json:"objectValue"`
+		}{
+			reading: reading{
+				Id:           b.Id,
+				Origin:       b.Origin,
+				DeviceName:   b.DeviceName,
+				ResourceName: b.ResourceName,
+				ProfileName:  b.ProfileName,
+				ValueType:    b.ValueType,
+				Units:        b.Units,
+				Tags:         b.Tags,
+			},
+			Value:       nil,
+			BinaryValue: nil,
+			ObjectValue: nil,
+		})
+	}
+	return json.Marshal(&struct {
+		reading       `json:",inline"`
+		BinaryReading `json:",inline" validate:"-"`
+		SimpleReading `json:",inline" validate:"-"`
+		ObjectReading `json:",inline" validate:"-"`
+	}{
+		reading: reading{
+			Id:           b.Id,
+			Origin:       b.Origin,
+			DeviceName:   b.DeviceName,
+			ResourceName: b.ResourceName,
+			ProfileName:  b.ProfileName,
+			ValueType:    b.ValueType,
+			Units:        b.Units,
+			Tags:         b.Tags,
+		},
+		BinaryReading: b.BinaryReading,
+		SimpleReading: b.SimpleReading,
+		ObjectReading: b.ObjectReading,
+	})
+}
+
+func (b *BaseReading) UnmarshalJSON(data []byte) error {
+	var aux struct {
+		Id           string
+		Origin       int64
+		DeviceName   string
+		ResourceName string
+		ProfileName  string
+		ValueType    string
+		Units        string
+		Tags         Tags
+		Value        any
+		BinaryReading
+		ObjectReading
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+
+	b.Id = aux.Id
+	b.Origin = aux.Origin
+	b.DeviceName = aux.DeviceName
+	b.ResourceName = aux.ResourceName
+	b.ProfileName = aux.ProfileName
+	b.ValueType = aux.ValueType
+	b.Units = aux.Units
+	b.Tags = aux.Tags
+	b.BinaryReading = aux.BinaryReading
+	if aux.Value != nil {
+		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%s", aux.Value)}
+	}
+	b.ObjectReading = aux.ObjectReading
+
+	if (aux.ValueType == common.ValueTypeObject || aux.ValueType == common.ValueTypeObjectArray) &&
+		aux.ObjectValue == nil {
+		b.isNull = true
+	} else if aux.ValueType == common.ValueTypeBinary && aux.BinaryValue == nil {
+		b.isNull = true
+	} else if aux.Value == nil {
+		b.isNull = true
+	}
 	return nil
 }

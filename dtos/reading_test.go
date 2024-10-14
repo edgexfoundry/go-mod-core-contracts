@@ -16,8 +16,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var TestSimpleValue = "500"
-
 var testSimpleReading = BaseReading{
 	Id:           TestUUID,
 	DeviceName:   TestDeviceName,
@@ -28,7 +26,7 @@ var testSimpleReading = BaseReading{
 	Units:        TestUnit,
 	Tags:         testTags,
 	SimpleReading: SimpleReading{
-		Value: &TestSimpleValue,
+		Value: TestValue,
 	},
 }
 
@@ -45,7 +43,7 @@ func Test_ToReadingModel(t *testing.T) {
 			Units:        TestUnit,
 			Tags:         testTags,
 		},
-		Value: &TestSimpleValue,
+		Value: TestValue,
 	}
 	tests := []struct {
 		name    string
@@ -73,7 +71,7 @@ func TestFromReadingModelToDTO(t *testing.T) {
 			Units:        TestUnit,
 			Tags:         testTags,
 		},
-		Value: &TestSimpleValue,
+		Value: TestValue,
 	}
 	expectedDTO := BaseReading{
 		Id:           TestUUID,
@@ -85,7 +83,7 @@ func TestFromReadingModelToDTO(t *testing.T) {
 		Units:        TestUnit,
 		Tags:         testTags,
 		SimpleReading: SimpleReading{
-			Value: &TestSimpleValue,
+			Value: TestValue,
 		},
 	}
 
@@ -150,7 +148,7 @@ func TestNewSimpleReading(t *testing.T) {
 			assert.Equal(t, expectedDeviceName, actual.DeviceName)
 			assert.Equal(t, expectedResourceName, actual.ResourceName)
 			assert.Equal(t, tt.expectedValueType, actual.ValueType)
-			assert.Equal(t, tt.expectedValue, *actual.Value)
+			assert.Equal(t, tt.expectedValue, actual.Value)
 			assert.NotZero(t, actual.Origin)
 		})
 	}
@@ -196,55 +194,56 @@ func TestNewSimpleReadingError(t *testing.T) {
 	}
 }
 
-func TestNewSimpleReadingWithNilValue(t *testing.T) {
+func TestNullReading(t *testing.T) {
 	expectedDeviceName := TestDeviceName
 	expectedProfileName := TestDeviceProfileName
 	expectedResourceName := TestDeviceResourceName
 
-	var nilValue *string = nil
-
 	tests := []struct {
 		name              string
 		expectedValueType string
-		value             any
-		expectedValue     any
 	}{
-		{"Simple Boolean", common.ValueTypeBool, nil, nilValue},
-		{"Simple String", common.ValueTypeString, nil, nilValue},
-		{"Simple Uint8", common.ValueTypeUint8, nil, nilValue},
-		{"Simple Uint16", common.ValueTypeUint16, nil, nilValue},
-		{"Simple Uint32", common.ValueTypeUint32, nil, nilValue},
-		{"Simple uint64", common.ValueTypeUint64, nil, nilValue},
-		{"Simple int8", common.ValueTypeInt8, nil, nilValue},
-		{"Simple int16", common.ValueTypeInt16, nil, nilValue},
-		{"Simple int32", common.ValueTypeInt32, nil, nilValue},
-		{"Simple int64", common.ValueTypeInt64, nil, nilValue},
-		{"Simple Float32", common.ValueTypeFloat32, nil, nilValue},
-		{"Simple Float64", common.ValueTypeFloat64, nil, nilValue},
-		{"Simple Boolean Array", common.ValueTypeBoolArray, nil, nilValue},
-		{"Simple String Array", common.ValueTypeStringArray, nil, nilValue},
-		{"Simple Uint8 Array", common.ValueTypeUint8Array, nil, nilValue},
-		{"Simple Uint16 Array", common.ValueTypeUint16Array, nil, nilValue},
-		{"Simple Uint32 Array", common.ValueTypeUint32Array, nil, nilValue},
-		{"Simple Uint64 Array", common.ValueTypeUint64Array, nil, nilValue},
-		{"Simple Int8 Array", common.ValueTypeInt8Array, nil, nilValue},
-		{"Simple Int16 Array", common.ValueTypeInt16Array, nil, nilValue},
-		{"Simple Int32 Array", common.ValueTypeInt32Array, nil, nilValue},
-		{"Simple Int64 Array", common.ValueTypeInt64Array, nil, nilValue},
-		{"Simple Float32 Array", common.ValueTypeFloat32Array, nil, nilValue},
-		{"Simple Float64 Array", common.ValueTypeFloat64Array, nil, nilValue},
+		{"Simple Boolean", common.ValueTypeBool},
+		{"Simple String", common.ValueTypeString},
+		{"Simple Uint8", common.ValueTypeUint8},
+		{"Simple Uint16", common.ValueTypeUint16},
+		{"Simple Uint32", common.ValueTypeUint32},
+		{"Simple uint64", common.ValueTypeUint64},
+		{"Simple int8", common.ValueTypeInt8},
+		{"Simple int16", common.ValueTypeInt16},
+		{"Simple int32", common.ValueTypeInt32},
+		{"Simple int64", common.ValueTypeInt64},
+		{"Simple Float32", common.ValueTypeFloat32},
+		{"Simple Float64", common.ValueTypeFloat64},
+		{"Simple Boolean Array", common.ValueTypeBoolArray},
+		{"Simple String Array", common.ValueTypeStringArray},
+		{"Simple Uint8 Array", common.ValueTypeUint8Array},
+		{"Simple Uint16 Array", common.ValueTypeUint16Array},
+		{"Simple Uint32 Array", common.ValueTypeUint32Array},
+		{"Simple Uint64 Array", common.ValueTypeUint64Array},
+		{"Simple Int8 Array", common.ValueTypeInt8Array},
+		{"Simple Int16 Array", common.ValueTypeInt16Array},
+		{"Simple Int32 Array", common.ValueTypeInt32Array},
+		{"Simple Int64 Array", common.ValueTypeInt64Array},
+		{"Simple Float32 Array", common.ValueTypeFloat32Array},
+		{"Simple Float64 Array", common.ValueTypeFloat64Array},
+		{"Object", common.ValueTypeObject},
+		{"Object Array", common.ValueTypeObjectArray},
+		{"Binary", common.ValueTypeBinary},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			actual, err := NewSimpleReading(expectedProfileName, expectedDeviceName, expectedResourceName, tt.expectedValueType, tt.value)
-			require.NoError(t, err)
+			actual := NewNullReading(expectedProfileName, expectedDeviceName, expectedResourceName, tt.expectedValueType)
 			assert.NotEmpty(t, actual.Id)
 			assert.Equal(t, expectedProfileName, actual.ProfileName)
 			assert.Equal(t, expectedDeviceName, actual.DeviceName)
 			assert.Equal(t, expectedResourceName, actual.ResourceName)
 			assert.Equal(t, tt.expectedValueType, actual.ValueType)
-			assert.Equal(t, tt.expectedValue, actual.Value)
+			assert.True(t, actual.isNull)
+			assert.Empty(t, actual.Value)
+			assert.Empty(t, actual.ObjectValue)
+			assert.Empty(t, actual.BinaryValue)
 			assert.NotZero(t, actual.Origin)
 		})
 	}

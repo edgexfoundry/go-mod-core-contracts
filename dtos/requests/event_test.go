@@ -77,7 +77,7 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	invalidReadingInvalidValueType.Event.Readings[0].ValueType = "BadType"
 
 	invalidSimpleReadingNoValue := eventRequestData()
-	invalidSimpleReadingNoValue.Event.Readings[0].SimpleReading.Value = &emptyString
+	invalidSimpleReadingNoValue.Event.Readings[0].SimpleReading.Value = emptyString
 
 	invalidBinaryReadingNoValue := eventRequestData()
 	invalidBinaryReadingNoValue.Event.Readings[0].ValueType = common.ValueTypeBinary
@@ -90,13 +90,13 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	invalidBinaryReadingNoMedia.Event.Readings[0].BinaryReading.BinaryValue = []byte(TestReadingBinaryValue)
 
 	nilBinaryReadingNoMedia := eventRequestData()
-	nilBinaryReadingNoMedia.Event.Readings[0].ValueType = common.ValueTypeBinary
+	nilBinaryReadingNoMedia.Event.Readings[0] = dtos.NewNullReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, common.ValueTypeBinary)
 
 	nilSimpleReading := eventRequestData()
-	nilSimpleReading.Event.Readings[0].SimpleReading.Value = nil
+	nilSimpleReading.Event.Readings[0] = dtos.NewNullReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, common.ValueTypeUint8)
 
 	nilObjectReading := eventRequestData()
-	nilObjectReading.Event.Readings[0].ValueType = common.ValueTypeObject
+	nilObjectReading.Event.Readings[0] = dtos.NewNullReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, common.ValueTypeObject)
 
 	tests := []struct {
 		name        string
@@ -293,7 +293,6 @@ func TestAddEvent_UnmarshalCBOR(t *testing.T) {
 
 func Test_AddEventReqToEventModels(t *testing.T) {
 	valid := eventRequestData()
-	testReadingValue := "45"
 	s := models.SimpleReading{
 		BaseReading: models.BaseReading{
 			Id:           ExampleUUID,
@@ -303,7 +302,7 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 			Origin:       TestOriginTime,
 			ValueType:    common.ValueTypeUint8,
 		},
-		Value: &testReadingValue,
+		Value: "45",
 	}
 	expectedEventModel := models.Event{
 		Id:          ExampleUUID,
