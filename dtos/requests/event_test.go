@@ -89,6 +89,15 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	invalidBinaryReadingNoMedia.Event.Readings[0].BinaryReading.MediaType = ""
 	invalidBinaryReadingNoMedia.Event.Readings[0].BinaryReading.BinaryValue = []byte(TestReadingBinaryValue)
 
+	nilBinaryReadingNoMedia := eventRequestData()
+	nilBinaryReadingNoMedia.Event.Readings[0].ValueType = common.ValueTypeBinary
+
+	nilSimpleReading := eventRequestData()
+	nilSimpleReading.Event.Readings[0].SimpleReading.Value = nil
+
+	nilObjectReading := eventRequestData()
+	nilObjectReading.Event.Readings[0].ValueType = common.ValueTypeObject
+
 	tests := []struct {
 		name        string
 		event       AddEventRequest
@@ -113,6 +122,9 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		{"invalid AddEventRequest, no SimpleReading Value", invalidSimpleReadingNoValue, true},
 		{"invalid AddEventRequest, no BinaryReading BinaryValue", invalidBinaryReadingNoValue, true},
 		{"invalid AddEventRequest, no BinaryReading MediaType", invalidBinaryReadingNoMedia, true},
+		{"valid AddEventRequest, nil Binary value", nilBinaryReadingNoMedia, false},
+		{"valid AddEventRequest, nil Simple value", nilSimpleReading, false},
+		{"valid AddEventRequest, nil Object value", nilObjectReading, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
