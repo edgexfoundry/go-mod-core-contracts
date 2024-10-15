@@ -39,12 +39,12 @@ type SimpleReading struct {
 }
 
 type BinaryReading struct {
-	BinaryValue []byte `json:"binaryValue,omitempty" validate:"gt=0,required"`
-	MediaType   string `json:"mediaType,omitempty" validate:"required"`
+	BinaryValue []byte `json:"binaryValue,omitempty" validate:"omitempty,gt=0"`
+	MediaType   string `json:"mediaType,omitempty" validate:"required_with=BinaryValue"`
 }
 
 type ObjectReading struct {
-	ObjectValue any `json:"objectValue,omitempty" validate:"required"`
+	ObjectValue any `json:"objectValue,omitempty"`
 }
 
 func newBaseReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
@@ -289,6 +289,9 @@ func (b BaseReading) Validate() error {
 	} else {
 		// validate the inner SimpleReading struct
 		simpleReading := b.SimpleReading
+		if simpleReading.Value == nil {
+			return nil
+		}
 		if err := common.Validate(simpleReading); err != nil {
 			return err
 		}
