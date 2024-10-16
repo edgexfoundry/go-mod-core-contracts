@@ -24,7 +24,19 @@ type BinaryReading struct {
 
 type SimpleReading struct {
 	BaseReading `json:",inline"`
-	Value       *string
+	Value       string
+}
+
+type NullReading struct {
+	BaseReading `json:",inline"`
+	Value       any
+}
+
+func NewNullReading(b BaseReading) NullReading {
+	return NullReading{
+		BaseReading: b,
+		Value:       nil,
+	}
 }
 
 type ObjectReading struct {
@@ -44,3 +56,4 @@ type Reading interface {
 func (b BinaryReading) GetBaseReading() BaseReading { return b.BaseReading }
 func (s SimpleReading) GetBaseReading() BaseReading { return s.BaseReading }
 func (o ObjectReading) GetBaseReading() BaseReading { return o.BaseReading }
+func (n NullReading) GetBaseReading() BaseReading   { return n.BaseReading }
