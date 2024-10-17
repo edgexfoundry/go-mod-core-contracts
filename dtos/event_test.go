@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/fxamacker/cbor/v2"
 	"github.com/stretchr/testify/require"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
@@ -238,26 +239,38 @@ func TestEvent_MarshalNullReading(t *testing.T) {
 		assert.True(t, actual.isNull)
 	}
 
-	jsonEncoded, err := json.Marshal(testEvent)
-	assert.NoError(t, err)
+	tests := []struct {
+		name      string
+		marshal   func(any) ([]byte, error)
+		unmarshal func([]byte, any) error
+	}{
+		{"marshal with JSON encode", json.Marshal, json.Unmarshal},
+		{"marshal with CBOR encode", cbor.Marshal, cbor.Unmarshal},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			encoded, err := tt.marshal(testEvent)
+			assert.NoError(t, err)
 
-	var result Event
-	err = json.Unmarshal(jsonEncoded, &result)
-	assert.NoError(t, err)
+			var result Event
+			err = tt.unmarshal(encoded, &result)
+			assert.NoError(t, err)
 
-	assert.Equal(t, testEvent.DeviceName, result.DeviceName)
-	assert.Equal(t, testEvent.ProfileName, result.ProfileName)
-	assert.Equal(t, testEvent.SourceName, result.SourceName)
-	assert.Equal(t, len(testEvent.Readings), len(result.Readings))
+			assert.Equal(t, testEvent.DeviceName, result.DeviceName)
+			assert.Equal(t, testEvent.ProfileName, result.ProfileName)
+			assert.Equal(t, testEvent.SourceName, result.SourceName)
+			assert.Equal(t, len(testEvent.Readings), len(result.Readings))
 
-	for i, r := range result.Readings {
-		assert.Equal(t, testEvent.Readings[i].DeviceName, r.DeviceName)
-		assert.Equal(t, testEvent.Readings[i].ProfileName, r.ProfileName)
-		assert.Equal(t, testEvent.Readings[i].ResourceName, r.ResourceName)
-		assert.Equal(t, testEvent.Readings[i].ValueType, r.ValueType)
-		assert.True(t, r.isNull, "isNull should be true after marshaling")
-		assert.Empty(t, r.Value, "reading value should be empty after marshaling")
-		assert.Empty(t, r.ObjectValue, "reading objectValue should be empty after marshaling")
-		assert.Empty(t, r.BinaryValue, "reading binaryValue should be empty after marshaling")
+			for i, r := range result.Readings {
+				assert.Equal(t, testEvent.Readings[i].DeviceName, r.DeviceName)
+				assert.Equal(t, testEvent.Readings[i].ProfileName, r.ProfileName)
+				assert.Equal(t, testEvent.Readings[i].ResourceName, r.ResourceName)
+				assert.Equal(t, testEvent.Readings[i].ValueType, r.ValueType)
+				assert.True(t, r.isNull, "isNull should be true after marshaling")
+				assert.Empty(t, r.Value, "reading value should be empty after marshaling")
+				assert.Empty(t, r.ObjectValue, "reading objectValue should be empty after marshaling")
+				assert.Empty(t, r.BinaryValue, "reading binaryValue should be empty after marshaling")
+			}
+		})
 	}
 }

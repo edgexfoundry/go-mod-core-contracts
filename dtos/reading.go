@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fxamacker/cbor/v2"
 	"github.com/google/uuid"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
@@ -507,6 +508,14 @@ func (b BaseReading) UnmarshalObjectValue(target any) error {
 }
 
 func (b BaseReading) MarshalJSON() ([]byte, error) {
+	return b.marshal(json.Marshal)
+}
+
+func (b BaseReading) MarshalCBOR() ([]byte, error) {
+	return b.marshal(cbor.Marshal)
+}
+
+func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) {
 	type reading struct {
 		Id           string `json:"id,omitempty"`
 		Origin       int64  `json:"origin"`
@@ -518,7 +527,7 @@ func (b BaseReading) MarshalJSON() ([]byte, error) {
 		Tags         Tags   `json:"tags,omitempty"`
 	}
 	if b.isNull {
-		return json.Marshal(&struct {
+		return marshal(&struct {
 			reading     `json:",inline"`
 			Value       any `json:"value"`
 			BinaryValue any `json:"binaryValue"`
@@ -539,7 +548,7 @@ func (b BaseReading) MarshalJSON() ([]byte, error) {
 			ObjectValue: nil,
 		})
 	}
-	return json.Marshal(&struct {
+	return marshal(&struct {
 		reading       `json:",inline"`
 		BinaryReading `json:",inline" validate:"-"`
 		SimpleReading `json:",inline" validate:"-"`
@@ -562,6 +571,14 @@ func (b BaseReading) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BaseReading) UnmarshalJSON(data []byte) error {
+	return b.Unmarshal(data, json.Unmarshal)
+}
+
+func (b *BaseReading) UnmarshalCBOR(data []byte) error {
+	return b.Unmarshal(data, cbor.Unmarshal)
+}
+
+func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) error {
 	var aux struct {
 		Id           string
 		Origin       int64
@@ -575,7 +592,7 @@ func (b *BaseReading) UnmarshalJSON(data []byte) error {
 		BinaryReading
 		ObjectReading
 	}
-	if err := json.Unmarshal(data, &aux); err != nil {
+	if err := unmarshal(data, &aux); err != nil {
 		return err
 	}
 
