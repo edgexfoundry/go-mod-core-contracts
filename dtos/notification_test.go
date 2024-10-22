@@ -3,7 +3,7 @@ package dtos
 import (
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -5,7 +5,7 @@
 
 package dtos
 
-import "github.com/edgexfoundry/go-mod-core-contracts/v3/models"
+import "github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 
 type ResourceOperation struct {
 	DeviceResource string            `json:"deviceResource" yaml:"deviceResource" validate:"required"` // The replacement of Object field

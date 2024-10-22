@@ -8,9 +8,9 @@ package requests
 import (
 	"encoding/json"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 )
 
 // OperationRequest defines the Request Content for SMA POST Operation.

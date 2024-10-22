@@ -11,11 +11,11 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/http/utils"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/interfaces"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/responses"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/http/utils"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/responses"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 )
 
 type ScheduleActionRecordClient struct {

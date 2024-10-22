@@ -8,7 +8,7 @@ package requests
 import (
 	"testing"
 
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
 	"github.com/stretchr/testify/assert"
 )
 
