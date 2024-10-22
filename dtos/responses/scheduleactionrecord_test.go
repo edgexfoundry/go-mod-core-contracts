@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos"
 )
 
 func TestNewScheduleActionRecordResponse(t *testing.T) {

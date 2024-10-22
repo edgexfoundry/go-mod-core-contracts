@@ -8,7 +8,7 @@ package models
 import (
 	"encoding/json"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 )
 
 type Transmission struct {

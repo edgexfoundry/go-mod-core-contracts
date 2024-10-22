@@ -8,7 +8,7 @@ package common
 import (
 	"github.com/google/uuid"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
 )
 
 // BaseRequest defines the base content for request DTOs (data transfer objects).

@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 )
 
 var valueTypes = []string{

@@ -12,10 +12,10 @@ import (
 	"path"
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/requests"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/responses"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/requests"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/responses"
 	"github.com/stretchr/testify/require"
 )
 

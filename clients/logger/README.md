@@ -4,7 +4,7 @@ This package contains the logging client written in the Go programming language.
 ### How To Use ###
 To use the logging client package you first need to import the library into your project:
 ```
-import "github.com/edgexfoundry/go-mod-core-contracts/v3/clients/logging"
+import "github.com/edgexfoundry/go-mod-core-contracts/v4/clients/logging"
 ```
 To send a log message to STDOUT, you first need to create a LoggingClient with desired Log Level and then you can send log messages (indicating the log level of the message using one of the various log function calls).
 ```

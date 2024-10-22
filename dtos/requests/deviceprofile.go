@@ -10,11 +10,11 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
-	edgexErrors "github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
+	edgexErrors "github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 )
 
 // DeviceProfileRequest defines the Request Content for POST DeviceProfile DTO.

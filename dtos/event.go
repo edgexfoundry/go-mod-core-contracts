@@ -9,8 +9,8 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 
 	"github.com/google/uuid"
 )

@@ -13,9 +13,9 @@ import (
 	"github.com/fxamacker/cbor/v2"
 	"github.com/stretchr/testify/require"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 
 	"github.com/stretchr/testify/assert"
 )

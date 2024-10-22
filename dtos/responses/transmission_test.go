@@ -8,7 +8,7 @@ package responses
 import (
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -8,7 +8,7 @@ package http
 import (
 	"net/http"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/interfaces"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 )
 
 type emptyAuthenticationInjector struct {

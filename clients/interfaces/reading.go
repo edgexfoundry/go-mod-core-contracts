@@ -8,9 +8,9 @@ package interfaces
 import (
 	"context"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/responses"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/responses"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 )
 
 // ReadingClient defines the interface for interactions with the Reading endpoint on the EdgeX Foundry core-data service.

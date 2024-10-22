@@ -8,9 +8,9 @@ package requests
 import (
 	"encoding/json"
 
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/models"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 )
 
 // UpdateKeysRequest defines the Request Content for PUT Key DTO.

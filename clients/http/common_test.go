@@ -13,8 +13,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
-	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/common"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
 	"github.com/stretchr/testify/require"
 )
 

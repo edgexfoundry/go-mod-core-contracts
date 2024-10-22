@@ -8,9 +8,9 @@ package interfaces
 import (
 	"context"
 
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/requests"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/dtos/responses"
-	"github.com/edgexfoundry/go-mod-core-contracts/v3/errors"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/requests"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/responses"
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 )
 
 // KVSClient defines the interface for interactions with the kvs endpoint on the EdgeX core-keeper service.

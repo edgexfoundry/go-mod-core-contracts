@@ -358,7 +358,7 @@ const (
 )
 
 const (
-	ConfigStemAll      = "edgex/v3" // Version never changes during minor releases so v3 is more appropriate than 3.0
+	ConfigStemAll      = "edgex/v4" // Version never changes during minor releases so v3 is more appropriate than 3.0
 	ConfigStemApp      = ConfigStemAll
 	ConfigStemCore     = ConfigStemAll
 	ConfigStemDevice   = ConfigStemAll
