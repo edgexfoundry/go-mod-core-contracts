@@ -53,6 +53,10 @@ type NullReading struct {
 	isNull bool // indicate the reading value should be null in the JSON payload
 }
 
+func (b BaseReading) IsNull() bool {
+	return b.isNull
+}
+
 func newBaseReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
 	return BaseReading{
 		Id:           uuid.NewString(),
@@ -548,26 +552,42 @@ func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) 
 			ObjectValue: nil,
 		})
 	}
-	return marshal(&struct {
-		reading       `json:",inline"`
-		BinaryReading `json:",inline" validate:"-"`
-		SimpleReading `json:",inline" validate:"-"`
-		ObjectReading `json:",inline" validate:"-"`
-	}{
-		reading: reading{
-			Id:           b.Id,
-			Origin:       b.Origin,
-			DeviceName:   b.DeviceName,
-			ResourceName: b.ResourceName,
-			ProfileName:  b.ProfileName,
-			ValueType:    b.ValueType,
-			Units:        b.Units,
-			Tags:         b.Tags,
-		},
-		BinaryReading: b.BinaryReading,
-		SimpleReading: b.SimpleReading,
-		ObjectReading: b.ObjectReading,
-	})
+	r := reading{
+		Id:           b.Id,
+		Origin:       b.Origin,
+		DeviceName:   b.DeviceName,
+		ResourceName: b.ResourceName,
+		ProfileName:  b.ProfileName,
+		ValueType:    b.ValueType,
+		Units:        b.Units,
+		Tags:         b.Tags,
+	}
+	switch b.ValueType {
+	case common.ValueTypeObject, common.ValueTypeObjectArray:
+		return marshal(&struct {
+			reading       `json:",inline"`
+			ObjectReading `json:",inline" validate:"-"`
+		}{
+			reading:       r,
+			ObjectReading: b.ObjectReading,
+		})
+	case common.ValueTypeBinary:
+		return marshal(&struct {
+			reading       `json:",inline"`
+			BinaryReading `json:",inline" validate:"-"`
+		}{
+			reading:       r,
+			BinaryReading: b.BinaryReading,
+		})
+	default:
+		return marshal(&struct {
+			reading       `json:",inline"`
+			SimpleReading `json:",inline" validate:"-"`
+		}{
+			reading:       r,
+			SimpleReading: b.SimpleReading,
+		})
+	}
 }
 
 func (b *BaseReading) UnmarshalJSON(data []byte) error {
@@ -610,13 +630,19 @@ func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) 
 	}
 	b.ObjectReading = aux.ObjectReading
 
-	if (aux.ValueType == common.ValueTypeObject || aux.ValueType == common.ValueTypeObjectArray) &&
-		aux.ObjectValue == nil {
-		b.isNull = true
-	} else if aux.ValueType == common.ValueTypeBinary && aux.BinaryValue == nil {
-		b.isNull = true
-	} else if aux.Value == nil {
-		b.isNull = true
+	switch aux.ValueType {
+	case common.ValueTypeObject, common.ValueTypeObjectArray:
+		if aux.ObjectValue == nil {
+			b.isNull = true
+		}
+	case common.ValueTypeBinary:
+		if aux.BinaryValue == nil {
+			b.isNull = true
+		}
+	default:
+		if aux.Value == nil {
+			b.isNull = true
+		}
 	}
 	return nil
 }

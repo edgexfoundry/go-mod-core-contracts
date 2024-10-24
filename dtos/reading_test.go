@@ -6,6 +6,7 @@
 package dtos
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -603,6 +604,137 @@ func TestUnmarshalObjectValueError(t *testing.T) {
 			target := ""
 			err = reading.UnmarshalObjectValue(&target)
 			require.Error(t, err)
+		})
+	}
+}
+
+func TestMarshalObjectReading(t *testing.T) {
+	tests := []struct {
+		name      string
+		valueType string
+		value     any
+	}{
+		{"Object", common.ValueTypeObject,
+			map[string]interface{}{
+				"Attr1": "yyz",
+				"Attr2": float64(-45),
+				"Attr3": []any{float64(255), float64(1), float64(0)},
+			},
+		},
+		{"Object Array", common.ValueTypeObjectArray,
+			[]any{map[string]any{
+				"Attr1": "yyz",
+				"Attr2": float64(-45),
+				"Attr3": []any{float64(255), float64(1), float64(0)},
+			}},
+		},
+		{
+			"Nil Object value", common.ValueTypeObjectArray, nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			reading := newBaseReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, tt.valueType)
+			if tt.value == nil {
+				reading.NullReading = NullReading{
+					isNull: true,
+				}
+			} else {
+				reading.ObjectReading = ObjectReading{
+					ObjectValue: tt.value,
+				}
+			}
+			data, err := json.Marshal(reading)
+			require.NoError(t, err)
+
+			var res BaseReading
+			err = json.Unmarshal(data, &res)
+			require.NoError(t, err)
+
+			assert.Equal(t, reading, res)
+		})
+	}
+}
+
+func TestMarshalBinaryReading(t *testing.T) {
+	tests := []struct {
+		name  string
+		value []byte
+	}{
+		{"Binary", []byte("HelloWorld")},
+		{"Nil Binary Value", nil},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var reading BaseReading
+			if tt.value == nil {
+				reading = NewNullReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, common.ValueTypeBinary)
+			} else {
+				reading = NewBinaryReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, tt.value, "application/json")
+			}
+			data, err := json.Marshal(reading)
+			require.NoError(t, err)
+
+			var res BaseReading
+			err = json.Unmarshal(data, &res)
+			require.NoError(t, err)
+
+			assert.Equal(t, reading, res)
+		})
+	}
+}
+
+func TestMarshalSimpleReading(t *testing.T) {
+	tests := []struct {
+		name      string
+		valueType string
+		value     any
+	}{
+		{"Simple Boolean", common.ValueTypeBool, true},
+		{"Simple String", common.ValueTypeString, "hello"},
+		{"Simple Uint8", common.ValueTypeUint8, uint8(255)},
+		{"Simple Uint16", common.ValueTypeUint16, uint16(65535)},
+		{"Simple Uint32", common.ValueTypeUint32, uint32(4294967295)},
+		{"Simple uint64", common.ValueTypeUint64, uint64(1234567890987654321)},
+		{"Simple int8", common.ValueTypeInt8, int8(123)},
+		{"Simple int16", common.ValueTypeInt16, int16(12345)},
+		{"Simple int32", common.ValueTypeInt32, int32(1234567890)},
+		{"Simple int64", common.ValueTypeInt64, int64(1234567890987654321)},
+		{"Simple Float32", common.ValueTypeFloat32, float32(123.456)},
+		{"Simple Float64", common.ValueTypeFloat64, float64(123456789.0987654321)},
+		{"Simple Boolean Array", common.ValueTypeBoolArray, []bool{true, false}},
+		{"Simple String Array", common.ValueTypeStringArray, []string{"hello", "world"}},
+		{"Simple Uint8 Array", common.ValueTypeUint8Array, []uint8{123, 21}},
+		{"Simple Uint16 Array", common.ValueTypeUint16Array, []uint16{12345, 4321}},
+		{"Simple Uint32 Array", common.ValueTypeUint32Array, []uint32{1234567890, 87654321}},
+		{"Simple Uint64 Array", common.ValueTypeUint64Array, []uint64{1234567890987654321, 10987654321}},
+		{"Simple Int8 Array", common.ValueTypeInt8Array, []int8{123, 123}},
+		{"Simple Int16 Array", common.ValueTypeInt16Array, []int16{12345, 12345}},
+		{"Simple Int32 Array", common.ValueTypeInt32Array, []int32{1234567890, 1234567890}},
+		{"Simple Int64 Array", common.ValueTypeInt64Array, []int64{1234567890987654321, 1234567890987654321}},
+		{"Simple Float32 Array", common.ValueTypeFloat32Array, []float32{123.456, -654.321}},
+		{"Simple Float64 Array", common.ValueTypeFloat64Array, []float64{123456789.0987654321, -987654321.123456789}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var reading BaseReading
+			var err error
+			if tt.value == nil {
+				reading = NewNullReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, tt.valueType)
+			} else {
+				reading, err = NewSimpleReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, tt.valueType, tt.value)
+				require.NoError(t, err)
+			}
+			data, err := json.Marshal(reading)
+			require.NoError(t, err)
+
+			var res BaseReading
+			err = json.Unmarshal(data, &res)
+			require.NoError(t, err)
+
+			assert.Equal(t, reading, res)
 		})
 	}
 }
