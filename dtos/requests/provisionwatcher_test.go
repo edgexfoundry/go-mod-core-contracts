@@ -194,7 +194,7 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 				ProfileName: TestDeviceProfileName,
 				AdminState:  models.Locked,
 				AutoEvents: []models.AutoEvent{
-					{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
+					{SourceName: "TestDevice", Interval: "300ms", OnChange: true, OnChangeThreshold: 0.01},
 				},
 			},
 		},

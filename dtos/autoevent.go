@@ -10,17 +10,19 @@ import (
 )
 
 type AutoEvent struct {
-	Interval   string `json:"interval" yaml:"interval" validate:"required,edgex-dto-duration"`
-	OnChange   bool   `json:"onChange" yaml:"onChange"`
-	SourceName string `json:"sourceName" yaml:"sourceName" validate:"required"`
+	Interval          string  `json:"interval" yaml:"interval" validate:"required,edgex-dto-duration"`
+	OnChange          bool    `json:"onChange" yaml:"onChange"`
+	OnChangeThreshold float64 `json:"onChangeThreshold" yaml:"onChangeThreshold" validate:"gte=0"`
+	SourceName        string  `json:"sourceName" yaml:"sourceName" validate:"required"`
 }
 
 // ToAutoEventModel transforms the AutoEvent DTO to the AutoEvent model
 func ToAutoEventModel(a AutoEvent) models.AutoEvent {
 	return models.AutoEvent{
-		Interval:   a.Interval,
-		OnChange:   a.OnChange,
-		SourceName: a.SourceName,
+		Interval:          a.Interval,
+		OnChange:          a.OnChange,
+		OnChangeThreshold: a.OnChangeThreshold,
+		SourceName:        a.SourceName,
 	}
 }
 
@@ -36,9 +38,10 @@ func ToAutoEventModels(autoEventDTOs []AutoEvent) []models.AutoEvent {
 // FromAutoEventModelToDTO transforms the AutoEvent model to the AutoEvent DTO
 func FromAutoEventModelToDTO(a models.AutoEvent) AutoEvent {
 	return AutoEvent{
-		Interval:   a.Interval,
-		OnChange:   a.OnChange,
-		SourceName: a.SourceName,
+		Interval:          a.Interval,
+		OnChange:          a.OnChange,
+		OnChangeThreshold: a.OnChangeThreshold,
+		SourceName:        a.SourceName,
 	}
 }
 
