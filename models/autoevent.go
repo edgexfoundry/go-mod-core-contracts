@@ -6,7 +6,8 @@
 package models
 
 type AutoEvent struct {
-	Interval   string
-	OnChange   bool
-	SourceName string
+	Interval          string
+	OnChange          bool
+	OnChangeThreshold float64
+	SourceName        string
 }

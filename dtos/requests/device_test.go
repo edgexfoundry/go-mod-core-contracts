@@ -22,7 +22,7 @@ import (
 var testDeviceLabels = []string{"MODBUS", "TEMP"}
 var testDeviceLocation = "{40lat;45long}"
 var testAutoEvents = []dtos.AutoEvent{
-	{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
+	{SourceName: "TestDevice", Interval: "300ms", OnChange: true, OnChangeThreshold: 0.01},
 }
 var testAutoEventsWithInvalidFrequency = []dtos.AutoEvent{
 	{SourceName: "TestDevice", Interval: "300", OnChange: true},
@@ -111,6 +111,10 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 	noAutoEventResource.Device.AutoEvents = []dtos.AutoEvent{
 		{Interval: "300ms", OnChange: true},
 	}
+	invalidAutoEventOnChangeThreshold := testAddDevice
+	invalidAutoEventOnChangeThreshold.Device.AutoEvents = []dtos.AutoEvent{
+		{SourceName: "TestDevice", Interval: "300ms", OnChange: true, OnChangeThreshold: -0.01},
+	}
 	tests := []struct {
 		name        string
 		Device      AddDeviceRequest
@@ -126,11 +130,12 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 		{"valid AddDeviceRequest, no Protocols", noProtocols, false},
 		{"invalid AddDeviceRequest, no AutoEvent frequency", noAutoEventFrequency, true},
 		{"invalid AddDeviceRequest, no AutoEvent resource", noAutoEventResource, true},
+		{"invalid AddDeviceRequest, OnChangeThreshold should greater than or equal 0", invalidAutoEventOnChangeThreshold, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.Device.Validate()
-			assert.Equal(t, tt.expectError, err != nil, "Unexpected addDeviceRequest validation result.", err)
+			assert.Equal(t, tt.expectError, err != nil, "Unexpected addDeviceRequest validation result: %v", err)
 		})
 	}
 
@@ -231,7 +236,7 @@ func Test_AddDeviceReqToDeviceModels(t *testing.T) {
 			Labels:         testDeviceLabels,
 			Location:       testDeviceLocation,
 			AutoEvents: []models.AutoEvent{
-				{SourceName: "TestDevice", Interval: "300ms", OnChange: true},
+				{SourceName: "TestDevice", Interval: "300ms", OnChange: true, OnChangeThreshold: 0.01},
 			},
 			Protocols: map[string]models.ProtocolProperties{
 				"modbus-ip": {
