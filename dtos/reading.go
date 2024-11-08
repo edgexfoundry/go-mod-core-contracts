@@ -41,7 +41,7 @@ type SimpleReading struct {
 }
 
 type BinaryReading struct {
-	BinaryValue []byte `json:"binaryValue,omitempty" validate:"omitempty,gt=0"`
+	BinaryValue []byte `json:"binaryValue,omitempty" validate:"omitempty"`
 	MediaType   string `json:"mediaType,omitempty" validate:"required_with=BinaryValue"`
 }
 
