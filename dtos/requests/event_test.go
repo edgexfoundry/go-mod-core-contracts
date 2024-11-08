@@ -120,7 +120,7 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		{"invalid AddEventRequest, no Reading ValueType", invalidReadingNoValueType, true},
 		{"invalid AddEventRequest, invalid Reading ValueType", invalidReadingInvalidValueType, true},
 		{"invalid AddEventRequest, no SimpleReading Value", invalidSimpleReadingNoValue, true},
-		{"invalid AddEventRequest, no BinaryReading BinaryValue", invalidBinaryReadingNoValue, true},
+		{"valid AddEventRequest, no BinaryReading BinaryValue", invalidBinaryReadingNoValue, false},
 		{"invalid AddEventRequest, no BinaryReading MediaType", invalidBinaryReadingNoMedia, true},
 		{"valid AddEventRequest, nil Binary value", nilBinaryReadingNoMedia, false},
 		{"valid AddEventRequest, nil Simple value", nilSimpleReading, false},
