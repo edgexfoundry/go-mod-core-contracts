@@ -79,10 +79,6 @@ const (
 	ApiProfileCallbackNameEchoRoute = ApiBase + "/callback/profile/name/:name"
 	ApiWatcherCallbackNameEchoRoute = ApiBase + "/callback/watcher/name/:name"
 
-	ApiIntervalByNameEchoRoute         = ApiIntervalRoute + "/" + Name + "/:" + Name
-	ApiIntervalActionByNameEchoRoute   = ApiIntervalActionRoute + "/" + Name + "/:" + Name
-	ApiIntervalActionByTargetEchoRoute = ApiIntervalActionRoute + "/" + Target + "/:" + Target
-
 	ApiKVSByKeyEchoRoute                = ApiKVSRoute + "/" + Key + "/:" + Key
 	ApiRegistrationByServiceIdEchoRoute = ApiRegisterRoute + "/" + ServiceId + "/:" + ServiceId
 

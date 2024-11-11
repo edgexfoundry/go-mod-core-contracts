@@ -12,7 +12,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 )
 
-// ScheduleActionRecordClient defines the interface for interactions with the ScheduleActionRecord endpoint on the EdgeX Foundry support-cron-scheduler service.
+// ScheduleActionRecordClient defines the interface for interactions with the ScheduleActionRecord endpoint on the EdgeX Foundry support-scheduler service.
 type ScheduleActionRecordClient interface {
 	// AllScheduleActionRecords query schedule action records with start, end, offset, and limit
 	AllScheduleActionRecords(ctx context.Context, start, end int64, offset, limit int) (responses.MultiScheduleActionRecordsResponse, errors.EdgeX)
