@@ -14,7 +14,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 )
 
-// ScheduleJobClient defines the interface for interactions with the ScheduleJob endpoint on the EdgeX Foundry support-cron-scheduler service.
+// ScheduleJobClient defines the interface for interactions with the ScheduleJob endpoint on the EdgeX Foundry support-scheduler service.
 type ScheduleJobClient interface {
 	// Add adds new schedule jobs.
 	Add(ctx context.Context, reqs []requests.AddScheduleJobRequest) ([]common.BaseWithIdResponse, errors.EdgeX)

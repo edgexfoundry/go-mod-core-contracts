@@ -134,14 +134,6 @@ const (
 	ApiDiscoveryByIdRoute           = ApiDiscoveryRoute + "/" + RequestId + "/{" + RequestId + "}"
 	ApiProfileScanByDeviceNameRoute = ApiProfileScanRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
 
-	ApiIntervalRoute               = ApiBase + "/interval"
-	ApiAllIntervalRoute            = ApiIntervalRoute + "/" + All
-	ApiIntervalByNameRoute         = ApiIntervalRoute + "/" + Name + "/{" + Name + "}"
-	ApiIntervalActionRoute         = ApiBase + "/intervalaction"
-	ApiAllIntervalActionRoute      = ApiIntervalActionRoute + "/" + All
-	ApiIntervalActionByNameRoute   = ApiIntervalActionRoute + "/" + Name + "/{" + Name + "}"
-	ApiIntervalActionByTargetRoute = ApiIntervalActionRoute + "/" + Target + "/{" + Target + "}"
-
 	ApiSystemRoute      = ApiBase + "/system"
 	ApiOperationRoute   = ApiSystemRoute + "/operation"
 	ApiHealthRoute      = ApiSystemRoute + "/health"
@@ -320,7 +312,6 @@ const (
 	SupportNotificationsServiceKey      = "support-notifications"
 	SystemManagementAgentServiceKey     = "sys-mgmt-agent"
 	SupportSchedulerServiceKey          = "support-scheduler"
-	SupportCronSchedulerServiceKey      = "support-cron-scheduler"
 	SecuritySecretStoreSetupServiceKey  = "security-secretstore-setup"
 	SecurityProxyAuthServiceKey         = "security-proxy-auth"
 	SecurityProxySetupServiceKey        = "security-proxy-setup"
