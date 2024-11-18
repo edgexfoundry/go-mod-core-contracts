@@ -5,7 +5,7 @@ go 1.23
 require (
 	github.com/fxamacker/cbor/v2 v2.7.0
 	github.com/go-kit/log v0.2.1
-	github.com/go-playground/validator/v10 v10.22.1
+	github.com/go-playground/validator/v10 v10.23.0
 	github.com/google/uuid v1.6.0
 	github.com/stretchr/testify v1.9.0
 	gopkg.in/yaml.v3 v3.0.1
