@@ -51,6 +51,12 @@ func unmarshalAddress(b []byte) (address Address, err error) {
 			return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal Email address.", err)
 		}
 		address = mail
+	case common.ZeroMQ:
+		var zeromq ZeroMQAddress
+		if err = json.Unmarshal(b, &zeromq); err != nil {
+			return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal ZeroMQ address.", err)
+		}
+		address = zeromq
 	default:
 		return address, errors.NewCommonEdgeX(errors.KindContractInvalid, "Unsupported address type", err)
 	}
@@ -63,8 +69,27 @@ type BaseAddress struct {
 	Type string
 
 	// Common properties
-	Host string
-	Port int
+	Scheme string // Scheme indicates the scheme of the URI, see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Syntax
+	Host   string
+	Port   int
+}
+
+// Security is a base struct contains the security related fields.
+type Security struct {
+	// SecretPath is the name of the path in secret provider to retrieve your secrets. Must be non-blank.
+	SecretPath string
+	// AuthMode indicates what to use when connecting to the broker.
+	// Options are "none", "cacert" , "usernamepassword", "clientcert".
+	// If a CA Cert exists in the SecretPath then it will be used for
+	// all modes except "none".
+	AuthMode string
+	// SkipCertVerify indicates if the server certificate verification should be skipped
+	SkipCertVerify bool
+}
+
+// MessageBus is a base struct contains the messageBus related fields.
+type MessageBus struct {
+	Topic string
 }
 
 // RESTAddress is a REST specific struct
@@ -80,8 +105,9 @@ func (a RESTAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }
 // MQTTPubAddress is a MQTT specific struct
 type MQTTPubAddress struct {
 	BaseAddress
+	MessageBus
+	Security
 	Publisher      string
-	Topic          string
 	QoS            int
 	KeepAlive      int
 	Retained       bool
@@ -98,3 +124,11 @@ type EmailAddress struct {
 }
 
 func (a EmailAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }
+
+// ZeroMQAddress is a ZeroMQ specific struct
+type ZeroMQAddress struct {
+	BaseAddress
+	MessageBus
+}
+
+func (a ZeroMQAddress) GetBaseAddress() BaseAddress { return a.BaseAddress }

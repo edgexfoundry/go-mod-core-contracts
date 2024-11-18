@@ -55,8 +55,8 @@ var testMQTTPubAddress = Address{
 	Port: testPort,
 	MQTTPubAddress: MQTTPubAddress{
 		Publisher: testPublisher,
-		Topic:     testTopic,
 	},
+	MessageBus: MessageBus{Topic: testTopic},
 }
 
 var testEmailAddress = Address{
@@ -195,7 +195,9 @@ func TestAddress_marshalJSON(t *testing.T) {
 		Host: testHost, Port: testPort,
 		MQTTPubAddress: MQTTPubAddress{
 			Publisher: testPublisher,
-			Topic:     testTopic,
+		},
+		MessageBus: MessageBus{
+			testTopic,
 		},
 	}
 	expectedMQTTJsonStr := fmt.Sprintf(
@@ -209,7 +211,7 @@ func TestAddress_marshalJSON(t *testing.T) {
 		},
 	}
 	expectedEmailJsonStr := fmt.Sprintf(
-		`{"type":"%s","host":"","port":0,"recipients":["%s"]}`,
+		`{"type":"%s","recipients":["%s"]}`,
 		emailAddress.Type, emailAddress.Recipients[0],
 	)
 
