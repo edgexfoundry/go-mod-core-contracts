@@ -1,7 +1,7 @@
 //go:build !no_dto_validator
 
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,6 +30,10 @@ const (
 	dtoRFC3986UnreservedCharTag        = "edgex-dto-rfc3986-unreserved-chars"
 	emptyOrDtoRFC3986UnreservedCharTag = "len=0|" + dtoRFC3986UnreservedCharTag
 	dtoInterDatetimeTag                = "edgex-dto-interval-datetime"
+	dtoNoReservedCharTag               = "edgex-dto-no-reserved-chars"
+	emptyOrDtoNoReservedCharTag        = "len=0|" + dtoNoReservedCharTag
+	dtoUsernameTag                     = "edgex-dto-username"
+	dtoPasswordTag                     = "edgex-dto-password" // nolint:gosec
 )
 
 const (
@@ -38,10 +42,17 @@ const (
 	rFC3986UnreservedCharsRegexString = "^[a-zA-Z0-9-_~:;=]+$"
 	intervalDatetimeLayout            = "20060102T150405"
 	name                              = "Name"
+	reservedCharsRegexString          = "^[^/#+$]+$"
+	// Username must start and end with a letter or digit
+	// The middle part can be letters, digits, underscores, or dots, with a length of 1 to 18 characters
+	// The total length must be between 3 and 20 characters long
+	usernameRegexString = "^[a-zA-Z0-9][a-zA-Z0-9._]{1,18}[a-zA-Z0-9]$"
 )
 
 var (
 	rFC3986UnreservedCharsRegex = regexp.MustCompile(rFC3986UnreservedCharsRegexString)
+	reservedCharsRegex          = regexp.MustCompile(reservedCharsRegexString)
+	usernameRegex               = regexp.MustCompile(usernameRegexString)
 )
 
 func init() {
@@ -52,6 +63,9 @@ func init() {
 	_ = val.RegisterValidation(dtoValueType, ValidateValueType)
 	_ = val.RegisterValidation(dtoRFC3986UnreservedCharTag, ValidateDtoRFC3986UnreservedChars)
 	_ = val.RegisterValidation(dtoInterDatetimeTag, ValidateIntervalDatetime)
+	_ = val.RegisterValidation(dtoNoReservedCharTag, ValidateDtoNoReservedChars)
+	_ = val.RegisterValidation(dtoUsernameTag, ValidateDtoUsername)
+	_ = val.RegisterValidation(dtoPasswordTag, ValidateDtoPassword)
 }
 
 // Validate function will use the validator package to validate the struct annotation
@@ -97,6 +111,12 @@ func getErrorMessage(e validator.FieldError) string {
 		msg = fmt.Sprintf("%s field should not be empty string", fieldName)
 	case dtoRFC3986UnreservedCharTag, emptyOrDtoRFC3986UnreservedCharTag:
 		msg = fmt.Sprintf("%s field only allows unreserved characters which are ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_~:;=", fieldName)
+	case dtoNoReservedCharTag, emptyOrDtoNoReservedCharTag:
+		msg = fmt.Sprintf("%s field does not allow reserved characters which are /#+$", fieldName)
+	case dtoUsernameTag:
+		msg = fmt.Sprintf("%s field must start and end with a letter or digit. The middle part allows letters, digits, underscores, or dots. The total length must be between 3 and 20 characters long.", fieldName)
+	case dtoPasswordTag:
+		msg = fmt.Sprintf("%s field must contain at least 1 uppercase and lowercase letters, 1 digit, and 1 special character @$!%%*?&. The total length must be between 8 and 64 characters long.", fieldName)
 	default:
 		msg = fmt.Sprintf("%s field validation failed on the %s tag with value '%s'", fieldName, tag, fieldValue)
 	}
@@ -175,4 +195,50 @@ func ValidateIntervalDatetime(fl validator.FieldLevel) bool {
 
 func isNilPointer(value reflect.Value) bool {
 	return value.Kind() == reflect.Ptr && value.IsNil()
+}
+
+// ValidateDtoNoReservedChars used to check if DTO's name pointer value excludes reserved characters= / "/" / "#" / "." / "*" / "+" / "$"
+func ValidateDtoNoReservedChars(fl validator.FieldLevel) bool {
+	val := fl.Field()
+	// Skip the validation if the pointer value is nil
+	if isNilPointer(val) {
+		return true
+	} else {
+		return reservedCharsRegex.MatchString(val.String())
+	}
+}
+
+// ValidateDtoUsername used to check if DTO's username field follows the usernameRegex rule
+func ValidateDtoUsername(fl validator.FieldLevel) bool {
+	val := fl.Field()
+	// Skip the validation if the pointer value is nil
+	if isNilPointer(val) {
+		return true
+	} else {
+		return usernameRegex.MatchString(val.String())
+	}
+}
+
+// ValidateDtoPassword used to check if DTO's password field contains at least 1 uppercase letter, 1 lowercase letter, 1 digit
+// and 1 special character (one of @$!%*?&); the password length is 8 to 64 characters long
+func ValidateDtoPassword(fl validator.FieldLevel) bool {
+	val := fl.Field()
+	// Skip the validation if the pointer value is nil
+	if isNilPointer(val) {
+		return true
+	}
+
+	password := val.String()
+	// Password length should be in the range of 8-64 characters
+	if len(password) < 8 || len(password) > 64 {
+		return false
+	}
+
+	// Check if the password contains at least 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character (one of @$!%*?&)
+	hasLower := regexp.MustCompile(`[a-z]`).MatchString
+	hasUpper := regexp.MustCompile(`[A-Z]`).MatchString
+	hasNumber := regexp.MustCompile(`[0-9]`).MatchString
+	hasSpecialChar := regexp.MustCompile(`[@$!%*?&]`).MatchString
+
+	return hasLower(password) && hasUpper(password) && hasNumber(password) && hasSpecialChar(password)
 }
