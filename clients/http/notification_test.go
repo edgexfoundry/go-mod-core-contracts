@@ -100,9 +100,9 @@ func TestNotificationClient_NotificationsBySubscriptionName(t *testing.T) {
 }
 
 func TestNotificationClient_NotificationsByTimeRange(t *testing.T) {
-	start := 1
-	end := 10
-	urlPath := path.Join(common.ApiNotificationRoute, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	start := int64(1)
+	end := int64(10)
+	urlPath := path.Join(common.ApiNotificationRoute, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiNotificationsResponse{})
 	defer ts.Close()
 	client := NewNotificationClient(ts.URL, NewNullAuthenticationInjector(), false)

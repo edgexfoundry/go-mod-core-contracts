@@ -78,9 +78,9 @@ func TestQueryReadingsByResourceName(t *testing.T) {
 }
 
 func TestQueryReadingsByTimeRange(t *testing.T) {
-	start := 1
-	end := 10
-	urlPath := path.Join(common.ApiReadingRoute, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	start := int64(1)
+	end := int64(10)
+	urlPath := path.Join(common.ApiReadingRoute, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
@@ -92,9 +92,9 @@ func TestQueryReadingsByTimeRange(t *testing.T) {
 
 func TestQueryReadingsByResourceNameAndTimeRange(t *testing.T) {
 	resourceName := "resource"
-	start := 1
-	end := 10
-	urlPath := path.Join(common.ApiReadingRoute, common.ResourceName, resourceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	start := int64(1)
+	end := int64(10)
+	urlPath := path.Join(common.ApiReadingRoute, common.ResourceName, resourceName, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
@@ -120,9 +120,9 @@ func TestQueryReadingsByDeviceNameAndResourceName(t *testing.T) {
 func TestQueryReadingsByDeviceNameAndResourceNameAndTimeRange(t *testing.T) {
 	deviceName := "device"
 	resourceName := "resource"
-	start := 1
-	end := 10
-	urlPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.ResourceName, resourceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	start := int64(1)
+	end := int64(10)
+	urlPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.ResourceName, resourceName, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 
@@ -135,9 +135,9 @@ func TestQueryReadingsByDeviceNameAndResourceNameAndTimeRange(t *testing.T) {
 func TestQueryReadingsByDeviceNameAndResourceNamesAndTimeRange(t *testing.T) {
 	deviceName := "device"
 	resourceNames := []string{"resource01", "resource02"}
-	start := 1
-	end := 10
-	urlPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	start := int64(1)
+	end := int64(10)
+	urlPath := path.Join(common.ApiReadingRoute, common.Device, common.Name, deviceName, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiReadingsResponse{})
 	defer ts.Close()
 

@@ -18,7 +18,7 @@ type TransmissionClient interface {
 	// TransmissionById query transmission by id.
 	TransmissionById(ctx context.Context, id string) (responses.TransmissionResponse, errors.EdgeX)
 	// TransmissionsByTimeRange query transmissions with time range, offset and limit
-	TransmissionsByTimeRange(ctx context.Context, start int, end int, offset int, limit int) (responses.MultiTransmissionsResponse, errors.EdgeX)
+	TransmissionsByTimeRange(ctx context.Context, start, end int64, offset int, limit int) (responses.MultiTransmissionsResponse, errors.EdgeX)
 	// AllTransmissions query transmissions with offset and limit
 	AllTransmissions(ctx context.Context, offset int, limit int) (responses.MultiTransmissionsResponse, errors.EdgeX)
 	// TransmissionsByStatus queries transmissions with status, offset and limit
