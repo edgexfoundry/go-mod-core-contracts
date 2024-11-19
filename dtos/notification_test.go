@@ -28,4 +28,5 @@ func TestNewNotification(t *testing.T) {
 	assert.Empty(t, actual.Status)
 	assert.Zero(t, actual.Created)
 	assert.Zero(t, actual.Modified)
+	assert.False(t, actual.Acknowledged)
 }

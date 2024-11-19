@@ -104,7 +104,7 @@ func getErrorMessage(e validator.FieldError) string {
 	case "gt":
 		msg = fmt.Sprintf("%s field should greater than %s", fieldName, fieldValue)
 	case dtoDurationTag:
-		msg = fmt.Sprintf("%s field should follows the ISO 8601 Durations format. Eg,100ms, 24h", fieldName)
+		msg = fmt.Sprintf("%s field should follows the ISO 8601 Durations format, e.g.,100ms, 24h, or be greater than or equal to the minimum value %s ", fieldName, fieldValue)
 	case dtoUuidTag:
 		msg = fmt.Sprintf("%s field needs a uuid", fieldName)
 	case dtoNoneEmptyStringTag:
@@ -124,9 +124,42 @@ func getErrorMessage(e validator.FieldError) string {
 }
 
 // ValidateDuration validate field which should follow the ISO 8601 Durations format
+// the min/max of the Duration can be set via the tag params
+// ex. edgex-dto-duration=10ms0x2C24h - 10ms represents the minimum Duration and 24h represents the maximum Duration
+// 0x2c is the UTF-8 hex encoding of comma (,) as the min/max value separator
 func ValidateDuration(fl validator.FieldLevel) bool {
-	_, err := time.ParseDuration(fl.Field().String())
-	return err == nil
+	duration, err := time.ParseDuration(fl.Field().String())
+	if err != nil {
+		return false
+	}
+
+	// if min/max are defined from tag param, check if the duration value is in the duration range
+	param := fl.Param()
+	var min, max time.Duration
+	if param != "" {
+		params := strings.Split(param, CommaSeparator)
+		if len(params) > 0 {
+			min, err = time.ParseDuration(params[0])
+			if err != nil {
+				return false
+			}
+			if duration < min {
+				// the duration value is smaller than the min
+				return false
+			}
+			if len(params) > 1 {
+				max, err = time.ParseDuration(params[1])
+				if err != nil {
+					return false
+				}
+				if duration > max {
+					// the duration value is larger than the max
+					return false
+				}
+			}
+		}
+	}
+	return true
 }
 
 // ValidateDtoUuid used to check the UpdateDTO uuid pointer value

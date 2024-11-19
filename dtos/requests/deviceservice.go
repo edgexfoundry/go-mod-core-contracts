@@ -100,6 +100,9 @@ func ReplaceDeviceServiceModelFieldsWithDTO(ds *models.DeviceService, patch dtos
 	if patch.BaseAddress != nil {
 		ds.BaseAddress = *patch.BaseAddress
 	}
+	if patch.Properties != nil {
+		ds.Properties = patch.Properties
+	}
 }
 
 func NewAddDeviceServiceRequest(dto dtos.DeviceService) AddDeviceServiceRequest {

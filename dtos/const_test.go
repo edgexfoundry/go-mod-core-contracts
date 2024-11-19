@@ -24,4 +24,7 @@ const (
 	TestDeviceResourceName = "TestDeviceResourceName"
 
 	TestDeviceCommandName = "TestDeviceCommand"
+
+	TestTag1 = "TestTag1"
+	TestTag2 = "TestTag2"
 )

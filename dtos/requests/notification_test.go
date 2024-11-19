@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos"
+	dtoCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 
 	"github.com/stretchr/testify/assert"
@@ -130,4 +131,68 @@ func TestAddNotificationReqToNotificationModels(t *testing.T) {
 	}
 	resultModels := AddNotificationReqToNotificationModels(requests)
 	assert.Equal(t, expectedNotificationModel, resultModels, "AddNotificationReqToNotificationModels did not result in expected Notification model.")
+}
+
+func buildTestGetNotificationRequest() GetNotificationRequest {
+	return GetNotificationRequest{
+		BaseRequest: dtoCommon.NewBaseRequest(),
+		QueryCondition: NotificationQueryCondition{
+			Category: []string{testNotificationCategory},
+			Start:    0,
+			End:      20,
+		},
+	}
+}
+
+func TestGetNotificationRequest_Validate(t *testing.T) {
+	noReqId := buildTestGetNotificationRequest()
+	noReqId.RequestId = ""
+	invalidReqId := buildTestGetNotificationRequest()
+	invalidReqId.RequestId = "abc"
+
+	noCategory := buildTestGetNotificationRequest()
+	noCategory.QueryCondition.Category = []string{}
+
+	tests := []struct {
+		name        string
+		request     GetNotificationRequest
+		expectError bool
+	}{
+		{"valid", buildTestGetNotificationRequest(), false},
+		{"valid, no category", noCategory, false},
+		{"invalid, request ID is not an UUID", invalidReqId, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.request.Validate()
+			assert.Equal(t, tt.expectError, err != nil, "Unexpected GetNotificationRequest validation result.", err)
+		})
+	}
+}
+
+func TestGetNotificationRequest_UnmarshalJSON(t *testing.T) {
+	getNotificationRequest := buildTestGetNotificationRequest()
+	jsonData, _ := json.Marshal(getNotificationRequest)
+	tests := []struct {
+		name     string
+		expected GetNotificationRequest
+		data     []byte
+		wantErr  bool
+	}{
+		{"unmarshal GetNotificationRequest with success", getNotificationRequest, jsonData, false},
+		{"unmarshal invalid GetNotificationRequest, empty data", GetNotificationRequest{}, []byte{}, true},
+		{"unmarshal invalid GetNotificationRequest, string data", GetNotificationRequest{}, []byte("Invalid GetNotificationRequest"), true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var result GetNotificationRequest
+			err := result.UnmarshalJSON(tt.data)
+			if tt.wantErr {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				assert.Equal(t, tt.expected, result, "Unmarshal did not result in expected GetNotificationRequest.")
+			}
+		})
+	}
 }

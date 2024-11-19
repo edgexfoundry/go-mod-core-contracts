@@ -301,9 +301,11 @@ func TestUpdateDeviceServiceRequest_UnmarshalJSON_EmptySlice(t *testing.T) {
 }
 
 func TestReplaceDeviceServiceModelFieldsWithDTO(t *testing.T) {
+	properties := testProperties
 	ds := models.DeviceService{
-		Id:   "7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
-		Name: "test device service",
+		Id:         "7a1707f0-166f-4c4b-bc9d-1d54c74e0137",
+		Name:       "test device service",
+		Properties: properties,
 	}
 	patch := mockDeviceServiceDTO()
 
@@ -312,6 +314,7 @@ func TestReplaceDeviceServiceModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, TestBaseAddress, ds.BaseAddress)
 	assert.Equal(t, models.Locked, string(ds.AdminState))
 	assert.Equal(t, testLabels, ds.Labels)
+	assert.Equal(t, properties, ds.Properties)
 }
 
 func TestNewAddDeviceServiceRequest(t *testing.T) {

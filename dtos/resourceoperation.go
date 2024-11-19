@@ -9,8 +9,8 @@ import "github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 
 type ResourceOperation struct {
 	DeviceResource string            `json:"deviceResource" yaml:"deviceResource" validate:"required"` // The replacement of Object field
-	DefaultValue   string            `json:"defaultValue" yaml:"defaultValue"`
-	Mappings       map[string]string `json:"mappings" yaml:"mappings"`
+	DefaultValue   string            `json:"defaultValue,omitempty" yaml:"defaultValue,omitempty"`
+	Mappings       map[string]string `json:"mappings,omitempty" yaml:"mappings,omitempty"`
 }
 
 // ToResourceOperationModel transforms the ResourceOperation DTO to the ResourceOperation model

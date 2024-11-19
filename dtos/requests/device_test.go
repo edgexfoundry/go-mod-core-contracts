@@ -34,7 +34,13 @@ var testProtocols = map[string]dtos.ProtocolProperties{
 		"UnitID":  "1",
 	},
 }
+
+var testProperties = map[string]any{
+	"LastScan": float64(1702275547),
+}
+
 var testParent = "ParentDevice"
+
 var testAddDevice = AddDeviceRequest{
 	BaseRequest: dtoCommon.BaseRequest{
 		RequestId:   ExampleUUID,
@@ -48,6 +54,7 @@ var testAddDevice = AddDeviceRequest{
 		OperatingState: models.Up,
 		Labels:         testDeviceLabels,
 		Location:       testDeviceLocation,
+		Tags:           testTags,
 		AutoEvents:     testAutoEvents,
 		Protocols:      testProtocols,
 		Parent:         testParent,
@@ -82,6 +89,8 @@ func mockUpdateDevice() dtos.UpdateDevice {
 	d.Location = testDeviceLocation
 	d.AutoEvents = testAutoEvents
 	d.Protocols = testProtocols
+	d.Tags = testTags
+	d.Properties = testProperties
 	d.Parent = &testParent
 	return d
 }
@@ -235,6 +244,7 @@ func Test_AddDeviceReqToDeviceModels(t *testing.T) {
 			OperatingState: models.Up,
 			Labels:         testDeviceLabels,
 			Location:       testDeviceLocation,
+			Tags:           testTags,
 			AutoEvents: []models.AutoEvent{
 				{SourceName: "TestDevice", Interval: "300ms", OnChange: true, OnChangeThreshold: 0.01},
 			},
@@ -436,8 +446,10 @@ func TestReplaceDeviceModelFieldsWithDTO(t *testing.T) {
 	assert.Equal(t, TestDeviceProfileName, device.ProfileName)
 	assert.Equal(t, testLabels, device.Labels)
 	assert.Equal(t, testDeviceLocation, device.Location)
+	assert.Equal(t, testTags, device.Tags)
 	assert.Equal(t, dtos.ToAutoEventModels(testAutoEvents), device.AutoEvents)
 	assert.Equal(t, dtos.ToProtocolModels(testProtocols), device.Protocols)
+	assert.Equal(t, testProperties, device.Properties)
 }
 
 func TestNewAddDeviceRequest(t *testing.T) {

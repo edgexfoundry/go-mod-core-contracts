@@ -84,3 +84,28 @@ func (b *pathBuilder) SetNameFieldPath(namePath string) *pathBuilder {
 func (b *pathBuilder) BuildPath() string {
 	return strings.TrimSuffix(b.sb.String(), "/")
 }
+
+// StrValueFromProperties retrieves the string value associated with the given key from the provided properties map.
+func StrValueFromProperties(key string, properties map[string]any) (val string) {
+	if propVal, ok := properties[key]; ok {
+		val = fmt.Sprintf("%v", propVal)
+	}
+	return val
+}
+
+// StrSliceFromProperties retrieves a slice of strings associated with the given key from the provided properties map.
+func StrSliceFromProperties(key string, properties map[string]any) []string {
+	if propVal, ok := properties[key]; ok {
+		switch slice := propVal.(type) {
+		case []string:
+			return slice
+		case []any:
+			strSlice := make([]string, len(slice))
+			for i, v := range slice {
+				strSlice[i] = fmt.Sprintf("%v", v)
+			}
+			return strSlice
+		}
+	}
+	return []string{}
+}

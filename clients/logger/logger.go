@@ -83,7 +83,7 @@ func NewClient(owningServiceName string, logLevel string) LoggingClient {
 	lc.rootLogger = log.WithPrefix(
 		lc.rootLogger,
 		"ts",
-		log.DefaultTimestampUTC,
+		log.DefaultTimestamp,
 		"app",
 		owningServiceName,
 		"source",

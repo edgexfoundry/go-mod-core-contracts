@@ -79,6 +79,10 @@ func TestFromEventModelToDTO(t *testing.T) {
 }
 
 func TestEvent_ToXML(t *testing.T) {
+	reading := newBaseReading(TestDeviceProfileName, TestDeviceName, TestSourceName, TestValueType)
+	reading.Tags = map[string]any{"1": TestTag1, "2": TestTag2}
+	reading.Origin = TestTimestamp
+	reading.Id = TestUUID
 	var expectedDTO = Event{
 		Versionable: dtoCommon.Versionable{ApiVersion: common.ApiVersion},
 		Id:          TestUUID,
@@ -91,10 +95,19 @@ func TestEvent_ToXML(t *testing.T) {
 			"Latitude":  "29.630771",
 			"Longitude": "-95.377603",
 		},
+		Readings: []BaseReading{
+			reading,
+		},
 	}
 	// Since the order in map is random we have to verify the individual items exists without depending on order
 	contains := []string{
-		"<Event><ApiVersion>v3</ApiVersion><Id>7a1707f0-166f-4c4b-bc9d-1d54c74e0137</Id><DeviceName>TestDevice</DeviceName><ProfileName>TestDeviceProfileName</ProfileName><SourceName>TestSourceName</SourceName><Origin>1594963842</Origin><Tags>",
+		"<Event><ApiVersion>v3</ApiVersion><Id>7a1707f0-166f-4c4b-bc9d-1d54c74e0137</Id><DeviceName>TestDevice</DeviceName><ProfileName>TestDeviceProfileName</ProfileName><SourceName>TestSourceName</SourceName><Origin>1594963842</Origin>",
+		"<Readings><Id>7a1707f0-166f-4c4b-bc9d-1d54c74e0137</Id><Origin>1594963842</Origin><DeviceName>TestDevice</DeviceName><ResourceName>TestSourceName</ResourceName><ProfileName>TestDeviceProfileName</ProfileName>",
+		"<ValueType>Int8</ValueType><Units></Units><Tags>",
+		"<1>TestTag1</1>",
+		"<2>TestTag2</2>",
+		"</Tags><BinaryValue></BinaryValue><MediaType></MediaType><Value></Value>",
+		"</Readings><Tags>",
 		"<GatewayID>Houston-0001</GatewayID>",
 		"<Latitude>29.630771</Latitude>",
 		"<Longitude>-95.377603</Longitude>",

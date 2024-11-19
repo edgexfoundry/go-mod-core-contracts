@@ -11,21 +11,23 @@ import (
 
 type DeviceService struct {
 	DBTimestamp `json:",inline"`
-	Id          string   `json:"id,omitempty" validate:"omitempty,uuid"`
-	Name        string   `json:"name" validate:"required,edgex-dto-none-empty-string"`
-	Description string   `json:"description,omitempty"`
-	Labels      []string `json:"labels,omitempty"`
-	BaseAddress string   `json:"baseAddress" validate:"required,uri"`
-	AdminState  string   `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
+	Id          string         `json:"id,omitempty" validate:"omitempty,uuid"`
+	Name        string         `json:"name" validate:"required,edgex-dto-none-empty-string"`
+	Description string         `json:"description,omitempty"`
+	Labels      []string       `json:"labels,omitempty"`
+	BaseAddress string         `json:"baseAddress" validate:"required,uri"`
+	AdminState  string         `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
+	Properties  map[string]any `json:"properties,omitempty" yaml:"properties,omitempty"`
 }
 
 type UpdateDeviceService struct {
-	Id          *string  `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
-	Name        *string  `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
-	Description *string  `json:"description"`
-	BaseAddress *string  `json:"baseAddress" validate:"omitempty,uri"`
-	Labels      []string `json:"labels"`
-	AdminState  *string  `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Id          *string        `json:"id" validate:"required_without=Name,edgex-dto-uuid"`
+	Name        *string        `json:"name" validate:"required_without=Id,edgex-dto-none-empty-string"`
+	Description *string        `json:"description"`
+	BaseAddress *string        `json:"baseAddress" validate:"omitempty,uri"`
+	Labels      []string       `json:"labels"`
+	AdminState  *string        `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
+	Properties  map[string]any `json:"properties"`
 }
 
 // ToDeviceServiceModel transforms the DeviceService DTO to the DeviceService Model
@@ -37,6 +39,7 @@ func ToDeviceServiceModel(dto DeviceService) models.DeviceService {
 	ds.BaseAddress = dto.BaseAddress
 	ds.Labels = dto.Labels
 	ds.AdminState = models.AdminState(dto.AdminState)
+	ds.Properties = dto.Properties
 	return ds
 }
 
@@ -50,6 +53,7 @@ func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 	dto.BaseAddress = ds.BaseAddress
 	dto.Labels = ds.Labels
 	dto.AdminState = string(ds.AdminState)
+	dto.Properties = ds.Properties
 	return dto
 }
 
@@ -63,6 +67,7 @@ func FromDeviceServiceModelToUpdateDTO(ds models.DeviceService) UpdateDeviceServ
 		Labels:      ds.Labels,
 		BaseAddress: &ds.BaseAddress,
 		AdminState:  &adminState,
+		Properties:  ds.Properties,
 	}
 	return dto
 }
