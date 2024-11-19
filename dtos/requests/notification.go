@@ -61,3 +61,40 @@ func NewAddNotificationRequest(dto dtos.Notification) AddNotificationRequest {
 		Notification: dto,
 	}
 }
+
+// GetNotificationRequest defines the Request Content for GET Notification DTO.
+type GetNotificationRequest struct {
+	dtoCommon.BaseRequest `json:",inline"`
+	QueryCondition        NotificationQueryCondition `json:"queryCondition"`
+}
+
+type NotificationQueryCondition struct {
+	Category []string `json:"category,omitempty"`
+	Start    int64    `json:"start,omitempty"`
+	End      int64    `json:"end,omitempty"`
+}
+
+// Validate satisfies the Validator interface
+func (request GetNotificationRequest) Validate() error {
+	err := common.Validate(request)
+	return err
+}
+
+// UnmarshalJSON implements the Unmarshaler interface for the GetNotificationRequest type
+func (request *GetNotificationRequest) UnmarshalJSON(b []byte) error {
+	var alias struct {
+		dtoCommon.BaseRequest
+		QueryCondition NotificationQueryCondition
+	}
+	if err := json.Unmarshal(b, &alias); err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
+	}
+
+	*request = GetNotificationRequest(alias)
+
+	// validate GetNotificationRequest DTO
+	if err := request.Validate(); err != nil {
+		return err
+	}
+	return nil
+}

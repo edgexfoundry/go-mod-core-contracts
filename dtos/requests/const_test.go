@@ -21,7 +21,6 @@ const (
 	TestSourceName = "TestSourceName"
 
 	TestDeviceResourceName = "TestDeviceResourceName"
-	TestTag                = "TestTag"
 
 	TestDeviceCommandName = "TestDeviceCommand"
 

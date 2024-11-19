@@ -150,6 +150,7 @@ const (
 const (
 	All           = "all"
 	Id            = "id"
+	Ids           = "ids"
 	Created       = "created"
 	Modified      = "modified"
 	Pushed        = "pushed"
@@ -197,6 +198,9 @@ const (
 	Job           = "job"
 	Trigger       = "trigger"
 	Latest        = "latest"
+	Ack           = "ack"
+	Acknowledge   = "acknowledge"
+	Unacknowledge = "unacknowledge"
 
 	Offset        = "offset"         //query string to specify the number of items to skip before starting to collect the result set.
 	Limit         = "limit"          //query string to specify the numbers of items to return
@@ -314,7 +318,6 @@ const (
 	CoreKeeperServiceKey                = "core-keeper"
 	SupportLoggingServiceKey            = "support-logging"
 	SupportNotificationsServiceKey      = "support-notifications"
-	SystemManagementAgentServiceKey     = "sys-mgmt-agent"
 	SupportSchedulerServiceKey          = "support-scheduler"
 	SecuritySecretStoreSetupServiceKey  = "security-secretstore-setup"
 	SecurityProxyAuthServiceKey         = "security-proxy-auth"

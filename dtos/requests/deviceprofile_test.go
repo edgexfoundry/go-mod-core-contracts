@@ -52,6 +52,7 @@ func profileData() DeviceProfileRequest {
 			Versionable: dtoCommon.NewVersionable(),
 		},
 		Profile: dtos.DeviceProfile{
+			ApiVersion: common.ApiVersion,
 			DeviceProfileBasicInfo: dtos.DeviceProfileBasicInfo{
 				Name:         TestDeviceProfileName,
 				Manufacturer: TestManufacturer,
@@ -66,6 +67,7 @@ func profileData() DeviceProfileRequest {
 }
 
 var expectedDeviceProfile = models.DeviceProfile{
+	ApiVersion:   common.ApiVersion,
 	Name:         TestDeviceProfileName,
 	Manufacturer: TestManufacturer,
 	Description:  TestDescription,

@@ -7,15 +7,16 @@ package models
 
 type Notification struct {
 	DBTimestamp
-	Category    string
-	Content     string
-	ContentType string
-	Description string
-	Id          string
-	Labels      []string
-	Sender      string
-	Severity    NotificationSeverity
-	Status      NotificationStatus
+	Category     string
+	Content      string
+	ContentType  string
+	Description  string
+	Id           string
+	Labels       []string
+	Sender       string
+	Severity     NotificationSeverity
+	Status       NotificationStatus
+	Acknowledged bool
 }
 
 // NotificationSeverity indicates the level of severity for the notification.

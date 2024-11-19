@@ -21,4 +21,5 @@ func TestFromDeviceServiceModelToUpdateDTO(t *testing.T) {
 	assert.Equal(t, model.Labels, dto.Labels)
 	assert.Equal(t, model.Id, *dto.BaseAddress)
 	assert.EqualValues(t, model.Id, *dto.AdminState)
+	assert.Equal(t, model.Properties, dto.Properties)
 }

@@ -19,6 +19,7 @@ type DeviceProfile struct {
 	DeviceProfileBasicInfo `json:",inline" yaml:",inline"`
 	DeviceResources        []DeviceResource `json:"deviceResources" yaml:"deviceResources" validate:"dive"`
 	DeviceCommands         []DeviceCommand  `json:"deviceCommands" yaml:"deviceCommands" validate:"dive"`
+	ApiVersion             string           `json:"apiVersion,omitempty" yaml:"apiVersion,omitempty"`
 }
 
 // Validate satisfies the Validator interface
@@ -39,6 +40,7 @@ func (dp *DeviceProfile) UnmarshalYAML(unmarshal func(interface{}) error) error 
 		DeviceProfileBasicInfo `yaml:",inline"`
 		DeviceResources        []DeviceResource `yaml:"deviceResources"`
 		DeviceCommands         []DeviceCommand  `yaml:"deviceCommands"`
+		ApiVersion             string           `yaml:"apiVersion"`
 	}
 	if err := unmarshal(&alias); err != nil {
 		return edgexErrors.NewCommonEdgeX(edgexErrors.KindContractInvalid, "failed to unmarshal request body as YAML.", err)
@@ -72,11 +74,15 @@ func ToDeviceProfileModel(deviceProfileDTO DeviceProfile) models.DeviceProfile {
 		Labels:          deviceProfileDTO.Labels,
 		DeviceResources: ToDeviceResourceModels(deviceProfileDTO.DeviceResources),
 		DeviceCommands:  ToDeviceCommandModels(deviceProfileDTO.DeviceCommands),
+		ApiVersion:      deviceProfileDTO.ApiVersion,
 	}
 }
 
 // FromDeviceProfileModelToDTO transforms the DeviceProfile Model to the DeviceProfile DTO
 func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfile {
+	if deviceProfile.ApiVersion == "" {
+		deviceProfile.ApiVersion = common.ApiVersion
+	}
 	return DeviceProfile{
 		DeviceProfileBasicInfo: DeviceProfileBasicInfo{
 			DBTimestamp:  DBTimestamp(deviceProfile.DBTimestamp),
@@ -89,6 +95,7 @@ func FromDeviceProfileModelToDTO(deviceProfile models.DeviceProfile) DeviceProfi
 		},
 		DeviceResources: FromDeviceResourceModelsToDTOs(deviceProfile.DeviceResources),
 		DeviceCommands:  FromDeviceCommandModelsToDTOs(deviceProfile.DeviceCommands),
+		ApiVersion:      deviceProfile.ApiVersion,
 	}
 }
 

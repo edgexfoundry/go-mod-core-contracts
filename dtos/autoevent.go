@@ -10,7 +10,7 @@ import (
 )
 
 type AutoEvent struct {
-	Interval          string  `json:"interval" yaml:"interval" validate:"required,edgex-dto-duration"`
+	Interval          string  `json:"interval" yaml:"interval" validate:"required,edgex-dto-duration=1ms"` // min/max can be defined as params, ex. edgex-dto-duration=10ms0x2C24h
 	OnChange          bool    `json:"onChange" yaml:"onChange"`
 	OnChangeThreshold float64 `json:"onChangeThreshold" yaml:"onChangeThreshold" validate:"gte=0"`
 	SourceName        string  `json:"sourceName" yaml:"sourceName" validate:"required"`

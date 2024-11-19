@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,4 +13,5 @@ type DeviceService struct {
 	Labels      []string
 	BaseAddress string
 	AdminState  AdminState
+	Properties  map[string]any
 }
