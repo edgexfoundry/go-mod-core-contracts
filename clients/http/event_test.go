@@ -93,9 +93,9 @@ func TestDeleteEventsByDeviceName(t *testing.T) {
 }
 
 func TestQueryEventsByTimeRange(t *testing.T) {
-	start := 1
-	end := 10
-	urlPath := path.Join(common.ApiEventRoute, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	start := int64(1)
+	end := int64(10)
+	urlPath := path.Join(common.ApiEventRoute, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	ts := newTestServer(http.MethodGet, urlPath, responses.MultiEventsResponse{})
 	defer ts.Close()
 

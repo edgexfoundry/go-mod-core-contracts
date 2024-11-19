@@ -105,8 +105,8 @@ func (client *NotificationClient) NotificationsByStatus(ctx context.Context, sta
 }
 
 // NotificationsByTimeRange query notifications with time range, offset and limit
-func (client *NotificationClient) NotificationsByTimeRange(ctx context.Context, start int, end int, offset int, limit int) (res responses.MultiNotificationsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiNotificationRoute, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+func (client *NotificationClient) NotificationsByTimeRange(ctx context.Context, start int64, end int64, offset int, limit int) (res responses.MultiNotificationsResponse, err errors.EdgeX) {
+	requestPath := path.Join(common.ApiNotificationRoute, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

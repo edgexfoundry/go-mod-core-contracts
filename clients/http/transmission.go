@@ -46,8 +46,8 @@ func (client *TransmissionClient) TransmissionById(ctx context.Context, id strin
 }
 
 // TransmissionsByTimeRange query transmissions with time range, offset and limit
-func (client *TransmissionClient) TransmissionsByTimeRange(ctx context.Context, start int, end int, offset int, limit int) (res responses.MultiTransmissionsResponse, err errors.EdgeX) {
-	requestPath := path.Join(common.ApiTransmissionRoute, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+func (client *TransmissionClient) TransmissionsByTimeRange(ctx context.Context, start int64, end int64, offset int, limit int) (res responses.MultiTransmissionsResponse, err errors.EdgeX) {
+	requestPath := path.Join(common.ApiTransmissionRoute, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

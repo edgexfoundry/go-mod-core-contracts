@@ -109,9 +109,9 @@ func (ec *eventClient) DeleteByDeviceName(ctx context.Context, name string) (dto
 	return res, nil
 }
 
-func (ec *eventClient) EventsByTimeRange(ctx context.Context, start, end, offset, limit int) (
+func (ec *eventClient) EventsByTimeRange(ctx context.Context, start, end int64, offset, limit int) (
 	responses.MultiEventsResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiEventRoute, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+	requestPath := path.Join(common.ApiEventRoute, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

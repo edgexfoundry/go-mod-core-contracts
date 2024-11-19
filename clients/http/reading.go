@@ -93,8 +93,8 @@ func (rc readingClient) ReadingsByResourceName(ctx context.Context, name string,
 	return res, nil
 }
 
-func (rc readingClient) ReadingsByTimeRange(ctx context.Context, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
-	requestPath := path.Join(common.ApiReadingRoute, common.Start, strconv.Itoa(start), common.End, strconv.Itoa(end))
+func (rc readingClient) ReadingsByTimeRange(ctx context.Context, start, end int64, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
+	requestPath := path.Join(common.ApiReadingRoute, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -107,9 +107,9 @@ func (rc readingClient) ReadingsByTimeRange(ctx context.Context, start, end, off
 }
 
 // ReadingsByResourceNameAndTimeRange returns readings by resource name and specified time range. Readings are sorted in descending order of origin time.
-func (rc readingClient) ReadingsByResourceNameAndTimeRange(ctx context.Context, name string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
+func (rc readingClient) ReadingsByResourceNameAndTimeRange(ctx context.Context, name string, start, end int64, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
 	requestPath := common.NewPathBuilder().EnableNameFieldEscape(rc.enableNameFieldEscape).
-		SetPath(common.ApiReadingRoute).SetPath(common.ResourceName).SetNameFieldPath(name).SetPath(common.Start).SetPath(strconv.Itoa(start)).SetPath(common.End).SetPath(strconv.Itoa(end)).BuildPath()
+		SetPath(common.ApiReadingRoute).SetPath(common.ResourceName).SetNameFieldPath(name).SetPath(common.Start).SetPath(strconv.FormatInt(start, 10)).SetPath(common.End).SetPath(strconv.FormatInt(end, 10)).BuildPath()
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -136,10 +136,10 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceName(ctx context.Context,
 
 }
 
-func (rc readingClient) ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx context.Context, deviceName, resourceName string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
+func (rc readingClient) ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx context.Context, deviceName, resourceName string, start, end int64, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
 	requestPath := common.NewPathBuilder().EnableNameFieldEscape(rc.enableNameFieldEscape).
 		SetPath(common.ApiReadingRoute).SetPath(common.Device).SetPath(common.Name).SetNameFieldPath(deviceName).SetPath(common.ResourceName).SetNameFieldPath(resourceName).
-		SetPath(common.Start).SetPath(strconv.Itoa(start)).SetPath(common.End).SetPath(strconv.Itoa(end)).BuildPath()
+		SetPath(common.Start).SetPath(strconv.FormatInt(start, 10)).SetPath(common.End).SetPath(strconv.FormatInt(end, 10)).BuildPath()
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
@@ -151,10 +151,10 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx cont
 	return res, nil
 }
 
-func (rc readingClient) ReadingsByDeviceNameAndResourceNamesAndTimeRange(ctx context.Context, deviceName string, resourceNames []string, start, end, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
+func (rc readingClient) ReadingsByDeviceNameAndResourceNamesAndTimeRange(ctx context.Context, deviceName string, resourceNames []string, start, end int64, offset, limit int) (responses.MultiReadingsResponse, errors.EdgeX) {
 	requestPath := common.NewPathBuilder().EnableNameFieldEscape(rc.enableNameFieldEscape).
 		SetPath(common.ApiReadingRoute).SetPath(common.Device).SetPath(common.Name).SetNameFieldPath(deviceName).
-		SetPath(common.Start).SetPath(strconv.Itoa(start)).SetPath(common.End).SetPath(strconv.Itoa(end)).BuildPath()
+		SetPath(common.Start).SetPath(strconv.FormatInt(start, 10)).SetPath(common.End).SetPath(strconv.FormatInt(end, 10)).BuildPath()
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))

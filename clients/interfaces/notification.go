@@ -29,7 +29,7 @@ type NotificationClient interface {
 	// NotificationsByStatus queries notifications with status, offset and limit
 	NotificationsByStatus(ctx context.Context, status string, offset int, limit int) (responses.MultiNotificationsResponse, errors.EdgeX)
 	// NotificationsByTimeRange query notifications with time range, offset and limit
-	NotificationsByTimeRange(ctx context.Context, start int, end int, offset int, limit int) (responses.MultiNotificationsResponse, errors.EdgeX)
+	NotificationsByTimeRange(ctx context.Context, start, end int64, offset int, limit int) (responses.MultiNotificationsResponse, errors.EdgeX)
 	// NotificationsBySubscriptionName query notifications with subscriptionName, offset and limit
 	NotificationsBySubscriptionName(ctx context.Context, subscriptionName string, offset int, limit int) (responses.MultiNotificationsResponse, errors.EdgeX)
 	// CleanupNotificationsByAge removes notifications that are older than age. And the corresponding transmissions will also be deleted.
