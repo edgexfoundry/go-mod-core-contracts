@@ -67,6 +67,9 @@ const (
 	ApiNotificationByIdEchoRoute               = ApiNotificationRoute + "/" + Id + "/:" + Id
 	ApiNotificationByStatusEchoRoute           = ApiNotificationRoute + "/" + Status + "/:" + Status
 	ApiNotificationBySubscriptionNameEchoRoute = ApiNotificationRoute + "/" + Subscription + "/" + Name + "/:" + Name
+	ApiNotificationByIdsRoute                  = ApiNotificationRoute + "/" + Ids + "/:" + Ids
+	ApiNotificationAcknowledgeByIdsRoute       = ApiNotificationRoute + "/" + Acknowledge + "/" + Ids + "/:" + Ids
+	ApiNotificationUnacknowledgeByIdsRoute     = ApiNotificationRoute + "/" + Unacknowledge + "/" + Ids + "/:" + Ids
 
 	ApiTransmissionByIdEchoRoute               = ApiTransmissionRoute + "/" + Id + "/:" + Id
 	ApiTransmissionByAgeEchoRoute              = ApiTransmissionRoute + "/" + Age + "/:" + Age
