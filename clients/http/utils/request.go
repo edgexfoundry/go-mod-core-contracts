@@ -100,6 +100,23 @@ func PostRequestWithRawData(
 	return processRequest(ctx, returnValuePointer, req, authInjector)
 }
 
+// PostRequestWithRawDataAndHeaders makes the post JSON request with raw data and request headers, and returns the body
+func PostRequestWithRawDataAndHeaders(
+	ctx context.Context,
+	returnValuePointer interface{},
+	baseUrl string, requestPath string,
+	requestParams url.Values,
+	data interface{}, authInjector interfaces.AuthenticationInjector,
+	headers map[string]string) errors.EdgeX {
+
+	req, err := createRequestWithRawDataAndHeaders(ctx, http.MethodPost, baseUrl, requestPath, requestParams, data, headers)
+	if err != nil {
+		return errors.NewCommonEdgeXWrapper(err)
+	}
+
+	return processRequest(ctx, returnValuePointer, req, authInjector)
+}
+
 // PutRequest makes the put JSON request and return the body
 func PutRequest(
 	ctx context.Context,

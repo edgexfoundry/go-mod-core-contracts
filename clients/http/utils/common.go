@@ -146,6 +146,20 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl st
 	return req, nil
 }
 
+func createRequestWithRawDataAndHeaders(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data any, headers map[string]string) (*http.Request, errors.EdgeX) {
+	req, err := createRequestWithRawData(ctx, httpMethod, baseUrl, requestPath, requestParams, data)
+	if err != nil {
+		return nil, errors.NewCommonEdgeXWrapper(err)
+	}
+
+	// Add the additional headers from request
+	for name, value := range headers {
+		req.Header.Set(name, value)
+	}
+
+	return req, nil
+}
+
 func createRequestWithEncodedData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
 	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
