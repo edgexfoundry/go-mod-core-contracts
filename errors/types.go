@@ -36,6 +36,7 @@ const (
 	KindOverflowError       ErrKind = "OverflowError"
 	KindNaNError            ErrKind = "NaNError"
 	KindUnauthorized        ErrKind = "Unauthorized"
+	KindForbidden           ErrKind = "Forbidden"
 )
 
 // EdgeX provides an abstraction for all internal EdgeX errors.
@@ -209,7 +210,7 @@ func codeMapping(kind ErrKind) int {
 		return http.StatusMethodNotAllowed
 	case KindRangeNotSatisfiable:
 		return http.StatusRequestedRangeNotSatisfiable
-	case KindIOError:
+	case KindIOError, KindForbidden:
 		return http.StatusForbidden
 	case KindUnauthorized:
 		return http.StatusUnauthorized
@@ -246,7 +247,7 @@ func KindMapping(code int) ErrKind {
 	case http.StatusUnauthorized:
 		return KindUnauthorized
 	case http.StatusForbidden:
-		return KindIOError
+		return KindForbidden
 	default:
 		return KindUnknown
 	}
