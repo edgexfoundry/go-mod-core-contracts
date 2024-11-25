@@ -245,6 +245,8 @@ func KindMapping(code int) ErrKind {
 		return KindRangeNotSatisfiable
 	case http.StatusUnauthorized:
 		return KindUnauthorized
+	case http.StatusForbidden:
+		return KindIOError
 	default:
 		return KindUnknown
 	}
