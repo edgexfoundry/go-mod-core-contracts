@@ -204,6 +204,9 @@ func processRequest(ctx context.Context,
 	returnValuePointer any, req *http.Request, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
 	resp, err := sendRequest(ctx, req, authInjector)
 	if err != nil {
+		if resp != nil {
+			_ = json.Unmarshal(resp, returnValuePointer)
+		}
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 	// Check the response content length to avoid json unmarshal error

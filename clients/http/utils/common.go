@@ -234,7 +234,7 @@ func sendRequest(ctx context.Context, req *http.Request, authInjector interfaces
 	// Handle error response
 	msg := fmt.Sprintf("request failed, status code: %d, err: %s", resp.StatusCode, string(bodyBytes))
 	errKind := errors.KindMapping(resp.StatusCode)
-	return nil, errors.NewCommonEdgeX(errKind, msg, nil)
+	return bodyBytes, errors.NewCommonEdgeX(errKind, msg, nil)
 }
 
 // EscapeAndJoinPath escape and join the path variables
