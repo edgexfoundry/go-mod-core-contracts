@@ -109,7 +109,7 @@ func PostRequestWithRawDataAndHeaders(
 	data interface{}, authInjector interfaces.AuthenticationInjector,
 	headers map[string]string) errors.EdgeX {
 
-	req, err := createRequestWithRawDataAndHeaders(ctx, http.MethodPost, baseUrl, requestPath, requestParams, data, headers)
+	req, err := CreateRequestWithRawDataAndHeaders(ctx, http.MethodPost, baseUrl, requestPath, requestParams, data, headers)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -202,11 +202,8 @@ func DeleteRequestWithParams(ctx context.Context, returnValuePointer interface{}
 // processRequest is a helper function to process the request and get the return value
 func processRequest(ctx context.Context,
 	returnValuePointer any, req *http.Request, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
-	resp, err := sendRequest(ctx, req, authInjector)
+	resp, err := SendRequest(ctx, req, authInjector)
 	if err != nil {
-		if resp != nil {
-			_ = json.Unmarshal(resp, returnValuePointer)
-		}
 		return errors.NewCommonEdgeXWrapper(err)
 	}
 	// Check the response content length to avoid json unmarshal error

@@ -146,7 +146,7 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl st
 	return req, nil
 }
 
-func createRequestWithRawDataAndHeaders(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data any, headers map[string]string) (*http.Request, errors.EdgeX) {
+func CreateRequestWithRawDataAndHeaders(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data any, headers map[string]string) (*http.Request, errors.EdgeX) {
 	req, err := createRequestWithRawData(ctx, httpMethod, baseUrl, requestPath, requestParams, data)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
@@ -213,9 +213,9 @@ func createRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl s
 	return req, nil
 }
 
-// sendRequest will make a request with raw data to the specified URL.
+// SendRequest will make a request with raw data to the specified URL.
 // It returns the body as a byte array if successful and an error otherwise.
-func sendRequest(ctx context.Context, req *http.Request, authInjector interfaces.AuthenticationInjector) ([]byte, errors.EdgeX) {
+func SendRequest(ctx context.Context, req *http.Request, authInjector interfaces.AuthenticationInjector) ([]byte, errors.EdgeX) {
 	resp, err := makeRequest(req, authInjector)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
