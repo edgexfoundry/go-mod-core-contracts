@@ -20,7 +20,7 @@ import (
 
 // GetRequest makes the get request and return the body
 func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, requestParams url.Values, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
-	req, err := createRequest(ctx, http.MethodGet, baseUrl, requestPath, requestParams)
+	req, err := CreateRequest(ctx, http.MethodGet, baseUrl, requestPath, requestParams)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -30,7 +30,7 @@ func GetRequest(ctx context.Context, returnValuePointer interface{}, baseUrl str
 
 // GetRequestAndReturnBinaryRes makes the get request and return the binary response and content type(i.e., application/json, application/cbor, ... )
 func GetRequestAndReturnBinaryRes(ctx context.Context, baseUrl string, requestPath string, requestParams url.Values, authInjector interfaces.AuthenticationInjector) (res []byte, contentType string, edgeXerr errors.EdgeX) {
-	req, edgeXerr := createRequest(ctx, http.MethodGet, baseUrl, requestPath, requestParams)
+	req, edgeXerr := CreateRequest(ctx, http.MethodGet, baseUrl, requestPath, requestParams)
 	if edgeXerr != nil {
 		return nil, "", errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
@@ -60,7 +60,7 @@ func GetRequestAndReturnBinaryRes(ctx context.Context, baseUrl string, requestPa
 
 // GetRequestWithBodyRawData makes the GET request with JSON raw data as request body and return the response
 func GetRequestWithBodyRawData(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, requestParams url.Values, data interface{}, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
-	req, err := createRequestWithRawDataAndParams(ctx, http.MethodGet, baseUrl, requestPath, requestParams, data)
+	req, err := CreateRequestWithRawDataAndParams(ctx, http.MethodGet, baseUrl, requestPath, requestParams, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -76,7 +76,7 @@ func PostRequest(
 	data []byte,
 	encoding string, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
 
-	req, err := createRequestWithEncodedData(ctx, http.MethodPost, baseUrl, requestPath, data, encoding)
+	req, err := CreateRequestWithEncodedData(ctx, http.MethodPost, baseUrl, requestPath, data, encoding)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -92,7 +92,7 @@ func PostRequestWithRawData(
 	requestParams url.Values,
 	data interface{}, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPost, baseUrl, requestPath, requestParams, data)
+	req, err := CreateRequestWithRawData(ctx, http.MethodPost, baseUrl, requestPath, requestParams, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -125,7 +125,7 @@ func PutRequest(
 	requestParams url.Values,
 	data interface{}, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPut, baseUrl, requestPath, requestParams, data)
+	req, err := CreateRequestWithRawData(ctx, http.MethodPut, baseUrl, requestPath, requestParams, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -141,7 +141,7 @@ func PatchRequest(
 	requestParams url.Values,
 	data interface{}, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
 
-	req, err := createRequestWithRawData(ctx, http.MethodPatch, baseUrl, requestPath, requestParams, data)
+	req, err := CreateRequestWithRawData(ctx, http.MethodPatch, baseUrl, requestPath, requestParams, data)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -156,7 +156,7 @@ func PostByFileRequest(
 	baseUrl string, requestPath string,
 	filePath string, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
 
-	req, err := createRequestFromFilePath(ctx, http.MethodPost, baseUrl, requestPath, filePath)
+	req, err := CreateRequestFromFilePath(ctx, http.MethodPost, baseUrl, requestPath, filePath)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -171,7 +171,7 @@ func PutByFileRequest(
 	baseUrl string, requestPath string,
 	filePath string, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
 
-	req, err := createRequestFromFilePath(ctx, http.MethodPut, baseUrl, requestPath, filePath)
+	req, err := CreateRequestFromFilePath(ctx, http.MethodPut, baseUrl, requestPath, filePath)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -181,7 +181,7 @@ func PutByFileRequest(
 
 // DeleteRequest makes the delete request and return the body
 func DeleteRequest(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
-	req, err := createRequest(ctx, http.MethodDelete, baseUrl, requestPath, nil)
+	req, err := CreateRequest(ctx, http.MethodDelete, baseUrl, requestPath, nil)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}
@@ -191,7 +191,7 @@ func DeleteRequest(ctx context.Context, returnValuePointer interface{}, baseUrl 
 
 // DeleteRequestWithParams makes the delete request with URL query params and return the body
 func DeleteRequestWithParams(ctx context.Context, returnValuePointer interface{}, baseUrl string, requestPath string, requestParams url.Values, authInjector interfaces.AuthenticationInjector) errors.EdgeX {
-	req, err := createRequest(ctx, http.MethodDelete, baseUrl, requestPath, requestParams)
+	req, err := CreateRequest(ctx, http.MethodDelete, baseUrl, requestPath, requestParams)
 	if err != nil {
 		return errors.NewCommonEdgeXWrapper(err)
 	}

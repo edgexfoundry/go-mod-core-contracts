@@ -29,7 +29,7 @@ func TestCreateRequest(t *testing.T) {
 	}
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, err := createRequest(context.Background(), http.MethodGet, baseUrl, requestPath, nil)
+			_, err := CreateRequest(context.Background(), http.MethodGet, baseUrl, requestPath, nil)
 			assert.NoError(t, err)
 		})
 	}
@@ -48,7 +48,7 @@ func TestCreateRequestWithRawData(t *testing.T) {
 	}
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, err := createRequestWithRawData(context.Background(), http.MethodGet, baseUrl, requestPath, nil, models.Event{})
+			_, err := CreateRequestWithRawData(context.Background(), http.MethodGet, baseUrl, requestPath, nil, models.Event{})
 			assert.NoError(t, err)
 		})
 	}
@@ -67,7 +67,7 @@ func TestCreateRequestWithRawDataAndParams(t *testing.T) {
 	}
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, err := createRequestWithRawDataAndParams(context.Background(), http.MethodGet, baseUrl, requestPath, nil, models.Event{})
+			_, err := CreateRequestWithRawDataAndParams(context.Background(), http.MethodGet, baseUrl, requestPath, nil, models.Event{})
 			assert.NoError(t, err)
 		})
 	}
@@ -86,7 +86,7 @@ func TestCreateRequestWithEncodedData(t *testing.T) {
 	}
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, err := createRequestWithEncodedData(context.Background(), http.MethodGet, baseUrl, requestPath, nil, "")
+			_, err := CreateRequestWithEncodedData(context.Background(), http.MethodGet, baseUrl, requestPath, nil, "")
 			assert.NoError(t, err)
 		})
 	}
@@ -109,7 +109,7 @@ func TestCreateRequestFromFilePath(t *testing.T) {
 	}
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, err := createRequestFromFilePath(context.Background(), http.MethodGet, baseUrl, requestPath, f.Name())
+			_, err := CreateRequestFromFilePath(context.Background(), http.MethodGet, baseUrl, requestPath, f.Name())
 			assert.NoError(t, err)
 		})
 	}
