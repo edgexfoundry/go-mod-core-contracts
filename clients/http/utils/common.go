@@ -75,7 +75,7 @@ func makeRequest(req *http.Request, authInjector interfaces.AuthenticationInject
 	return resp, nil
 }
 
-func createRequest(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values) (*http.Request, errors.EdgeX) {
+func CreateRequest(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values) (*http.Request, errors.EdgeX) {
 	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
@@ -91,7 +91,7 @@ func createRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 	return req, nil
 }
 
-func createRequestWithRawDataAndParams(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
+func CreateRequestWithRawDataAndParams(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
 	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
@@ -118,7 +118,7 @@ func createRequestWithRawDataAndParams(ctx context.Context, httpMethod string, b
 	return req, nil
 }
 
-func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
+func CreateRequestWithRawData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data interface{}) (*http.Request, errors.EdgeX) {
 	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
@@ -146,7 +146,21 @@ func createRequestWithRawData(ctx context.Context, httpMethod string, baseUrl st
 	return req, nil
 }
 
-func createRequestWithEncodedData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
+func CreateRequestWithRawDataAndHeaders(ctx context.Context, httpMethod string, baseUrl string, requestPath string, requestParams url.Values, data any, headers map[string]string) (*http.Request, errors.EdgeX) {
+	req, err := CreateRequestWithRawData(ctx, httpMethod, baseUrl, requestPath, requestParams, data)
+	if err != nil {
+		return nil, errors.NewCommonEdgeXWrapper(err)
+	}
+
+	// Add the additional headers from request
+	for name, value := range headers {
+		req.Header.Set(name, value)
+	}
+
+	return req, nil
+}
+
+func CreateRequestWithEncodedData(ctx context.Context, httpMethod string, baseUrl string, requestPath string, data []byte, encoding string) (*http.Request, errors.EdgeX) {
 	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
@@ -166,8 +180,8 @@ func createRequestWithEncodedData(ctx context.Context, httpMethod string, baseUr
 	return req, nil
 }
 
-// createRequestFromFilePath creates multipart/form-data request with the specified file
-func createRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl string, requestPath string, filePath string) (*http.Request, errors.EdgeX) {
+// CreateRequestFromFilePath creates multipart/form-data request with the specified file
+func CreateRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl string, requestPath string, filePath string) (*http.Request, errors.EdgeX) {
 	u, err := parseBaseUrlAndRequestPath(baseUrl, requestPath)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
@@ -199,9 +213,9 @@ func createRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl s
 	return req, nil
 }
 
-// sendRequest will make a request with raw data to the specified URL.
+// SendRequest will make a request with raw data to the specified URL.
 // It returns the body as a byte array if successful and an error otherwise.
-func sendRequest(ctx context.Context, req *http.Request, authInjector interfaces.AuthenticationInjector) ([]byte, errors.EdgeX) {
+func SendRequest(ctx context.Context, req *http.Request, authInjector interfaces.AuthenticationInjector) ([]byte, errors.EdgeX) {
 	resp, err := makeRequest(req, authInjector)
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
@@ -220,7 +234,7 @@ func sendRequest(ctx context.Context, req *http.Request, authInjector interfaces
 	// Handle error response
 	msg := fmt.Sprintf("request failed, status code: %d, err: %s", resp.StatusCode, string(bodyBytes))
 	errKind := errors.KindMapping(resp.StatusCode)
-	return nil, errors.NewCommonEdgeX(errKind, msg, nil)
+	return bodyBytes, errors.NewCommonEdgeX(errKind, msg, nil)
 }
 
 // EscapeAndJoinPath escape and join the path variables
