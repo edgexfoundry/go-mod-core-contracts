@@ -21,6 +21,7 @@ import (
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
+	dtosCommon "github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
 
 	"github.com/google/uuid"
@@ -231,8 +232,19 @@ func SendRequest(ctx context.Context, req *http.Request, authInjector interfaces
 		return bodyBytes, nil
 	}
 
+	var errMsg string
+	var errResp dtosCommon.BaseResponse
+	// If the bodyBytes can be unmarshalled to BaseResponse DTO, use the BaseResponse.Message field as the error message
+	// Otherwise, use the whole bodyBytes string as the error message
+	baseRespErr := json.Unmarshal(bodyBytes, &errResp)
+	if baseRespErr == nil {
+		errMsg = errResp.Message
+	} else {
+		errMsg = string(bodyBytes)
+	}
+
 	// Handle error response
-	msg := fmt.Sprintf("request failed, status code: %d, err: %s", resp.StatusCode, string(bodyBytes))
+	msg := fmt.Sprintf("request failed, status code: %d, err: %s", resp.StatusCode, errMsg)
 	errKind := errors.KindMapping(resp.StatusCode)
 	return bodyBytes, errors.NewCommonEdgeX(errKind, msg, nil)
 }
