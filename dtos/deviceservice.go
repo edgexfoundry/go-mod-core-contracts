@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ type DeviceService struct {
 	Labels      []string       `json:"labels,omitempty"`
 	BaseAddress string         `json:"baseAddress" validate:"required,uri"`
 	AdminState  string         `json:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
-	Properties  map[string]any `json:"properties,omitempty" yaml:"properties,omitempty"`
+	Properties  map[string]any `json:"properties" yaml:"properties"`
 }
 
 type UpdateDeviceService struct {
@@ -40,6 +40,9 @@ func ToDeviceServiceModel(dto DeviceService) models.DeviceService {
 	ds.Labels = dto.Labels
 	ds.AdminState = models.AdminState(dto.AdminState)
 	ds.Properties = dto.Properties
+	if ds.Properties == nil {
+		ds.Properties = make(map[string]any)
+	}
 	return ds
 }
 
@@ -54,6 +57,9 @@ func FromDeviceServiceModelToDTO(ds models.DeviceService) DeviceService {
 	dto.Labels = ds.Labels
 	dto.AdminState = string(ds.AdminState)
 	dto.Properties = ds.Properties
+	if dto.Properties == nil {
+		dto.Properties = make(map[string]any)
+	}
 	return dto
 }
 

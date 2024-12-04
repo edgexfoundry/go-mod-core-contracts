@@ -56,6 +56,7 @@ func addScheduleJobRequestData() AddScheduleJobRequest {
 		Actions:    testScheduleActions,
 		AdminState: models.Unlocked,
 		Labels:     testScheduleJobLabels,
+		Properties: make(map[string]any),
 	})
 }
 
@@ -129,6 +130,9 @@ func TestAddScheduleJobRequest_Validate(t *testing.T) {
 func TestAddScheduleJobRequest_UnmarshalJSON(t *testing.T) {
 	validAddScheduleJobRequest := addScheduleJobRequestData()
 	jsonData, _ := json.Marshal(validAddScheduleJobRequest)
+	validAddScheduleJobRequestWithoutProperties := validAddScheduleJobRequest
+	validAddScheduleJobRequestWithoutProperties.ScheduleJob.Properties = nil
+	jsonDataWithoutScheduleJobProperties, _ := json.Marshal(validAddScheduleJobRequestWithoutProperties)
 	tests := []struct {
 		name     string
 		expected AddScheduleJobRequest
@@ -136,6 +140,7 @@ func TestAddScheduleJobRequest_UnmarshalJSON(t *testing.T) {
 		wantErr  bool
 	}{
 		{"unmarshal AddScheduleJobRequest with success", validAddScheduleJobRequest, jsonData, false},
+		{"unmarshal AddScheduleJobRequest with success, nil ScheduleJob Properties", validAddScheduleJobRequest, jsonDataWithoutScheduleJobProperties, false},
 		{"unmarshal invalid AddScheduleJobRequest, empty data", AddScheduleJobRequest{}, []byte{}, true},
 		{"unmarshal invalid AddScheduleJobRequest, string data", AddScheduleJobRequest{}, []byte("Invalid AddScheduleJobRequest"), true},
 	}

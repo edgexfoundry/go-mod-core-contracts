@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -58,6 +58,7 @@ var testAddDevice = AddDeviceRequest{
 		AutoEvents:     testAutoEvents,
 		Protocols:      testProtocols,
 		Parent:         testParent,
+		Properties:     make(map[string]any),
 	},
 }
 
@@ -205,6 +206,9 @@ func TestAddDeviceRequest_Validate(t *testing.T) {
 func TestAddDevice_UnmarshalJSON(t *testing.T) {
 	valid := testAddDevice
 	resultTestBytes, _ := json.Marshal(testAddDevice)
+	nilDeviceProperties := testAddDevice
+	nilDeviceProperties.Device.Properties = nil
+	bytesNilDeviceProperties, _ := json.Marshal(nilDeviceProperties)
 	type args struct {
 		data []byte
 	}
@@ -215,6 +219,7 @@ func TestAddDevice_UnmarshalJSON(t *testing.T) {
 		wantErr   bool
 	}{
 		{"unmarshal AddDeviceRequest with success", valid, args{resultTestBytes}, false},
+		{"unmarshal AddDeviceRequest with success, nil Device Properties", valid, args{bytesNilDeviceProperties}, false},
 		{"unmarshal invalid AddDeviceRequest, empty data", AddDeviceRequest{}, args{[]byte{}}, true},
 		{"unmarshal invalid AddDeviceRequest, string data", AddDeviceRequest{}, args{[]byte("Invalid AddDeviceRequest")}, true},
 	}
@@ -255,11 +260,19 @@ func Test_AddDeviceReqToDeviceModels(t *testing.T) {
 					"UnitID":  "1",
 				},
 			},
-			Parent: testParent,
+			Parent:     testParent,
+			Properties: make(map[string]any),
 		},
 	}
 	resultModels := AddDeviceReqToDeviceModels(requests)
 	assert.Equal(t, expectedDeviceModel, resultModels, "AddDeviceReqToDeviceModels did not result in expected Device model.")
+	for i, _ := range requests {
+		requests[i].Device.Properties = nil
+	}
+	resultModels = AddDeviceReqToDeviceModels(requests)
+	for _, m := range resultModels {
+		assert.NotNil(t, m.Properties)
+	}
 }
 
 func TestUpdateDeviceRequest_UnmarshalJSON(t *testing.T) {

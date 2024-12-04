@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2023 IOTech Ltd
+// Copyright (C) 2023-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ type DiscoveredDevice struct {
 	ProfileName string         `json:"profileName" yaml:"profileName" validate:"len=0|edgex-dto-none-empty-string"`
 	AdminState  string         `json:"adminState" yaml:"adminState" validate:"oneof='LOCKED' 'UNLOCKED'"`
 	AutoEvents  []AutoEvent    `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
-	Properties  map[string]any `json:"properties,omitempty" yaml:"properties,omitempty"`
+	Properties  map[string]any `json:"properties" yaml:"properties"`
 }
 
 type UpdateDiscoveredDevice struct {
@@ -22,21 +22,29 @@ type UpdateDiscoveredDevice struct {
 }
 
 func ToDiscoveredDeviceModel(dto DiscoveredDevice) models.DiscoveredDevice {
-	return models.DiscoveredDevice{
+	m := models.DiscoveredDevice{
 		ProfileName: dto.ProfileName,
 		AdminState:  models.AdminState(dto.AdminState),
 		AutoEvents:  ToAutoEventModels(dto.AutoEvents),
 		Properties:  dto.Properties,
 	}
+	if m.Properties == nil {
+		m.Properties = make(map[string]any)
+	}
+	return m
 }
 
 func FromDiscoveredDeviceModelToDTO(d models.DiscoveredDevice) DiscoveredDevice {
-	return DiscoveredDevice{
+	dto := DiscoveredDevice{
 		ProfileName: d.ProfileName,
 		AdminState:  string(d.AdminState),
 		AutoEvents:  FromAutoEventModelsToDTOs(d.AutoEvents),
 		Properties:  d.Properties,
 	}
+	if dto.Properties == nil {
+		dto.Properties = make(map[string]any)
+	}
+	return dto
 }
 
 func FromDiscoveredDeviceModelToUpdateDTO(d models.DiscoveredDevice) UpdateDiscoveredDevice {

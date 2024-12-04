@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -35,6 +35,10 @@ func (d *AddDeviceRequest) UnmarshalJSON(b []byte) error {
 	}
 	if err := json.Unmarshal(b, &alias); err != nil {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
+	}
+
+	if alias.Device.Properties == nil {
+		alias.Device.Properties = make(map[string]any)
 	}
 
 	*d = AddDeviceRequest(alias)

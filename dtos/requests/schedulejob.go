@@ -45,6 +45,10 @@ func (a *AddScheduleJobRequest) UnmarshalJSON(b []byte) error {
 		return errors.NewCommonEdgeX(errors.KindContractInvalid, "Failed to unmarshal request body as JSON.", err)
 	}
 
+	if alias.ScheduleJob.Properties == nil {
+		alias.ScheduleJob.Properties = make(map[string]any)
+	}
+
 	*a = AddScheduleJobRequest(alias)
 
 	// validate AddScheduleJobRequest DTO
