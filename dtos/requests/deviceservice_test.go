@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,6 +29,7 @@ var testAddDeviceService = AddDeviceServiceRequest{
 		BaseAddress: TestBaseAddress,
 		Labels:      []string{"MODBUS", "TEMP"},
 		AdminState:  models.Locked,
+		Properties:  make(map[string]any),
 	},
 }
 
@@ -111,6 +112,9 @@ func TestAddDeviceServiceRequest_Validate(t *testing.T) {
 func TestAddDeviceService_UnmarshalJSON(t *testing.T) {
 	valid := testAddDeviceService
 	resultTestBytes, _ := json.Marshal(testAddDeviceService)
+	nilDeviceServiceProperties := testAddDeviceService
+	nilDeviceServiceProperties.Service.Properties = nil
+	bytesNilDeviceServiceProperties, _ := json.Marshal(nilDeviceServiceProperties)
 	type args struct {
 		data []byte
 	}
@@ -121,6 +125,7 @@ func TestAddDeviceService_UnmarshalJSON(t *testing.T) {
 		wantErr          bool
 	}{
 		{"unmarshal AddDeviceServiceRequest with success", valid, args{resultTestBytes}, false},
+		{"unmarshal AddDeviceServiceRequest with success, nil Service Properties", valid, args{bytesNilDeviceServiceProperties}, false},
 		{"unmarshal invalid AddDeviceServiceRequest, empty data", AddDeviceServiceRequest{}, args{[]byte{}}, true},
 		{"unmarshal invalid AddDeviceServiceRequest, string data", AddDeviceServiceRequest{}, args{[]byte("Invalid AddDeviceServiceRequest")}, true},
 	}
@@ -146,9 +151,17 @@ func TestAddDeviceServiceReqToDeviceServiceModels(t *testing.T) {
 		BaseAddress: TestBaseAddress,
 		Labels:      []string{"MODBUS", "TEMP"},
 		AdminState:  models.Locked,
+		Properties:  make(map[string]any),
 	}}
 	resultModels := AddDeviceServiceReqToDeviceServiceModels(requests)
 	assert.Equal(t, expectedDeviceServiceModel, resultModels, "AddDeviceServiceReqToDeviceServiceModels did not result in expected DeviceService model.")
+	for i, _ := range requests {
+		requests[i].Service.Properties = nil
+	}
+	resultModels = AddDeviceServiceReqToDeviceServiceModels(requests)
+	for _, ds := range resultModels {
+		assert.NotNil(t, ds.Properties)
+	}
 }
 
 func TestUpdateDeviceService_UnmarshalJSON(t *testing.T) {

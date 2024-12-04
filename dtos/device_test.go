@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021-2023 IOTech Ltd
+// Copyright (C) 2021-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -84,10 +84,24 @@ func TestDeviceDTOtoModel(t *testing.T) {
 	assert.Equal(t, testDeviceModelWithoutTime, dto)
 }
 
+func TestDeviceDTOtoModelWithNilProperties(t *testing.T) {
+	dto := testDeviceDto
+	dto.Properties = nil
+	model := ToDeviceModel(dto)
+	assert.NotNil(t, model.Properties)
+}
+
 func TestDeviceModeltoDTO(t *testing.T) {
 	model := testDeviceModel
 	dto := FromDeviceModelToDTO(model)
 	assert.Equal(t, testDeviceDto, dto)
+}
+
+func TestDeviceModeltoDTOWithNilProperties(t *testing.T) {
+	model := testDeviceModel
+	model.Properties = nil
+	dto := FromDeviceModelToDTO(model)
+	assert.NotNil(t, dto.Properties)
 }
 
 func TestFromDeviceModelToUpdateDTO(t *testing.T) {

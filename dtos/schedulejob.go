@@ -24,7 +24,7 @@ type ScheduleJob struct {
 	Actions                  []ScheduleAction `json:"actions" validate:"required,gt=0,dive"`
 	AdminState               string           `json:"adminState" validate:"omitempty,oneof='LOCKED' 'UNLOCKED'"`
 	Labels                   []string         `json:"labels,omitempty"`
-	Properties               map[string]any   `json:"properties,omitempty"`
+	Properties               map[string]any   `json:"properties"`
 }
 
 type UpdateScheduleJob struct {
@@ -209,6 +209,10 @@ func ToScheduleJobModel(dto ScheduleJob) models.ScheduleJob {
 	model.Labels = dto.Labels
 	model.Properties = dto.Properties
 
+	if model.Properties == nil {
+		model.Properties = make(map[string]any)
+	}
+
 	return model
 }
 
@@ -223,6 +227,10 @@ func FromScheduleJobModelToDTO(model models.ScheduleJob) ScheduleJob {
 	dto.AdminState = string(model.AdminState)
 	dto.Labels = model.Labels
 	dto.Properties = model.Properties
+
+	if dto.Properties == nil {
+		dto.Properties = make(map[string]any)
+	}
 
 	return dto
 }

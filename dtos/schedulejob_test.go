@@ -127,6 +127,7 @@ var (
 		AutoTriggerMissedRecords: true,
 		Actions:                  []ScheduleAction{scheduleActionEdgeXMessageBus},
 		AdminState:               testAdminState,
+		Properties:               make(map[string]any),
 	}
 	scheduleJobModel = models.ScheduleJob{
 		DBTimestamp:              models.DBTimestamp{},
@@ -136,6 +137,7 @@ var (
 		AutoTriggerMissedRecords: true,
 		Actions:                  []models.ScheduleAction{scheduleActionEdgeXMessageBusModel},
 		AdminState:               models.AdminState(testAdminState),
+		Properties:               make(map[string]any),
 	}
 )
 

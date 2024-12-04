@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,7 @@ type Device struct {
 	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
 	Protocols      map[string]ProtocolProperties `json:"protocols" yaml:"protocols" validate:"required"`
 	Tags           map[string]any                `json:"tags,omitempty" yaml:"tags,omitempty"`
-	Properties     map[string]any                `json:"properties,omitempty" yaml:"properties,omitempty"`
+	Properties     map[string]any                `json:"properties" yaml:"properties"`
 }
 
 type UpdateDevice struct {
@@ -61,6 +61,9 @@ func ToDeviceModel(dto Device) models.Device {
 	d.Protocols = ToProtocolModels(dto.Protocols)
 	d.Tags = dto.Tags
 	d.Properties = dto.Properties
+	if d.Properties == nil {
+		d.Properties = make(map[string]any)
+	}
 	return d
 }
 
@@ -82,6 +85,9 @@ func FromDeviceModelToDTO(d models.Device) Device {
 	dto.Protocols = FromProtocolModelsToDTOs(d.Protocols)
 	dto.Tags = d.Tags
 	dto.Properties = d.Properties
+	if dto.Properties == nil {
+		dto.Properties = make(map[string]any)
+	}
 	return dto
 }
 

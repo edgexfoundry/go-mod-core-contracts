@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021-2023 IOTech Ltd
+// Copyright (C) 2021-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -43,6 +43,7 @@ var testAddProvisionWatcher = AddProvisionWatcherRequest{
 			ProfileName: TestDeviceProfileName,
 			AdminState:  models.Locked,
 			AutoEvents:  testAutoEvents,
+			Properties:  make(map[string]any),
 		},
 	},
 }
@@ -147,6 +148,9 @@ func TestAddProvisionWatcherRequest_Validate(t *testing.T) {
 func TestAddProvisionWatcherRequest_UnmarshalJSON(t *testing.T) {
 	valid := testAddProvisionWatcher
 	resultTestBytes, _ := json.Marshal(testAddProvisionWatcher)
+	nilDiscoveredDeviceProperties := testAddProvisionWatcher
+	nilDiscoveredDeviceProperties.ProvisionWatcher.DiscoveredDevice.Properties = nil
+	bytesNilDiscoveredDeviceProperties, _ := json.Marshal(nilDiscoveredDeviceProperties)
 	type args struct {
 		data []byte
 	}
@@ -157,6 +161,7 @@ func TestAddProvisionWatcherRequest_UnmarshalJSON(t *testing.T) {
 		wantErr             bool
 	}{
 		{"unmarshal AddProvisionWatcherRequest with success", valid, args{resultTestBytes}, false},
+		{"unmarshal AddProvisionWatcherRequest with success, nil DiscoveredDevice Properties", valid, args{bytesNilDiscoveredDeviceProperties}, false},
 		{"unmarshal invalid AddProvisionWatcherRequest, empty data", AddProvisionWatcherRequest{}, args{[]byte{}}, true},
 		{"unmarshal invalid AddProvisionWatcherRequest, string data", AddProvisionWatcherRequest{}, args{[]byte("Invalid AddDeviceRequest")}, true},
 	}
@@ -196,11 +201,19 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 				AutoEvents: []models.AutoEvent{
 					{SourceName: "TestDevice", Interval: "300ms", OnChange: true, OnChangeThreshold: 0.01},
 				},
+				Properties: make(map[string]any),
 			},
 		},
 	}
 	resultModels := AddProvisionWatcherReqToProvisionWatcherModels(requests)
 	assert.Equal(t, expectedProvisionWatcherModel, resultModels, "AddProvisionWatcherReqToProvisionWatcherModels did not result in expected ProvisionWatcher model.")
+	for i, _ := range requests {
+		requests[i].ProvisionWatcher.DiscoveredDevice.Properties = nil
+	}
+	resultModels = AddProvisionWatcherReqToProvisionWatcherModels(requests)
+	for _, pw := range resultModels {
+		assert.NotNil(t, pw.DiscoveredDevice.Properties)
+	}
 }
 
 func TestUpdateProvisionWatcherRequest_Validate(t *testing.T) {
