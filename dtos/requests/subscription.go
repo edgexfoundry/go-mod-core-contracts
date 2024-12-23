@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +7,7 @@ package requests
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos"
@@ -15,7 +16,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 )
 
-var supportedChannelTypes = []string{common.EMAIL, common.REST}
+var supportedChannelTypes = []string{common.EMAIL, common.REST, common.MQTT, common.ZeroMQ}
 
 // AddSubscriptionRequest defines the Request Content for POST Subscription DTO.
 type AddSubscriptionRequest struct {
@@ -34,7 +35,7 @@ func (request AddSubscriptionRequest) Validate() error {
 		if err != nil {
 			return errors.NewCommonEdgeXWrapper(err)
 		} else if !contains(supportedChannelTypes, c.Type) {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, "MQTT is not valid type for Channel", nil)
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("%s is not valid type for Channel", c.Type), nil)
 		}
 	}
 	return nil
@@ -85,7 +86,7 @@ func (request UpdateSubscriptionRequest) Validate() error {
 		if err != nil {
 			return errors.NewCommonEdgeXWrapper(err)
 		} else if !contains(supportedChannelTypes, c.Type) {
-			return errors.NewCommonEdgeX(errors.KindContractInvalid, "MQTT is not valid type for Channel", nil)
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, fmt.Sprintf("%s is not valid type for Channel", c.Type), nil)
 		}
 	}
 	if request.Subscription.Categories != nil && request.Subscription.Labels != nil &&

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2024 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +7,7 @@ package requests
 
 import (
 	"encoding/json"
+	"net/http"
 	"testing"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos"
@@ -20,8 +21,13 @@ var (
 	testSubscriptionName       = "subscriptionName"
 	testSubscriptionCategories = []string{"category1", "category2"}
 	testSubscriptionLabels     = []string{"label"}
+	testHost                   = "host"
+	testPort                   = 123
 	testSubscriptionChannels   = []dtos.Address{
+		dtos.NewRESTAddress(testHost, testPort, http.MethodGet),
 		dtos.NewEmailAddress([]string{"test@example.com"}),
+		dtos.NewMQTTAddress(testHost, testPort, "publisher", "topic"),
+		dtos.NewZeroMQAddress(testHost, testPort, "topic"),
 	}
 	testSubscriptionDescription    = "description"
 	testSubscriptionReceiver       = "receiver"
@@ -87,7 +93,7 @@ func TestAddSubscriptionRequest_Validate(t *testing.T) {
 	}
 	unsupportedChannelType := addSubscriptionRequestData()
 	unsupportedChannelType.Subscription.Channels = []dtos.Address{
-		dtos.NewMQTTAddress("host", 123, "publisher", "topic"),
+		{Type: "unknown"},
 	}
 
 	noCategories := addSubscriptionRequestData()
@@ -212,7 +218,7 @@ func TestUpdateSubscriptionRequest_Validate(t *testing.T) {
 	}
 	unsupportedChannelType := NewUpdateSubscriptionRequest(updateSubscriptionData())
 	unsupportedChannelType.Subscription.Channels = []dtos.Address{
-		dtos.NewMQTTAddress("host", 123, "publisher", "topic"),
+		{Type: "unknown"},
 	}
 	validWithoutChannels := NewUpdateSubscriptionRequest(updateSubscriptionData())
 	validWithoutChannels.Subscription.Channels = nil
