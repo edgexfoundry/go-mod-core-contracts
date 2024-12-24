@@ -96,4 +96,7 @@ const (
 	ApiScheduleActionRecordRouteByStatusEchoRoute           = ApiScheduleActionRecordRoute + "/" + Status + "/:" + Status
 	ApiScheduleActionRecordRouteByJobNameEchoRoute          = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name
 	ApiScheduleActionRecordRouteByJobNameAndStatusEchoRoute = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name + "/" + Status + "/:" + Status
+
+	ApiKeyRoute                     = ApiBase + "/key"
+	ApiVerificationKeyByIssuerRoute = ApiKeyRoute + "/" + VerificationKeyType + "/" + Issuer + "/:" + Issuer
 )
