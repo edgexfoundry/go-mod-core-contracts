@@ -406,3 +406,10 @@ const (
 	// App Service Topics
 	// App Service topics remain configurable inorder to filter by subscription.
 )
+
+// Constants related to the security-proxy-auth service
+const (
+	VerificationKeyType = "verification"
+	SigningKeyType      = "signing"
+	Issuer              = "issuer"
+)
