@@ -144,9 +144,11 @@ type Security struct {
 type ZeroMQAddress struct {
 }
 
-func NewZeroMQAddress(topic string) Address {
+func NewZeroMQAddress(host string, port int, topic string) Address {
 	return Address{
 		Type:       common.ZeroMQ,
+		Host:       host,
+		Port:       port,
 		MessageBus: MessageBus{Topic: topic},
 	}
 }
