@@ -132,6 +132,9 @@ const (
 	ApiAllRegistrationsRoute        = ApiRegisterRoute + "/" + All
 	ApiKVSByKeyRoute                = ApiKVSRoute + "/" + Key + "/:" + Key
 	ApiRegistrationByServiceIdRoute = ApiRegisterRoute + "/" + ServiceId + "/:" + ServiceId
+
+	ApiKeyRoute                     = ApiBase + "/key"
+	ApiVerificationKeyByIssuerRoute = ApiKeyRoute + "/" + VerificationKeyType + "/" + Issuer + "/:" + Issuer
 )
 
 // Constants related to defined url path names and parameters in the v3 service APIs
@@ -393,4 +396,11 @@ const (
 
 	// App Service Topics
 	// App Service topics remain configurable inorder to filter by subscription.
+)
+
+// Constants related to the security-proxy-auth service
+const (
+	VerificationKeyType = "verification"
+	SigningKeyType      = "signing"
+	Issuer              = "issuer"
 )
