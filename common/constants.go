@@ -12,26 +12,26 @@ const (
 	ApiBase    = "/api/v3"
 
 	ApiEventRoute                                           = ApiBase + "/event"
-	ApiEventServiceNameProfileNameDeviceNameSourceNameRoute = ApiEventRoute + "/{" + ServiceName + "}" + "/{" + ProfileName + "}" + "/{" + DeviceName + "}" + "/{" + SourceName + "}"
 	ApiAllEventRoute                                        = ApiEventRoute + "/" + All
-	ApiEventIdRoute                                         = ApiEventRoute + "/" + Id + "/{" + Id + "}"
 	ApiEventCountRoute                                      = ApiEventRoute + "/" + Count
-	ApiEventCountByDeviceNameRoute                          = ApiEventCountRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiEventByDeviceNameRoute                               = ApiEventRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiEventByTimeRangeRoute                                = ApiEventRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiEventByAgeRoute                                      = ApiEventRoute + "/" + Age + "/{" + Age + "}"
+	ApiEventServiceNameProfileNameDeviceNameSourceNameRoute = ApiEventRoute + "/:" + ServiceName + "/:" + ProfileName + "/:" + DeviceName + "/:" + SourceName
+	ApiEventIdRoute                                         = ApiEventRoute + "/" + Id + "/:" + Id
+	ApiEventCountByDeviceNameRoute                          = ApiEventCountRoute + "/" + Device + "/" + Name + "/:" + Name
+	ApiEventByDeviceNameRoute                               = ApiEventRoute + "/" + Device + "/" + Name + "/:" + Name
+	ApiEventByTimeRangeRoute                                = ApiEventRoute + "/" + Start + "/:" + Start + "/" + End + "/:" + End
+	ApiEventByAgeRoute                                      = ApiEventRoute + "/" + Age + "/:" + Age
 
 	ApiReadingRoute                                        = ApiBase + "/reading"
 	ApiAllReadingRoute                                     = ApiReadingRoute + "/" + All
 	ApiReadingCountRoute                                   = ApiReadingRoute + "/" + Count
-	ApiReadingCountByDeviceNameRoute                       = ApiReadingCountRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiReadingByDeviceNameRoute                            = ApiReadingRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-	ApiReadingByResourceNameRoute                          = ApiReadingRoute + "/" + ResourceName + "/{" + ResourceName + "}"
-	ApiReadingByTimeRangeRoute                             = ApiReadingRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiReadingByResourceNameAndTimeRangeRoute              = ApiReadingByResourceNameRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiReadingByDeviceNameAndResourceNameRoute             = ApiReadingRoute + "/" + Device + "/" + Name + "/{" + Name + "}/" + ResourceName + "/{" + ResourceName + "}"
-	ApiReadingByDeviceNameAndResourceNameAndTimeRangeRoute = ApiReadingByDeviceNameAndResourceNameRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiReadingByDeviceNameAndTimeRangeRoute                = ApiReadingByDeviceNameRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
+	ApiReadingCountByDeviceNameRoute                       = ApiReadingCountRoute + "/" + Device + "/" + Name + "/:" + Name
+	ApiReadingByDeviceNameRoute                            = ApiReadingRoute + "/" + Device + "/" + Name + "/:" + Name
+	ApiReadingByResourceNameRoute                          = ApiReadingRoute + "/" + ResourceName + "/:" + ResourceName
+	ApiReadingByTimeRangeRoute                             = ApiReadingRoute + "/" + Start + "/:" + Start + "/" + End + "/:" + End
+	ApiReadingByResourceNameAndTimeRangeRoute              = ApiReadingByResourceNameRoute + "/" + Start + "/:" + Start + "/" + End + "/:" + End
+	ApiReadingByDeviceNameAndResourceNameRoute             = ApiReadingRoute + "/" + Device + "/" + Name + "/:" + Name + "/" + ResourceName + "/:" + ResourceName
+	ApiReadingByDeviceNameAndResourceNameAndTimeRangeRoute = ApiReadingByDeviceNameAndResourceNameRoute + "/" + Start + "/:" + Start + "/" + End + "/:" + End
+	ApiReadingByDeviceNameAndTimeRangeRoute                = ApiReadingByDeviceNameRoute + "/" + Start + "/:" + Start + "/" + End + "/:" + End
 
 	ApiDeviceProfileRoute                       = ApiBase + "/deviceprofile"
 	ApiDeviceProfileBasicInfoRoute              = ApiDeviceProfileRoute + "/basicinfo"
@@ -39,81 +39,82 @@ const (
 	ApiDeviceProfileDeviceCommandRoute          = ApiDeviceProfileRoute + "/" + DeviceCommand
 	ApiDeviceProfileResourceRoute               = ApiDeviceProfileRoute + "/" + Resource
 	ApiDeviceProfileUploadFileRoute             = ApiDeviceProfileRoute + "/uploadfile"
-	ApiDeviceProfileByNameRoute                 = ApiDeviceProfileRoute + "/" + Name + "/{" + Name + "}"
-	ApiDeviceProfileDeviceCommandByNameRoute    = ApiDeviceProfileByNameRoute + "/" + DeviceCommand + "/{" + CommandName + "}"
-	ApiDeviceProfileResourceByNameRoute         = ApiDeviceProfileByNameRoute + "/" + Resource + "/{" + ResourceName + "}"
-	ApiDeviceProfileByIdRoute                   = ApiDeviceProfileRoute + "/" + Id + "/{" + Id + "}"
 	ApiAllDeviceProfileRoute                    = ApiDeviceProfileRoute + "/" + All
-	ApiDeviceProfileByManufacturerRoute         = ApiDeviceProfileRoute + "/" + Manufacturer + "/{" + Manufacturer + "}"
-	ApiDeviceProfileByModelRoute                = ApiDeviceProfileRoute + "/" + Model + "/{" + Model + "}"
-	ApiDeviceProfileByManufacturerAndModelRoute = ApiDeviceProfileRoute + "/" + Manufacturer + "/{" + Manufacturer + "}" + "/" + Model + "/{" + Model + "}"
+	ApiDeviceProfileByNameRoute                 = ApiDeviceProfileRoute + "/" + Name + "/:" + Name
+	ApiDeviceProfileDeviceCommandByNameRoute    = ApiDeviceProfileByNameRoute + "/" + DeviceCommand + "/:" + CommandName
+	ApiDeviceProfileResourceByNameRoute         = ApiDeviceProfileByNameRoute + "/" + Resource + "/:" + ResourceName
+	ApiDeviceProfileByManufacturerRoute         = ApiDeviceProfileRoute + "/" + Manufacturer + "/:" + Manufacturer
+	ApiDeviceProfileByModelRoute                = ApiDeviceProfileRoute + "/" + Model + "/:" + Model
+	ApiDeviceProfileByManufacturerAndModelRoute = ApiDeviceProfileRoute + "/" + Manufacturer + "/:" + Manufacturer + "/" + Model + "/:" + Model
 
 	ApiDeviceResourceRoute                     = ApiBase + "/deviceresource"
-	ApiDeviceResourceByProfileAndResourceRoute = ApiDeviceResourceRoute + "/" + Profile + "/{" + ProfileName + "}" + "/" + Resource + "/{" + ResourceName + "}"
+	ApiDeviceResourceByProfileAndResourceRoute = ApiDeviceResourceRoute + "/" + Profile + "/:" + ProfileName + "/" + Resource + "/:" + ResourceName
 
 	ApiDeviceServiceRoute       = ApiBase + "/deviceservice"
 	ApiAllDeviceServiceRoute    = ApiDeviceServiceRoute + "/" + All
-	ApiDeviceServiceByNameRoute = ApiDeviceServiceRoute + "/" + Name + "/{" + Name + "}"
-	ApiDeviceServiceByIdRoute   = ApiDeviceServiceRoute + "/" + Id + "/{" + Id + "}"
+	ApiDeviceServiceByNameRoute = ApiDeviceServiceRoute + "/" + Name + "/:" + Name
 
 	ApiDeviceRoute                = ApiBase + "/device"
 	ApiAllDeviceRoute             = ApiDeviceRoute + "/" + All
-	ApiDeviceIdExistsRoute        = ApiDeviceRoute + "/" + Check + "/" + Id + "/{" + Id + "}"
-	ApiDeviceNameExistsRoute      = ApiDeviceRoute + "/" + Check + "/" + Name + "/{" + Name + "}"
-	ApiDeviceByIdRoute            = ApiDeviceRoute + "/" + Id + "/{" + Id + "}"
-	ApiDeviceByNameRoute          = ApiDeviceRoute + "/" + Name + "/{" + Name + "}"
-	ApiDeviceByProfileIdRoute     = ApiDeviceRoute + "/" + Profile + "/" + Id + "/{" + Id + "}"
-	ApiDeviceByProfileNameRoute   = ApiDeviceRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
-	ApiDeviceByServiceIdRoute     = ApiDeviceRoute + "/" + Service + "/" + Id + "/{" + Id + "}"
-	ApiDeviceByServiceNameRoute   = ApiDeviceRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
-	ApiDeviceNameCommandNameRoute = ApiDeviceByNameRoute + "/{" + Command + "}"
+	ApiDeviceNameExistsRoute      = ApiDeviceRoute + "/" + Check + "/" + Name + "/:" + Name
+	ApiDeviceByNameRoute          = ApiDeviceRoute + "/" + Name + "/:" + Name
+	ApiDeviceByProfileNameRoute   = ApiDeviceRoute + "/" + Profile + "/" + Name + "/:" + Name
+	ApiDeviceByServiceNameRoute   = ApiDeviceRoute + "/" + Service + "/" + Name + "/:" + Name
+	ApiDeviceNameCommandNameRoute = ApiDeviceByNameRoute + "/:" + Command
 
 	ApiProvisionWatcherRoute              = ApiBase + "/provisionwatcher"
 	ApiAllProvisionWatcherRoute           = ApiProvisionWatcherRoute + "/" + All
-	ApiProvisionWatcherByIdRoute          = ApiProvisionWatcherRoute + "/" + Id + "/{" + Id + "}"
-	ApiProvisionWatcherByNameRoute        = ApiProvisionWatcherRoute + "/" + Name + "/{" + Name + "}"
-	ApiProvisionWatcherByProfileNameRoute = ApiProvisionWatcherRoute + "/" + Profile + "/" + Name + "/{" + Name + "}"
-	ApiProvisionWatcherByServiceNameRoute = ApiProvisionWatcherRoute + "/" + Service + "/" + Name + "/{" + Name + "}"
+	ApiProvisionWatcherByNameRoute        = ApiProvisionWatcherRoute + "/" + Name + "/:" + Name
+	ApiProvisionWatcherByProfileNameRoute = ApiProvisionWatcherRoute + "/" + Profile + "/" + Name + "/:" + Name
+	ApiProvisionWatcherByServiceNameRoute = ApiProvisionWatcherRoute + "/" + Service + "/" + Name + "/:" + Name
+
+	ApiDiscoveryRoute     = ApiBase + "/discovery"
+	ApiDiscoveryByIdRoute = ApiDiscoveryRoute + "/" + RequestId + "/:" + RequestId
+
+	ApiProfileScanRoute             = ApiBase + "/profilescan"
+	ApiProfileScanByDeviceNameRoute = ApiProfileScanRoute + "/" + Device + "/" + Name + "/:" + Name
 
 	ApiSubscriptionRoute           = ApiBase + "/subscription"
 	ApiAllSubscriptionRoute        = ApiSubscriptionRoute + "/" + All
-	ApiSubscriptionByNameRoute     = ApiSubscriptionRoute + "/" + Name + "/{" + Name + "}"
-	ApiSubscriptionByCategoryRoute = ApiSubscriptionRoute + "/" + Category + "/{" + Category + "}"
-	ApiSubscriptionByLabelRoute    = ApiSubscriptionRoute + "/" + Label + "/{" + Label + "}"
-	ApiSubscriptionByReceiverRoute = ApiSubscriptionRoute + "/" + Receiver + "/{" + Receiver + "}"
+	ApiSubscriptionByNameRoute     = ApiSubscriptionRoute + "/" + Name + "/:" + Name
+	ApiSubscriptionByCategoryRoute = ApiSubscriptionRoute + "/" + Category + "/:" + Category
+	ApiSubscriptionByLabelRoute    = ApiSubscriptionRoute + "/" + Label + "/:" + Label
+	ApiSubscriptionByReceiverRoute = ApiSubscriptionRoute + "/" + Receiver + "/:" + Receiver
 
-	ApiNotificationCleanupRoute            = ApiBase + "/cleanup"
-	ApiNotificationCleanupByAgeRoute       = ApiBase + "/" + Cleanup + "/" + Age + "/{" + Age + "}"
 	ApiNotificationRoute                   = ApiBase + "/notification"
-	ApiNotificationByTimeRangeRoute        = ApiNotificationRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiNotificationByAgeRoute              = ApiNotificationRoute + "/" + Age + "/{" + Age + "}"
-	ApiNotificationByCategoryRoute         = ApiNotificationRoute + "/" + Category + "/{" + Category + "}"
-	ApiNotificationByLabelRoute            = ApiNotificationRoute + "/" + Label + "/{" + Label + "}"
-	ApiNotificationByIdRoute               = ApiNotificationRoute + "/" + Id + "/{" + Id + "}"
-	ApiNotificationByStatusRoute           = ApiNotificationRoute + "/" + Status + "/{" + Status + "}"
-	ApiNotificationBySubscriptionNameRoute = ApiNotificationRoute + "/" + Subscription + "/" + Name + "/{" + Name + "}"
+	ApiNotificationCleanupRoute            = ApiBase + "/cleanup"
+	ApiNotificationCleanupByAgeRoute       = ApiNotificationCleanupRoute + "/" + Age + "/:" + Age
+	ApiNotificationByTimeRangeRoute        = ApiNotificationRoute + "/" + Start + "/:" + Start + "/" + End + "/:" + End
+	ApiNotificationByAgeRoute              = ApiNotificationRoute + "/" + Age + "/:" + Age
+	ApiNotificationByCategoryRoute         = ApiNotificationRoute + "/" + Category + "/:" + Category
+	ApiNotificationByLabelRoute            = ApiNotificationRoute + "/" + Label + "/:" + Label
+	ApiNotificationByIdRoute               = ApiNotificationRoute + "/" + Id + "/:" + Id
+	ApiNotificationByStatusRoute           = ApiNotificationRoute + "/" + Status + "/:" + Status
+	ApiNotificationBySubscriptionNameRoute = ApiNotificationRoute + "/" + Subscription + "/" + Name + "/:" + Name
+	ApiNotificationAcknowledgeByIdsRoute   = ApiNotificationRoute + "/" + Acknowledge + "/" + Ids + "/:" + Ids
+	ApiNotificationUnacknowledgeByIdsRoute = ApiNotificationRoute + "/" + Unacknowledge + "/" + Ids + "/:" + Ids
 
 	ApiTransmissionRoute                   = ApiBase + "/transmission"
-	ApiTransmissionByIdRoute               = ApiTransmissionRoute + "/" + Id + "/{" + Id + "}"
-	ApiTransmissionByAgeRoute              = ApiTransmissionRoute + "/" + Age + "/{" + Age + "}"
 	ApiAllTransmissionRoute                = ApiTransmissionRoute + "/" + All
-	ApiTransmissionBySubscriptionNameRoute = ApiTransmissionRoute + "/" + Subscription + "/" + Name + "/{" + Name + "}"
-	ApiTransmissionByTimeRangeRoute        = ApiTransmissionRoute + "/" + Start + "/{" + Start + "}/" + End + "/{" + End + "}"
-	ApiTransmissionByStatusRoute           = ApiTransmissionRoute + "/" + Status + "/{" + Status + "}"
-	ApiTransmissionByNotificationIdRoute   = ApiTransmissionRoute + "/" + Notification + "/" + Id + "/{" + Id + "}"
+	ApiTransmissionByIdRoute               = ApiTransmissionRoute + "/" + Id + "/:" + Id
+	ApiTransmissionByAgeRoute              = ApiTransmissionRoute + "/" + Age + "/:" + Age
+	ApiTransmissionBySubscriptionNameRoute = ApiTransmissionRoute + "/" + Subscription + "/" + Name + "/:" + Name
+	ApiTransmissionByTimeRangeRoute        = ApiTransmissionRoute + "/" + Start + "/:" + Start + "/" + End + "/:" + End
+	ApiTransmissionByStatusRoute           = ApiTransmissionRoute + "/" + Status + "/:" + Status
+	ApiTransmissionByNotificationIdRoute   = ApiTransmissionRoute + "/" + Notification + "/" + Id + "/:" + Id
 
 	ApiScheduleJobRoute              = ApiBase + "/job"
 	ApiAllScheduleJobRoute           = ApiScheduleJobRoute + "/" + All
-	ApiScheduleJobByNameRoute        = ApiScheduleJobRoute + "/" + Name + "/{" + Name + "}"
 	ApiTriggerScheduleJobRoute       = ApiScheduleJobRoute + "/" + Trigger
-	ApiTriggerScheduleJobByNameRoute = ApiScheduleJobRoute + "/" + Trigger + "/" + Name + "/{" + Name + "}"
+	ApiScheduleJobByNameRoute        = ApiScheduleJobRoute + "/" + Name + "/:" + Name
+	ApiTriggerScheduleJobByNameRoute = ApiTriggerScheduleJobRoute + "/" + Name + "/:" + Name
 
-	ApiScheduleActionRecordRoute                   = ApiBase + "/scheduleactionrecord"
-	ApiAllScheduleActionRecordRoute                = ApiScheduleActionRecordRoute + "/" + All
-	ApiLatestScheduleActionRecordByJobNameRoute    = ApiScheduleActionRecordRoute + "/" + Latest + "/" + Job + "/" + Name + "/{" + Name + "}"
-	ApiScheduleActionRecordRouteByStatusRoute      = ApiScheduleActionRecordRoute + "/" + Status + "/{" + Status + "}"
-	ApiScheduleActionRecordRouteByJobNameRoute     = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/{" + Name + "}"
-	ApiScheduleActionRecordByJobNameAndStatusRoute = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/{" + Name + "}/" + Status + "/{" + Status + "}"
+	ApiScheduleActionRecordRoute                        = ApiBase + "/scheduleactionrecord"
+	ApiAllScheduleActionRecordRoute                     = ApiScheduleActionRecordRoute + "/" + All
+	ApiLatestScheduleActionRecordByJobNameRoute         = ApiScheduleActionRecordRoute + "/" + Latest + "/" + Job + "/" + Name + "/:" + Name
+	ApiScheduleActionRecordRouteByStatusRoute           = ApiScheduleActionRecordRoute + "/" + Status + "/:" + Status
+	ApiScheduleActionRecordRouteByJobNameRoute          = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name
+	ApiScheduleActionRecordRouteByJobNameAndStatusRoute = ApiScheduleActionRecordRoute + "/" + Job + "/" + Name + "/:" + Name + "/" + Status + "/:" + Status
 
 	ApiConfigRoute         = ApiBase + "/config"
 	ApiPingRoute           = ApiBase + "/ping"
@@ -121,29 +122,16 @@ const (
 	ApiSecretRoute         = ApiBase + "/secret"
 	ApiUnitsOfMeasureRoute = ApiBase + "/uom"
 
-	ApiDeviceCallbackRoute          = ApiBase + "/callback/device"
-	ApiDeviceCallbackNameRoute      = ApiBase + "/callback/device/name/{name}"
-	ApiProfileCallbackRoute         = ApiBase + "/callback/profile"
-	ApiProfileCallbackNameRoute     = ApiBase + "/callback/profile/name/{name}"
-	ApiWatcherCallbackRoute         = ApiBase + "/callback/watcher"
-	ApiWatcherCallbackNameRoute     = ApiBase + "/callback/watcher/name/{name}"
-	ApiServiceCallbackRoute         = ApiBase + "/callback/service"
-	ApiDiscoveryRoute               = ApiBase + "/discovery"
-	ApiDeviceValidationRoute        = ApiBase + "/validate/device"
-	ApiProfileScanRoute             = ApiBase + "/profilescan"
-	ApiDiscoveryByIdRoute           = ApiDiscoveryRoute + "/" + RequestId + "/{" + RequestId + "}"
-	ApiProfileScanByDeviceNameRoute = ApiProfileScanRoute + "/" + Device + "/" + Name + "/{" + Name + "}"
-
 	ApiSystemRoute      = ApiBase + "/system"
 	ApiOperationRoute   = ApiSystemRoute + "/operation"
 	ApiHealthRoute      = ApiSystemRoute + "/health"
 	ApiMultiConfigRoute = ApiSystemRoute + "/config"
 
 	ApiKVSRoute                     = ApiBase + "/kvs"
-	ApiKVSByKeyRoute                = ApiKVSRoute + "/" + Key + "/{" + Key + "}"
 	ApiRegisterRoute                = ApiBase + "/registry"
 	ApiAllRegistrationsRoute        = ApiRegisterRoute + "/" + All
-	ApiRegistrationByServiceIdRoute = ApiRegisterRoute + "/" + ServiceId + "/{" + ServiceId + "}"
+	ApiKVSByKeyRoute                = ApiKVSRoute + "/" + Key + "/:" + Key
+	ApiRegistrationByServiceIdRoute = ApiRegisterRoute + "/" + ServiceId + "/:" + ServiceId
 )
 
 // Constants related to defined url path names and parameters in the v3 service APIs
