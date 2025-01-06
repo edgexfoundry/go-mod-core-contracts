@@ -1,7 +1,7 @@
 //go:build !no_dto_validator
 
 //
-// Copyright (C) 2020-2024 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -103,6 +103,13 @@ func getErrorMessage(e validator.FieldError) string {
 		msg = fmt.Sprintf("%s field should be one of %s", fieldName, fieldValue)
 	case "gt":
 		msg = fmt.Sprintf("%s field should greater than %s", fieldName, fieldValue)
+	case "unique":
+		// If the tag contains a field param, it means that the unique tag is used for a slice of struct
+		if fieldValue != "" {
+			msg = fmt.Sprintf("%s field should only contain unique elements with unique '%s' values", fieldName, fieldValue)
+		} else {
+			msg = fmt.Sprintf("%s field should only contain unique elements", fieldName)
+		}
 	case dtoDurationTag:
 		msg = fmt.Sprintf("%s field should follows the ISO 8601 Durations format, e.g.,100ms, 24h, or be greater than or equal to the minimum value %s ", fieldName, fieldValue)
 	case dtoUuidTag:
