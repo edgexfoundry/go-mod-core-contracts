@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2024 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,6 +21,7 @@ type Device struct {
 	AutoEvents     []AutoEvent
 	Tags           map[string]any
 	Properties     map[string]any
+	Retries        int
 }
 
 // ProtocolProperties contains the device connection information in key/value pair
