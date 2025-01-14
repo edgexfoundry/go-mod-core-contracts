@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,6 +12,7 @@ import (
 	"path"
 	"strconv"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -21,7 +22,7 @@ import (
 )
 
 type readingClient struct {
-	baseUrl               string
+	baseUrlFunc           clients.ClientBaseUrlFunc
 	authInjector          interfaces.AuthenticationInjector
 	enableNameFieldEscape bool
 }
@@ -29,7 +30,16 @@ type readingClient struct {
 // NewReadingClient creates an instance of ReadingClient
 func NewReadingClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ReadingClient {
 	return &readingClient{
-		baseUrl:               baseUrl,
+		baseUrlFunc:           clients.GetDefaultClientBaseUrlFunc(baseUrl),
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
+	}
+}
+
+// NewReadingClientWithUrlCallback creates an instance of ReadingClient with ClientBaseUrlFunc.
+func NewReadingClientWithUrlCallback(baseUrlFunc clients.ClientBaseUrlFunc, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ReadingClient {
+	return &readingClient{
+		baseUrlFunc:           baseUrlFunc,
 		authInjector:          authInjector,
 		enableNameFieldEscape: enableNameFieldEscape,
 	}
@@ -40,7 +50,11 @@ func (rc readingClient) AllReadings(ctx context.Context, offset, limit int) (res
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, common.ApiAllReadingRoute, requestParams, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllReadingRoute, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -49,7 +63,11 @@ func (rc readingClient) AllReadings(ctx context.Context, offset, limit int) (res
 
 func (rc readingClient) ReadingCount(ctx context.Context) (dtoCommon.CountResponse, errors.EdgeX) {
 	res := dtoCommon.CountResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, common.ApiReadingCountRoute, nil, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiReadingCountRoute, nil, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -59,7 +77,11 @@ func (rc readingClient) ReadingCount(ctx context.Context) (dtoCommon.CountRespon
 func (rc readingClient) ReadingCountByDeviceName(ctx context.Context, name string) (dtoCommon.CountResponse, errors.EdgeX) {
 	requestPath := path.Join(common.ApiReadingCountRoute, common.Device, common.Name, name)
 	res := dtoCommon.CountResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, nil, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, nil, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -72,7 +94,11 @@ func (rc readingClient) ReadingsByDeviceName(ctx context.Context, name string, o
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -86,7 +112,11 @@ func (rc readingClient) ReadingsByResourceName(ctx context.Context, name string,
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -99,7 +129,11 @@ func (rc readingClient) ReadingsByTimeRange(ctx context.Context, start, end int6
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -114,7 +148,11 @@ func (rc readingClient) ReadingsByResourceNameAndTimeRange(ctx context.Context, 
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -128,7 +166,11 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceName(ctx context.Context,
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -144,7 +186,11 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceNameAndTimeRange(ctx cont
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequest(ctx, &res, rc.baseUrl, requestPath, requestParams, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -164,7 +210,11 @@ func (rc readingClient) ReadingsByDeviceNameAndResourceNamesAndTimeRange(ctx con
 		queryPayload[common.ResourceNames] = resourceNames
 	}
 	res := responses.MultiReadingsResponse{}
-	err := utils.GetRequestWithBodyRawData(ctx, &res, rc.baseUrl, requestPath, requestParams, queryPayload, rc.authInjector)
+	baseUrl, err := clients.GetBaseUrl(rc.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequestWithBodyRawData(ctx, &res, baseUrl, requestPath, requestParams, queryPayload, rc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
