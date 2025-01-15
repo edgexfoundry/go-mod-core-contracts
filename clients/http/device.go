@@ -1,7 +1,7 @@
 //
 // Copyright (C) 2020-2021 Unknown author
 // Copyright (C) 2023 Intel Corporation
-// Copyright (C) 2024 IOTech Ltd
+// Copyright (C) 2024-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -23,7 +24,7 @@ import (
 )
 
 type DeviceClient struct {
-	baseUrl               string
+	baseUrlFunc           clients.ClientBaseUrlFunc
 	authInjector          interfaces.AuthenticationInjector
 	enableNameFieldEscape bool
 }
@@ -31,14 +32,27 @@ type DeviceClient struct {
 // NewDeviceClient creates an instance of DeviceClient
 func NewDeviceClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.DeviceClient {
 	return &DeviceClient{
-		baseUrl:               baseUrl,
+		baseUrlFunc:           clients.GetDefaultClientBaseUrlFunc(baseUrl),
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
+	}
+}
+
+// NewDeviceClientWithUrlCallback creates an instance of DeviceClient with ClientBaseUrlFunc.
+func NewDeviceClientWithUrlCallback(baseUrlFunc clients.ClientBaseUrlFunc, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.DeviceClient {
+	return &DeviceClient{
+		baseUrlFunc:           baseUrlFunc,
 		authInjector:          authInjector,
 		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
 func (dc DeviceClient) Add(ctx context.Context, reqs []requests.AddDeviceRequest) (res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, nil, reqs, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PostRequestWithRawData(ctx, &res, baseUrl, common.ApiDeviceRoute, nil, reqs, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -50,7 +64,11 @@ func (dc DeviceClient) AddWithQueryParams(ctx context.Context, reqs []requests.A
 	for k, v := range queryParams {
 		requestParams.Set(k, v)
 	}
-	err = utils.PostRequestWithRawData(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, requestParams, reqs, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PostRequestWithRawData(ctx, &res, baseUrl, common.ApiDeviceRoute, requestParams, reqs, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -58,7 +76,11 @@ func (dc DeviceClient) AddWithQueryParams(ctx context.Context, reqs []requests.A
 }
 
 func (dc DeviceClient) Update(ctx context.Context, reqs []requests.UpdateDeviceRequest) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, nil, reqs, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PatchRequest(ctx, &res, baseUrl, common.ApiDeviceRoute, nil, reqs, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -70,7 +92,11 @@ func (dc DeviceClient) UpdateWithQueryParams(ctx context.Context, reqs []request
 	for k, v := range queryParams {
 		requestParams.Set(k, v)
 	}
-	err = utils.PatchRequest(ctx, &res, dc.baseUrl, common.ApiDeviceRoute, requestParams, reqs, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PatchRequest(ctx, &res, baseUrl, common.ApiDeviceRoute, requestParams, reqs, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -84,7 +110,11 @@ func (dc DeviceClient) AllDevices(ctx context.Context, labels []string, offset i
 	}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, common.ApiAllDeviceRoute, requestParams, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllDeviceRoute, requestParams, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -100,7 +130,11 @@ func (dc DeviceClient) AllDevicesWithChildren(ctx context.Context, parent string
 	requestParams.Set(common.MaxLevels, strconv.FormatUint(uint64(maxLevels), 10))
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, common.ApiAllDeviceRoute, requestParams, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllDeviceRoute, requestParams, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -110,7 +144,11 @@ func (dc DeviceClient) AllDevicesWithChildren(ctx context.Context, parent string
 func (dc DeviceClient) DeviceNameExists(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := common.NewPathBuilder().EnableNameFieldEscape(dc.enableNameFieldEscape).
 		SetPath(common.ApiDeviceRoute).SetPath(common.Check).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, path, nil, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, path, nil, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -120,7 +158,11 @@ func (dc DeviceClient) DeviceNameExists(ctx context.Context, name string) (res d
 func (dc DeviceClient) DeviceByName(ctx context.Context, name string) (res responses.DeviceResponse, err errors.EdgeX) {
 	path := common.NewPathBuilder().EnableNameFieldEscape(dc.enableNameFieldEscape).
 		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, path, nil, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, path, nil, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -130,7 +172,11 @@ func (dc DeviceClient) DeviceByName(ctx context.Context, name string) (res respo
 func (dc DeviceClient) DeleteDeviceByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := common.NewPathBuilder().EnableNameFieldEscape(dc.enableNameFieldEscape).
 		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.DeleteRequest(ctx, &res, dc.baseUrl, path, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.DeleteRequest(ctx, &res, baseUrl, path, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -143,7 +189,11 @@ func (dc DeviceClient) DevicesByProfileName(ctx context.Context, name string, of
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, requestPath, requestParams, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -156,7 +206,11 @@ func (dc DeviceClient) DevicesByServiceName(ctx context.Context, name string, of
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, dc.baseUrl, requestPath, requestParams, dc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, dc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

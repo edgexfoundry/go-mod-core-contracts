@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2024 IOTech Ltd
+// Copyright (C) 2024-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -21,7 +22,7 @@ import (
 )
 
 type ScheduleJobClient struct {
-	baseUrl               string
+	baseUrlFunc           clients.ClientBaseUrlFunc
 	authInjector          interfaces.AuthenticationInjector
 	enableNameFieldEscape bool
 }
@@ -29,7 +30,16 @@ type ScheduleJobClient struct {
 // NewScheduleJobClient creates an instance of ScheduleJobClient
 func NewScheduleJobClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ScheduleJobClient {
 	return &ScheduleJobClient{
-		baseUrl:               baseUrl,
+		baseUrlFunc:           clients.GetDefaultClientBaseUrlFunc(baseUrl),
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
+	}
+}
+
+// NewScheduleJobClientWithUrlCallback creates an instance of ScheduleJobClient with ClientBaseUrlFunc.
+func NewScheduleJobClientWithUrlCallback(baseUrlFunc clients.ClientBaseUrlFunc, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ScheduleJobClient {
+	return &ScheduleJobClient{
+		baseUrlFunc:           baseUrlFunc,
 		authInjector:          authInjector,
 		enableNameFieldEscape: enableNameFieldEscape,
 	}
@@ -38,7 +48,11 @@ func NewScheduleJobClient(baseUrl string, authInjector interfaces.Authentication
 // Add adds new schedule jobs
 func (client ScheduleJobClient) Add(ctx context.Context, reqs []requests.AddScheduleJobRequest) (
 	res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, common.ApiScheduleJobRoute, nil, reqs, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PostRequestWithRawData(ctx, &res, baseUrl, common.ApiScheduleJobRoute, nil, reqs, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -48,7 +62,11 @@ func (client ScheduleJobClient) Add(ctx context.Context, reqs []requests.AddSche
 // Update updates schedule jobs
 func (client ScheduleJobClient) Update(ctx context.Context, reqs []requests.UpdateScheduleJobRequest) (
 	res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, client.baseUrl, common.ApiScheduleJobRoute, nil, reqs, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PatchRequest(ctx, &res, baseUrl, common.ApiScheduleJobRoute, nil, reqs, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -64,7 +82,11 @@ func (client ScheduleJobClient) AllScheduleJobs(ctx context.Context, labels []st
 	}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllScheduleJobRoute, requestParams, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllScheduleJobRoute, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -76,7 +98,11 @@ func (client ScheduleJobClient) ScheduleJobByName(ctx context.Context, name stri
 	res responses.ScheduleJobResponse, err errors.EdgeX) {
 	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
 		SetPath(common.ApiScheduleJobRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, nil, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -88,7 +114,11 @@ func (client ScheduleJobClient) DeleteScheduleJobByName(ctx context.Context, nam
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
 	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
 		SetPath(common.ApiScheduleJobRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.DeleteRequest(ctx, &res, client.baseUrl, requestPath, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.DeleteRequest(ctx, &res, baseUrl, requestPath, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -100,7 +130,11 @@ func (client ScheduleJobClient) TriggerScheduleJobByName(ctx context.Context, na
 	res dtoCommon.BaseResponse, err errors.EdgeX) {
 	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
 		SetPath(common.ApiTriggerScheduleJobRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.PostRequestWithRawData(ctx, &res, client.baseUrl, requestPath, nil, nil, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PostRequestWithRawData(ctx, &res, baseUrl, requestPath, nil, nil, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

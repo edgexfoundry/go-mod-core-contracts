@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021-2023 IOTech Ltd
+// Copyright (C) 2021-2025 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,6 +12,7 @@ import (
 	"path"
 	"strconv"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -22,7 +23,7 @@ import (
 )
 
 type eventClient struct {
-	baseUrl               string
+	baseUrlFunc           clients.ClientBaseUrlFunc
 	authInjector          interfaces.AuthenticationInjector
 	enableNameFieldEscape bool
 }
@@ -30,7 +31,16 @@ type eventClient struct {
 // NewEventClient creates an instance of EventClient
 func NewEventClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.EventClient {
 	return &eventClient{
-		baseUrl:               baseUrl,
+		baseUrlFunc:           clients.GetDefaultClientBaseUrlFunc(baseUrl),
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
+	}
+}
+
+// NewEventClientWithUrlCallback creates an instance of EventClient with ClientBaseUrlFunc.
+func NewEventClientWithUrlCallback(baseUrlFunc clients.ClientBaseUrlFunc, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.EventClient {
+	return &eventClient{
+		baseUrlFunc:           baseUrlFunc,
 		authInjector:          authInjector,
 		enableNameFieldEscape: enableNameFieldEscape,
 	}
@@ -38,7 +48,7 @@ func NewEventClient(baseUrl string, authInjector interfaces.AuthenticationInject
 
 func (ec *eventClient) Add(ctx context.Context, serviceName string, req requests.AddEventRequest) (
 	dtoCommon.BaseWithIdResponse, errors.EdgeX) {
-	path := common.NewPathBuilder().EnableNameFieldEscape(ec.enableNameFieldEscape).
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(ec.enableNameFieldEscape).
 		SetPath(common.ApiEventRoute).SetNameFieldPath(serviceName).SetNameFieldPath(req.Event.ProfileName).SetNameFieldPath(req.Event.DeviceName).SetNameFieldPath(req.Event.SourceName).BuildPath()
 	var br dtoCommon.BaseWithIdResponse
 
@@ -46,8 +56,11 @@ func (ec *eventClient) Add(ctx context.Context, serviceName string, req requests
 	if err != nil {
 		return br, errors.NewCommonEdgeXWrapper(err)
 	}
-
-	err = utils.PostRequest(ctx, &br, ec.baseUrl, path, bytes, encoding, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return br, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.PostRequest(ctx, &br, baseUrl, requestPath, bytes, encoding, ec.authInjector)
 	if err != nil {
 		return br, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -59,7 +72,11 @@ func (ec *eventClient) AllEvents(ctx context.Context, offset, limit int) (respon
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiEventsResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, common.ApiAllEventRoute, requestParams, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllEventRoute, requestParams, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -68,7 +85,11 @@ func (ec *eventClient) AllEvents(ctx context.Context, offset, limit int) (respon
 
 func (ec *eventClient) EventCount(ctx context.Context) (dtoCommon.CountResponse, errors.EdgeX) {
 	res := dtoCommon.CountResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, common.ApiEventCountRoute, nil, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiEventCountRoute, nil, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -78,7 +99,11 @@ func (ec *eventClient) EventCount(ctx context.Context) (dtoCommon.CountResponse,
 func (ec *eventClient) EventCountByDeviceName(ctx context.Context, name string) (dtoCommon.CountResponse, errors.EdgeX) {
 	requestPath := path.Join(common.ApiEventCountRoute, common.Device, common.Name, name)
 	res := dtoCommon.CountResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, nil, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, nil, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -92,7 +117,11 @@ func (ec *eventClient) EventsByDeviceName(ctx context.Context, name string, offs
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiEventsResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, requestParams, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -100,9 +129,13 @@ func (ec *eventClient) EventsByDeviceName(ctx context.Context, name string, offs
 }
 
 func (ec *eventClient) DeleteByDeviceName(ctx context.Context, name string) (dtoCommon.BaseResponse, errors.EdgeX) {
-	path := path.Join(common.ApiEventRoute, common.Device, common.Name, name)
+	requestPath := path.Join(common.ApiEventRoute, common.Device, common.Name, name)
 	res := dtoCommon.BaseResponse{}
-	err := utils.DeleteRequest(ctx, &res, ec.baseUrl, path, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.DeleteRequest(ctx, &res, baseUrl, requestPath, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -116,7 +149,11 @@ func (ec *eventClient) EventsByTimeRange(ctx context.Context, start, end int64, 
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
 	res := responses.MultiEventsResponse{}
-	err := utils.GetRequest(ctx, &res, ec.baseUrl, requestPath, requestParams, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -124,9 +161,13 @@ func (ec *eventClient) EventsByTimeRange(ctx context.Context, start, end int64, 
 }
 
 func (ec *eventClient) DeleteByAge(ctx context.Context, age int) (dtoCommon.BaseResponse, errors.EdgeX) {
-	path := path.Join(common.ApiEventRoute, common.Age, strconv.Itoa(age))
+	requestPath := path.Join(common.ApiEventRoute, common.Age, strconv.Itoa(age))
 	res := dtoCommon.BaseResponse{}
-	err := utils.DeleteRequest(ctx, &res, ec.baseUrl, path, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.DeleteRequest(ctx, &res, baseUrl, requestPath, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -134,9 +175,13 @@ func (ec *eventClient) DeleteByAge(ctx context.Context, age int) (dtoCommon.Base
 }
 
 func (ec *eventClient) DeleteById(ctx context.Context, id string) (dtoCommon.BaseResponse, errors.EdgeX) {
-	path := path.Join(common.ApiEventRoute, common.Id, id)
+	requestPath := path.Join(common.ApiEventRoute, common.Id, id)
 	res := dtoCommon.BaseResponse{}
-	err := utils.DeleteRequest(ctx, &res, ec.baseUrl, path, ec.authInjector)
+	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.DeleteRequest(ctx, &res, baseUrl, requestPath, ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

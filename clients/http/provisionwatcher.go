@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2021 IOTech Ltd
+// Copyright (C) 2021-2025 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -22,7 +23,7 @@ import (
 )
 
 type ProvisionWatcherClient struct {
-	baseUrl               string
+	baseUrlFunc           clients.ClientBaseUrlFunc
 	authInjector          interfaces.AuthenticationInjector
 	enableNameFieldEscape bool
 }
@@ -30,14 +31,27 @@ type ProvisionWatcherClient struct {
 // NewProvisionWatcherClient creates an instance of ProvisionWatcherClient
 func NewProvisionWatcherClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ProvisionWatcherClient {
 	return &ProvisionWatcherClient{
-		baseUrl:               baseUrl,
+		baseUrlFunc:           clients.GetDefaultClientBaseUrlFunc(baseUrl),
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
+	}
+}
+
+// NewProvisionWatcherClientWithUrlCallback creates an instance of ProvisionWatcherClient with ClientBaseUrlFunc.
+func NewProvisionWatcherClientWithUrlCallback(baseUrlFunc clients.ClientBaseUrlFunc, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ProvisionWatcherClient {
+	return &ProvisionWatcherClient{
+		baseUrlFunc:           baseUrlFunc,
 		authInjector:          authInjector,
 		enableNameFieldEscape: enableNameFieldEscape,
 	}
 }
 
 func (pwc ProvisionWatcherClient) Add(ctx context.Context, reqs []requests.AddProvisionWatcherRequest) (res []dtoCommon.BaseWithIdResponse, err errors.EdgeX) {
-	err = utils.PostRequestWithRawData(ctx, &res, pwc.baseUrl, common.ApiProvisionWatcherRoute, nil, reqs, pwc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(pwc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PostRequestWithRawData(ctx, &res, baseUrl, common.ApiProvisionWatcherRoute, nil, reqs, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -46,7 +60,11 @@ func (pwc ProvisionWatcherClient) Add(ctx context.Context, reqs []requests.AddPr
 }
 
 func (pwc ProvisionWatcherClient) Update(ctx context.Context, reqs []requests.UpdateProvisionWatcherRequest) (res []dtoCommon.BaseResponse, err errors.EdgeX) {
-	err = utils.PatchRequest(ctx, &res, pwc.baseUrl, common.ApiProvisionWatcherRoute, nil, reqs, pwc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(pwc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PatchRequest(ctx, &res, baseUrl, common.ApiProvisionWatcherRoute, nil, reqs, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -61,7 +79,11 @@ func (pwc ProvisionWatcherClient) AllProvisionWatchers(ctx context.Context, labe
 	}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, pwc.baseUrl, common.ApiAllProvisionWatcherRoute, requestParams, pwc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(pwc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllProvisionWatcherRoute, requestParams, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -72,7 +94,11 @@ func (pwc ProvisionWatcherClient) AllProvisionWatchers(ctx context.Context, labe
 func (pwc ProvisionWatcherClient) ProvisionWatcherByName(ctx context.Context, name string) (res responses.ProvisionWatcherResponse, err errors.EdgeX) {
 	path := common.NewPathBuilder().EnableNameFieldEscape(pwc.enableNameFieldEscape).
 		SetPath(common.ApiProvisionWatcherRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.GetRequest(ctx, &res, pwc.baseUrl, path, nil, pwc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(pwc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, path, nil, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -83,7 +109,11 @@ func (pwc ProvisionWatcherClient) ProvisionWatcherByName(ctx context.Context, na
 func (pwc ProvisionWatcherClient) DeleteProvisionWatcherByName(ctx context.Context, name string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	path := common.NewPathBuilder().EnableNameFieldEscape(pwc.enableNameFieldEscape).
 		SetPath(common.ApiProvisionWatcherRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
-	err = utils.DeleteRequest(ctx, &res, pwc.baseUrl, path, pwc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(pwc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.DeleteRequest(ctx, &res, baseUrl, path, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -97,7 +127,11 @@ func (pwc ProvisionWatcherClient) ProvisionWatchersByProfileName(ctx context.Con
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, pwc.baseUrl, requestPath, requestParams, pwc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(pwc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -111,7 +145,11 @@ func (pwc ProvisionWatcherClient) ProvisionWatchersByServiceName(ctx context.Con
 	requestParams := url.Values{}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, pwc.baseUrl, requestPath, requestParams, pwc.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(pwc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, pwc.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

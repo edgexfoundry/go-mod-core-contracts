@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2024 IOTech Ltd
+// Copyright (C) 2024-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,7 @@ import (
 	"path"
 	"strconv"
 
+	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/http/utils"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -19,7 +20,7 @@ import (
 )
 
 type ScheduleActionRecordClient struct {
-	baseUrl               string
+	baseUrlFunc           clients.ClientBaseUrlFunc
 	authInjector          interfaces.AuthenticationInjector
 	enableNameFieldEscape bool
 }
@@ -27,7 +28,16 @@ type ScheduleActionRecordClient struct {
 // NewScheduleActionRecordClient creates an instance of ScheduleActionRecordClient
 func NewScheduleActionRecordClient(baseUrl string, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ScheduleActionRecordClient {
 	return &ScheduleActionRecordClient{
-		baseUrl:               baseUrl,
+		baseUrlFunc:           clients.GetDefaultClientBaseUrlFunc(baseUrl),
+		authInjector:          authInjector,
+		enableNameFieldEscape: enableNameFieldEscape,
+	}
+}
+
+// NewScheduleActionRecordClientWithUrlCallback creates an instance of ScheduleActionRecordClient with ClientBaseUrlFunc.
+func NewScheduleActionRecordClientWithUrlCallback(baseUrlFunc clients.ClientBaseUrlFunc, authInjector interfaces.AuthenticationInjector, enableNameFieldEscape bool) interfaces.ScheduleActionRecordClient {
+	return &ScheduleActionRecordClient{
+		baseUrlFunc:           baseUrlFunc,
 		authInjector:          authInjector,
 		enableNameFieldEscape: enableNameFieldEscape,
 	}
@@ -40,7 +50,11 @@ func (client *ScheduleActionRecordClient) AllScheduleActionRecords(ctx context.C
 	requestParams.Set(common.End, strconv.FormatInt(end, 10))
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, common.ApiAllScheduleActionRecordRoute, requestParams, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllScheduleActionRecordRoute, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -52,7 +66,11 @@ func (client *ScheduleActionRecordClient) LatestScheduleActionRecordsByJobName(c
 	requestPath := path.Join(common.ApiScheduleActionRecordRoute, common.Latest, common.Job, common.Name, jobName)
 	requestParams := url.Values{}
 	requestParams.Set(common.Name, jobName)
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -67,7 +85,11 @@ func (client *ScheduleActionRecordClient) ScheduleActionRecordsByStatus(ctx cont
 	requestParams.Set(common.End, strconv.FormatInt(end, 10))
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -82,7 +104,11 @@ func (client *ScheduleActionRecordClient) ScheduleActionRecordsByJobName(ctx con
 	requestParams.Set(common.End, strconv.FormatInt(end, 10))
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -97,7 +123,11 @@ func (client *ScheduleActionRecordClient) ScheduleActionRecordsByJobNameAndStatu
 	requestParams.Set(common.End, strconv.FormatInt(end, 10))
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
-	err = utils.GetRequest(ctx, &res, client.baseUrl, requestPath, requestParams, client.authInjector)
+	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
