@@ -85,7 +85,7 @@ func TestIssueGetCommandByNameWithQueryParams(t *testing.T) {
 func TestIssueIssueSetCommandByName(t *testing.T) {
 	deviceName := "Simple-Device01"
 	cmdName := "SwitchButton"
-	settings := map[string]string{
+	settings := map[string]any{
 		"SwitchButton": "true",
 	}
 	path := common.NewPathBuilder().EnableNameFieldEscape(false).
@@ -101,8 +101,8 @@ func TestIssueIssueSetCommandByName(t *testing.T) {
 func TestIssueIssueSetCommandByNameWithObject(t *testing.T) {
 	deviceName := "Simple-Device01"
 	cmdName := "SwitchButton"
-	settings := map[string]interface{}{
-		"SwitchButton": map[string]interface{}{
+	settings := map[string]any{
+		"SwitchButton": map[string]any{
 			"kind":  "button",
 			"value": "on",
 		},
@@ -112,7 +112,7 @@ func TestIssueIssueSetCommandByNameWithObject(t *testing.T) {
 	ts := newTestServer(http.MethodPut, path, dtoCommon.BaseResponse{})
 	defer ts.Close()
 	client := NewCommandClient(ts.URL, NewNullAuthenticationInjector(), false)
-	res, err := client.IssueSetCommandByNameWithObject(context.Background(), deviceName, cmdName, settings)
+	res, err := client.IssueSetCommandByName(context.Background(), deviceName, cmdName, settings)
 	require.NoError(t, err)
 	require.IsType(t, dtoCommon.BaseResponse{}, res)
 }

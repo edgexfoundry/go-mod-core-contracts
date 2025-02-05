@@ -114,22 +114,7 @@ func (client *CommandClient) IssueGetCommandByNameWithQueryParams(ctx context.Co
 }
 
 // IssueSetCommandByName issues the specified write command referenced by the command name to the device/sensor that is also referenced by name.
-func (client *CommandClient) IssueSetCommandByName(ctx context.Context, deviceName string, commandName string, settings map[string]string) (res dtoCommon.BaseResponse, err errors.EdgeX) {
-	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
-		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetNameFieldPath(commandName).BuildPath()
-	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
-	if goErr != nil {
-		return res, errors.NewCommonEdgeXWrapper(goErr)
-	}
-	err = utils.PutRequest(ctx, &res, baseUrl, requestPath, nil, settings, client.authInjector)
-	if err != nil {
-		return res, errors.NewCommonEdgeXWrapper(err)
-	}
-	return res, nil
-}
-
-// IssueSetCommandByNameWithObject issues the specified write command and the settings supports object value type
-func (client *CommandClient) IssueSetCommandByNameWithObject(ctx context.Context, deviceName string, commandName string, settings map[string]interface{}) (res dtoCommon.BaseResponse, err errors.EdgeX) {
+func (client *CommandClient) IssueSetCommandByName(ctx context.Context, deviceName string, commandName string, settings map[string]any) (res dtoCommon.BaseResponse, err errors.EdgeX) {
 	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
 		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetNameFieldPath(commandName).BuildPath()
 	baseUrl, goErr := clients.GetBaseUrl(client.baseUrlFunc)
