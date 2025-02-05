@@ -44,20 +44,10 @@ func NewMultiEventsResponse(requestId string, message string, statusCode int, to
 }
 
 func (e *EventResponse) Encode() ([]byte, string, error) {
-	var encoding = common.ContentTypeJSON
-
-	for _, r := range e.Event.Readings {
-		if r.ValueType == common.ValueTypeBinary {
-			encoding = common.ContentTypeCBOR
-			break
-		}
-	}
-	if v := os.Getenv(common.EnvEncodeAllEvents); v == common.ValueTrue {
-		encoding = common.ContentTypeCBOR
-	}
-
+	var encoding = e.GetEncodingContentType()
 	var err error
 	var encodedData []byte
+
 	switch encoding {
 	case common.ContentTypeCBOR:
 		encodedData, err = cbor.Marshal(e)
@@ -72,4 +62,18 @@ func (e *EventResponse) Encode() ([]byte, string, error) {
 	}
 
 	return encodedData, encoding, nil
+}
+
+// GetEncodingContentType determines which content type should be used to encode and decode this object
+func (e *EventResponse) GetEncodingContentType() string {
+	if v := os.Getenv(common.EnvEncodeAllEvents); v == common.ValueTrue {
+		return common.ContentTypeCBOR
+	}
+	for _, r := range e.Event.Readings {
+		if r.ValueType == common.ValueTypeBinary {
+			return common.ContentTypeCBOR
+		}
+	}
+
+	return common.ContentTypeJSON
 }

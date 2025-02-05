@@ -89,20 +89,10 @@ func (a *AddEventRequest) Unmarshal(b []byte, f unmarshal) error {
 }
 
 func (a *AddEventRequest) Encode() ([]byte, string, error) {
-	var encoding = common.ContentTypeJSON
-
-	for _, r := range a.Event.Readings {
-		if r.ValueType == common.ValueTypeBinary {
-			encoding = common.ContentTypeCBOR
-			break
-		}
-	}
-	if v := os.Getenv(common.EnvEncodeAllEvents); v == common.ValueTrue {
-		encoding = common.ContentTypeCBOR
-	}
-
+	var encoding = a.GetEncodingContentType()
 	var err error
 	var encodedData []byte
+
 	switch encoding {
 	case common.ContentTypeCBOR:
 		encodedData, err = cbor.Marshal(a)
@@ -117,6 +107,20 @@ func (a *AddEventRequest) Encode() ([]byte, string, error) {
 	}
 
 	return encodedData, encoding, nil
+}
+
+// GetEncodingContentType determines which content type should be used to encode and decode this object
+func (a *AddEventRequest) GetEncodingContentType() string {
+	if v := os.Getenv(common.EnvEncodeAllEvents); v == common.ValueTrue {
+		return common.ContentTypeCBOR
+	}
+	for _, r := range a.Event.Readings {
+		if r.ValueType == common.ValueTypeBinary {
+			return common.ContentTypeCBOR
+		}
+	}
+
+	return common.ContentTypeJSON
 }
 
 // AddEventReqToEventModel transforms the AddEventRequest DTO to the Event model
