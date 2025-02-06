@@ -29,7 +29,5 @@ type CommandClient interface {
 	// IssueGetCommandByNameWithQueryParams issues the specified read command by deviceName and commandName with additional query parameters.
 	IssueGetCommandByNameWithQueryParams(ctx context.Context, deviceName string, commandName string, queryParams map[string]string) (*responses.EventResponse, errors.EdgeX)
 	// IssueSetCommandByName issues the specified write command referenced by the command name to the device/sensor that is also referenced by name.
-	IssueSetCommandByName(ctx context.Context, deviceName string, commandName string, settings map[string]string) (common.BaseResponse, errors.EdgeX)
-	// IssueSetCommandByNameWithObject issues the specified write command and the settings supports object value type
-	IssueSetCommandByNameWithObject(ctx context.Context, deviceName string, commandName string, settings map[string]interface{}) (common.BaseResponse, errors.EdgeX)
+	IssueSetCommandByName(ctx context.Context, deviceName string, commandName string, settings map[string]any) (common.BaseResponse, errors.EdgeX)
 }
