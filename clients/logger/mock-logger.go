@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright 2019 Dell Inc.
+ * Copyright (C) 2025 IOTech Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,8 +15,6 @@
 
 package logger
 
-import "github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
-
 // MockLogger is a type that can be used for mocking the LoggingClient interface during unit tests
 type MockLogger struct {
 }
@@ -26,7 +25,7 @@ func NewMockClient() LoggingClient {
 }
 
 // SetLogLevel simulates setting a log severity level
-func (lc MockLogger) SetLogLevel(_ string) errors.EdgeX {
+func (lc MockLogger) SetLogLevel(_ string) error {
 	return nil
 }
 
