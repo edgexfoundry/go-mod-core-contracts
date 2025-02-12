@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -51,6 +51,8 @@ type EdgeX interface {
 	Message() string
 	// Code returns the status code of this error.
 	Code() int
+	// Kind returns the error kind of this error.
+	Kind() string
 }
 
 // CommonEdgeX generalizes an error structure which can be used for any type of EdgeX error.
@@ -128,6 +130,11 @@ func (ce CommonEdgeX) Message() string {
 // Code returns the status code of this error.
 func (ce CommonEdgeX) Code() int {
 	return ce.code
+}
+
+// Kind returns the error kind of this error.
+func (ce CommonEdgeX) Kind() string {
+	return string(ce.kind)
 }
 
 // Unwrap retrieves the next nested error in the wrapped error chain.
