@@ -136,6 +136,9 @@ const (
 
 	ApiKeyRoute                     = ApiBase + "/key"
 	ApiVerificationKeyByIssuerRoute = ApiKeyRoute + "/" + VerificationKeyType + "/" + Issuer + "/:" + Issuer
+
+	ApiTokenRoute      = ApiBase + "/" + Token
+	ApiRegenTokenRoute = ApiTokenRoute + "/" + EntityId + "/:" + EntityId
 )
 
 // Constants related to defined url path names and parameters in the v3 service APIs
@@ -404,4 +407,10 @@ const (
 	VerificationKeyType = "verification"
 	SigningKeyType      = "signing"
 	Issuer              = "issuer"
+)
+
+// Constants related to the security-secretstore-setup service
+const (
+	EntityId = "entityId"
+	Token    = "token"
 )
