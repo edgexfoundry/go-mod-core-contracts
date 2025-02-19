@@ -3,7 +3,7 @@ package common
 // CountResponse defines the Response Content for GET count DTO.
 type CountResponse struct {
 	BaseResponse `json:",inline"`
-	Count        uint32
+	Count        uint32 `json:"count"`
 }
 
 // NewCountResponse creates new CountResponse with all fields set appropriately
