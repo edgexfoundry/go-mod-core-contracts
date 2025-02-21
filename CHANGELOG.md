@@ -3,6 +3,87 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
+## [v4.0.0] - 2025-03-12
+
+### ✨ Features
+
+- Add DeleteById to interface ([49f8627…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/49f86278feb7be638efc0312c2d890135da1788d))
+- Add Kind() method to EdgeX error interface ([9172608…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/9172608da6a200124329a18b080222f6fa030ba2))
+- Enhance Core Data Event Retention ([c293476…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/c29347609a41d534e07fb76b6089d04855a8188a))
+- Add helper function in event DTOs ([#973](https://github.com/edgexfoundry/go-mod-core-contracts/issues/973)) ([658ac86…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/658ac86b41db2d213e72e8edbe30d482a3587384))
+- Use `baseUrlFunc` for AuthClient ([86fdbe0…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/86fdbe0ec44bdaf10cc28749820bbaca6e58f71f))
+- Add model/DTOs and HTTP client for security-proxy-auth ([8d9ce4b…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/8d9ce4be013658f22f8bc8113ce53db7fa71e4a2))
+- Add the post with headers util function for HTTP clients ([#955](https://github.com/edgexfoundry/go-mod-core-contracts/issues/955)) ([9164bc1…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/9164bc1c0b3796a2feabf3521f5acbca65783573))
+- Add new API routes for notifications ([ba55863…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/ba5586313443727d187d16cfec8b446e7628fbe5))
+- Add more extendable fields to dtos/models for v4 ([b4b29ec…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/b4b29eca62c6eabc141589f69e0eaa5ee2c7d928))
+- Change start/end from int to int64 for arm32 ([2e32708…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/2e32708ab81acdef9ec38d9db761411d2c692769))
+- Add ZeroMQ channel and update MQTT channel ([bbd1843…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/bbd1843f5aa1d127b59d23d8e517cff9d4345007))
+- Add username/password validations ([4336af0…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/4336af07560a4d02ffb6783f33e18b2f96b5afe4))
+- Add Unauthorized `ErrKind` ([a628e4c…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/a628e4c8c657a215a65813f31ce8e62adb89b22e))
+- Add `onChangeThreshold` in Device AutoEvent ([f399940…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/f39994077e6603461b5c3fee41b176f810ff9913))
+- Add CBOR encode and decode for BaseReading ([8f27c7a…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/8f27c7abae0e16c031c8c7e2ba3c71ec97d07d39))
+- Allow reading value to be null ([4a7a10a…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/4a7a10a3a61d76941da71588a5da288692112b8f))
+- Add new discovery/profilescan APIs to DeviceServiceCommandClient ([9ff41d2…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/9ff41d212d11429aa0370e900638e98d91d449fa))
+- Enhance `WithEmptyPayloadAndId` method ([5095a2a…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/5095a2a290111a3eb981f3cade4dbcfd5959b829))
+- Enhance support-scheduler service for advanced job scheduling ([8789206…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/878920651f8f33bcd7d3f24de4f2affa7ae60761))
+- Add UnmarshalJSON and WithEmptyPayload methods with more tests ([7ffbf86…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/7ffbf863d5ebd0ce6e0bc811e49f93664f804a9f))
+- Add PostgreSQL as the new default persistence layer ([5bc0bbc…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/5bc0bbceaf6546befac2c20fe3f7d9c46a1a1e45))
+```text
+
+BREAKING CHANGE: Switched default database to PostgreSQL across all services
+
+```
+- Add DS profilescan API DTO and client ([45caab6…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/45caab6e793aec63da2839df359b618f97008afe))
+- Add profile basic info http client ([3d51ed7…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/3d51ed7616cc08427e4d538aba11c75e352d1bae))
+- Add multiple profile basic info DTO ([2133f19…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/2133f19c414c3a8d1ef62f5484038543baf8ca3d))
+- Allow empty profileName in Device ([0782ff0…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/0782ff0d388a9319a830f94ebed6529908651f5b))
+- Add ObjectArray valueType support ([#899](https://github.com/edgexfoundry/go-mod-core-contracts/issues/899)) ([467e0a5…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/467e0a5de96c7e27d57f985266f9f068ad2a1d2a))
+- Add new Add/update with param device client ([6edc03f…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/6edc03f696a9a074c7115e347077c22ca502b44a))
+- Add optional "parent" field to Device objects ([#887](https://github.com/edgexfoundry/go-mod-core-contracts/issues/887)) ([132cf7a…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/132cf7a0d98f69aaa4a72c8537e6ff006b27445a))
+- Core Keeper implementation ([e3dd702…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/e3dd7029928a0a6ca0433a8ff353d6de7cdd76df))
+```text
+
+BREAKING CHANGE: Introduced Core Keeper as a new service for configuration and registry management
+
+```
+- Add openziti to core contracts ([#876](https://github.com/edgexfoundry/go-mod-core-contracts/issues/876)) ([22d5e16…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/22d5e16a8980b24fc88809bb5198de467db1a9fe))
+- Add injectEdgeXAuth boolean attribute to RESTAddress types ([66ec24c…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/66ec24c3da583be5fb7edd9ccead2b4b95a54cd3))
+
+### ♻ Code Refactoring
+
+- Generalize LoggingClient interface ([618face…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/618faceb2398c61e8d9464175d38fd493e4878ab))
+- Refine the command client library ([ebecdaf…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/ebecdaf26f1810fa691e8939b5c5458ba123432a))
+```text
+
+BREAKING CHANGE: Refine the command client library
+
+```
+- Update go module to v4 ([3722314…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/37223149a24e8e0216580cbcf98112a0dfd072e8))
+```text
+
+BREAKING CHANGE: Update go module to v4
+
+```
+- Support null value in reading instead of nil reading value ([43f1e99…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/43f1e99823bcc20f145e229eadd37b2c887ffe9c))
+
+### 🐛 Bug Fixes
+
+- Generate proper error message for 'unique' validation tag ([be22b17…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/be22b176104324ac725c745a5800f937af6b910e))
+- Ensure `Properties` field is properly initialized and serialized ([9f205f8…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/9f205f8e9ffbb4e7049917ea8ebf0e95133eb005))
+- Replace the error message with BaseResponse.Message ([89e02a4…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/89e02a4eecadce9d454acc7ea4305d261c7934c0))
+- Allow binary reading value to be empty ([d524d8c…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/d524d8c204f739d8b5b86ef1ba60ec8e5cd14733))
+- Fix inconsistent reading DTO JSON marshal and unmarshal ([c399d60…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/c399d60e2593767685d3b618a083c5a5f2cf0014))
+- Fix binary reading validation ([1bf9e0c…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/1bf9e0c7b19d5143de3a4bacf98c81ce5b5d77ee))
+- Add missing field "Method" to model and DTO transform functions ([2e1836e…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/2e1836ed65a7b8fa2dc8799e1eaf670623591bec))
+- Update DeviceClient and KVSClient mocks ([50a29bf…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/50a29bf8c465817118fd07dc014cdf999ceccbd2))
+- Check the response content length before invoking json.Unmarshal ([266762f…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/266762f9c8393c8da7aea63bb418216b78b8829a))
+
+
+### 👷 Build
+
+- Upgrade to go-1.23, Linter1.61.0 ([1276be6…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/1276be6f117a45c8b13e217674147f4711b849c1))
+
+
 ## [v3.1.0] - 2023-11-15
 
 ### ✨  Features
