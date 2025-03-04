@@ -69,9 +69,10 @@ type BaseAddress struct {
 	Type string
 
 	// Common properties
-	Scheme string // Scheme indicates the scheme of the URI, see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Syntax
-	Host   string
-	Port   int
+	Scheme   string // Scheme indicates the scheme of the URI, see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#Syntax
+	Host     string
+	Port     int
+	Protocol string
 }
 
 // Security is a base struct contains the security related fields.

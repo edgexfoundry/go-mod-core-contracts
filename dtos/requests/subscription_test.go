@@ -24,7 +24,7 @@ var (
 	testHost                   = "host"
 	testPort                   = 123
 	testSubscriptionChannels   = []dtos.Address{
-		dtos.NewRESTAddress(testHost, testPort, http.MethodGet),
+		dtos.NewRESTAddress(testHost, testPort, http.MethodGet, "http"),
 		dtos.NewEmailAddress([]string{"test@example.com"}),
 		dtos.NewMQTTAddress(testHost, testPort, "publisher", "topic"),
 		dtos.NewZeroMQAddress(testHost, testPort, "topic"),
