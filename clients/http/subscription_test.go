@@ -26,7 +26,7 @@ func addSubscriptionRequest() requests.AddSubscriptionRequest {
 	return requests.NewAddSubscriptionRequest(
 		dtos.Subscription{
 			Name:        TestSubscriptionName,
-			Channels:    []dtos.Address{dtos.NewRESTAddress(TestHost, TestPort, http.MethodGet)},
+			Channels:    []dtos.Address{dtos.NewRESTAddress(TestHost, TestPort, http.MethodGet, "http")},
 			Receiver:    TestReceiver,
 			Categories:  []string{TestCategory},
 			Labels:      []string{TestLabel},
@@ -41,7 +41,7 @@ func updateSubscriptionRequest() requests.UpdateSubscriptionRequest {
 	return requests.NewUpdateSubscriptionRequest(
 		dtos.UpdateSubscription{
 			Name:     &name,
-			Channels: []dtos.Address{dtos.NewRESTAddress(TestHost, TestPort, http.MethodPut)},
+			Channels: []dtos.Address{dtos.NewRESTAddress(TestHost, TestPort, http.MethodPut, "http")},
 		},
 	)
 }
