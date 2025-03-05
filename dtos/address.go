@@ -68,11 +68,12 @@ type RESTAddress struct {
 	InjectEdgeXAuth bool   `json:"injectEdgeXAuth,omitempty"`
 }
 
-func NewRESTAddress(host string, port int, httpMethod string) Address {
+func NewRESTAddress(host string, port int, httpMethod string, scheme string) Address {
 	return Address{
-		Type: common.REST,
-		Host: host,
-		Port: port,
+		Type:   common.REST,
+		Host:   host,
+		Port:   port,
+		Scheme: scheme,
 		RESTAddress: RESTAddress{
 			HTTPMethod: httpMethod,
 		},
@@ -160,7 +161,7 @@ func ToAddressModel(a Address) models.Address {
 	case common.REST:
 		address = models.RESTAddress{
 			BaseAddress: models.BaseAddress{
-				Type: a.Type, Host: a.Host, Port: a.Port,
+				Type: a.Type, Host: a.Host, Port: a.Port, Scheme: a.Scheme,
 			},
 			Path:            a.RESTAddress.Path,
 			HTTPMethod:      a.RESTAddress.HTTPMethod,
