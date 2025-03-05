@@ -17,7 +17,7 @@
 - Add new API routes for notifications ([ba55863…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/ba5586313443727d187d16cfec8b446e7628fbe5))
 - Add more extendable fields to dtos/models for v4 ([b4b29ec…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/b4b29eca62c6eabc141589f69e0eaa5ee2c7d928))
 - Change start/end from int to int64 for arm32 ([2e32708…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/2e32708ab81acdef9ec38d9db761411d2c692769))
-- Add ZeroMQ channel and update MQTT channel ([bbd1843…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/bbd1843f5aa1d127b59d23d8e517cff9d4345007))
+- Add ZeroMQ channel and update MQTT channel for Address dto/model ([bbd1843…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/bbd1843f5aa1d127b59d23d8e517cff9d4345007))
 - Add username/password validations ([4336af0…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/4336af07560a4d02ffb6783f33e18b2f96b5afe4))
 - Add Unauthorized `ErrKind` ([a628e4c…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/a628e4c8c657a215a65813f31ce8e62adb89b22e))
 - Add `onChangeThreshold` in Device AutoEvent ([f399940…](https://github.com/edgexfoundry/go-mod-core-contracts/commit/f39994077e6603461b5c3fee41b176f810ff9913))
