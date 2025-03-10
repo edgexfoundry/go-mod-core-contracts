@@ -124,8 +124,8 @@ func TestNewSimpleReading(t *testing.T) {
 		{"Simple int16", common.ValueTypeInt16, int16(-12345), "-12345"},
 		{"Simple int32", common.ValueTypeInt32, int32(-1234567890), "-1234567890"},
 		{"Simple int64", common.ValueTypeInt64, int64(-1234567890987654321), "-1234567890987654321"},
-		{"Simple Float32", common.ValueTypeFloat32, float32(123.456), "1.234560e+02"},
-		{"Simple Float64", common.ValueTypeFloat64, float64(123456789.0987654321), "1.234568e+08"},
+		{"Simple Float32", common.ValueTypeFloat32, float32(123.456), "1.23456e+02"},
+		{"Simple Float64", common.ValueTypeFloat64, float64(123456789.0987654321), "1.2345678909876543e+08"},
 		{"Simple Boolean Array", common.ValueTypeBoolArray, []bool{true, false}, "[true, false]"},
 		{"Simple String Array", common.ValueTypeStringArray, []string{"hello", "world"}, "[hello, world]"},
 		{"Simple Uint8 Array", common.ValueTypeUint8Array, []uint8{123, 21}, "[123, 21]"},
@@ -136,8 +136,8 @@ func TestNewSimpleReading(t *testing.T) {
 		{"Simple Int16 Array", common.ValueTypeInt16Array, []int16{-12345, 12345}, "[-12345, 12345]"},
 		{"Simple Int32 Array", common.ValueTypeInt32Array, []int32{-1234567890, 1234567890}, "[-1234567890, 1234567890]"},
 		{"Simple Int64 Array", common.ValueTypeInt64Array, []int64{-1234567890987654321, 1234567890987654321}, "[-1234567890987654321, 1234567890987654321]"},
-		{"Simple Float32 Array", common.ValueTypeFloat32Array, []float32{123.456, -654.321}, "[1.234560e+02, -6.543210e+02]"},
-		{"Simple Float64 Array", common.ValueTypeFloat64Array, []float64{123456789.0987654321, -987654321.123456789}, "[1.234568e+08, -9.876543e+08]"},
+		{"Simple Float32 Array", common.ValueTypeFloat32Array, []float32{123.456, -654.321}, "[1.23456e+02, -6.54321e+02]"},
+		{"Simple Float64 Array", common.ValueTypeFloat64Array, []float64{123456789.0987654321, -987654321.123456789}, "[1.2345678909876543e+08, -9.876543211234568e+08]"},
 	}
 
 	for _, tt := range tests {
