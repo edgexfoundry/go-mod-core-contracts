@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright 2022 Intel Corp.
+ * Copyright (C) 2025 IOTech Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -19,6 +20,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/fxamacker/cbor/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -61,19 +63,36 @@ func TestNewSystemEvent(t *testing.T) {
 	assert.GreaterOrEqual(t, expectedLaterTimestamp, actual.Timestamp)
 }
 
-func TestDecodeDetails(t *testing.T) {
+func TestDecodeDetailsFromJSONDecodedData(t *testing.T) {
 	systemEvent := NewSystemEvent(expectedType, expectedAction, expectedSource, expectedOwner, expectedTags, expectedDetails)
 
 	// Simulate the System Event was received as encoded JSON and has been decoded which results in the Details being
 	// decoded to a map[string]interface{} since decoder doesn't know the actual type.
-	data, err := json.Marshal(systemEvent)
+	data, err := json.Marshal(systemEvent) // simulate the server encode the systemEvent and publish to broker
 	require.NoError(t, err)
 	target := &SystemEvent{}
-	err = json.Unmarshal(data, target)
+	err = json.Unmarshal(data, target) // simulate the client receive the systemEvent from broker and decode the systemEvent
 	require.NoError(t, err)
 
 	actual := &Device{}
-	err = target.DecodeDetails(actual)
+	err = target.DecodeDetails(actual) // decode the map[string]interface{} to actual data type
+	require.NoError(t, err)
+	assert.Equal(t, expectedDetails, *actual)
+}
+
+func TestDecodeDetailsFromCBORDecodedData(t *testing.T) {
+	systemEvent := NewSystemEvent(expectedType, expectedAction, expectedSource, expectedOwner, expectedTags, expectedDetails)
+
+	// Simulate the System Event was received as encoded JSON and has been decoded which results in the Details being
+	// decoded to a map[interface{}]interface{} since decoder doesn't know the actual type.
+	data, err := cbor.Marshal(systemEvent) // simulate the server encode the systemEvent and publish to broker
+	require.NoError(t, err)
+	target := &SystemEvent{}
+	err = cbor.Unmarshal(data, target) // simulate the client receive the systemEvent from broker and decode the systemEvent
+	require.NoError(t, err)
+
+	actual := &Device{}
+	err = target.DecodeDetails(actual) // decode the map[interface{}]interface{} to actual data type
 	require.NoError(t, err)
 	assert.Equal(t, expectedDetails, *actual)
 }
