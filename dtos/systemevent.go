@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright 2022 Intel Corp.
+ * Copyright (C) 2025 IOTech Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -19,6 +20,8 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/fxamacker/cbor/v2"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/common"
 )
@@ -55,16 +58,31 @@ func (s *SystemEvent) DecodeDetails(details any) error {
 		return errors.New("unable to decode System Event details: Details are nil")
 	}
 
-	// Must encode the details to JSON since if the target SystemEvent was decoded from JSON the details are
-	// captured in a map[string]interface{}.
-	data, err := json.Marshal(s.Details)
-	if err != nil {
-		return fmt.Errorf("unable to encode System Event details to JSON: %s", err.Error())
-	}
+	switch s.Details.(type) {
+	case map[any]any:
+		// Must encode the details to CBOR since if the target SystemEvent was decoded from CBOR the details are
+		// captured in a map[interface{}]interface{}.
+		data, err := cbor.Marshal(s.Details)
+		if err != nil {
+			return fmt.Errorf("unable to encode System Event details to CBOR: %s", err.Error())
+		}
 
-	err = json.Unmarshal(data, details)
-	if err != nil {
-		return fmt.Errorf("unable to decode System Event details from JSON: %s", err.Error())
+		err = cbor.Unmarshal(data, details)
+		if err != nil {
+			return fmt.Errorf("unable to decode System Event details from CBOR: %s", err.Error())
+		}
+	default:
+		// Must encode the details to JSON since if the target SystemEvent was decoded from JSON the details are
+		// captured in a map[string]interface{}.
+		data, err := json.Marshal(s.Details)
+		if err != nil {
+			return fmt.Errorf("unable to encode System Event details to JSON: %s", err.Error())
+		}
+
+		err = json.Unmarshal(data, details)
+		if err != nil {
+			return fmt.Errorf("unable to decode System Event details from JSON: %s", err.Error())
+		}
 	}
 
 	return nil
