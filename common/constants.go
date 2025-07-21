@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2024 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -295,7 +295,8 @@ const (
 
 // Constants for Edgex Environment variable
 const (
-	EnvEncodeAllEvents = "EDGEX_ENCODE_ALL_EVENTS_CBOR"
+	EnvEncodeAllEvents   = "EDGEX_ENCODE_ALL_EVENTS_CBOR"
+	EnvMessageCborEncode = "EDGEX_MSG_CBOR_ENCODE"
 )
 
 // Miscellaneous constants
