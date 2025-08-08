@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -135,38 +136,85 @@ func getErrorMessage(e validator.FieldError) string {
 // ex. edgex-dto-duration=10ms0x2C24h - 10ms represents the minimum Duration and 24h represents the maximum Duration
 // 0x2c is the UTF-8 hex encoding of comma (,) as the min/max value separator
 func ValidateDuration(fl validator.FieldLevel) bool {
-	duration, err := time.ParseDuration(fl.Field().String())
-	if err != nil {
+	durationStr := fl.Field().String()
+
+	valid, duration := parseDurationWithDay(durationStr)
+	if !valid {
 		return false
 	}
 
 	// if min/max are defined from tag param, check if the duration value is in the duration range
 	param := fl.Param()
-	var min, max time.Duration
 	if param != "" {
 		params := strings.Split(param, CommaSeparator)
 		if len(params) > 0 {
-			min, err = time.ParseDuration(params[0])
-			if err != nil {
-				return false
-			}
-			if duration < min {
-				// the duration value is smaller than the min
-				return false
-			}
-			if len(params) > 1 {
-				max, err = time.ParseDuration(params[1])
-				if err != nil {
+			// Check if minimum value is defined from the tag param
+			if params[0] != "" {
+				valid, minDuration := parseDurationWithDay(params[0])
+				if !valid {
 					return false
 				}
-				if duration > max {
-					// the duration value is larger than the max
+				if duration < minDuration {
+					// the duration value is smaller than the min
 					return false
+				}
+			}
+
+			if len(params) > 1 {
+				// Check if maximum value is defined from the tag param
+				if params[1] != "" {
+					valid, maxDuration := parseDurationWithDay(params[1])
+					if !valid {
+						return false
+					}
+					if duration > maxDuration {
+						// the duration value is larger than the max
+						return false
+					}
 				}
 			}
 		}
 	}
 	return true
+}
+
+// parseDurationWithDay extends duration string parsing to support the "d" (day) unit.
+// It returns a boolean indicating whether the string is valid, along with the corresponding Duration value.
+func parseDurationWithDay(durationStr string) (bool, time.Duration) {
+	var totalDuration time.Duration
+
+	// Regex to capture decimal days (e.g., "2.5d" or "3d")
+	re := regexp.MustCompile(`([\d.]+)d`)
+	matches := re.FindStringSubmatch(durationStr)
+
+	// Checks if the duration string contains a valid decimal with 'd'(day) unit
+	if len(matches) == 2 {
+		day, err := strconv.ParseFloat(matches[1], 64)
+		if err != nil {
+			return false, 0
+		}
+		// Converts days to hours
+		totalDuration = time.Duration(day * float64(24*time.Hour))
+
+		// Remove the matched "Xd" (e.g., "2.5d") from the duration string
+		// so we're left with only the remaining duration (e.g., "5h")
+		durationStr = re.ReplaceAllString(durationStr, "")
+		durationStr = strings.TrimSpace(durationStr)
+
+		// The duration string contains no other time units except for "d"
+		if durationStr == "" {
+			return true, totalDuration
+		}
+	}
+
+	// Parse the remaining duration string without day unit
+	remainingDuration, err := time.ParseDuration(durationStr)
+	if err != nil {
+		return false, totalDuration
+	}
+
+	totalDuration += remainingDuration
+	return true, totalDuration
 }
 
 // ValidateDtoUuid used to check the UpdateDTO uuid pointer value
