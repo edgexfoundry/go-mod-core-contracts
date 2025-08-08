@@ -538,14 +538,14 @@ func (b BaseReading) MarshalCBOR() ([]byte, error) {
 
 func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) {
 	type reading struct {
-		Id           string `json:"id,omitempty"`
-		Origin       int64  `json:"origin"`
-		DeviceName   string `json:"deviceName"`
-		ResourceName string `json:"resourceName"`
-		ProfileName  string `json:"profileName"`
-		ValueType    string `json:"valueType"`
-		Units        string `json:"units,omitempty"`
-		Tags         Tags   `json:"tags,omitempty"`
+		Id           string `json:"id,omitempty" cbor:"id,omitempty"`
+		Origin       int64  `json:"origin,omitempty" cbor:"origin,omitempty"`
+		DeviceName   string `json:"deviceName,omitempty" cbor:"deviceName,omitempty"`
+		ResourceName string `json:"resourceName,omitempty" cbor:"resourceName,omitempty"`
+		ProfileName  string `json:"profileName,omitempty" cbor:"profileName,omitempty"`
+		ValueType    string `json:"valueType" cbor:"valueType"`
+		Units        string `json:"units,omitempty" cbor:"units,omitempty"`
+		Tags         Tags   `json:"tags,omitempty" cbor:"tags,omitempty"`
 	}
 	if b.isNull {
 		return marshal(&struct {

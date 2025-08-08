@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,6 +8,8 @@ package dtos
 import (
 	"encoding/json"
 	"fmt"
+	"math"
+	"os"
 	"testing"
 
 	"github.com/fxamacker/cbor/v2"
@@ -286,4 +288,35 @@ func TestEvent_MarshalNullReading(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestEvent_MarshalOptimizedEventPayload(t *testing.T) {
+	testEvent := NewEvent(TestDeviceProfileName, TestDeviceName, TestSourceName)
+	testEvent.Id = TestUUID
+	testEvent.Origin = TestTimestamp
+	err := testEvent.AddSimpleReading(TestReadingName, common.ValueTypeUint8, uint8(math.MaxUint8))
+	require.NoError(t, err)
+	testEvent.Readings[0].Id = TestUUID
+	testEvent.Readings[0].Origin = TestTimestamp
+
+	err = os.Setenv(common.EnvOptimizeEventPayload, common.ValueTrue)
+	require.NoError(t, err)
+
+	// Marshal reduce the reading fields
+	data, err := json.Marshal(testEvent)
+	require.NoError(t, err)
+	assert.JSONEq(t,
+		fmt.Sprintf(
+			`{"apiVersion":"v3", "id":"%s",
+					"deviceName":"TestDevice","profileName":"TestDeviceProfileName","sourceName":"TestSourceName","origin":%d,
+					"readings":[{"resourceName":"TestDeviceResource","valueType":"Uint8","value":"255"}]}`, TestUUID, TestTimestamp),
+		string(data))
+
+	// Unmarshal recover the reading fields
+	var res Event
+	err = json.Unmarshal(data, &res)
+	require.NoError(t, err)
+
+	testEvent.Readings[0].Id = "" // the id field will be omitted ,and it isn’t used to store in the database
+	assert.Equal(t, testEvent, res)
 }
