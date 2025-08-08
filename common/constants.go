@@ -295,8 +295,9 @@ const (
 
 // Constants for Edgex Environment variable
 const (
-	EnvEncodeAllEvents   = "EDGEX_ENCODE_ALL_EVENTS_CBOR"
-	EnvMessageCborEncode = "EDGEX_MSG_CBOR_ENCODE"
+	EnvEncodeAllEvents      = "EDGEX_ENCODE_ALL_EVENTS_CBOR"
+	EnvMessageCborEncode    = "EDGEX_MSG_CBOR_ENCODE"
+	EnvOptimizeEventPayload = "EDGEX_OPTIMIZE_EVENT_PAYLOAD"
 )
 
 // Miscellaneous constants
