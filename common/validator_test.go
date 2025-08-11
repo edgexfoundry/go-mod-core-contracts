@@ -168,6 +168,10 @@ func TestParseDurationWithDay(t *testing.T) {
 	expectedDur6, err := time.ParseDuration(durStr6)
 	require.NoError(t, err)
 
+	durStr7 := "2.2d1.1d20m3h1h10m"
+	expectedDur7, err := time.ParseDuration("83.2h30m")
+	require.NoError(t, err)
+
 	tests := []struct {
 		name             string
 		durString        string
@@ -180,6 +184,7 @@ func TestParseDurationWithDay(t *testing.T) {
 		{"valid - duration string with fractional days and hour", durStr4, true, expectedDur4},
 		{"valid - duration string with hour and day at last", durStr5, true, expectedDur5},
 		{"valid - duration string with min in ms and max in h", durStr6, true, expectedDur6},
+		{"valid - duration string with repeated day and other time units", durStr7, true, expectedDur7},
 		{"invalid - duration string with valid day and invalid minute", "1dxxm", false, 0},
 		{"invalid - duration string with invalid day and valid second", "xxd30s", false, 0},
 		{"invalid duration string", "abc", false, 0},

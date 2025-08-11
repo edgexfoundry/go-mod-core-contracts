@@ -181,39 +181,44 @@ func ValidateDuration(fl validator.FieldLevel) bool {
 // parseDurationWithDay extends duration string parsing to support the "d" (day) unit.
 // It returns a boolean indicating whether the string is valid, along with the corresponding Duration value.
 func parseDurationWithDay(durationStr string) (bool, time.Duration) {
+	// Duration string should not be empty
+	if durationStr == "" {
+		return false, time.Duration(0)
+	}
+
 	var totalDuration time.Duration
 
-	// Regex to capture decimal days (e.g., "2.5d" or "3d")
+	// Regex to find all day fragments like "2.2d", "1.5d", "1d1d", etc.
 	re := regexp.MustCompile(`([\d.]+)d`)
-	matches := re.FindStringSubmatch(durationStr)
+	matches := re.FindAllStringSubmatch(durationStr, -1)
 
-	// Checks if the duration string contains a valid decimal with 'd'(day) unit
-	if len(matches) == 2 {
-		day, err := strconv.ParseFloat(matches[1], 64)
+	// Sum up all matched day durations
+	for _, match := range matches {
+		if len(match) != 2 {
+			continue
+		}
+		day, err := strconv.ParseFloat(match[1], 64)
 		if err != nil {
 			return false, 0
 		}
-		// Converts days to hours
-		totalDuration = time.Duration(day * float64(24*time.Hour))
+		// Converts days to hours and adds up to the total duration
+		totalDuration += time.Duration(day * float64(24*time.Hour))
+	}
 
-		// Remove the matched "Xd" (e.g., "2.5d") from the duration string
-		// so we're left with only the remaining duration (e.g., "5h")
-		durationStr = re.ReplaceAllString(durationStr, "")
-		durationStr = strings.TrimSpace(durationStr)
+	// Remove all day fragments from the original string to get the rest
+	// so we're left with only the remaining duration (e.g., "5h30m")
+	durationStr = re.ReplaceAllString(durationStr, "")
+	durationStr = strings.TrimSpace(durationStr)
 
-		// The duration string contains no other time units except for "d"
-		if durationStr == "" {
-			return true, totalDuration
+	// Parse the remaining standard duration if any
+	if durationStr != "" {
+		remainingDuration, err := time.ParseDuration(durationStr)
+		if err != nil {
+			return false, totalDuration
 		}
-	}
 
-	// Parse the remaining duration string without day unit
-	remainingDuration, err := time.ParseDuration(durationStr)
-	if err != nil {
-		return false, totalDuration
+		totalDuration += remainingDuration
 	}
-
-	totalDuration += remainingDuration
 	return true, totalDuration
 }
 
