@@ -138,7 +138,7 @@ func getErrorMessage(e validator.FieldError) string {
 func ValidateDuration(fl validator.FieldLevel) bool {
 	durationStr := fl.Field().String()
 
-	valid, duration := parseDurationWithDay(durationStr)
+	valid, duration := ParseDurationWithDay(durationStr)
 	if !valid {
 		return false
 	}
@@ -150,7 +150,7 @@ func ValidateDuration(fl validator.FieldLevel) bool {
 		if len(params) > 0 {
 			// Check if minimum value is defined from the tag param
 			if params[0] != "" {
-				valid, minDuration := parseDurationWithDay(params[0])
+				valid, minDuration := ParseDurationWithDay(params[0])
 				if !valid {
 					return false
 				}
@@ -163,7 +163,7 @@ func ValidateDuration(fl validator.FieldLevel) bool {
 			if len(params) > 1 {
 				// Check if maximum value is defined from the tag param
 				if params[1] != "" {
-					valid, maxDuration := parseDurationWithDay(params[1])
+					valid, maxDuration := ParseDurationWithDay(params[1])
 					if !valid {
 						return false
 					}
@@ -178,9 +178,9 @@ func ValidateDuration(fl validator.FieldLevel) bool {
 	return true
 }
 
-// parseDurationWithDay extends duration string parsing to support the "d" (day) unit.
+// ParseDurationWithDay extends duration string parsing to support the "d" (day) unit.
 // It returns a boolean indicating whether the string is valid, along with the corresponding Duration value.
-func parseDurationWithDay(durationStr string) (bool, time.Duration) {
+func ParseDurationWithDay(durationStr string) (bool, time.Duration) {
 	// Duration string should not be empty
 	if durationStr == "" {
 		return false, time.Duration(0)
