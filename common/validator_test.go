@@ -142,7 +142,7 @@ func TestValidateDuration_WithMinMax(t *testing.T) {
 	}
 }
 
-// TestParseDurationWithDay tests the parseDurationWithDay function
+// TestParseDurationWithDay tests the ParseDurationWithDay function
 func TestParseDurationWithDay(t *testing.T) {
 	durStr1 := "10h30m"
 	expectedDur1, err := time.ParseDuration(durStr1)
@@ -193,7 +193,7 @@ func TestParseDurationWithDay(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result, duration := parseDurationWithDay(tt.durString)
+			result, duration := ParseDurationWithDay(tt.durString)
 			require.Equal(t, tt.expectedResult, result)
 			if tt.expectedResult {
 				require.Equal(t, tt.expectedDuration, duration)
