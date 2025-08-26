@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2024 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,18 +22,19 @@ import (
 )
 
 type BaseReading struct {
-	Id            string `json:"id,omitempty"`
-	Origin        int64  `json:"origin" validate:"required"`
-	DeviceName    string `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
-	ResourceName  string `json:"resourceName" validate:"required,edgex-dto-none-empty-string"`
-	ProfileName   string `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
-	ValueType     string `json:"valueType" validate:"required,edgex-dto-value-type"`
-	Units         string `json:"units,omitempty"`
-	Tags          Tags   `json:"tags,omitempty"`
-	BinaryReading `json:",inline" validate:"-"`
-	SimpleReading `json:",inline" validate:"-"`
-	ObjectReading `json:",inline" validate:"-"`
-	NullReading   `json:",inline" validate:"-"`
+	Id             string `json:"id,omitempty"`
+	Origin         int64  `json:"origin" validate:"required"`
+	DeviceName     string `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
+	ResourceName   string `json:"resourceName" validate:"required,edgex-dto-none-empty-string"`
+	ProfileName    string `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
+	ValueType      string `json:"valueType" validate:"required,edgex-dto-value-type"`
+	Units          string `json:"units,omitempty"`
+	Tags           Tags   `json:"tags,omitempty"`
+	BinaryReading  `json:",inline" validate:"-"`
+	SimpleReading  `json:",inline" validate:"-"`
+	ObjectReading  `json:",inline" validate:"-"`
+	NullReading    `json:",inline" validate:"-"`
+	NumericReading `json:",inline" validate:"-"`
 }
 
 type SimpleReading struct {
@@ -55,6 +56,11 @@ type NullReading struct {
 
 func (b BaseReading) IsNull() bool {
 	return b.isNull
+}
+
+// NumericReading is used for querying event readings from core-data, requiring DB layer support for numeric data types (e.g., Postgres), and we still use SimpleReading for adding event readings.
+type NumericReading struct {
+	NumericValue any
 }
 
 func newBaseReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
@@ -114,6 +120,15 @@ func NewObjectReadingWithArray(profileName string, deviceName string, resourceNa
 func NewNullReading(profileName string, deviceName string, resourceName string, valueType string) BaseReading {
 	reading := newBaseReading(profileName, deviceName, resourceName, valueType)
 	reading.isNull = true
+	return reading
+}
+
+// NewNumericReading creates and returns a new initialized BaseReading with its NumericReading initialized
+func NewNumericReading(profileName string, deviceName string, resourceName string, valueType string, value any) BaseReading {
+	reading := newBaseReading(profileName, deviceName, resourceName, valueType)
+	reading.NumericReading = NumericReading{
+		NumericValue: value,
+	}
 	return reading
 }
 
@@ -418,6 +433,18 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 			Tags:         r.Tags,
 			NullReading:  NullReading{isNull: true},
 		}
+	case models.NumericReading:
+		baseReading = BaseReading{
+			Id:             r.Id,
+			Origin:         r.Origin,
+			DeviceName:     r.DeviceName,
+			ResourceName:   r.ResourceName,
+			ProfileName:    r.ProfileName,
+			ValueType:      r.ValueType,
+			Units:          r.Units,
+			Tags:           r.Tags,
+			NumericReading: NumericReading{NumericValue: r.NumericValue},
+		}
 	}
 
 	return baseReading
@@ -596,6 +623,33 @@ func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) 
 			reading:       r,
 			BinaryReading: b.BinaryReading,
 		})
+	case common.ValueTypeUint8, common.ValueTypeUint16, common.ValueTypeUint32, common.ValueTypeUint64,
+		common.ValueTypeInt8, common.ValueTypeInt16, common.ValueTypeInt32, common.ValueTypeInt64,
+		common.ValueTypeFloat32, common.ValueTypeFloat64,
+		common.ValueTypeInt8Array, common.ValueTypeInt16Array, common.ValueTypeInt32Array, common.ValueTypeInt64Array,
+		common.ValueTypeUint8Array, common.ValueTypeUint16Array, common.ValueTypeUint32Array, common.ValueTypeUint64Array,
+		common.ValueTypeFloat32Array, common.ValueTypeFloat64Array:
+		// the reading value should be stored in SimpleReading or NumericReading
+		if b.NumericReading.NumericValue == nil {
+			return marshal(&struct {
+				reading       `json:",inline"`
+				SimpleReading `json:",inline" validate:"-"`
+			}{
+				reading:       r,
+				SimpleReading: b.SimpleReading,
+			})
+		} else {
+			type numericReading struct { // define another struct to output the numeric reading value
+				Value any `json:"value"`
+			}
+			return marshal(&struct {
+				reading        `json:",inline"`
+				numericReading `json:",inline" validate:"-"`
+			}{
+				reading:        r,
+				numericReading: numericReading{Value: b.NumericReading.NumericValue},
+			})
+		}
 	default:
 		return marshal(&struct {
 			reading       `json:",inline"`
