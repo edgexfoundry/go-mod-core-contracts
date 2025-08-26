@@ -115,7 +115,8 @@ func TestEvent_ToXML(t *testing.T) {
 		"<Longitude>-95.377603</Longitude>",
 		"</Tags></Event>",
 	}
-	actual, _ := expectedDTO.ToXML()
+	actual, err := expectedDTO.ToXML()
+	require.NoError(t, err)
 	for _, item := range contains {
 		assert.Contains(t, actual, item, fmt.Sprintf("Missing item '%s'", item))
 	}

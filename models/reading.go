@@ -27,6 +27,11 @@ type SimpleReading struct {
 	Value       string
 }
 
+type NumericReading struct {
+	BaseReading  `json:",inline"`
+	NumericValue any
+}
+
 type NullReading struct {
 	BaseReading `json:",inline"`
 	Value       any
@@ -53,7 +58,8 @@ type Reading interface {
 // abstract Reading interface and then be used as a Reading.
 // Also, the Reading interface can access the BaseReading fields.
 // This is Golang's way to implement inheritance.
-func (b BinaryReading) GetBaseReading() BaseReading { return b.BaseReading }
-func (s SimpleReading) GetBaseReading() BaseReading { return s.BaseReading }
-func (o ObjectReading) GetBaseReading() BaseReading { return o.BaseReading }
-func (n NullReading) GetBaseReading() BaseReading   { return n.BaseReading }
+func (b BinaryReading) GetBaseReading() BaseReading  { return b.BaseReading }
+func (s SimpleReading) GetBaseReading() BaseReading  { return s.BaseReading }
+func (o ObjectReading) GetBaseReading() BaseReading  { return o.BaseReading }
+func (n NullReading) GetBaseReading() BaseReading    { return n.BaseReading }
+func (n NumericReading) GetBaseReading() BaseReading { return n.BaseReading }
