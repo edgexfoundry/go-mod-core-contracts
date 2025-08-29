@@ -26,7 +26,12 @@ func TestQueryAllReadings(t *testing.T) {
 	defer ts.Close()
 
 	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.AllReadings(context.Background(), 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+
+	res, err = client.AllReadingsWithQueryParams(context.Background(), queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -60,7 +65,12 @@ func TestQueryReadingsByDeviceName(t *testing.T) {
 	defer ts.Close()
 
 	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.ReadingsByDeviceName(context.Background(), deviceName, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+
+	res, err = client.ReadingsByDeviceNameWithQueryParams(context.Background(), deviceName, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -72,7 +82,12 @@ func TestQueryReadingsByResourceName(t *testing.T) {
 	defer ts.Close()
 
 	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.ReadingsByResourceName(context.Background(), resourceName, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+
+	res, err = client.ReadingsByResourceNameWithQueryParams(context.Background(), resourceName, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -85,7 +100,12 @@ func TestQueryReadingsByTimeRange(t *testing.T) {
 	defer ts.Close()
 
 	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.ReadingsByTimeRange(context.Background(), start, end, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+
+	res, err = client.ReadingsByTimeRangeWithQueryParams(context.Background(), start, end, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -99,7 +119,12 @@ func TestQueryReadingsByResourceNameAndTimeRange(t *testing.T) {
 	defer ts.Close()
 
 	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.ReadingsByResourceNameAndTimeRange(context.Background(), resourceName, start, end, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+
+	res, err = client.ReadingsByResourceNameAndTimeRangeWithQueryParams(context.Background(), resourceName, start, end, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -112,7 +137,12 @@ func TestQueryReadingsByDeviceNameAndResourceName(t *testing.T) {
 	defer ts.Close()
 
 	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.ReadingsByDeviceNameAndResourceName(context.Background(), deviceName, resourceName, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+
+	res, err = client.ReadingsByDeviceNameAndResourceNameWithQueryParams(context.Background(), deviceName, resourceName, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -127,7 +157,12 @@ func TestQueryReadingsByDeviceNameAndResourceNameAndTimeRange(t *testing.T) {
 	defer ts.Close()
 
 	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.ReadingsByDeviceNameAndResourceNameAndTimeRange(context.Background(), deviceName, resourceName, start, end, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+
+	res, err = client.ReadingsByDeviceNameAndResourceNameAndTimeRangeWithQueryParams(context.Background(), deviceName, resourceName, start, end, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -143,6 +178,10 @@ func TestQueryReadingsByDeviceNameAndResourceNamesAndTimeRange(t *testing.T) {
 
 	client := NewReadingClient(ts.URL, NewNullAuthenticationInjector(), false)
 	res, err := client.ReadingsByDeviceNameAndResourceNamesAndTimeRange(context.Background(), deviceName, resourceNames, start, end, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiReadingsResponse{}, res)
+
+	res, err = client.ReadingsByDeviceNameAndResourceNamesAndTimeRangeWithQueryParams(context.Background(), deviceName, resourceNames, start, end, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }

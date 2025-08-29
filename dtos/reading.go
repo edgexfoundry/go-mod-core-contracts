@@ -696,9 +696,16 @@ func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) 
 	b.Units = aux.Units
 	b.Tags = aux.Tags
 	b.BinaryReading = aux.BinaryReading
-	if aux.Value != nil {
-		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%s", aux.Value)}
+
+	switch v := aux.Value.(type) { // reading.value support string, numeric, numeric array currently
+	case string: // string, for JSON strings
+		b.SimpleReading = SimpleReading{Value: v}
+	case float64: // float64, for JSON numbers
+		b.NumericValue = NumericReading{NumericValue: v}
+	case []any: // []any, for JSON arrays
+		b.NumericValue = NumericReading{NumericValue: v}
 	}
+
 	b.ObjectReading = aux.ObjectReading
 
 	switch aux.ValueType {

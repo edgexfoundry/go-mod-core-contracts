@@ -266,3 +266,11 @@ func parseBaseUrlAndRequestPath(baseUrl, requestPath string) (*url.URL, error) {
 	}
 	return url.Parse(fullPath)
 }
+
+func ToRequestParameters(queryParams map[string]string) url.Values {
+	requestParams := url.Values{}
+	for k, v := range queryParams {
+		requestParams.Set(k, v)
+	}
+	return requestParams
+}

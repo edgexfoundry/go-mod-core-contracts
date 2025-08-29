@@ -23,6 +23,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var queryParameters = map[string]string{common.Offset: "1", common.Limit: "10", common.Numeric: common.ValueTrue}
+
 func TestAddEvent(t *testing.T) {
 	serviceName := "serviceName"
 	event := dtos.Event{ProfileName: "profileName", DeviceName: "deviceName", SourceName: "sourceName"}
@@ -41,7 +43,12 @@ func TestQueryAllEvents(t *testing.T) {
 	defer ts.Close()
 
 	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.AllEvents(context.Background(), 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiEventsResponse{}, res)
+
+	res, err = client.AllEventsWithQueryParams(context.Background(), queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 }
@@ -75,7 +82,12 @@ func TestQueryEventsByDeviceName(t *testing.T) {
 	defer ts.Close()
 
 	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.EventsByDeviceName(context.Background(), deviceName, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiEventsResponse{}, res)
+
+	res, err = client.EventsByDeviceNameWithQueryParams(context.Background(), deviceName, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 }
@@ -100,7 +112,12 @@ func TestQueryEventsByTimeRange(t *testing.T) {
 	defer ts.Close()
 
 	client := NewEventClient(ts.URL, NewNullAuthenticationInjector(), false)
+
 	res, err := client.EventsByTimeRange(context.Background(), start, end, 1, 10)
+	require.NoError(t, err)
+	assert.IsType(t, responses.MultiEventsResponse{}, res)
+
+	res, err = client.EventsByTimeRangeWithQueryParams(context.Background(), start, end, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 }
