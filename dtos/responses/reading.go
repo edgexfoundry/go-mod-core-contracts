@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,6 +22,13 @@ type MultiReadingsResponse struct {
 	Readings                          []dtos.BaseReading `json:"readings"`
 }
 
+// MultiReadingsAggregationResponse defines the Response Content for GET multiple aggregated readings DTO.
+type MultiReadingsAggregationResponse struct {
+	common.BaseResponse `json:",inline"`
+	AggregateFunc       string             `json:"aggregateFunc"`
+	Readings            []dtos.BaseReading `json:"readings"`
+}
+
 func NewReadingResponse(requestId string, message string, statusCode int, reading dtos.BaseReading) ReadingResponse {
 	return ReadingResponse{
 		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
@@ -33,5 +40,13 @@ func NewMultiReadingsResponse(requestId string, message string, statusCode int, 
 	return MultiReadingsResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Readings:                   readings,
+	}
+}
+
+func NewMultiReadingsAggregationResponse(requestId string, message string, statusCode int, aggregateFunc string, readings []dtos.BaseReading) MultiReadingsAggregationResponse {
+	return MultiReadingsAggregationResponse{
+		BaseResponse:  common.NewBaseResponse(requestId, message, statusCode),
+		AggregateFunc: aggregateFunc,
+		Readings:      readings,
 	}
 }

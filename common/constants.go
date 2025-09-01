@@ -210,6 +210,7 @@ const (
 	KeyOnly       = "keyOnly"        //query string to specify if the response will only return the keys of the specified query key prefix, without values and metadata
 	Plaintext     = "plaintext"      //query string to specify if the response will return the stored plain text value of the key(s) without any encoding
 	Deregistered  = "deregistered"   //query string to specify if the response will return the registries of deregistered services
+	AggregateFunc = "aggregateFunc"  //query string to specify which SQL aggregate function to apply when calculating the reading value
 )
 
 // Constants related to the default value of query strings in the v3 service APIs
@@ -416,4 +417,13 @@ const (
 const (
 	EntityId = "entityId"
 	Token    = "token"
+)
+
+// Constants related to the supported SQL aggregate functions from reading APIs
+const (
+	MinFunc   = "MIN"
+	MaxFunc   = "MAX"
+	CountFunc = "COUNT"
+	SumFunc   = "SUM"
+	AvgFunc   = "AVG"
 )
