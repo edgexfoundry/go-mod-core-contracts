@@ -696,17 +696,13 @@ func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) 
 	b.Units = aux.Units
 	b.Tags = aux.Tags
 	b.BinaryReading = aux.BinaryReading
+	if aux.Value != nil {
+		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%s", aux.Value)}
+	}
 
-	// reading.value only support string for adding the reading
-	// numeric, numeric array are used for querying
-	//   for example, the user query event reading via event or reading http client with the parameter numeric=true, the http client can decode numeric into NumericReading
-	switch v := aux.Value.(type) {
-	case string: // string, for JSON strings
-		b.Value = v
-	case float64: // float64, for JSON numbers
-		b.NumericValue = v
-	case []any: // []any, for JSON arrays. StringArray and BoolArray remain in string format.
-		b.NumericValue = v
+	// if the value is not string, let the NumericReading contain the equivalent value
+	if _, ok := aux.Value.(string); !ok {
+		b.NumericReading = NumericReading{NumericValue: aux.Value}
 	}
 
 	b.ObjectReading = aux.ObjectReading
