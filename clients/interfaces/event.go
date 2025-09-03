@@ -24,7 +24,7 @@ type EventClient interface {
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
 	AllEvents(ctx context.Context, offset, limit int) (responses.MultiEventsResponse, errors.EdgeX)
 	// AllEventsWithQueryParams returns all events with specified query parameters. Events are sorted in descending order of created time.
-	AllEventsWithQueryParams(ctx context.Context, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX)
+	AllEventsWithQueryParams(ctx context.Context, offset, limit int, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX)
 	// EventCount returns a count of all of events currently stored in the database.
 	EventCount(ctx context.Context) (common.CountResponse, errors.EdgeX)
 	// EventCountByDeviceName returns a count of all of events currently stored in the database, sourced from the specified device.
@@ -34,7 +34,7 @@ type EventClient interface {
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
 	EventsByDeviceName(ctx context.Context, name string, offset, limit int) (responses.MultiEventsResponse, errors.EdgeX)
 	// EventsByDeviceNameWithQueryParams returns a portion of the entire events according to the device name and specified query parameters. Events are sorted in descending order of created time.
-	EventsByDeviceNameWithQueryParams(ctx context.Context, name string, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX)
+	EventsByDeviceNameWithQueryParams(ctx context.Context, name string, offset, limit int, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX)
 	// DeleteByDeviceName deletes all events for the specified device.
 	DeleteByDeviceName(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX)
 	// EventsByTimeRange returns events between a given start and end date/time. Events are sorted in descending order of created time.
@@ -43,7 +43,7 @@ type EventClient interface {
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
 	EventsByTimeRange(ctx context.Context, start, end int64, offset, limit int) (responses.MultiEventsResponse, errors.EdgeX)
 	// EventsByTimeRangeWithQueryParams returns events between a given start, end date/time, and specified query parameters. Events are sorted in descending order of created time.
-	EventsByTimeRangeWithQueryParams(ctx context.Context, start, end int64, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX)
+	EventsByTimeRangeWithQueryParams(ctx context.Context, start, end int64, offset, limit int, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX)
 	// DeleteByAge deletes events that are older than the given age. Age is supposed in milliseconds from created timestamp.
 	DeleteByAge(ctx context.Context, age int) (common.BaseResponse, errors.EdgeX)
 	// DeleteById deletes an event by its id

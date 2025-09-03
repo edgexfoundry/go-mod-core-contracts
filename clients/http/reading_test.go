@@ -31,7 +31,7 @@ func TestQueryAllReadings(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 
-	res, err = client.AllReadingsWithQueryParams(context.Background(), queryParameters)
+	res, err = client.AllReadingsWithQueryParams(context.Background(), 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -70,7 +70,7 @@ func TestQueryReadingsByDeviceName(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 
-	res, err = client.ReadingsByDeviceNameWithQueryParams(context.Background(), deviceName, queryParameters)
+	res, err = client.ReadingsByDeviceNameWithQueryParams(context.Background(), deviceName, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -87,7 +87,7 @@ func TestQueryReadingsByResourceName(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 
-	res, err = client.ReadingsByResourceNameWithQueryParams(context.Background(), resourceName, queryParameters)
+	res, err = client.ReadingsByResourceNameWithQueryParams(context.Background(), resourceName, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -105,7 +105,7 @@ func TestQueryReadingsByTimeRange(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 
-	res, err = client.ReadingsByTimeRangeWithQueryParams(context.Background(), start, end, queryParameters)
+	res, err = client.ReadingsByTimeRangeWithQueryParams(context.Background(), start, end, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -124,7 +124,7 @@ func TestQueryReadingsByResourceNameAndTimeRange(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 
-	res, err = client.ReadingsByResourceNameAndTimeRangeWithQueryParams(context.Background(), resourceName, start, end, queryParameters)
+	res, err = client.ReadingsByResourceNameAndTimeRangeWithQueryParams(context.Background(), resourceName, start, end, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -142,7 +142,7 @@ func TestQueryReadingsByDeviceNameAndResourceName(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 
-	res, err = client.ReadingsByDeviceNameAndResourceNameWithQueryParams(context.Background(), deviceName, resourceName, queryParameters)
+	res, err = client.ReadingsByDeviceNameAndResourceNameWithQueryParams(context.Background(), deviceName, resourceName, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -162,7 +162,7 @@ func TestQueryReadingsByDeviceNameAndResourceNameAndTimeRange(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 
-	res, err = client.ReadingsByDeviceNameAndResourceNameAndTimeRangeWithQueryParams(context.Background(), deviceName, resourceName, start, end, queryParameters)
+	res, err = client.ReadingsByDeviceNameAndResourceNameAndTimeRangeWithQueryParams(context.Background(), deviceName, resourceName, start, end, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }
@@ -181,7 +181,7 @@ func TestQueryReadingsByDeviceNameAndResourceNamesAndTimeRange(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 
-	res, err = client.ReadingsByDeviceNameAndResourceNamesAndTimeRangeWithQueryParams(context.Background(), deviceName, resourceNames, start, end, queryParameters)
+	res, err = client.ReadingsByDeviceNameAndResourceNamesAndTimeRangeWithQueryParams(context.Background(), deviceName, resourceNames, start, end, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiReadingsResponse{}, res)
 }

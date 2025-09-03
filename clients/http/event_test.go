@@ -23,7 +23,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var queryParameters = map[string]string{common.Offset: "1", common.Limit: "10", common.Numeric: common.ValueTrue}
+var queryParameters = map[string]string{common.Numeric: common.ValueTrue}
 
 func TestAddEvent(t *testing.T) {
 	serviceName := "serviceName"
@@ -48,7 +48,7 @@ func TestQueryAllEvents(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 
-	res, err = client.AllEventsWithQueryParams(context.Background(), queryParameters)
+	res, err = client.AllEventsWithQueryParams(context.Background(), 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 }
@@ -87,7 +87,7 @@ func TestQueryEventsByDeviceName(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 
-	res, err = client.EventsByDeviceNameWithQueryParams(context.Background(), deviceName, queryParameters)
+	res, err = client.EventsByDeviceNameWithQueryParams(context.Background(), deviceName, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 }
@@ -117,7 +117,7 @@ func TestQueryEventsByTimeRange(t *testing.T) {
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 
-	res, err = client.EventsByTimeRangeWithQueryParams(context.Background(), start, end, queryParameters)
+	res, err = client.EventsByTimeRangeWithQueryParams(context.Background(), start, end, 1, 10, queryParameters)
 	require.NoError(t, err)
 	assert.IsType(t, responses.MultiEventsResponse{}, res)
 }

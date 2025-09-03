@@ -67,16 +67,16 @@ func (ec *eventClient) Add(ctx context.Context, serviceName string, req requests
 }
 
 func (ec *eventClient) AllEvents(ctx context.Context, offset, limit int) (responses.MultiEventsResponse, errors.EdgeX) {
-	return ec.AllEventsWithQueryParams(ctx, map[string]string{common.Offset: strconv.Itoa(offset), common.Limit: strconv.Itoa(limit)})
+	return ec.AllEventsWithQueryParams(ctx, offset, limit, nil)
 }
 
-func (ec *eventClient) AllEventsWithQueryParams(ctx context.Context, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX) {
+func (ec *eventClient) AllEventsWithQueryParams(ctx context.Context, offset, limit int, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX) {
 	res := responses.MultiEventsResponse{}
 	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllEventRoute, utils.ToRequestParameters(queryParams), ec.authInjector)
+	err = utils.GetRequest(ctx, &res, baseUrl, common.ApiAllEventRoute, utils.ToRequestParameters(offset, limit, queryParams), ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -112,17 +112,17 @@ func (ec *eventClient) EventCountByDeviceName(ctx context.Context, name string) 
 
 func (ec *eventClient) EventsByDeviceName(ctx context.Context, name string, offset, limit int) (
 	responses.MultiEventsResponse, errors.EdgeX) {
-	return ec.EventsByDeviceNameWithQueryParams(ctx, name, map[string]string{common.Offset: strconv.Itoa(offset), common.Limit: strconv.Itoa(limit)})
+	return ec.EventsByDeviceNameWithQueryParams(ctx, name, offset, limit, nil)
 }
 
-func (ec *eventClient) EventsByDeviceNameWithQueryParams(ctx context.Context, name string, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX) {
+func (ec *eventClient) EventsByDeviceNameWithQueryParams(ctx context.Context, name string, offset, limit int, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX) {
 	requestPath := path.Join(common.ApiEventRoute, common.Device, common.Name, name)
 	res := responses.MultiEventsResponse{}
 	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, utils.ToRequestParameters(queryParams), ec.authInjector)
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, utils.ToRequestParameters(offset, limit, queryParams), ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
@@ -145,17 +145,17 @@ func (ec *eventClient) DeleteByDeviceName(ctx context.Context, name string) (dto
 
 func (ec *eventClient) EventsByTimeRange(ctx context.Context, start, end int64, offset, limit int) (
 	responses.MultiEventsResponse, errors.EdgeX) {
-	return ec.EventsByTimeRangeWithQueryParams(ctx, start, end, map[string]string{common.Offset: strconv.Itoa(offset), common.Limit: strconv.Itoa(limit)})
+	return ec.EventsByTimeRangeWithQueryParams(ctx, start, end, offset, limit, nil)
 }
 
-func (ec *eventClient) EventsByTimeRangeWithQueryParams(ctx context.Context, start, end int64, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX) {
+func (ec *eventClient) EventsByTimeRangeWithQueryParams(ctx context.Context, start, end int64, offset, limit int, queryParams map[string]string) (responses.MultiEventsResponse, errors.EdgeX) {
 	requestPath := path.Join(common.ApiEventRoute, common.Start, strconv.FormatInt(start, 10), common.End, strconv.FormatInt(end, 10))
 	res := responses.MultiEventsResponse{}
 	baseUrl, err := clients.GetBaseUrl(ec.baseUrlFunc)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, utils.ToRequestParameters(queryParams), ec.authInjector)
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, utils.ToRequestParameters(offset, limit, queryParams), ec.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
