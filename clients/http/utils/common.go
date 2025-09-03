@@ -18,6 +18,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strconv"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/clients/interfaces"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -265,4 +266,14 @@ func parseBaseUrlAndRequestPath(baseUrl, requestPath string) (*url.URL, error) {
 		return nil, err
 	}
 	return url.Parse(fullPath)
+}
+
+func ToRequestParameters(offset, limit int, queryParams map[string]string) url.Values {
+	requestParams := url.Values{}
+	requestParams.Set(common.Offset, strconv.Itoa(offset))
+	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	for k, v := range queryParams {
+		requestParams.Set(k, v)
+	}
+	return requestParams
 }

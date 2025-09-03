@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2024 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -775,16 +775,25 @@ func TestMarshalNumericReading(t *testing.T) {
 		valueType string
 		value     any
 	}{
-		{"Simple Uint8", common.ValueTypeUint8, uint8(255)},
-		{"Simple Uint16", common.ValueTypeUint16, uint16(1234)},
-		{"Simple Uint32", common.ValueTypeUint32, uint32(12345)},
-		{"Simple uint64", common.ValueTypeUint64, uint64(123456)},
-		{"Simple int8", common.ValueTypeInt8, int8(123)},
-		{"Simple int16", common.ValueTypeInt16, int16(1234)},
-		{"Simple int32", common.ValueTypeInt32, int32(12345)},
-		{"Simple int64", common.ValueTypeInt64, int64(123456)},
-		{"Simple Float32", common.ValueTypeFloat32, float32(123.456)},
-		{"Simple Float64", common.ValueTypeFloat64, 123456789.0987654321},
+		{"Numeric Uint8", common.ValueTypeUint8, uint8(255)},
+		{"Numeric Uint16", common.ValueTypeUint16, uint16(1234)},
+		{"Numeric Uint32", common.ValueTypeUint32, uint32(12345)},
+		{"Numeric uint64", common.ValueTypeUint64, uint64(123456)},
+		{"Numeric int8", common.ValueTypeInt8, int8(123)},
+		{"Numeric int16", common.ValueTypeInt16, int16(1234)},
+		{"Numeric int32", common.ValueTypeInt32, int32(12345)},
+		{"Numeric int64", common.ValueTypeInt64, int64(123456)},
+		{"Numeric Float32", common.ValueTypeFloat32, float32(123.456)},
+		{"Numeric Float64", common.ValueTypeFloat64, 123456789.0987654321},
+		{"Numeric array Uint8", common.ValueTypeUint8Array, []any{uint8(1), uint8(255)}},
+		{"Numeric array Uint16", common.ValueTypeUint16Array, []any{uint16(1), uint16(1234)}},
+		{"Numeric array Uint16", common.ValueTypeUint32Array, []any{uint32(1), uint32(12345)}},
+		{"Numeric array Uint16", common.ValueTypeUint64Array, []any{uint64(1), uint64(123456)}},
+		{"Numeric array Int8", common.ValueTypeInt8Array, []any{int8(1), int8(123)}},
+		{"Numeric array Int16", common.ValueTypeInt16Array, []any{int16(1), int16(1234)}},
+		{"Numeric array Int32", common.ValueTypeInt32Array, []any{int32(1), int32(12345)}},
+		{"Numeric array Float32", common.ValueTypeFloat32Array, []any{float32(123.456), float32(1.123)}},
+		{"Numeric array Float64", common.ValueTypeFloat64Array, []any{1.01, 123456789.0987654321}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -792,11 +801,11 @@ func TestMarshalNumericReading(t *testing.T) {
 			data, err := json.Marshal(reading)
 			require.NoError(t, err)
 
-			var res map[string]any
+			var res BaseReading
 			err = json.Unmarshal(data, &res)
 			require.NoError(t, err)
 
-			assert.Equal(t, fmt.Sprintf("%v", tt.value), fmt.Sprintf("%v", res["value"]))
+			assert.Equal(t, fmt.Sprintf("%v", tt.value), fmt.Sprintf("%v", res.NumericValue))
 		})
 	}
 }

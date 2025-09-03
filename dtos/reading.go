@@ -699,6 +699,12 @@ func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) 
 	if aux.Value != nil {
 		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%s", aux.Value)}
 	}
+
+	// if the value is not string, let the NumericReading contain the equivalent value
+	if _, ok := aux.Value.(string); !ok {
+		b.NumericReading = NumericReading{NumericValue: aux.Value}
+	}
+
 	b.ObjectReading = aux.ObjectReading
 
 	switch aux.ValueType {
