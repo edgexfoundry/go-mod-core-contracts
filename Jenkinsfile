@@ -15,5 +15,6 @@
 //
 
 edgeXBuildGoMod (
-    project: 'go-mod-core-contracts'
+    project: 'go-mod-core-contracts',
+    goVersion: '1.23'
 )

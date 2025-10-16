@@ -24,11 +24,19 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/requests"
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/dtos/responses"
 	edgexErrors "github.com/edgexfoundry/go-mod-core-contracts/v4/errors"
-
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func TestNewDeviceProfileClientWithUrlCallback(t *testing.T) {
+	baseUrlFunc := func() (string, error) {
+		return "", nil
+	}
+	client := NewDeviceProfileClientWithUrlCallback(baseUrlFunc, &emptyAuthenticationInjector{}, true)
+	require.NotNil(t, client)
+	require.NotNil(t, client.(*DeviceProfileClient).resourcesCache)
+}
 
 func TestAddDeviceProfiles(t *testing.T) {
 	requestId := uuid.New().String()
