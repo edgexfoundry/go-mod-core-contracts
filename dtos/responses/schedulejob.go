@@ -29,7 +29,7 @@ type MultiScheduleJobsResponse struct {
 	ScheduleJobs                      []dtos.ScheduleJob `json:"scheduleJobs"`
 }
 
-func NewMultiScheduleJobsResponse(requestId string, message string, statusCode int, totalCount uint32, scheduleJobs []dtos.ScheduleJob) MultiScheduleJobsResponse {
+func NewMultiScheduleJobsResponse(requestId string, message string, statusCode int, totalCount int64, scheduleJobs []dtos.ScheduleJob) MultiScheduleJobsResponse {
 	return MultiScheduleJobsResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		ScheduleJobs:               scheduleJobs,

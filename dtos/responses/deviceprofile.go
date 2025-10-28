@@ -29,7 +29,7 @@ type MultiDeviceProfilesResponse struct {
 	Profiles                          []dtos.DeviceProfile `json:"profiles"`
 }
 
-func NewMultiDeviceProfilesResponse(requestId string, message string, statusCode int, totalCount uint32, deviceProfiles []dtos.DeviceProfile) MultiDeviceProfilesResponse {
+func NewMultiDeviceProfilesResponse(requestId string, message string, statusCode int, totalCount int64, deviceProfiles []dtos.DeviceProfile) MultiDeviceProfilesResponse {
 	return MultiDeviceProfilesResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Profiles:                   deviceProfiles,
@@ -42,7 +42,7 @@ type MultiDeviceProfileBasicInfoResponse struct {
 	Profiles                          []dtos.DeviceProfileBasicInfo `json:"profiles"`
 }
 
-func NewMultiDeviceProfileBasicInfosResponse(requestId string, message string, statusCode int, totalCount uint32, deviceProfileBasicInfos []dtos.DeviceProfileBasicInfo) MultiDeviceProfileBasicInfoResponse {
+func NewMultiDeviceProfileBasicInfosResponse(requestId string, message string, statusCode int, totalCount int64, deviceProfileBasicInfos []dtos.DeviceProfileBasicInfo) MultiDeviceProfileBasicInfoResponse {
 	return MultiDeviceProfileBasicInfoResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Profiles:                   deviceProfileBasicInfos,

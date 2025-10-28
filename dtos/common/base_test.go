@@ -56,7 +56,7 @@ func TestNewBaseWithTotalCountResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
-	expectedTotalCount := uint32(3)
+	expectedTotalCount := int64(3)
 	actual := NewBaseWithTotalCountResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)

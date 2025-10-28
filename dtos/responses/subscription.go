@@ -30,7 +30,7 @@ type MultiSubscriptionsResponse struct {
 	Subscriptions                     []dtos.Subscription `json:"subscriptions"`
 }
 
-func NewMultiSubscriptionsResponse(requestId string, message string, statusCode int, totalCount uint32, subscriptions []dtos.Subscription) MultiSubscriptionsResponse {
+func NewMultiSubscriptionsResponse(requestId string, message string, statusCode int, totalCount int64, subscriptions []dtos.Subscription) MultiSubscriptionsResponse {
 	return MultiSubscriptionsResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Subscriptions:              subscriptions,

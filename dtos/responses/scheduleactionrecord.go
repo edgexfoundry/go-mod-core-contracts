@@ -29,7 +29,7 @@ type MultiScheduleActionRecordsResponse struct {
 	ScheduleActionRecords             []dtos.ScheduleActionRecord `json:"scheduleActionRecords"`
 }
 
-func NewMultiScheduleActionRecordsResponse(requestId string, message string, statusCode int, totalCount uint32, scheduleActionRecords []dtos.ScheduleActionRecord) MultiScheduleActionRecordsResponse {
+func NewMultiScheduleActionRecordsResponse(requestId string, message string, statusCode int, totalCount int64, scheduleActionRecords []dtos.ScheduleActionRecord) MultiScheduleActionRecordsResponse {
 	return MultiScheduleActionRecordsResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		ScheduleActionRecords:      scheduleActionRecords,
