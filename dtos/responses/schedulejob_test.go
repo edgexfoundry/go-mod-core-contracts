@@ -35,8 +35,8 @@ func TestNewMultiScheduleJobsResponse(t *testing.T) {
 		{Name: "testJob1"},
 		{Name: "testJob2"},
 	}
-	expectedTotalCount := uint32(2)
-	actual := NewMultiScheduleJobsResponse(expectedRequestId, expectedMessage, expectedStatusCode, uint32(len(expectedScheduleJobs)), expectedScheduleJobs)
+	expectedTotalCount := int64(2)
+	actual := NewMultiScheduleJobsResponse(expectedRequestId, expectedMessage, expectedStatusCode, int64(len(expectedScheduleJobs)), expectedScheduleJobs)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)

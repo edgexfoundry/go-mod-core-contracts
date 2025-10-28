@@ -66,10 +66,10 @@ func NewBaseWithIdResponse(requestId string, message string, statusCode int, id 
 // BaseWithTotalCountResponse defines the base content for response DTOs (data transfer objects).
 type BaseWithTotalCountResponse struct {
 	BaseResponse `json:",inline"`
-	TotalCount   uint32 `json:"totalCount"`
+	TotalCount   int64 `json:"totalCount"`
 }
 
-func NewBaseWithTotalCountResponse(requestId string, message string, statusCode int, totalCount uint32) BaseWithTotalCountResponse {
+func NewBaseWithTotalCountResponse(requestId string, message string, statusCode int, totalCount int64) BaseWithTotalCountResponse {
 	return BaseWithTotalCountResponse{
 		BaseResponse: NewBaseResponse(requestId, message, statusCode),
 		TotalCount:   totalCount,

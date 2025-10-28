@@ -27,7 +27,7 @@ func NewRegistrationResponse(requestId string, message string, statusCode int, r
 	}
 }
 
-func NewMultiRegistrationsResponse(requestId string, message string, statusCode int, totalCount uint32, registrations []dtos.Registration) MultiRegistrationsResponse {
+func NewMultiRegistrationsResponse(requestId string, message string, statusCode int, totalCount int64, registrations []dtos.Registration) MultiRegistrationsResponse {
 	return MultiRegistrationsResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Registrations:              registrations,

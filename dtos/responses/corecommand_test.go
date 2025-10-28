@@ -63,7 +63,7 @@ func TestNewMultiDeviceCoreCommandsResponse(t *testing.T) {
 			},
 		},
 	}
-	expectedTotalCount := uint32(2)
+	expectedTotalCount := int64(2)
 	actual := NewMultiDeviceCoreCommandsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedDeviceCoreCommands)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)

@@ -39,8 +39,8 @@ func TestNewMultiScheduleActionRecordsResponse(t *testing.T) {
 			JobName: "testJob2",
 		},
 	}
-	expectedTotalCount := uint32(2)
-	actual := NewMultiScheduleActionRecordsResponse(expectedRequestId, expectedMessage, expectedStatusCode, uint32(len(expectedScheduleActionRecords)), expectedScheduleActionRecords)
+	expectedTotalCount := int64(2)
+	actual := NewMultiScheduleActionRecordsResponse(expectedRequestId, expectedMessage, expectedStatusCode, int64(len(expectedScheduleActionRecords)), expectedScheduleActionRecords)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
 	assert.Equal(t, expectedStatusCode, actual.StatusCode)
