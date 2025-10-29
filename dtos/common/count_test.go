@@ -10,7 +10,7 @@ func TestNewCountResponse(t *testing.T) {
 	expectedRequestId := "123456"
 	expectedStatusCode := 200
 	expectedMessage := "unit test message"
-	expectedCount := uint32(1000)
+	expectedCount := int64(1000)
 	actual := NewCountResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedCount)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
