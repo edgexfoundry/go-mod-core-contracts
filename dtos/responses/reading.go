@@ -36,7 +36,7 @@ func NewReadingResponse(requestId string, message string, statusCode int, readin
 	}
 }
 
-func NewMultiReadingsResponse(requestId string, message string, statusCode int, totalCount uint32, readings []dtos.BaseReading) MultiReadingsResponse {
+func NewMultiReadingsResponse(requestId string, message string, statusCode int, totalCount int64, readings []dtos.BaseReading) MultiReadingsResponse {
 	return MultiReadingsResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Readings:                   readings,

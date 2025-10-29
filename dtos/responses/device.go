@@ -29,7 +29,7 @@ type MultiDevicesResponse struct {
 	Devices                           []dtos.Device `json:"devices"`
 }
 
-func NewMultiDevicesResponse(requestId string, message string, statusCode int, totalCount uint32, devices []dtos.Device) MultiDevicesResponse {
+func NewMultiDevicesResponse(requestId string, message string, statusCode int, totalCount int64, devices []dtos.Device) MultiDevicesResponse {
 	return MultiDevicesResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Devices:                    devices,

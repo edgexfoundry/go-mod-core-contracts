@@ -29,7 +29,7 @@ type MultiProvisionWatchersResponse struct {
 	ProvisionWatchers                 []dtos.ProvisionWatcher `json:"provisionWatchers"`
 }
 
-func NewMultiProvisionWatchersResponse(requestId string, message string, statusCode int, totalCount uint32, pws []dtos.ProvisionWatcher) MultiProvisionWatchersResponse {
+func NewMultiProvisionWatchersResponse(requestId string, message string, statusCode int, totalCount int64, pws []dtos.ProvisionWatcher) MultiProvisionWatchersResponse {
 	return MultiProvisionWatchersResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		ProvisionWatchers:          pws,

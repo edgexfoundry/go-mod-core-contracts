@@ -30,7 +30,7 @@ type MultiTransmissionsResponse struct {
 	Transmissions                     []dtos.Transmission `json:"transmissions"`
 }
 
-func NewMultiTransmissionsResponse(requestId string, message string, statusCode int, totalCount uint32, transmissions []dtos.Transmission) MultiTransmissionsResponse {
+func NewMultiTransmissionsResponse(requestId string, message string, statusCode int, totalCount int64, transmissions []dtos.Transmission) MultiTransmissionsResponse {
 	return MultiTransmissionsResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Transmissions:              transmissions,

@@ -34,7 +34,7 @@ func TestNewMultiDeviceProfilesResponse(t *testing.T) {
 		{DeviceProfileBasicInfo: dtos.DeviceProfileBasicInfo{Name: "test device profile1"}},
 		{DeviceProfileBasicInfo: dtos.DeviceProfileBasicInfo{Name: "test device profile2"}},
 	}
-	expectedTotalCount := uint32(2)
+	expectedTotalCount := int64(2)
 	actual := NewMultiDeviceProfilesResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedDeviceProfiles)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)
@@ -52,7 +52,7 @@ func TestNewMultiDeviceProfileBasicInfosResponse(t *testing.T) {
 		{Name: "test device profile1"},
 		{Name: "test device profile2"},
 	}
-	expectedTotalCount := uint32(2)
+	expectedTotalCount := int64(2)
 	actual := NewMultiDeviceProfileBasicInfosResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedDeviceProfileBasicInfos)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)

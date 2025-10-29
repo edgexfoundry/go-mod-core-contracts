@@ -34,7 +34,7 @@ func TestNewMultiTransmissionsResponse(t *testing.T) {
 		{Id: "abc"},
 		{Id: "def"},
 	}
-	expectedTotalCount := uint32(len(expectedTransmissions))
+	expectedTotalCount := int64(len(expectedTransmissions))
 	actual := NewMultiTransmissionsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedTransmissions)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)

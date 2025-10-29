@@ -33,7 +33,7 @@ func TestNewMultiDevicesResponse(t *testing.T) {
 		{Name: "test device1"},
 		{Name: "test device2"},
 	}
-	expectedTotalCount := uint32(2)
+	expectedTotalCount := int64(2)
 	actual := NewMultiDevicesResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedDevices)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)

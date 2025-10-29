@@ -36,7 +36,7 @@ func NewEventResponse(requestId string, message string, statusCode int, event dt
 	}
 }
 
-func NewMultiEventsResponse(requestId string, message string, statusCode int, totalCount uint32, events []dtos.Event) MultiEventsResponse {
+func NewMultiEventsResponse(requestId string, message string, statusCode int, totalCount int64, events []dtos.Event) MultiEventsResponse {
 	return MultiEventsResponse{
 		BaseWithTotalCountResponse: dtoCommon.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Events:                     events,

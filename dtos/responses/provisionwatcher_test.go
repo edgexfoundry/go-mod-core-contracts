@@ -33,7 +33,7 @@ func TestNewMultiProvisionWatchersResponse(t *testing.T) {
 		{Name: "test watcher1"},
 		{Name: "test watcher2"},
 	}
-	expectedTotalCount := uint32(2)
+	expectedTotalCount := int64(2)
 	actual := NewMultiProvisionWatchersResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedProvisionWatchers)
 
 	assert.Equal(t, expectedRequestId, actual.RequestId)

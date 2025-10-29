@@ -38,7 +38,7 @@ func TestNewRegistrationResponse(t *testing.T) {
 }
 
 func TestNewMultiRegistrationsResponse(t *testing.T) {
-	expectedTotalCount := uint32(1)
+	expectedTotalCount := int64(1)
 	expectedResp := []dtos.Registration{registration}
 	actual := NewMultiRegistrationsResponse(expectedRequestId, expectedMessage, expectedStatusCode, expectedTotalCount, expectedResp)
 

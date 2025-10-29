@@ -30,7 +30,7 @@ type MultiNotificationsResponse struct {
 	Notifications                     []dtos.Notification `json:"notifications"`
 }
 
-func NewMultiNotificationsResponse(requestId string, message string, statusCode int, totalCount uint32, notifications []dtos.Notification) MultiNotificationsResponse {
+func NewMultiNotificationsResponse(requestId string, message string, statusCode int, totalCount int64, notifications []dtos.Notification) MultiNotificationsResponse {
 	return MultiNotificationsResponse{
 		BaseWithTotalCountResponse: common.NewBaseWithTotalCountResponse(requestId, message, statusCode, totalCount),
 		Notifications:              notifications,
