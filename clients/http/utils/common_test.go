@@ -98,7 +98,9 @@ func TestCreateRequestFromFilePath(t *testing.T) {
 	requestPathWithSlash := "/test-path"
 	f, err := os.CreateTemp("", "sample")
 	assert.NoError(t, err)
-	defer os.Remove(f.Name())
+	defer func(name string) {
+		_ = os.Remove(name)
+	}(f.Name())
 
 	tests := []struct {
 		name        string

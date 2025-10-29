@@ -189,7 +189,7 @@ func CreateRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl s
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to parse baseUrl and requestPath", err)
 	}
 
-	fileContents, err := os.ReadFile(filePath)
+	fileContents, err := os.ReadFile(filePath) // #nosec G304 -- filePath is controlled and safe to be read
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindIOError, fmt.Sprintf("fail to read file from %s", filePath), err)
 	}
@@ -204,7 +204,10 @@ func CreateRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl s
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindIOError, "fail to copy file to form data", err)
 	}
-	writer.Close()
+	err = writer.Close()
+	if err != nil {
+		return nil, errors.NewCommonEdgeX(errors.KindIOError, "fail to close multipart writer", err)
+	}
 
 	req, err := http.NewRequest(httpMethod, u.String(), body)
 	if err != nil {
@@ -222,7 +225,9 @@ func SendRequest(ctx context.Context, req *http.Request, authInjector interfaces
 	if err != nil {
 		return nil, errors.NewCommonEdgeXWrapper(err)
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 
 	bodyBytes, err := getBody(resp)
 	if err != nil {

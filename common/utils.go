@@ -44,11 +44,11 @@ func BuildTopic(parts ...string) string {
 // URLEncode encodes the input string with additional common character support
 func URLEncode(s string) string {
 	res := url.PathEscape(s)
-	res = strings.Replace(res, "+", "%2B", -1) // MQTT topic reserved char
-	res = strings.Replace(res, "-", "%2D", -1)
-	res = strings.Replace(res, ".", "%2E", -1) // RegexCmd and Redis topic reserved char
-	res = strings.Replace(res, "_", "%5F", -1)
-	res = strings.Replace(res, "~", "%7E", -1)
+	res = strings.ReplaceAll(res, "+", "%2B") // MQTT topic reserved char
+	res = strings.ReplaceAll(res, "-", "%2D")
+	res = strings.ReplaceAll(res, ".", "%2E") // RegexCmd and Redis topic reserved char
+	res = strings.ReplaceAll(res, "_", "%5F")
+	res = strings.ReplaceAll(res, "~", "%7E")
 
 	return res
 }

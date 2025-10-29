@@ -13,14 +13,14 @@ import (
 )
 
 var (
-	L0Error        = NewCommonEdgeX(KindUnknown, "", nil)
-	L1Error        = fmt.Errorf("nothing")
-	L1ErrorWrapper = NewCommonEdgeXWrapper(L1Error)
-	L2ErrorWrapper = NewCommonEdgeXWrapper(L1ErrorWrapper)
-	L2Error        = NewCommonEdgeX(KindDatabaseError, "database failed", L1Error)
-	L3Error        = NewCommonEdgeXWrapper(L2Error)
-	L4Error        = NewCommonEdgeX(KindUnknown, "don't know", L3Error)
-	L5Error        = NewCommonEdgeX(KindCommunicationError, "network disconnected", L4Error)
+	ErrL0        = NewCommonEdgeX(KindUnknown, "", nil)
+	ErrL1        = fmt.Errorf("nothing")
+	ErrL1Wrapper = NewCommonEdgeXWrapper(ErrL1)
+	ErrL2Wrapper = NewCommonEdgeXWrapper(ErrL1Wrapper)
+	ErrL2        = NewCommonEdgeX(KindDatabaseError, "database failed", ErrL1)
+	ErrL3        = NewCommonEdgeXWrapper(ErrL2)
+	ErrL4        = NewCommonEdgeX(KindUnknown, "don't know", ErrL3)
+	ErrL5        = NewCommonEdgeX(KindCommunicationError, "network disconnected", ErrL4)
 )
 
 func TestKind(t *testing.T) {
@@ -29,12 +29,12 @@ func TestKind(t *testing.T) {
 		err  error
 		kind ErrKind
 	}{
-		{"Check the empty CommonEdgeX", L0Error, KindUnknown},
-		{"Check the non-CommonEdgeX", L1Error, KindUnknown},
-		{"Get the first error kind with 1 error wrapped", L2Error, KindDatabaseError},
-		{"Get the first error kind with 2 error wrapped", L3Error, KindDatabaseError},
-		{"Get the first non-unknown error kind with 3 error wrapped", L4Error, KindDatabaseError},
-		{"Get the first error kind with 4 error wrapped", L5Error, KindCommunicationError},
+		{"Check the empty CommonEdgeX", ErrL0, KindUnknown},
+		{"Check the non-CommonEdgeX", ErrL1, KindUnknown},
+		{"Get the first error kind with 1 error wrapped", ErrL2, KindDatabaseError},
+		{"Get the first error kind with 2 error wrapped", ErrL3, KindDatabaseError},
+		{"Get the first non-unknown error kind with 3 error wrapped", ErrL4, KindDatabaseError},
+		{"Get the first error kind with 4 error wrapped", ErrL5, KindCommunicationError},
 	}
 
 	for _, tt := range tests {
@@ -51,13 +51,13 @@ func TestMessage(t *testing.T) {
 		err  EdgeX
 		msg  string
 	}{
-		{"Get the first level error message from an empty error", L0Error, ""},
-		{"Get the first level error message from an empty EdgeXError with 1 error wrapped", L1ErrorWrapper, L1Error.Error()},
-		{"Get the first level error message from an empty EdgeXError with 1 empty error wrapped", L2ErrorWrapper, L1Error.Error()},
-		{"Get the first level error message from an EdgeXError with 1 error wrapped", L2Error, L2Error.message},
-		{"Get the first level error message from an empty EdgeXError with 2 error wrapped", L3Error, L2Error.message},
-		{"Get the first level error message from an EdgeXError with 3 error wrapped", L4Error, L4Error.message},
-		{"Get the first level error message from an EdgeXError with 4 error wrapped", L5Error, L5Error.message},
+		{"Get the first level error message from an empty error", ErrL0, ""},
+		{"Get the first level error message from an empty EdgeXError with 1 error wrapped", ErrL1Wrapper, ErrL1.Error()},
+		{"Get the first level error message from an empty EdgeXError with 1 empty error wrapped", ErrL2Wrapper, ErrL1.Error()},
+		{"Get the first level error message from an EdgeXError with 1 error wrapped", ErrL2, ErrL2.message},
+		{"Get the first level error message from an empty EdgeXError with 2 error wrapped", ErrL3, ErrL2.message},
+		{"Get the first level error message from an EdgeXError with 3 error wrapped", ErrL4, ErrL4.message},
+		{"Get the first level error message from an EdgeXError with 4 error wrapped", ErrL5, ErrL5.message},
 	}
 
 	for _, tt := range tests {
