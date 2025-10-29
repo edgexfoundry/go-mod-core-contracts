@@ -155,7 +155,7 @@ func TestAddDeviceServiceReqToDeviceServiceModels(t *testing.T) {
 	}}
 	resultModels := AddDeviceServiceReqToDeviceServiceModels(requests)
 	assert.Equal(t, expectedDeviceServiceModel, resultModels, "AddDeviceServiceReqToDeviceServiceModels did not result in expected DeviceService model.")
-	for i, _ := range requests {
+	for i := range requests {
 		requests[i].Service.Properties = nil
 	}
 	resultModels = AddDeviceServiceReqToDeviceServiceModels(requests)

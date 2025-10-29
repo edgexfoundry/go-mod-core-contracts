@@ -10,6 +10,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -39,7 +40,9 @@ func GetRequestAndReturnBinaryRes(ctx context.Context, baseUrl string, requestPa
 	if edgeXerr != nil {
 		return nil, "", errors.NewCommonEdgeXWrapper(edgeXerr)
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 
 	res, edgeXerr = getBody(resp)
 	if edgeXerr != nil {

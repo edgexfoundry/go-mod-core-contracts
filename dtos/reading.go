@@ -320,19 +320,20 @@ func (b BaseReading) Validate() error {
 	if b.isNull {
 		return nil
 	}
-	if b.ValueType == common.ValueTypeBinary {
+	switch b.ValueType {
+	case common.ValueTypeBinary:
 		// validate the inner BinaryReading struct
 		binaryReading := b.BinaryReading
 		if err := common.Validate(binaryReading); err != nil {
 			return err
 		}
-	} else if b.ValueType == common.ValueTypeObject || b.ValueType == common.ValueTypeObjectArray {
+	case common.ValueTypeObject, common.ValueTypeObjectArray:
 		// validate the inner ObjectReading struct
 		objectReading := b.ObjectReading
 		if err := common.Validate(objectReading); err != nil {
 			return err
 		}
-	} else {
+	default:
 		// validate the inner SimpleReading struct
 		simpleReading := b.SimpleReading
 		if err := common.Validate(simpleReading); err != nil {
@@ -359,21 +360,22 @@ func ToReadingModel(r BaseReading) models.Reading {
 		Units:        r.Units,
 		Tags:         r.Tags,
 	}
-	if r.NullReading.isNull {
+	if r.isNull {
 		return models.NewNullReading(br)
 	}
-	if r.ValueType == common.ValueTypeBinary {
+	switch r.ValueType {
+	case common.ValueTypeBinary:
 		readingModel = models.BinaryReading{
 			BaseReading: br,
 			BinaryValue: r.BinaryValue,
 			MediaType:   r.MediaType,
 		}
-	} else if r.ValueType == common.ValueTypeObject || r.ValueType == common.ValueTypeObjectArray {
+	case common.ValueTypeObject, common.ValueTypeObjectArray:
 		readingModel = models.ObjectReading{
 			BaseReading: br,
 			ObjectValue: r.ObjectValue,
 		}
-	} else {
+	default:
 		readingModel = models.SimpleReading{
 			BaseReading: br,
 			Value:       r.Value,
@@ -630,7 +632,7 @@ func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) 
 		common.ValueTypeUint8Array, common.ValueTypeUint16Array, common.ValueTypeUint32Array, common.ValueTypeUint64Array,
 		common.ValueTypeFloat32Array, common.ValueTypeFloat64Array:
 		// the reading value should be stored in SimpleReading or NumericReading
-		if b.NumericReading.NumericValue == nil {
+		if b.NumericValue == nil {
 			return marshal(&struct {
 				reading       `json:",inline"`
 				SimpleReading `json:",inline" validate:"-"`
@@ -647,7 +649,7 @@ func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) 
 				numericReading `json:",inline" validate:"-"`
 			}{
 				reading:        r,
-				numericReading: numericReading{Value: b.NumericReading.NumericValue},
+				numericReading: numericReading{Value: b.NumericValue},
 			})
 		}
 	default:

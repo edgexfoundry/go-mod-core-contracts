@@ -266,7 +266,7 @@ func Test_AddDeviceReqToDeviceModels(t *testing.T) {
 	}
 	resultModels := AddDeviceReqToDeviceModels(requests)
 	assert.Equal(t, expectedDeviceModel, resultModels, "AddDeviceReqToDeviceModels did not result in expected Device model.")
-	for i, _ := range requests {
+	for i := range requests {
 		requests[i].Device.Properties = nil
 	}
 	resultModels = AddDeviceReqToDeviceModels(requests)
