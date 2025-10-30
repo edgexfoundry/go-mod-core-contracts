@@ -207,7 +207,7 @@ func TestAddProvisionWatcherReqToProvisionWatcherModels(t *testing.T) {
 	}
 	resultModels := AddProvisionWatcherReqToProvisionWatcherModels(requests)
 	assert.Equal(t, expectedProvisionWatcherModel, resultModels, "AddProvisionWatcherReqToProvisionWatcherModels did not result in expected ProvisionWatcher model.")
-	for i, _ := range requests {
+	for i := range requests {
 		requests[i].ProvisionWatcher.DiscoveredDevice.Properties = nil
 	}
 	resultModels = AddProvisionWatcherReqToProvisionWatcherModels(requests)

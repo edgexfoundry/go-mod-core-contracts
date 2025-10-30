@@ -77,17 +77,17 @@ func TestAddEventRequest_Validate(t *testing.T) {
 	invalidReadingInvalidValueType.Event.Readings[0].ValueType = "BadType"
 
 	invalidSimpleReadingNoValue := eventRequestData()
-	invalidSimpleReadingNoValue.Event.Readings[0].SimpleReading.Value = emptyString
+	invalidSimpleReadingNoValue.Event.Readings[0].Value = emptyString
 
 	invalidBinaryReadingNoValue := eventRequestData()
 	invalidBinaryReadingNoValue.Event.Readings[0].ValueType = common.ValueTypeBinary
-	invalidBinaryReadingNoValue.Event.Readings[0].BinaryReading.MediaType = TestBinaryReadingMediaType
-	invalidBinaryReadingNoValue.Event.Readings[0].BinaryReading.BinaryValue = []byte{}
+	invalidBinaryReadingNoValue.Event.Readings[0].MediaType = TestBinaryReadingMediaType
+	invalidBinaryReadingNoValue.Event.Readings[0].BinaryValue = []byte{}
 
 	invalidBinaryReadingNoMedia := eventRequestData()
 	invalidBinaryReadingNoMedia.Event.Readings[0].ValueType = common.ValueTypeBinary
-	invalidBinaryReadingNoMedia.Event.Readings[0].BinaryReading.MediaType = ""
-	invalidBinaryReadingNoMedia.Event.Readings[0].BinaryReading.BinaryValue = []byte(TestReadingBinaryValue)
+	invalidBinaryReadingNoMedia.Event.Readings[0].MediaType = ""
+	invalidBinaryReadingNoMedia.Event.Readings[0].BinaryValue = []byte(TestReadingBinaryValue)
 
 	nilBinaryReadingNoMedia := eventRequestData()
 	nilBinaryReadingNoMedia.Event.Readings[0] = dtos.NewNullReading(TestDeviceProfileName, TestDeviceName, TestDeviceResourceName, common.ValueTypeBinary)

@@ -166,9 +166,9 @@ func ToAddressModel(a Address) models.Address {
 			BaseAddress: models.BaseAddress{
 				Type: a.Type, Host: a.Host, Port: a.Port, Scheme: a.Scheme,
 			},
-			Path:            a.RESTAddress.Path,
-			HTTPMethod:      a.RESTAddress.HTTPMethod,
-			InjectEdgeXAuth: a.RESTAddress.InjectEdgeXAuth,
+			Path:            a.Path,
+			HTTPMethod:      a.HTTPMethod,
+			InjectEdgeXAuth: a.InjectEdgeXAuth,
 		}
 	case common.MQTT:
 		address = models.MQTTPubAddress{
@@ -181,7 +181,7 @@ func ToAddressModel(a Address) models.Address {
 				SkipCertVerify: a.SkipCertVerify,
 			},
 			MessageBus:     models.MessageBus{Topic: a.Topic},
-			Publisher:      a.MQTTPubAddress.Publisher,
+			Publisher:      a.Publisher,
 			QoS:            a.QoS,
 			KeepAlive:      a.KeepAlive,
 			Retained:       a.Retained,
@@ -200,7 +200,7 @@ func ToAddressModel(a Address) models.Address {
 			BaseAddress: models.BaseAddress{
 				Type: a.Type,
 			},
-			Recipients: a.EmailAddress.Recipients,
+			Recipients: a.Recipients,
 		}
 	}
 	return address
