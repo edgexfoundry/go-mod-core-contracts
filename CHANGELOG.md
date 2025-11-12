@@ -3,6 +3,30 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
+
+
+<a name="x.y.z"></a>
+## [x.y.z] - 2025-11-12
+### Features ✨
+- Add Clone func for Device, DeviceProfile, ProvisionWatcher ([#1004](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1004)) ([#d009b4c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/d009b4c))
+### Bug Fixes 🐛
+- Initialize resourcesCache for new device profile client ([#1002](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1002)) ([#49fb7eb](https://github.com/edgexfoundry/go-mod-core-contracts/commits/49fb7eb))
+### Build 👷
+- Specify goVersion 1.23 in Jenkinsfile ([#84ca4df](https://github.com/edgexfoundry/go-mod-core-contracts/commits/84ca4df))
+
+<a name="v4.0.1"></a>
+## [v4.0.1] - 2025-03-11
+### Bug Fixes 🐛
+- parse float to string with precision to a sufficient level ([#48f27d9](https://github.com/edgexfoundry/go-mod-core-contracts/commits/48f27d9))
+- NewRESTAddress use http as default scheme ([#d9b0c9d](https://github.com/edgexfoundry/go-mod-core-contracts/commits/d9b0c9d))
+- Allow Auto event duration is empty ([#4a5f155](https://github.com/edgexfoundry/go-mod-core-contracts/commits/4a5f155))
+### Continuous Integration 🔄
+- **lts-release:** LTS release v4.0.1 [@a0c87c4](:/a0c87c4) ([#68c33e5](https://github.com/edgexfoundry/go-mod-core-contracts/commits/68c33e5))
+
+
+
+
+
 ## [v4.0.0] - 2025-03-12
 
 ### ✨ Features
