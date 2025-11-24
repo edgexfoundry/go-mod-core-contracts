@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2024 IOTech Ltd
+// Copyright (C) 2020-2025 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,6 +42,8 @@ type DeviceProfileClient interface {
 	DeviceResourceByProfileNameAndResourceName(ctx context.Context, profileName string, resourceName string) (responses.DeviceResourceResponse, errors.EdgeX)
 	// UpdateDeviceProfileBasicInfo updates existing profile's basic info
 	UpdateDeviceProfileBasicInfo(ctx context.Context, reqs []requests.DeviceProfileBasicInfoRequest) ([]common.BaseResponse, errors.EdgeX)
+	// UpdateDeviceProfileTags updates existing profile's device resources/commands tags
+	UpdateDeviceProfileTags(ctx context.Context, profileName string, request requests.DeviceProfileTagsRequest) (common.BaseResponse, errors.EdgeX)
 	// AddDeviceProfileResource adds new device resource to an existing profile
 	AddDeviceProfileResource(ctx context.Context, reqs []requests.AddDeviceResourceRequest) ([]common.BaseResponse, errors.EdgeX)
 	// UpdateDeviceProfileResource updates existing device resource

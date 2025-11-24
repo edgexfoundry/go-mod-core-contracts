@@ -275,6 +275,18 @@ func TestUpdateDeviceProfileBasicInfo(t *testing.T) {
 	require.IsType(t, []dtoCommon.BaseResponse{}, res)
 }
 
+func TestUpdateDeviceProfileTags(t *testing.T) {
+	testName := "testName"
+	urlPath := path.Join(common.ApiDeviceProfileRoute, common.Name, testName, common.Tags)
+	ts := newTestServer(http.MethodPatch, urlPath, dtoCommon.BaseResponse{})
+	defer ts.Close()
+
+	client := NewDeviceProfileClient(ts.URL, NewNullAuthenticationInjector(), false)
+	res, err := client.UpdateDeviceProfileTags(context.Background(), testName, requests.DeviceProfileTagsRequest{})
+	require.NoError(t, err)
+	require.IsType(t, dtoCommon.BaseResponse{}, res)
+}
+
 func TestAddDeviceProfileResource(t *testing.T) {
 	ts := newTestServer(http.MethodPost, common.ApiDeviceProfileResourceRoute, []dtoCommon.BaseResponse{})
 	defer ts.Close()
