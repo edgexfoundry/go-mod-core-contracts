@@ -41,6 +41,7 @@ const (
 	ApiDeviceProfileUploadFileRoute             = ApiDeviceProfileRoute + "/uploadfile"
 	ApiAllDeviceProfileRoute                    = ApiDeviceProfileRoute + "/" + All
 	ApiDeviceProfileByNameRoute                 = ApiDeviceProfileRoute + "/" + Name + "/:" + Name
+	ApiDeviceProfileTagsByNameRoute             = ApiDeviceProfileByNameRoute + "/" + Tags
 	ApiDeviceProfileDeviceCommandByNameRoute    = ApiDeviceProfileByNameRoute + "/" + DeviceCommand + "/:" + CommandName
 	ApiDeviceProfileResourceByNameRoute         = ApiDeviceProfileByNameRoute + "/" + Resource + "/:" + ResourceName
 	ApiDeviceProfileByManufacturerRoute         = ApiDeviceProfileRoute + "/" + Manufacturer + "/:" + Manufacturer
@@ -168,6 +169,7 @@ const (
 	ResourceName  = "resourceName"
 	ResourceNames = "resourceNames"
 	CommandName   = "commandName"
+	Tags          = "tags"
 	Start         = "start"
 	End           = "end"
 	Age           = "age"

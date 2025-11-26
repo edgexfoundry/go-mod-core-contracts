@@ -283,6 +283,22 @@ func (client *DeviceProfileClient) UpdateDeviceProfileBasicInfo(ctx context.Cont
 	return res, nil
 }
 
+// UpdateDeviceProfileTags updates existing profile's device resources/commands tags
+func (client *DeviceProfileClient) UpdateDeviceProfileTags(ctx context.Context, profileName string, request requests.DeviceProfileTagsRequest) (dtoCommon.BaseResponse, errors.EdgeX) {
+	var response dtoCommon.BaseResponse
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
+		SetPath(common.ApiDeviceProfileRoute).SetPath(common.Name).SetNameFieldPath(profileName).SetPath(common.Tags).BuildPath()
+	baseUrl, err := clients.GetBaseUrl(client.baseUrlFunc)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	err = utils.PatchRequest(ctx, &response, baseUrl, requestPath, nil, request, client.authInjector)
+	if err != nil {
+		return response, errors.NewCommonEdgeXWrapper(err)
+	}
+	return response, nil
+}
+
 // AddDeviceProfileResource adds new device resource to an existing profile
 func (client *DeviceProfileClient) AddDeviceProfileResource(ctx context.Context, reqs []requests.AddDeviceResourceRequest) ([]dtoCommon.BaseResponse, errors.EdgeX) {
 	var res []dtoCommon.BaseResponse
