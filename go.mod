@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/fxamacker/cbor/v2 v2.9.0
 	github.com/go-kit/log v0.2.1
-	github.com/go-playground/validator/v10 v10.30.0
+	github.com/go-playground/validator/v10 v10.30.1
 	github.com/google/uuid v1.6.0
 	github.com/stretchr/testify v1.11.1
 	gopkg.in/yaml.v3 v3.0.1
