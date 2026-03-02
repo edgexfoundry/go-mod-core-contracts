@@ -1,11 +1,12 @@
 //
-// Copyright (C) 2021-2024 IOTech Ltd
+// Copyright (C) 2021-2026 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package dtos
 
 import (
+	"encoding/json"
 	"testing"
 
 	"gopkg.in/yaml.v3"
@@ -90,6 +91,61 @@ func profileData() DeviceProfile {
 func TestFromDeviceProfileModelToDTO(t *testing.T) {
 	result := FromDeviceProfileModelToDTO(testDeviceProfile)
 	assert.Equal(t, profileData(), result, "FromDeviceProfileModelToDTO did not result in expected device profile DTO.")
+}
+
+func TestDeviceProfileBasicInfo_LinkedDeviceCount_JSON(t *testing.T) {
+	tests := []struct {
+		name              string
+		linkedDeviceCount uint32
+	}{
+		{"non-zero LinkedDeviceCount", 5},
+		{"zero LinkedDeviceCount present without omitempty", 0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			info := DeviceProfileBasicInfo{
+				Name:              TestDeviceProfileName,
+				LinkedDeviceCount: tt.linkedDeviceCount,
+			}
+
+			data, err := json.Marshal(info)
+			require.NoError(t, err)
+			assert.Contains(t, string(data), "linkedDeviceCount")
+
+			var result DeviceProfileBasicInfo
+			err = json.Unmarshal(data, &result)
+			require.NoError(t, err)
+			assert.Equal(t, tt.linkedDeviceCount, result.LinkedDeviceCount)
+		})
+	}
+}
+
+func TestDeviceProfileBasicInfo_LinkedDeviceCount_YAML(t *testing.T) {
+	tests := []struct {
+		name              string
+		linkedDeviceCount uint32
+	}{
+		{"non-zero LinkedDeviceCount", 10},
+		{"zero LinkedDeviceCount", 0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			info := DeviceProfileBasicInfo{
+				Name:              TestDeviceProfileName,
+				LinkedDeviceCount: tt.linkedDeviceCount,
+			}
+
+			data, err := yaml.Marshal(info)
+			require.NoError(t, err)
+
+			var result DeviceProfileBasicInfo
+			err = yaml.Unmarshal(data, &result)
+			require.NoError(t, err)
+			assert.Equal(t, tt.linkedDeviceCount, result.LinkedDeviceCount)
+		})
+	}
 }
 
 func TestFromDeviceProfileModelToBasicInfoDTO(t *testing.T) {
