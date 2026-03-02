@@ -96,7 +96,7 @@ func TestFromDeviceProfileModelToDTO(t *testing.T) {
 func TestDeviceProfileBasicInfo_LinkedDeviceCount_JSON(t *testing.T) {
 	tests := []struct {
 		name              string
-		linkedDeviceCount uint32
+		linkedDeviceCount int64
 	}{
 		{"non-zero LinkedDeviceCount", 5},
 		{"zero LinkedDeviceCount present without omitempty", 0},
@@ -124,7 +124,7 @@ func TestDeviceProfileBasicInfo_LinkedDeviceCount_JSON(t *testing.T) {
 func TestDeviceProfileBasicInfo_LinkedDeviceCount_YAML(t *testing.T) {
 	tests := []struct {
 		name              string
-		linkedDeviceCount uint32
+		linkedDeviceCount int64
 	}{
 		{"non-zero LinkedDeviceCount", 10},
 		{"zero LinkedDeviceCount", 0},

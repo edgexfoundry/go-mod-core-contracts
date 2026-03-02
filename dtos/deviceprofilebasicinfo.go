@@ -13,7 +13,7 @@ type DeviceProfileBasicInfo struct {
 	Description       string   `json:"description,omitempty" yaml:"description,omitempty"`
 	Model             string   `json:"model,omitempty" yaml:"model,omitempty"`
 	Labels            []string `json:"labels,omitempty" yaml:"labels,flow,omitempty"`
-	LinkedDeviceCount uint32   `json:"linkedDeviceCount" yaml:"linkedDeviceCount"`
+	LinkedDeviceCount int64    `json:"linkedDeviceCount" yaml:"linkedDeviceCount"`
 }
 
 type UpdateDeviceProfileBasicInfo struct {
