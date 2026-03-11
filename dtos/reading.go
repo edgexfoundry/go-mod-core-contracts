@@ -165,8 +165,12 @@ func convertInterfaceValue(valueType string, value any) (string, error) {
 	case common.ValueTypeBoolArray:
 		return convertSimpleArrayValue(valueType, reflect.Bool, value)
 	case common.ValueTypeStringArray:
-		return convertSimpleArrayValue(valueType, reflect.String, value)
+		arrayValue, ok := value.([]string)
+		if !ok {
+			return "", fmt.Errorf("unable to cast value to []string for %s", valueType)
+		}
 
+		return convertStringArrayValue(arrayValue)
 	case common.ValueTypeUint8Array:
 		return convertSimpleArrayValue(valueType, reflect.Uint8, value)
 	case common.ValueTypeUint16Array:
@@ -236,6 +240,14 @@ func convertFloatValue(valueType string, kind reflect.Kind, value any) (string, 
 	default:
 		return "", fmt.Errorf("invalid kind %s to convert float value to string", kind.String())
 	}
+}
+
+func convertStringArrayValue(values []string) (string, error) {
+	result, err := json.Marshal(values)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal StringArray value: %v", err)
+	}
+	return string(result), nil
 }
 
 func convertSimpleArrayValue(valueType string, kind reflect.Kind, value any) (string, error) {
