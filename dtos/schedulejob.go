@@ -142,7 +142,7 @@ func (s *ScheduleAction) UnmarshalJSON(b []byte) error {
 			// Or just a plain string
 			s.Payload = []byte(v)
 		}
-	case map[string]any:
+	case map[string]any, []any:
 		// If payload is a JSON object then marshal it
 		if encoded, err := json.Marshal(v); err == nil {
 			s.Payload = encoded

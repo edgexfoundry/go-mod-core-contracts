@@ -240,6 +240,7 @@ func TestScheduleAction_UnmarshalJSON(t *testing.T) {
 		{"valid Schedule Action with base64 encoding payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":"eyJrZXkiOiAiVmFsdWUifQ==","topic":"mock-topic"}`, false},
 		{"valid Schedule Action with JSON string payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":"{\"key\": \"Value\"}","topic":"mock-topic"}`, false},
 		{"valid Schedule Action with JSON object payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":{"key": "Value"},"topic":"mock-topic"}`, false},
+		{"valid Schedule Action with JSON object array payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":[{"key": "Value"}],"topic":"mock-topic"}`, false},
 		{"invalid Schedule Action with invalid payload", `{"type":"EdgeXMessageBus","contentType":"application/json","payload":{key: "Value"},"topic":"mock-topic"}`, true},
 	}
 	for _, tt := range tests {
