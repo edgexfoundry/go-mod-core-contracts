@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2025 IOTech Ltd
+// Copyright (C) 2020-2026 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,14 +22,15 @@ import (
 )
 
 type BaseReading struct {
-	Id             string `json:"id,omitempty"`
-	Origin         int64  `json:"origin" validate:"required"`
-	DeviceName     string `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
-	ResourceName   string `json:"resourceName" validate:"required,edgex-dto-none-empty-string"`
-	ProfileName    string `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
-	ValueType      string `json:"valueType" validate:"required,edgex-dto-value-type"`
-	Units          string `json:"units,omitempty"`
-	Tags           Tags   `json:"tags,omitempty"`
+	Id             string         `json:"id,omitempty"`
+	Origin         int64          `json:"origin" validate:"required"`
+	DeviceName     string         `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
+	ResourceName   string         `json:"resourceName" validate:"required,edgex-dto-none-empty-string"`
+	ProfileName    string         `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
+	ValueType      string         `json:"valueType" validate:"required,edgex-dto-value-type"`
+	Units          string         `json:"units,omitempty"`
+	Tags           Tags           `json:"tags,omitempty"`
+	Extensions     map[string]any `json:"-" xml:"-"`
 	BinaryReading  `json:",inline" validate:"-"`
 	SimpleReading  `json:",inline" validate:"-"`
 	ObjectReading  `json:",inline" validate:"-"`
@@ -570,11 +571,19 @@ func (b BaseReading) UnmarshalObjectValue(target any) error {
 }
 
 func (b BaseReading) MarshalJSON() ([]byte, error) {
-	return b.marshal(json.Marshal)
+	data, err := b.marshal(json.Marshal)
+	if err != nil || len(b.Extensions) == 0 {
+		return data, err
+	}
+	return mergeExtensions(data, b.Extensions, json.Unmarshal, json.Marshal)
 }
 
 func (b BaseReading) MarshalCBOR() ([]byte, error) {
-	return b.marshal(cbor.Marshal)
+	data, err := b.marshal(cbor.Marshal)
+	if err != nil || len(b.Extensions) == 0 {
+		return data, err
+	}
+	return mergeExtensions(data, b.Extensions, cbor.Unmarshal, cbor.Marshal)
 }
 
 func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) {

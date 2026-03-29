@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2025 IOTech Ltd
+// Copyright (C) 2020-2026 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,13 +21,14 @@ import (
 
 type Event struct {
 	dtoCommon.Versionable `json:",inline"`
-	Id                    string        `json:"id" validate:"required,uuid"`
-	DeviceName            string        `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
-	ProfileName           string        `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
-	SourceName            string        `json:"sourceName" validate:"required,edgex-dto-none-empty-string"`
-	Origin                int64         `json:"origin" validate:"required"`
-	Readings              []BaseReading `json:"readings" validate:"gt=0,dive,required"`
-	Tags                  Tags          `json:"tags,omitempty"`
+	Id                    string         `json:"id" validate:"required,uuid"`
+	DeviceName            string         `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
+	ProfileName           string         `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
+	SourceName            string         `json:"sourceName" validate:"required,edgex-dto-none-empty-string"`
+	Origin                int64          `json:"origin" validate:"required"`
+	Readings              []BaseReading  `json:"readings" validate:"gt=0,dive,required"`
+	Tags                  Tags           `json:"tags,omitempty"`
+	Extensions            map[string]any `json:"-" xml:"-"`
 }
 
 // NewEvent creates and returns an initialized Event with no Readings
@@ -102,11 +103,19 @@ func (e *Event) ToXML() (string, error) {
 }
 
 func (e Event) MarshalJSON() ([]byte, error) {
-	return e.marshal(json.Marshal)
+	data, err := e.marshal(json.Marshal)
+	if err != nil || len(e.Extensions) == 0 {
+		return data, err
+	}
+	return mergeExtensions(data, e.Extensions, json.Unmarshal, json.Marshal)
 }
 
 func (e Event) MarshalCBOR() ([]byte, error) {
-	return e.marshal(cbor.Marshal)
+	data, err := e.marshal(cbor.Marshal)
+	if err != nil || len(e.Extensions) == 0 {
+		return data, err
+	}
+	return mergeExtensions(data, e.Extensions, cbor.Unmarshal, cbor.Marshal)
 }
 
 func (e Event) marshal(marshal func(any) ([]byte, error)) ([]byte, error) {
