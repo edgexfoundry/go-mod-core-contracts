@@ -40,6 +40,7 @@ func NewEvent(profileName, deviceName, sourceName string) Event {
 		ProfileName: profileName,
 		SourceName:  sourceName,
 		Origin:      time.Now().UnixNano(),
+		Extensions:  make(map[string]any),
 	}
 }
 
@@ -161,7 +162,7 @@ func (e Event) marshal(marshal func(any) ([]byte, error)) ([]byte, error) {
 }
 
 func (e *Event) UnmarshalJSON(b []byte) error {
-	return e.unmarshal(b, json.Unmarshal)
+	return e.unmarshal(b, jsonUnmarshalUseNumber)
 }
 
 func (e *Event) UnmarshalCBOR(b []byte) error {
@@ -169,28 +170,50 @@ func (e *Event) UnmarshalCBOR(b []byte) error {
 }
 
 func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error {
-	var aux struct {
-		dtoCommon.Versionable
-		Id          string
-		DeviceName  string
-		ProfileName string
-		SourceName  string
-		Origin      int64
-		Readings    []BaseReading
-		Tags        Tags
-	}
-	if err := unmarshal(data, &aux); err != nil {
+	var rawMap map[string]any
+	if err := unmarshal(data, &rawMap); err != nil {
 		return err
 	}
+	// When cbor.Unmarshal decodes into map[string]any, the top-level keys are strings,
+	// but nested map values (e.g. readings, tags) are decoded as map[any]any because
+	// their target type is any. normalizeMap recursively converts these to map[string]any
+	// so that subsequent type assertions work correctly for both JSON and CBOR paths.
+	normalizeMap(rawMap)
 
-	e.Versionable = aux.Versionable
-	e.Id = aux.Id
-	e.DeviceName = aux.DeviceName
-	e.ProfileName = aux.ProfileName
-	e.SourceName = aux.SourceName
-	e.Origin = aux.Origin
-	e.Readings = aux.Readings
-	e.Tags = aux.Tags
+	e.ApiVersion, _ = popKey(rawMap, keyApiVersion).(string)
+	e.Id, _ = popKey(rawMap, keyId).(string)
+	e.DeviceName, _ = popKey(rawMap, keyDeviceName).(string)
+	e.ProfileName, _ = popKey(rawMap, keyProfileName).(string)
+	e.SourceName, _ = popKey(rawMap, keySourceName).(string)
+
+	switch v := popKey(rawMap, keyOrigin).(type) {
+	case json.Number:
+		e.Origin, _ = v.Int64()
+	case uint64: // CBOR, positive integers decode as uint64
+		e.Origin = int64(v)
+	}
+
+	// Pop readings before convertJSONNumbers so that json.Number values inside each reading
+	// (e.g. origin) are preserved for precise int64 conversion in populateFromMap.
+	rawReadings, _ := popKey(rawMap, keyReadings).([]any)
+
+	// convert json.Number in rawMap to native numeric types before assigning Tags/Extensions
+	convertJSONNumbers(rawMap)
+
+	if tags, ok := popKey(rawMap, keyTags).(map[string]any); ok {
+		e.Tags = tags
+	}
+
+	if len(rawReadings) > 0 {
+		e.Readings = make([]BaseReading, len(rawReadings))
+		for i, raw := range rawReadings {
+			if readingMap, ok := raw.(map[string]any); ok {
+				if err := e.Readings[i].populateFromMap(readingMap); err != nil {
+					return err
+				}
+			}
+		}
+	}
 
 	if os.Getenv(common.EnvOptimizeEventPayload) == common.ValueTrue {
 		// recover the reduced fields
@@ -205,5 +228,8 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 			}
 		}
 	}
+
+	// remaining keys are extensions
+	e.Extensions = rawMap
 	return nil
 }

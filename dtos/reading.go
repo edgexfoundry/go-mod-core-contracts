@@ -6,6 +6,7 @@
 package dtos
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -72,6 +73,7 @@ func newBaseReading(profileName string, deviceName string, resourceName string, 
 		ResourceName: resourceName,
 		ProfileName:  profileName,
 		ValueType:    valueType,
+		Extensions:   make(map[string]any),
 	}
 }
 
@@ -685,7 +687,7 @@ func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) 
 }
 
 func (b *BaseReading) UnmarshalJSON(data []byte) error {
-	return b.Unmarshal(data, json.Unmarshal)
+	return b.Unmarshal(data, jsonUnmarshalUseNumber)
 }
 
 func (b *BaseReading) UnmarshalCBOR(data []byte) error {
@@ -693,56 +695,79 @@ func (b *BaseReading) UnmarshalCBOR(data []byte) error {
 }
 
 func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) error {
-	var aux struct {
-		Id           string
-		Origin       int64
-		DeviceName   string
-		ResourceName string
-		ProfileName  string
-		ValueType    string
-		Units        string
-		Tags         Tags
-		Value        any
-		BinaryReading
-		ObjectReading
-	}
-	if err := unmarshal(data, &aux); err != nil {
+	var rawMap map[string]any
+	if err := unmarshal(data, &rawMap); err != nil {
 		return err
 	}
+	// When cbor.Unmarshal decodes into map[string]any, the top-level keys are strings,
+	// but nested map values (e.g. tags, objectValue) are decoded as map[any]any because
+	// their target type is any. normalizeMap recursively converts these to map[string]any
+	// so that subsequent type assertions work correctly for both JSON and CBOR paths.
+	normalizeMap(rawMap)
+	return b.populateFromMap(rawMap)
+}
 
-	b.Id = aux.Id
-	b.Origin = aux.Origin
-	b.DeviceName = aux.DeviceName
-	b.ResourceName = aux.ResourceName
-	b.ProfileName = aux.ProfileName
-	b.ValueType = aux.ValueType
-	b.Units = aux.Units
-	b.Tags = aux.Tags
-	b.BinaryReading = aux.BinaryReading
-	if aux.Value != nil {
-		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%s", aux.Value)}
+func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
+	b.Id, _ = popKey(rawMap, keyId).(string)
+	b.DeviceName, _ = popKey(rawMap, keyDeviceName).(string)
+	b.ResourceName, _ = popKey(rawMap, keyResourceName).(string)
+	b.ProfileName, _ = popKey(rawMap, keyProfileName).(string)
+	b.ValueType, _ = popKey(rawMap, keyValueType).(string)
+	b.Units, _ = popKey(rawMap, keyUnits).(string)
+
+	switch v := popKey(rawMap, keyOrigin).(type) {
+	case json.Number:
+		b.Origin, _ = v.Int64()
+	case uint64: // CBOR, positive integers decode as uint64
+		b.Origin = int64(v)
 	}
 
+	// convert json.Number in rawMap to native numeric types before assigning Tags/Extensions
+	convertJSONNumbers(rawMap)
+
+	if tags, ok := popKey(rawMap, keyTags).(map[string]any); ok {
+		b.Tags = tags
+	}
+
+	// BinaryReading: JSON gives base64 string, CBOR gives []byte
+	switch v := popKey(rawMap, keyBinaryValue).(type) {
+	case string:
+		b.BinaryValue, _ = base64.StdEncoding.DecodeString(v)
+	case []byte:
+		b.BinaryValue = v
+	}
+	b.MediaType, _ = popKey(rawMap, keyMediaType).(string)
+
+	// ObjectReading
+	objectValue := popKey(rawMap, keyObjectValue)
+	b.ObjectValue = objectValue
+
+	// Value -> SimpleReading / NumericReading
+	value := popKey(rawMap, keyValue)
+	if value != nil {
+		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%s", value)}
+	}
 	// if the value is not string, let the NumericReading contain the equivalent value
-	if _, ok := aux.Value.(string); !ok {
-		b.NumericReading = NumericReading{NumericValue: aux.Value}
+	if _, ok := value.(string); !ok {
+		b.NumericReading = NumericReading{NumericValue: value}
 	}
 
-	b.ObjectReading = aux.ObjectReading
-
-	switch aux.ValueType {
+	switch b.ValueType {
 	case common.ValueTypeObject, common.ValueTypeObjectArray:
-		if aux.ObjectValue == nil {
+		if objectValue == nil {
 			b.isNull = true
 		}
 	case common.ValueTypeBinary:
-		if aux.BinaryValue == nil {
+		if b.BinaryValue == nil {
 			b.isNull = true
 		}
 	default:
-		if aux.Value == nil {
+		if value == nil {
 			b.isNull = true
 		}
 	}
+
+	// remaining keys are extensions
+	b.Extensions = rawMap
 	return nil
 }

@@ -42,6 +42,7 @@ var testEventDTO = dtos.Event{
 		"Latitude":  "29.630771",
 		"Longitude": "-95.377603",
 	},
+	Extensions: map[string]any{},
 }
 
 func TestGetCommand(t *testing.T) {

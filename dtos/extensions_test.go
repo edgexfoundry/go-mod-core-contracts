@@ -13,6 +13,18 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestPopKey(t *testing.T) {
+	m := map[string]any{"a": "1", "b": "2", "c": "3"}
+
+	v := popKey(m, "b")
+	assert.Equal(t, "2", v)
+	assert.Equal(t, map[string]any{"a": "1", "c": "3"}, m)
+
+	v = popKey(m, "nonexistent")
+	assert.Nil(t, v)
+	assert.Equal(t, map[string]any{"a": "1", "c": "3"}, m)
+}
+
 func TestMergeExtensions(t *testing.T) {
 	base := map[string]any{"deviceName": "sensor-1", "value": "42"}
 
