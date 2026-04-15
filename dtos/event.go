@@ -8,6 +8,8 @@ package dtos
 import (
 	"encoding/json"
 	"encoding/xml"
+	"fmt"
+	"math"
 	"os"
 	"time"
 
@@ -180,22 +182,34 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 	// so that subsequent type assertions work correctly for both JSON and CBOR paths.
 	normalizeMap(rawMap)
 
-	e.ApiVersion, _ = popKey(rawMap, keyApiVersion).(string)
-	e.Id, _ = popKey(rawMap, keyId).(string)
-	e.DeviceName, _ = popKey(rawMap, keyDeviceName).(string)
-	e.ProfileName, _ = popKey(rawMap, keyProfileName).(string)
-	e.SourceName, _ = popKey(rawMap, keySourceName).(string)
+	e.ApiVersion = popStringValuefromKey(rawMap, keyApiVersion)
+	e.Id = popStringValuefromKey(rawMap, keyId)
+	e.DeviceName = popStringValuefromKey(rawMap, keyDeviceName)
+	e.ProfileName = popStringValuefromKey(rawMap, keyProfileName)
+	e.SourceName = popStringValuefromKey(rawMap, keySourceName)
 
 	switch v := popKey(rawMap, keyOrigin).(type) {
 	case json.Number:
-		e.Origin, _ = v.Int64()
+		var err error
+		if e.Origin, err = v.Int64(); err != nil {
+			return fmt.Errorf("failed to decode origin: %w", err)
+		}
 	case uint64: // CBOR, positive integers decode as uint64
+		if v > math.MaxInt64 {
+			return fmt.Errorf("origin value %d overflows int64", v)
+		}
 		e.Origin = int64(v)
 	}
 
 	// Pop readings before convertJSONNumbers so that json.Number values inside each reading
 	// (e.g. origin) are preserved for precise int64 conversion in populateFromMap.
-	rawReadings, _ := popKey(rawMap, keyReadings).([]any)
+	var rawReadings []any
+	if v := popKey(rawMap, keyReadings); v != nil {
+		var ok bool
+		if rawReadings, ok = v.([]any); !ok {
+			return fmt.Errorf("failed to decode readings: expected []any, got %T", v)
+		}
+	}
 
 	// convert json.Number in rawMap to native numeric types before assigning Tags/Extensions
 	convertJSONNumbers(rawMap)

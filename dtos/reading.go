@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"math"
 	"reflect"
 	"strconv"
 	"strings"
@@ -708,17 +709,23 @@ func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) 
 }
 
 func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
-	b.Id, _ = popKey(rawMap, keyId).(string)
-	b.DeviceName, _ = popKey(rawMap, keyDeviceName).(string)
-	b.ResourceName, _ = popKey(rawMap, keyResourceName).(string)
-	b.ProfileName, _ = popKey(rawMap, keyProfileName).(string)
-	b.ValueType, _ = popKey(rawMap, keyValueType).(string)
-	b.Units, _ = popKey(rawMap, keyUnits).(string)
+	b.Id = popStringValuefromKey(rawMap, keyId)
+	b.DeviceName = popStringValuefromKey(rawMap, keyDeviceName)
+	b.ResourceName = popStringValuefromKey(rawMap, keyResourceName)
+	b.ProfileName = popStringValuefromKey(rawMap, keyProfileName)
+	b.ValueType = popStringValuefromKey(rawMap, keyValueType)
+	b.Units = popStringValuefromKey(rawMap, keyUnits)
 
 	switch v := popKey(rawMap, keyOrigin).(type) {
 	case json.Number:
-		b.Origin, _ = v.Int64()
+		var err error
+		if b.Origin, err = v.Int64(); err != nil {
+			return fmt.Errorf("failed to decode origin: %w", err)
+		}
 	case uint64: // CBOR, positive integers decode as uint64
+		if v > math.MaxInt64 {
+			return fmt.Errorf("origin value %d overflows int64", v)
+		}
 		b.Origin = int64(v)
 	}
 
@@ -736,7 +743,7 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 	case []byte:
 		b.BinaryValue = v
 	}
-	b.MediaType, _ = popKey(rawMap, keyMediaType).(string)
+	b.MediaType = popStringValuefromKey(rawMap, keyMediaType)
 
 	// ObjectReading
 	objectValue := popKey(rawMap, keyObjectValue)

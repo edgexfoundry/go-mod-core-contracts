@@ -8,6 +8,8 @@ package dtos
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"strconv"
 )
 
 // mergeExtensions merges the extensions map into the already-marshaled data bytes at top level.
@@ -57,7 +59,7 @@ func convertJSONNumbers(v any) any {
 	}
 }
 
-// normalizeMap recursively converts map[interface{}]interface{} (produced by CBOR decoding into any)
+// normalizeMap recursively converts map[any]any (produced by CBOR decoding into any)
 // to map[string]any for consistency with JSON-decoded maps. No-op for JSON-decoded data.
 func normalizeMap(v any) any {
 	switch val := v.(type) {
@@ -88,4 +90,19 @@ func popKey(m map[string]any, key string) any {
 	v := m[key]
 	delete(m, key)
 	return v
+}
+
+func popStringValuefromKey(m map[string]any, key string) string {
+	switch v := popKey(m, key).(type) {
+	case string:
+		return v
+	case int:
+		return strconv.Itoa(v)
+	case bool:
+		return strconv.FormatBool(v)
+	case nil:
+		return ""
+	default:
+		return fmt.Sprintf("%v", v)
+	}
 }
