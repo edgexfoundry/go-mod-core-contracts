@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2024 IOTech Ltd
+// Copyright (C) 2024-2026 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +7,7 @@ package models
 
 import (
 	"encoding/json"
+
 	"github.com/google/uuid"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -194,7 +195,8 @@ type BaseScheduleAction struct {
 
 type EdgeXMessageBusAction struct {
 	BaseScheduleAction
-	Topic string
+	Topic         string
+	UseRawPayload bool
 }
 
 func (m EdgeXMessageBusAction) GetBaseScheduleAction() BaseScheduleAction {
