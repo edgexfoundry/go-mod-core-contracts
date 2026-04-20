@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2024 IOTech Ltd
+// Copyright (C) 2024-2026 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -184,7 +184,8 @@ func (s *ScheduleAction) Validate() error {
 }
 
 type EdgeXMessageBusAction struct {
-	Topic string `json:"topic,omitempty" validate:"required"`
+	Topic         string `json:"topic,omitempty" validate:"required"`
+	UseRawPayload bool   `json:"useRawPayload,omitempty"`
 }
 
 type RESTAction struct {
@@ -298,7 +299,8 @@ func ToScheduleActionModel(dto ScheduleAction) models.ScheduleAction {
 				ContentType: dto.ContentType,
 				Payload:     dto.Payload,
 			},
-			Topic: dto.Topic,
+			Topic:         dto.Topic,
+			UseRawPayload: dto.UseRawPayload,
 		}
 	case common.ActionREST:
 		model = models.RESTAction{
@@ -337,7 +339,8 @@ func FromScheduleActionModelToDTO(model models.ScheduleAction) ScheduleAction {
 			ContentType: messageBusModel.ContentType,
 			Payload:     messageBusModel.Payload,
 			EdgeXMessageBusAction: EdgeXMessageBusAction{
-				Topic: messageBusModel.Topic,
+				Topic:         messageBusModel.Topic,
+				UseRawPayload: messageBusModel.UseRawPayload,
 			},
 		}
 	case common.ActionREST:

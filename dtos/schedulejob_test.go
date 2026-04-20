@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2024 IOTech Ltd
+// Copyright (C) 2024-2026 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,7 +29,8 @@ var scheduleActionEdgeXMessageBus = ScheduleAction{
 	ContentType: common.ContentTypeJSON,
 	Payload:     []byte(payload),
 	EdgeXMessageBusAction: EdgeXMessageBusAction{
-		Topic: topic,
+		Topic:         topic,
+		UseRawPayload: true,
 	},
 }
 
@@ -39,7 +40,8 @@ var scheduleActionEdgeXMessageBusModel = models.EdgeXMessageBusAction{
 		ContentType: common.ContentTypeJSON,
 		Payload:     []byte(payload),
 	},
-	Topic: topic,
+	Topic:         topic,
+	UseRawPayload: true,
 }
 
 var scheduleActionRest = ScheduleAction{
