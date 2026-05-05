@@ -42,7 +42,6 @@ func NewEvent(profileName, deviceName, sourceName string) Event {
 		ProfileName: profileName,
 		SourceName:  sourceName,
 		Origin:      time.Now().UnixNano(),
-		Extensions:  make(map[string]any),
 	}
 }
 
@@ -172,8 +171,11 @@ func (e *Event) UnmarshalCBOR(b []byte) error {
 }
 
 func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error {
-	var rawMap map[string]any
-	if err := unmarshal(data, &rawMap); err != nil {
+	var (
+		rawMap map[string]any
+		err    error
+	)
+	if err = unmarshal(data, &rawMap); err != nil {
 		return err
 	}
 	// When cbor.Unmarshal decodes into map[string]any, the top-level keys are strings,
@@ -182,15 +184,24 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 	// so that subsequent type assertions work correctly for both JSON and CBOR paths.
 	normalizeMap(rawMap)
 
-	e.ApiVersion = popStringValuefromKey(rawMap, keyApiVersion)
-	e.Id = popStringValuefromKey(rawMap, keyId)
-	e.DeviceName = popStringValuefromKey(rawMap, keyDeviceName)
-	e.ProfileName = popStringValuefromKey(rawMap, keyProfileName)
-	e.SourceName = popStringValuefromKey(rawMap, keySourceName)
+	if e.ApiVersion, err = popStringValueFromKey(rawMap, keyApiVersion); err != nil {
+		return err
+	}
+	if e.Id, err = popStringValueFromKey(rawMap, keyId); err != nil {
+		return err
+	}
+	if e.DeviceName, err = popStringValueFromKey(rawMap, keyDeviceName); err != nil {
+		return err
+	}
+	if e.ProfileName, err = popStringValueFromKey(rawMap, keyProfileName); err != nil {
+		return err
+	}
+	if e.SourceName, err = popStringValueFromKey(rawMap, keySourceName); err != nil {
+		return err
+	}
 
 	switch v := popKey(rawMap, keyOrigin).(type) {
 	case json.Number:
-		var err error
 		if e.Origin, err = v.Int64(); err != nil {
 			return fmt.Errorf("failed to decode origin: %w", err)
 		}
@@ -199,6 +210,12 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 			return fmt.Errorf("origin value %d overflows int64", v)
 		}
 		e.Origin = int64(v)
+	case int64: // CBOR, negative integers decode as int64
+		e.Origin = v
+	case nil:
+		// key absent — leave Origin as zero
+	default:
+		return fmt.Errorf("origin must be a numeric type, got %T", v)
 	}
 
 	// Pop readings before convertJSONNumbers so that json.Number values inside each reading
@@ -221,10 +238,12 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 	if len(rawReadings) > 0 {
 		e.Readings = make([]BaseReading, len(rawReadings))
 		for i, raw := range rawReadings {
-			if readingMap, ok := raw.(map[string]any); ok {
-				if err := e.Readings[i].populateFromMap(readingMap); err != nil {
-					return err
-				}
+			readingMap, ok := raw.(map[string]any)
+			if !ok {
+				return fmt.Errorf("failed to decode readings[%d]: expected map[string]any, got %T", i, raw)
+			}
+			if err := e.Readings[i].populateFromMap(readingMap); err != nil {
+				return err
 			}
 		}
 	}
@@ -244,6 +263,8 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 	}
 
 	// remaining keys are extensions
-	e.Extensions = rawMap
+	if len(rawMap) > 0 {
+		e.Extensions = rawMap
+	}
 	return nil
 }

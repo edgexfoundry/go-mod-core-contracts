@@ -74,7 +74,6 @@ func newBaseReading(profileName string, deviceName string, resourceName string, 
 		ResourceName: resourceName,
 		ProfileName:  profileName,
 		ValueType:    valueType,
-		Extensions:   make(map[string]any),
 	}
 }
 
@@ -709,16 +708,28 @@ func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) 
 }
 
 func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
-	b.Id = popStringValuefromKey(rawMap, keyId)
-	b.DeviceName = popStringValuefromKey(rawMap, keyDeviceName)
-	b.ResourceName = popStringValuefromKey(rawMap, keyResourceName)
-	b.ProfileName = popStringValuefromKey(rawMap, keyProfileName)
-	b.ValueType = popStringValuefromKey(rawMap, keyValueType)
-	b.Units = popStringValuefromKey(rawMap, keyUnits)
+	var err error
+	if b.Id, err = popStringValueFromKey(rawMap, keyId); err != nil {
+		return err
+	}
+	if b.DeviceName, err = popStringValueFromKey(rawMap, keyDeviceName); err != nil {
+		return err
+	}
+	if b.ResourceName, err = popStringValueFromKey(rawMap, keyResourceName); err != nil {
+		return err
+	}
+	if b.ProfileName, err = popStringValueFromKey(rawMap, keyProfileName); err != nil {
+		return err
+	}
+	if b.ValueType, err = popStringValueFromKey(rawMap, keyValueType); err != nil {
+		return err
+	}
+	if b.Units, err = popStringValueFromKey(rawMap, keyUnits); err != nil {
+		return err
+	}
 
 	switch v := popKey(rawMap, keyOrigin).(type) {
 	case json.Number:
-		var err error
 		if b.Origin, err = v.Int64(); err != nil {
 			return fmt.Errorf("failed to decode origin: %w", err)
 		}
@@ -727,10 +738,24 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 			return fmt.Errorf("origin value %d overflows int64", v)
 		}
 		b.Origin = int64(v)
+	case int64: // CBOR, negative integers decode as int64
+		b.Origin = v
+	case nil:
+		// key absent — leave Origin as zero
+	default:
+		return fmt.Errorf("failed to decode origin: unsupported type %T\"", v)
 	}
 
 	// convert json.Number in rawMap to native numeric types before assigning Tags/Extensions
 	convertJSONNumbers(rawMap)
+
+	if rawTags := popKey(rawMap, keyTags); rawTags != nil {
+		if tags, ok := rawTags.(map[string]any); ok {
+			b.Tags = tags
+		} else {
+			return fmt.Errorf("failed to decode tags: expected map[string]any, got %T", rawTags)
+		}
+	}
 
 	if tags, ok := popKey(rawMap, keyTags).(map[string]any); ok {
 		b.Tags = tags
@@ -739,11 +764,17 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 	// BinaryReading: JSON gives base64 string, CBOR gives []byte
 	switch v := popKey(rawMap, keyBinaryValue).(type) {
 	case string:
-		b.BinaryValue, _ = base64.StdEncoding.DecodeString(v)
+		decoded, err := base64.StdEncoding.DecodeString(v)
+		if err != nil {
+			return fmt.Errorf("failed to decode binaryValue: %w", err)
+		}
+		b.BinaryValue = decoded
 	case []byte:
 		b.BinaryValue = v
 	}
-	b.MediaType = popStringValuefromKey(rawMap, keyMediaType)
+	if b.MediaType, err = popStringValueFromKey(rawMap, keyMediaType); err != nil {
+		return err
+	}
 
 	// ObjectReading
 	objectValue := popKey(rawMap, keyObjectValue)
@@ -775,6 +806,8 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 	}
 
 	// remaining keys are extensions
-	b.Extensions = rawMap
+	if len(rawMap) > 0 {
+		b.Extensions = rawMap
+	}
 	return nil
 }

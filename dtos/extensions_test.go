@@ -75,3 +75,57 @@ func TestMergeExtensions(t *testing.T) {
 		})
 	}
 }
+
+func TestJsonUnmarshalUseNumber(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		wantErr  bool
+		checkNum bool // verify json.Number preservation
+	}{
+		{
+			name:  "valid object",
+			input: `{"a":1}`,
+		},
+		{
+			name:     "preserves number as json.Number",
+			input:    `{"number":123}`,
+			checkNum: true,
+		},
+		{
+			name:    "trailing garbage after value",
+			input:   `{"a":1}garbage`,
+			wantErr: true,
+		},
+		{
+			name:    "concatenated JSON objects",
+			input:   `{"a":1}{"b":2}`,
+			wantErr: true,
+		},
+		{
+			name:    "invalid JSON",
+			input:   `{bad}`,
+			wantErr: true,
+		},
+		{
+			name:  "trailing whitespace is allowed",
+			input: `{"a":1}   `,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var v map[string]any
+			err := jsonUnmarshalUseNumber([]byte(tt.input), &v)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			if tt.checkNum {
+				_, ok := v["number"].(json.Number)
+				assert.True(t, ok, "expected json.Number, got %T", v["n"])
+			}
+		})
+	}
+}

@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"strconv"
+	"io"
 )
 
 // mergeExtensions merges the extensions map into the already-marshaled data bytes at top level.
@@ -30,7 +30,17 @@ func mergeExtensions(data []byte, extensions map[string]any, unmarshalFn func([]
 func jsonUnmarshalUseNumber(data []byte, v any) error {
 	dec := json.NewDecoder(bytes.NewReader(data))
 	dec.UseNumber()
-	return dec.Decode(v)
+	if err := dec.Decode(v); err != nil {
+		return err
+	}
+	// Ensure no trailing non-whitespace content remains
+	if err := dec.Decode(new(struct{})); err != io.EOF {
+		if err == nil {
+			return fmt.Errorf("invalid JSON: extra data after first value")
+		}
+		return err
+	}
+	return nil
 }
 
 // convertJSONNumbers recursively converts json.Number values in a map/slice to float64,
@@ -66,7 +76,10 @@ func normalizeMap(v any) any {
 	case map[any]any:
 		result := make(map[string]any, len(val))
 		for k, v := range val {
-			ks, _ := k.(string)
+			ks, ok := k.(string)
+			if !ok {
+				ks = fmt.Sprint(k)
+			}
 			result[ks] = normalizeMap(v)
 		}
 		return result
@@ -92,17 +105,16 @@ func popKey(m map[string]any, key string) any {
 	return v
 }
 
-func popStringValuefromKey(m map[string]any, key string) string {
-	switch v := popKey(m, key).(type) {
+// popStringValueFromKey removes the key from the map and returns its value as a string.
+// Returns an error if the key is present but not a string type.
+func popStringValueFromKey(m map[string]any, key string) (string, error) {
+	v := popKey(m, key)
+	switch val := v.(type) {
 	case string:
-		return v
-	case int:
-		return strconv.Itoa(v)
-	case bool:
-		return strconv.FormatBool(v)
+		return val, nil
 	case nil:
-		return ""
+		return "", nil
 	default:
-		return fmt.Sprintf("%v", v)
+		return "", fmt.Errorf("field %q must be a string, got %T", key, v)
 	}
 }
