@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/fxamacker/cbor/v2"
 	"github.com/stretchr/testify/require"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/common"
@@ -811,4 +812,30 @@ func TestMarshalNumericReading(t *testing.T) {
 			assert.Equal(t, fmt.Sprintf("%v", tt.value), fmt.Sprintf("%v", res.NumericValue))
 		})
 	}
+}
+
+func TestBaseReading_UnmarshalExtensions(t *testing.T) {
+	baseJSON := `{"deviceName":"TestDevice","profileName":"TestDeviceProfileName",` +
+		`"resourceName":"TestDeviceResource","valueType":"String","value":"val",` +
+		`"origin":1594963842,"description":"d"}`
+
+	t.Run("JSON", func(t *testing.T) {
+		var result BaseReading
+		require.NoError(t, json.Unmarshal([]byte(baseJSON), &result))
+
+		assert.Equal(t, "d", result.Extensions["description"])
+	})
+
+	t.Run("CBOR", func(t *testing.T) {
+		var intermediate BaseReading
+		require.NoError(t, json.Unmarshal([]byte(baseJSON), &intermediate))
+
+		data, err := cbor.Marshal(intermediate)
+		require.NoError(t, err)
+
+		var result BaseReading
+		require.NoError(t, cbor.Unmarshal(data, &result))
+
+		assert.Equal(t, "d", result.Extensions["description"])
+	})
 }

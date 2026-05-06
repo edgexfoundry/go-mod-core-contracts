@@ -8,6 +8,8 @@ package dtos
 import (
 	"encoding/json"
 	"encoding/xml"
+	"fmt"
+	"math"
 	"os"
 	"time"
 
@@ -40,6 +42,8 @@ func NewEvent(profileName, deviceName, sourceName string) Event {
 		ProfileName: profileName,
 		SourceName:  sourceName,
 		Origin:      time.Now().UnixNano(),
+		Extensions:  make(map[string]any),
+		Tags:        make(Tags),
 	}
 }
 
@@ -161,7 +165,7 @@ func (e Event) marshal(marshal func(any) ([]byte, error)) ([]byte, error) {
 }
 
 func (e *Event) UnmarshalJSON(b []byte) error {
-	return e.unmarshal(b, json.Unmarshal)
+	return e.unmarshal(b, jsonUnmarshalUseNumber)
 }
 
 func (e *Event) UnmarshalCBOR(b []byte) error {
@@ -169,28 +173,92 @@ func (e *Event) UnmarshalCBOR(b []byte) error {
 }
 
 func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error {
-	var aux struct {
-		dtoCommon.Versionable
-		Id          string
-		DeviceName  string
-		ProfileName string
-		SourceName  string
-		Origin      int64
-		Readings    []BaseReading
-		Tags        Tags
+	*e = Event{}
+
+	var (
+		rawMap map[string]any
+		err    error
+	)
+	if err = unmarshal(data, &rawMap); err != nil {
+		return err
 	}
-	if err := unmarshal(data, &aux); err != nil {
+	// When cbor.Unmarshal decodes into map[string]any, the top-level keys are strings,
+	// but nested map values (e.g. readings, tags) are decoded as map[any]any because
+	// their target type is any. normalizeMap recursively converts these to map[string]any
+	// so that subsequent type assertions work correctly for both JSON and CBOR paths.
+	normalizeMap(rawMap)
+
+	if e.ApiVersion, err = popStringValueFromKey(rawMap, keyApiVersion); err != nil {
+		return err
+	}
+	if e.Id, err = popStringValueFromKey(rawMap, keyId); err != nil {
+		return err
+	}
+	if e.DeviceName, err = popStringValueFromKey(rawMap, keyDeviceName); err != nil {
+		return err
+	}
+	if e.ProfileName, err = popStringValueFromKey(rawMap, keyProfileName); err != nil {
+		return err
+	}
+	if e.SourceName, err = popStringValueFromKey(rawMap, keySourceName); err != nil {
 		return err
 	}
 
-	e.Versionable = aux.Versionable
-	e.Id = aux.Id
-	e.DeviceName = aux.DeviceName
-	e.ProfileName = aux.ProfileName
-	e.SourceName = aux.SourceName
-	e.Origin = aux.Origin
-	e.Readings = aux.Readings
-	e.Tags = aux.Tags
+	switch v := popKey(rawMap, keyOrigin).(type) {
+	case json.Number:
+		if e.Origin, err = v.Int64(); err != nil {
+			return fmt.Errorf("failed to decode origin: %w", err)
+		}
+	case uint64: // CBOR, positive integers decode as uint64
+		if v > math.MaxInt64 {
+			return fmt.Errorf("origin value %d overflows int64", v)
+		}
+		e.Origin = int64(v)
+	case int64: // CBOR, negative integers decode as int64
+		e.Origin = v
+	case nil:
+		// key absent — leave Origin as zero
+	default:
+		return fmt.Errorf("origin must be a numeric type, got %T", v)
+	}
+
+	// Pop readings before convertJSONNumbers so that json.Number values inside each reading
+	// (e.g. origin) are preserved for precise int64 conversion in populateFromMap.
+	var rawReadings []any
+	if v := popKey(rawMap, keyReadings); v != nil {
+		var ok bool
+		if rawReadings, ok = v.([]any); !ok {
+			return fmt.Errorf("failed to decode readings: expected []any, got %T", v)
+		}
+	}
+
+	// convert json.Number in rawMap to native numeric types before assigning Tags/Extensions
+	convertJSONNumbers(rawMap)
+
+	if rawTags := popKey(rawMap, keyTags); rawTags != nil {
+		if tags, ok := rawTags.(map[string]any); ok {
+			e.Tags = tags
+		} else {
+			return fmt.Errorf("failed to decode tags: expected map[string]any, got %T", rawTags)
+		}
+	} else {
+		e.Tags = make(map[string]any)
+	}
+
+	if len(rawReadings) > 0 {
+		e.Readings = make([]BaseReading, len(rawReadings))
+		for i, raw := range rawReadings {
+			readingMap, ok := raw.(map[string]any)
+			if !ok {
+				return fmt.Errorf("failed to decode readings[%d]: expected map[string]any, got %T", i, raw)
+			}
+			if err := e.Readings[i].populateFromMap(readingMap); err != nil {
+				return err
+			}
+		}
+	} else {
+		e.Readings = make([]BaseReading, 0)
+	}
 
 	if os.Getenv(common.EnvOptimizeEventPayload) == common.ValueTrue {
 		// recover the reduced fields
@@ -204,6 +272,13 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 				e.Readings[i].ResourceName = e.SourceName
 			}
 		}
+	}
+
+	// remaining keys are extensions
+	if len(rawMap) > 0 {
+		e.Extensions = rawMap
+	} else {
+		e.Extensions = make(map[string]any)
 	}
 	return nil
 }

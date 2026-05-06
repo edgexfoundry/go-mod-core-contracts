@@ -6,8 +6,10 @@
 package dtos
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"math"
 	"reflect"
 	"strconv"
 	"strings"
@@ -72,6 +74,8 @@ func newBaseReading(profileName string, deviceName string, resourceName string, 
 		ResourceName: resourceName,
 		ProfileName:  profileName,
 		ValueType:    valueType,
+		Extensions:   make(map[string]any),
+		Tags:         make(Tags),
 	}
 }
 
@@ -685,7 +689,7 @@ func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) 
 }
 
 func (b *BaseReading) UnmarshalJSON(data []byte) error {
-	return b.Unmarshal(data, json.Unmarshal)
+	return b.Unmarshal(data, jsonUnmarshalUseNumber)
 }
 
 func (b *BaseReading) UnmarshalCBOR(data []byte) error {
@@ -693,56 +697,121 @@ func (b *BaseReading) UnmarshalCBOR(data []byte) error {
 }
 
 func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) error {
-	var aux struct {
-		Id           string
-		Origin       int64
-		DeviceName   string
-		ResourceName string
-		ProfileName  string
-		ValueType    string
-		Units        string
-		Tags         Tags
-		Value        any
-		BinaryReading
-		ObjectReading
+	var rawMap map[string]any
+	if err := unmarshal(data, &rawMap); err != nil {
+		return err
 	}
-	if err := unmarshal(data, &aux); err != nil {
+	// When cbor.Unmarshal decodes into map[string]any, the top-level keys are strings,
+	// but nested map values (e.g. tags, objectValue) are decoded as map[any]any because
+	// their target type is any. normalizeMap recursively converts these to map[string]any
+	// so that subsequent type assertions work correctly for both JSON and CBOR paths.
+	normalizeMap(rawMap)
+	return b.populateFromMap(rawMap)
+}
+
+func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
+	*b = BaseReading{}
+
+	var err error
+	if b.Id, err = popStringValueFromKey(rawMap, keyId); err != nil {
+		return err
+	}
+	if b.DeviceName, err = popStringValueFromKey(rawMap, keyDeviceName); err != nil {
+		return err
+	}
+	if b.ResourceName, err = popStringValueFromKey(rawMap, keyResourceName); err != nil {
+		return err
+	}
+	if b.ProfileName, err = popStringValueFromKey(rawMap, keyProfileName); err != nil {
+		return err
+	}
+	if b.ValueType, err = popStringValueFromKey(rawMap, keyValueType); err != nil {
+		return err
+	}
+	if b.Units, err = popStringValueFromKey(rawMap, keyUnits); err != nil {
 		return err
 	}
 
-	b.Id = aux.Id
-	b.Origin = aux.Origin
-	b.DeviceName = aux.DeviceName
-	b.ResourceName = aux.ResourceName
-	b.ProfileName = aux.ProfileName
-	b.ValueType = aux.ValueType
-	b.Units = aux.Units
-	b.Tags = aux.Tags
-	b.BinaryReading = aux.BinaryReading
-	if aux.Value != nil {
-		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%s", aux.Value)}
+	switch v := popKey(rawMap, keyOrigin).(type) {
+	case json.Number:
+		if b.Origin, err = v.Int64(); err != nil {
+			return fmt.Errorf("failed to decode origin: %w", err)
+		}
+	case uint64: // CBOR, positive integers decode as uint64
+		if v > math.MaxInt64 {
+			return fmt.Errorf("origin value %d overflows int64", v)
+		}
+		b.Origin = int64(v)
+	case int64: // CBOR, negative integers decode as int64
+		b.Origin = v
+	case nil:
+		// key absent — leave Origin as zero
+	default:
+		return fmt.Errorf("failed to decode origin: unsupported type %T", v)
 	}
 
+	// convert json.Number in rawMap to native numeric types before assigning Tags/Extensions
+	convertJSONNumbers(rawMap)
+
+	if rawTags := popKey(rawMap, keyTags); rawTags != nil {
+		if tags, ok := rawTags.(map[string]any); ok {
+			b.Tags = tags
+		} else {
+			return fmt.Errorf("failed to decode tags: expected map[string]any, got %T", rawTags)
+		}
+	} else {
+		b.Tags = make(map[string]any)
+	}
+
+	// BinaryReading: JSON gives base64 string, CBOR gives []byte
+	switch v := popKey(rawMap, keyBinaryValue).(type) {
+	case string:
+		decoded, err := base64.StdEncoding.DecodeString(v)
+		if err != nil {
+			return fmt.Errorf("failed to decode binaryValue: %w", err)
+		}
+		b.BinaryValue = decoded
+	case []byte:
+		b.BinaryValue = v
+	}
+	if b.MediaType, err = popStringValueFromKey(rawMap, keyMediaType); err != nil {
+		return err
+	}
+
+	// ObjectReading
+	objectValue := popKey(rawMap, keyObjectValue)
+	b.ObjectValue = objectValue
+
+	// Value -> SimpleReading / NumericReading
+	value := popKey(rawMap, keyValue)
+	if value != nil {
+		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%v", value)}
+	}
 	// if the value is not string, let the NumericReading contain the equivalent value
-	if _, ok := aux.Value.(string); !ok {
-		b.NumericReading = NumericReading{NumericValue: aux.Value}
+	if _, ok := value.(string); !ok {
+		b.NumericReading = NumericReading{NumericValue: value}
 	}
 
-	b.ObjectReading = aux.ObjectReading
-
-	switch aux.ValueType {
+	switch b.ValueType {
 	case common.ValueTypeObject, common.ValueTypeObjectArray:
-		if aux.ObjectValue == nil {
+		if objectValue == nil {
 			b.isNull = true
 		}
 	case common.ValueTypeBinary:
-		if aux.BinaryValue == nil {
+		if b.BinaryValue == nil {
 			b.isNull = true
 		}
 	default:
-		if aux.Value == nil {
+		if value == nil {
 			b.isNull = true
 		}
+	}
+
+	// remaining keys are extensions
+	if len(rawMap) > 0 {
+		b.Extensions = rawMap
+	} else {
+		b.Extensions = make(map[string]any)
 	}
 	return nil
 }

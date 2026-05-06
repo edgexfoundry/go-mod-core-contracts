@@ -301,6 +301,7 @@ func Test_AddEventReqToEventModels(t *testing.T) {
 			ProfileName:  TestDeviceProfileName,
 			Origin:       TestOriginTime,
 			ValueType:    common.ValueTypeUint8,
+			Tags:         make(map[string]any),
 		},
 		Value: "45",
 	}
