@@ -74,6 +74,8 @@ func newBaseReading(profileName string, deviceName string, resourceName string, 
 		ResourceName: resourceName,
 		ProfileName:  profileName,
 		ValueType:    valueType,
+		Extensions:   make(map[string]any),
+		Tags:         make(Tags),
 	}
 }
 
@@ -708,6 +710,8 @@ func (b *BaseReading) Unmarshal(data []byte, unmarshal func([]byte, any) error) 
 }
 
 func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
+	*b = BaseReading{}
+
 	var err error
 	if b.Id, err = popStringValueFromKey(rawMap, keyId); err != nil {
 		return err
@@ -743,7 +747,7 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 	case nil:
 		// key absent — leave Origin as zero
 	default:
-		return fmt.Errorf("failed to decode origin: unsupported type %T\"", v)
+		return fmt.Errorf("failed to decode origin: unsupported type %T", v)
 	}
 
 	// convert json.Number in rawMap to native numeric types before assigning Tags/Extensions
@@ -755,10 +759,8 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 		} else {
 			return fmt.Errorf("failed to decode tags: expected map[string]any, got %T", rawTags)
 		}
-	}
-
-	if tags, ok := popKey(rawMap, keyTags).(map[string]any); ok {
-		b.Tags = tags
+	} else {
+		b.Tags = make(map[string]any)
 	}
 
 	// BinaryReading: JSON gives base64 string, CBOR gives []byte
@@ -808,6 +810,8 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 	// remaining keys are extensions
 	if len(rawMap) > 0 {
 		b.Extensions = rawMap
+	} else {
+		b.Extensions = make(map[string]any)
 	}
 	return nil
 }

@@ -124,7 +124,7 @@ func TestJsonUnmarshalUseNumber(t *testing.T) {
 			require.NoError(t, err)
 			if tt.checkNum {
 				_, ok := v["number"].(json.Number)
-				assert.True(t, ok, "expected json.Number, got %T", v["n"])
+				assert.True(t, ok, "expected json.Number, got %T", v["number"])
 			}
 		})
 	}

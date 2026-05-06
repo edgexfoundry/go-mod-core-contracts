@@ -42,6 +42,8 @@ func NewEvent(profileName, deviceName, sourceName string) Event {
 		ProfileName: profileName,
 		SourceName:  sourceName,
 		Origin:      time.Now().UnixNano(),
+		Extensions:  make(map[string]any),
+		Tags:        make(Tags),
 	}
 }
 
@@ -171,6 +173,8 @@ func (e *Event) UnmarshalCBOR(b []byte) error {
 }
 
 func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error {
+	*e = Event{}
+
 	var (
 		rawMap map[string]any
 		err    error
@@ -231,8 +235,14 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 	// convert json.Number in rawMap to native numeric types before assigning Tags/Extensions
 	convertJSONNumbers(rawMap)
 
-	if tags, ok := popKey(rawMap, keyTags).(map[string]any); ok {
-		e.Tags = tags
+	if rawTags := popKey(rawMap, keyTags); rawTags != nil {
+		if tags, ok := rawTags.(map[string]any); ok {
+			e.Tags = tags
+		} else {
+			return fmt.Errorf("failed to decode tags: expected map[string]any, got %T", rawTags)
+		}
+	} else {
+		e.Tags = make(map[string]any)
 	}
 
 	if len(rawReadings) > 0 {
@@ -246,6 +256,8 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 				return err
 			}
 		}
+	} else {
+		e.Readings = make([]BaseReading, 0)
 	}
 
 	if os.Getenv(common.EnvOptimizeEventPayload) == common.ValueTrue {
@@ -265,6 +277,8 @@ func (e *Event) unmarshal(data []byte, unmarshal func([]byte, any) error) error 
 	// remaining keys are extensions
 	if len(rawMap) > 0 {
 		e.Extensions = rawMap
+	} else {
+		e.Extensions = make(map[string]any)
 	}
 	return nil
 }
