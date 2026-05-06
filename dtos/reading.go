@@ -785,7 +785,7 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 	// Value -> SimpleReading / NumericReading
 	value := popKey(rawMap, keyValue)
 	if value != nil {
-		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%s", value)}
+		b.SimpleReading = SimpleReading{Value: fmt.Sprintf("%v", value)}
 	}
 	// if the value is not string, let the NumericReading contain the equivalent value
 	if _, ok := value.(string); !ok {
