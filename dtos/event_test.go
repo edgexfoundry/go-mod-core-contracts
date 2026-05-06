@@ -321,3 +321,28 @@ func TestEvent_MarshalOptimizedEventPayload(t *testing.T) {
 	testEvent.Readings[0].Id = "" // the id field will be omitted ,and it isn’t used to store in the database
 	assert.Equal(t, testEvent, res)
 }
+
+func TestEvent_UnmarshalExtensions(t *testing.T) {
+	baseJSON := `{"apiVersion":"v3","deviceName":"TestDevice","profileName":"TestDeviceProfileName",` +
+		`"sourceName":"TestSourceName","origin":1594963842,"readings":[], "description":"d"}`
+
+	t.Run("JSON", func(t *testing.T) {
+		var result Event
+		require.NoError(t, json.Unmarshal([]byte(baseJSON), &result))
+
+		assert.Equal(t, "d", result.Extensions["description"])
+	})
+
+	t.Run("CBOR", func(t *testing.T) {
+		var intermediate Event
+		require.NoError(t, json.Unmarshal([]byte(baseJSON), &intermediate))
+
+		data, err := cbor.Marshal(intermediate)
+		require.NoError(t, err)
+
+		var result Event
+		require.NoError(t, cbor.Unmarshal(data, &result))
+
+		assert.Equal(t, "d", result.Extensions["description"])
+	})
+}
