@@ -42,6 +42,7 @@ func NewEvent(profileName, deviceName, sourceName string) Event {
 		ProfileName: profileName,
 		SourceName:  sourceName,
 		Origin:      time.Now().UnixNano(),
+		Readings:    make([]BaseReading, 0),
 		Extensions:  make(map[string]any),
 		Tags:        make(Tags),
 	}
