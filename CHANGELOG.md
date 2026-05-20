@@ -3,6 +3,40 @@
 ## Core Contracts Module (in Go)
 [Github repository](https://github.com/edgexfoundry/go-mod-core-contracts)
 
+## [v4.0.2] - 2025-05-31
+
+### ✨ Features
+
+- Add `UseRawPayload` support for `ScheduleAction` with `EdgeXMessageBus` type ([#9769618](https://github.com/edgexfoundry/go-mod-core-contracts/commits/9769618))
+- Add `Extensions` field to Event and BaseReading DTOs ([#667cc38](https://github.com/edgexfoundry/go-mod-core-contracts/commits/667cc38))
+- Add `linkedDeviceCount` field to `DeviceProfileBasicInfo` DTO ([#5b1ec54](https://github.com/edgexfoundry/go-mod-core-contracts/commits/5b1ec54))
+- Add the HTTP clients and DTOs for PATCH device profile tags ([#c5a527d](https://github.com/edgexfoundry/go-mod-core-contracts/commits/c5a527d))
+- Add `BuildCoreCommands` utility function ([#6666b06](https://github.com/edgexfoundry/go-mod-core-contracts/commits/6666b06))
+- Add new `MultiReadingsAggregationResponse` DTO ([#1020](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1020)) ([#b1f2561](https://github.com/edgexfoundry/go-mod-core-contracts/commits/b1f2561))
+- Add `NumericReading` for numeric data ([#1016](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1016)) ([#9e23642](https://github.com/edgexfoundry/go-mod-core-contracts/commits/9e23642))
+- Support day unit with edgex-dto-duration validation tag ([#1014](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1014)) ([#11bffbc](https://github.com/edgexfoundry/go-mod-core-contracts/commits/11bffbc))
+- Reduce payload size for device events ([#1012](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1012)) ([#22c22c6](https://github.com/edgexfoundry/go-mod-core-contracts/commits/22c22c6))
+- Add `SecretPoster` for invoking post secret to different service ([#1010](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1010)) ([#beaeb51](https://github.com/edgexfoundry/go-mod-core-contracts/commits/beaeb51))
+- Support `SystemEvent` CBOR encoding ([#1007](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1007)) ([#4cf1468](https://github.com/edgexfoundry/go-mod-core-contracts/commits/4cf1468))
+- Add Clone function for Device, DeviceProfile and ProvisionWatcher ([#1004](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1004)) ([#b8b4cb2](https://github.com/edgexfoundry/go-mod-core-contracts/commits/b8b4cb2))
+
+### 🐛 Bug Fixes
+
+- Initialize Readings as empty slice in `NewEvent` ([#cd4b35c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/cd4b35c))
+- Fix schedule job creation error when using JSON array payload ([#5b46b03](https://github.com/edgexfoundry/go-mod-core-contracts/commits/5b46b03))
+- Fixed `StringArray` reading serialization handling by using `json.Marshal` ([#fa67f43](https://github.com/edgexfoundry/go-mod-core-contracts/commits/fa67f43))
+- (Delete?) Update LinkedDeviceCount data type to int64 ([#563f85b](https://github.com/edgexfoundry/go-mod-core-contracts/commits/563f85b))
+- (Delete due to mentioned before) Export ParseDurationWithDay function ([#07844d0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/07844d0))
+- Initialize `resourcesCache` for new device profile client ([#1002](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1002)) ([#c09f050](https://github.com/edgexfoundry/go-mod-core-contracts/commits/c09f050))
+- Fixed float-to-string conversion precision handling ([#37c58d2](https://github.com/edgexfoundry/go-mod-core-contracts/commits/37c58d2))
+- Changed the default scheme of `NewRESTAddress` to HTTP ([#f54e88f](https://github.com/edgexfoundry/go-mod-core-contracts/commits/f54e88f))
+- Allow empty duration values for Auto Events ([#a5c1c90](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a5c1c90))
+
+### 👷 Build 
+
+- Update goVersion to 1.25 and golangci-lint to 2.5.0([#087e300](https://github.com/edgexfoundry/go-mod-core-contracts/commits/087e300))
+
+
 ## [v4.0.0] - 2025-03-12
 
 ### ✨ Features
