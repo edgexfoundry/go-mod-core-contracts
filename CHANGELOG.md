@@ -19,17 +19,16 @@
 - Add `SecretPoster` for invoking post secret to different service ([#1010](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1010)) ([#beaeb51](https://github.com/edgexfoundry/go-mod-core-contracts/commits/beaeb51))
 - Support `SystemEvent` CBOR encoding ([#1007](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1007)) ([#4cf1468](https://github.com/edgexfoundry/go-mod-core-contracts/commits/4cf1468))
 - Add Clone function for Device, DeviceProfile and ProvisionWatcher ([#1004](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1004)) ([#b8b4cb2](https://github.com/edgexfoundry/go-mod-core-contracts/commits/b8b4cb2))
+- Export `ParseDurationWithDay` function ([#07844d0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/07844d0))
 
 ### 🐛 Bug Fixes
 
 - Initialize Readings as empty slice in `NewEvent` ([#cd4b35c](https://github.com/edgexfoundry/go-mod-core-contracts/commits/cd4b35c))
 - Fix schedule job creation error when using JSON array payload ([#5b46b03](https://github.com/edgexfoundry/go-mod-core-contracts/commits/5b46b03))
-- Fixed `StringArray` reading serialization handling by using `json.Marshal` ([#fa67f43](https://github.com/edgexfoundry/go-mod-core-contracts/commits/fa67f43))
-- (Delete?) Update LinkedDeviceCount data type to int64 ([#563f85b](https://github.com/edgexfoundry/go-mod-core-contracts/commits/563f85b))
-- (Delete due to mentioned before) Export ParseDurationWithDay function ([#07844d0](https://github.com/edgexfoundry/go-mod-core-contracts/commits/07844d0))
+- Fix `StringArray` reading serialization handling by using `json.Marshal` ([#fa67f43](https://github.com/edgexfoundry/go-mod-core-contracts/commits/fa67f43))
 - Initialize `resourcesCache` for new device profile client ([#1002](https://github.com/edgexfoundry/go-mod-core-contracts/issues/1002)) ([#c09f050](https://github.com/edgexfoundry/go-mod-core-contracts/commits/c09f050))
-- Fixed float-to-string conversion precision handling ([#37c58d2](https://github.com/edgexfoundry/go-mod-core-contracts/commits/37c58d2))
-- Changed the default scheme of `NewRESTAddress` to HTTP ([#f54e88f](https://github.com/edgexfoundry/go-mod-core-contracts/commits/f54e88f))
+- Fix float-to-string conversion precision handling ([#37c58d2](https://github.com/edgexfoundry/go-mod-core-contracts/commits/37c58d2))
+- Change the default scheme of `NewRESTAddress` to HTTP ([#f54e88f](https://github.com/edgexfoundry/go-mod-core-contracts/commits/f54e88f))
 - Allow empty duration values for Auto Events ([#a5c1c90](https://github.com/edgexfoundry/go-mod-core-contracts/commits/a5c1c90))
 
 ### 👷 Build 
