@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2021 IOTech Ltd
+// Copyright (C) 2020-2026 IOTech Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -109,13 +109,13 @@ func TestAddEventRequest_Validate(t *testing.T) {
 		{"invalid AddEventRequest, no Event Id", noEventId, true},
 		{"invalid AddEventRequest, Event Id is not an uuid", invalidEventId, true},
 		{"invalid AddEventRequest, no DeviceName", noDeviceName, true},
-		{"invalid AddEventRequest, no ProfileName", noProfileName, true},
-		{"invalid AddEventRequest, no SourceName", noSourceName, true},
+		{"valid AddEventRequest, no ProfileName", noProfileName, false},
+		{"valid AddEventRequest, no SourceName", noSourceName, false},
 		{"invalid AddEventRequest, no Origin", noOrigin, true},
 		{"invalid AddEventRequest, no Reading", noReading, true},
 		{"invalid AddEventRequest, no Reading DeviceName", invalidReadingNoDevice, true},
 		{"invalid AddEventRequest, no Resource Name", invalidReadingNoResourceName, true},
-		{"invalid AddEventRequest, no Profile Name", invalidReadingNoProfileName, true},
+		{"valid AddEventRequest, no Profile Name", invalidReadingNoProfileName, false},
 		{"invalid AddEventRequest, no Reading Origin", invalidReadingNoOrigin, true},
 		{"invalid AddEventRequest, no Reading ValueType", invalidReadingNoValueType, true},
 		{"invalid AddEventRequest, invalid Reading ValueType", invalidReadingInvalidValueType, true},

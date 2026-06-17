@@ -25,8 +25,8 @@ type Event struct {
 	dtoCommon.Versionable `json:",inline"`
 	Id                    string         `json:"id" validate:"required,uuid"`
 	DeviceName            string         `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
-	ProfileName           string         `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
-	SourceName            string         `json:"sourceName" validate:"required,edgex-dto-none-empty-string"`
+	ProfileName           string         `json:"profileName,omitempty" validate:"omitempty,edgex-dto-none-empty-string"`
+	SourceName            string         `json:"sourceName,omitempty" validate:"omitempty,edgex-dto-none-empty-string"`
 	Origin                int64          `json:"origin" validate:"required"`
 	Readings              []BaseReading  `json:"readings" validate:"gt=0,dive,required"`
 	Tags                  Tags           `json:"tags,omitempty"`
