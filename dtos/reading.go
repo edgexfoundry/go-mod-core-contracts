@@ -28,7 +28,7 @@ type BaseReading struct {
 	Origin         int64          `json:"origin" validate:"required"`
 	DeviceName     string         `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
 	ResourceName   string         `json:"resourceName" validate:"required,edgex-dto-none-empty-string"`
-	ProfileName    string         `json:"profileName" validate:"required,edgex-dto-none-empty-string"`
+	ProfileName    string         `json:"profileName,omitempty" validate:"omitempty,edgex-dto-none-empty-string"`
 	ValueType      string         `json:"valueType" validate:"required,edgex-dto-value-type"`
 	Units          string         `json:"units,omitempty"`
 	Tags           Tags           `json:"tags,omitempty"`
