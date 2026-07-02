@@ -114,6 +114,22 @@ type BaseScheduleDef struct {
 	Type           ScheduleDefType
 	StartTimestamp int64
 	EndTimestamp   int64
+	// ActiveYearlyTimeWindow is an optional recurring within-year active period. When nil, the schedule
+	// has no window constraint and fires on every tick within its lifetime. See ActiveYearlyTimeWindow.
+	ActiveYearlyTimeWindow *ActiveYearlyTimeWindow
+}
+
+// ActiveYearlyTimeWindow describes a recurring month/day range within a year. The rules are:
+//   - The pattern repeats every year; StartTimestamp/EndTimestamp bound the job's overall lifetime independently.
+//   - EndDay is inclusive — the whole end day is active.
+//   - start == end (same month and day) is a valid single-day window.
+//   - start > end is a year-crossing window, e.g. Nov 15 -> Feb 10. Here start and end are compared by
+//     month first, then day, so a same-month range like 12/10 -> 12/1 is also year-crossing.
+type ActiveYearlyTimeWindow struct {
+	StartMonth int
+	StartDay   int
+	EndMonth   int
+	EndDay     int
 }
 
 type IntervalScheduleDef struct {

@@ -305,3 +305,85 @@ func TestFromScheduleActionModelToDTO(t *testing.T) {
 	result3 := FromScheduleActionModelToDTO(scheduleActionDeviceControlModel)
 	assert.Equal(t, scheduleActionDeviceControl, result3, "FromScheduleActionModelToDTO did not result in DeviceControl ScheduleAction dto")
 }
+
+func TestActiveYearlyTimeWindow_Validate(t *testing.T) {
+	tests := []struct {
+		name        string
+		window      ActiveYearlyTimeWindow
+		expectedErr bool
+	}{
+		{"valid same-year window", ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 5, EndMonth: 3, EndDay: 12}, false},
+		{"valid year-crossing window", ActiveYearlyTimeWindow{StartMonth: 11, StartDay: 15, EndMonth: 2, EndDay: 10}, false},
+		{"valid same-month year-crossing window", ActiveYearlyTimeWindow{StartMonth: 12, StartDay: 10, EndMonth: 12, EndDay: 1}, false},
+		{"valid single-day window (start == end)", ActiveYearlyTimeWindow{StartMonth: 6, StartDay: 15, EndMonth: 6, EndDay: 15}, false},
+		{"valid Feb 29", ActiveYearlyTimeWindow{StartMonth: 2, StartDay: 29, EndMonth: 3, EndDay: 1}, false},
+		{"valid end of Dec", ActiveYearlyTimeWindow{StartMonth: 12, StartDay: 1, EndMonth: 12, EndDay: 31}, false},
+		{"invalid start month 0", ActiveYearlyTimeWindow{StartMonth: 0, StartDay: 5, EndMonth: 3, EndDay: 12}, true},
+		{"invalid start month 13", ActiveYearlyTimeWindow{StartMonth: 13, StartDay: 5, EndMonth: 3, EndDay: 12}, true},
+		{"invalid end month 0", ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 5, EndMonth: 0, EndDay: 12}, true},
+		{"invalid start day 0", ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 0, EndMonth: 3, EndDay: 12}, true},
+		{"invalid day 32", ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 32, EndMonth: 3, EndDay: 12}, true},
+		{"invalid Feb 30", ActiveYearlyTimeWindow{StartMonth: 2, StartDay: 30, EndMonth: 3, EndDay: 1}, true},
+		{"invalid Feb 31", ActiveYearlyTimeWindow{StartMonth: 2, StartDay: 31, EndMonth: 3, EndDay: 1}, true},
+		{"invalid Apr 31", ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 1, EndMonth: 4, EndDay: 31}, true},
+		{"invalid Jun 31", ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 1, EndMonth: 6, EndDay: 31}, true},
+		{"invalid Sep 31", ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 1, EndMonth: 9, EndDay: 31}, true},
+		{"invalid Nov 31", ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 1, EndMonth: 11, EndDay: 31}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.window.Validate()
+			if tt.expectedErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestScheduleDef_Validate_ActiveYearlyTimeWindow(t *testing.T) {
+	base := scheduleIntervalDef
+
+	validWindow := base
+	validWindow.ActiveYearlyTimeWindow = &ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 5, EndMonth: 3, EndDay: 12}
+
+	invalidWindow := base
+	invalidWindow.ActiveYearlyTimeWindow = &ActiveYearlyTimeWindow{StartMonth: 2, StartDay: 30, EndMonth: 3, EndDay: 1}
+
+	nilWindow := base
+	nilWindow.ActiveYearlyTimeWindow = nil
+
+	tests := []struct {
+		name        string
+		def         ScheduleDef
+		expectedErr bool
+	}{
+		{"nil window is valid", nilWindow, false},
+		{"valid window", validWindow, false},
+		{"invalid window (Feb 30) rejected", invalidWindow, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.def.Validate()
+			if tt.expectedErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestScheduleDefModel_ActiveYearlyTimeWindow_RoundTrip(t *testing.T) {
+	dto := scheduleIntervalDef
+	dto.ActiveYearlyTimeWindow = &ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 5, EndMonth: 3, EndDay: 12}
+
+	model := ToScheduleDefModel(dto)
+	base := model.GetBaseScheduleDef()
+	assert.NotNil(t, base.ActiveYearlyTimeWindow)
+	assert.Equal(t, &models.ActiveYearlyTimeWindow{StartMonth: 1, StartDay: 5, EndMonth: 3, EndDay: 12}, base.ActiveYearlyTimeWindow)
+
+	roundTrip := FromScheduleDefModelToDTO(model)
+	assert.Equal(t, dto, roundTrip, "ActiveYearlyTimeWindow did not survive DTO -> model -> DTO round trip")
+}
