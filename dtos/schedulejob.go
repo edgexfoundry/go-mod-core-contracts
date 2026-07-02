@@ -64,9 +64,20 @@ type ScheduleDef struct {
 	Type           string `json:"type" validate:"oneof='INTERVAL' 'CRON'"`
 	StartTimestamp int64  `json:"startTimestamp,omitempty"`
 	EndTimestamp   int64  `json:"endTimestamp,omitempty"`
+	// ActiveYearlyTimeWindow is an optional recurring within-year active period; nil means no window constraint.
+	ActiveYearlyTimeWindow *ActiveYearlyTimeWindow `json:"activeYearlyTimeWindow,omitempty" validate:"omitempty"`
 
 	IntervalScheduleDef `json:",inline" validate:"-"`
 	CronScheduleDef     `json:",inline" validate:"-"`
+}
+
+// ActiveYearlyTimeWindow is the DTO for a recurring within-year active period. See models.ActiveYearlyTimeWindow
+// for the semantics; Validate enforces the month/day range and calendar-date rules.
+type ActiveYearlyTimeWindow struct {
+	StartMonth int `json:"startMonth" validate:"min=1,max=12"`
+	StartDay   int `json:"startDay" validate:"min=1,max=31"`
+	EndMonth   int `json:"endMonth" validate:"min=1,max=12"`
+	EndDay     int `json:"endDay" validate:"min=1,max=31"`
 }
 
 // Validate satisfies the Validator interface
@@ -93,6 +104,48 @@ func (s *ScheduleDef) Validate() error {
 		if s.EndTimestamp < s.StartTimestamp {
 			return errors.NewCommonEdgeX(errors.KindContractInvalid, "endTimestamp must be greater than startTimestamp", nil)
 		}
+	}
+
+	if s.ActiveYearlyTimeWindow != nil {
+		if err = s.ActiveYearlyTimeWindow.Validate(); err != nil {
+			return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid ScheduleDef.ActiveYearlyTimeWindow.", err)
+		}
+	}
+
+	return nil
+}
+
+// maxDayOfMonth returns the largest valid day for the given month, ignoring the year. February allows 29
+// (leap day) because the window pattern is year-agnostic and may recur in a leap year.
+func maxDayOfMonth(month int) int {
+	switch month {
+	case 1, 3, 5, 7, 8, 10, 12:
+		return 31
+	case 4, 6, 9, 11:
+		return 30
+	case 2:
+		return 29
+	default:
+		return 0
+	}
+}
+
+// Validate satisfies the Validator interface. It enforces the month/day range bounds via struct tags and the
+// calendar-date rule (a (month, day) pair must be a real date; Feb 29 is allowed) here. start == end is a valid
+// single-day window and start > end is a year-crossing window, so neither ordering is rejected.
+func (w *ActiveYearlyTimeWindow) Validate() error {
+	err := common.Validate(w)
+	if err != nil {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid, "invalid ActiveYearlyTimeWindow.", err)
+	}
+
+	if w.StartDay > maxDayOfMonth(w.StartMonth) {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid,
+			fmt.Sprintf("invalid start date %d/%d: day out of range for month", w.StartMonth, w.StartDay), nil)
+	}
+	if w.EndDay > maxDayOfMonth(w.EndMonth) {
+		return errors.NewCommonEdgeX(errors.KindContractInvalid,
+			fmt.Sprintf("invalid end date %d/%d: day out of range for month", w.EndMonth, w.EndDay), nil)
 	}
 
 	return nil
@@ -243,18 +296,20 @@ func ToScheduleDefModel(dto ScheduleDef) models.ScheduleDef {
 	case common.DefInterval:
 		model = models.IntervalScheduleDef{
 			BaseScheduleDef: models.BaseScheduleDef{
-				Type:           common.DefInterval,
-				StartTimestamp: dto.StartTimestamp,
-				EndTimestamp:   dto.EndTimestamp,
+				Type:                   common.DefInterval,
+				StartTimestamp:         dto.StartTimestamp,
+				EndTimestamp:           dto.EndTimestamp,
+				ActiveYearlyTimeWindow: toActiveYearlyTimeWindowModel(dto.ActiveYearlyTimeWindow),
 			},
 			Interval: dto.Interval,
 		}
 	case common.DefCron:
 		model = models.CronScheduleDef{
 			BaseScheduleDef: models.BaseScheduleDef{
-				Type:           common.DefCron,
-				StartTimestamp: dto.StartTimestamp,
-				EndTimestamp:   dto.EndTimestamp,
+				Type:                   common.DefCron,
+				StartTimestamp:         dto.StartTimestamp,
+				EndTimestamp:           dto.EndTimestamp,
+				ActiveYearlyTimeWindow: toActiveYearlyTimeWindowModel(dto.ActiveYearlyTimeWindow),
 			},
 			Crontab: dto.Crontab,
 		}
@@ -270,22 +325,48 @@ func FromScheduleDefModelToDTO(model models.ScheduleDef) ScheduleDef {
 	case common.DefInterval:
 		durationModel := model.(models.IntervalScheduleDef)
 		dto = ScheduleDef{
-			Type:                common.DefInterval,
-			StartTimestamp:      durationModel.StartTimestamp,
-			EndTimestamp:        durationModel.EndTimestamp,
-			IntervalScheduleDef: IntervalScheduleDef{Interval: durationModel.Interval},
+			Type:                   common.DefInterval,
+			StartTimestamp:         durationModel.StartTimestamp,
+			EndTimestamp:           durationModel.EndTimestamp,
+			ActiveYearlyTimeWindow: fromActiveYearlyTimeWindowModel(durationModel.ActiveYearlyTimeWindow),
+			IntervalScheduleDef:    IntervalScheduleDef{Interval: durationModel.Interval},
 		}
 	case common.DefCron:
 		cronModel := model.(models.CronScheduleDef)
 		dto = ScheduleDef{
-			Type:            common.DefCron,
-			StartTimestamp:  cronModel.StartTimestamp,
-			EndTimestamp:    cronModel.EndTimestamp,
-			CronScheduleDef: CronScheduleDef{Crontab: cronModel.Crontab},
+			Type:                   common.DefCron,
+			StartTimestamp:         cronModel.StartTimestamp,
+			EndTimestamp:           cronModel.EndTimestamp,
+			ActiveYearlyTimeWindow: fromActiveYearlyTimeWindowModel(cronModel.ActiveYearlyTimeWindow),
+			CronScheduleDef:        CronScheduleDef{Crontab: cronModel.Crontab},
 		}
 	}
 
 	return dto
+}
+
+func toActiveYearlyTimeWindowModel(dto *ActiveYearlyTimeWindow) *models.ActiveYearlyTimeWindow {
+	if dto == nil {
+		return nil
+	}
+	return &models.ActiveYearlyTimeWindow{
+		StartMonth: dto.StartMonth,
+		StartDay:   dto.StartDay,
+		EndMonth:   dto.EndMonth,
+		EndDay:     dto.EndDay,
+	}
+}
+
+func fromActiveYearlyTimeWindowModel(model *models.ActiveYearlyTimeWindow) *ActiveYearlyTimeWindow {
+	if model == nil {
+		return nil
+	}
+	return &ActiveYearlyTimeWindow{
+		StartMonth: model.StartMonth,
+		StartDay:   model.StartDay,
+		EndMonth:   model.EndMonth,
+		EndDay:     model.EndDay,
+	}
 }
 
 func ToScheduleActionModel(dto ScheduleAction) models.ScheduleAction {
