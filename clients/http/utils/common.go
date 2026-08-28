@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020-2023 IOTech Ltd
+// Copyright (C) 2020-2026 IOTech Ltd
 // Copyright (C) 2023 Intel Corporation
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -85,7 +85,7 @@ func CreateRequest(ctx context.Context, httpMethod string, baseUrl string, reque
 	if requestParams != nil {
 		u.RawQuery = requestParams.Encode()
 	}
-	req, err := http.NewRequest(httpMethod, u.String(), nil)
+	req, err := http.NewRequestWithContext(ctx, httpMethod, u.String(), nil)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
@@ -111,7 +111,7 @@ func CreateRequestWithRawDataAndParams(ctx context.Context, httpMethod string, b
 		content = common.ContentTypeJSON
 	}
 
-	req, err := http.NewRequest(httpMethod, u.String(), bytes.NewReader(jsonEncodedData))
+	req, err := http.NewRequestWithContext(ctx, httpMethod, u.String(), bytes.NewReader(jsonEncodedData))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
@@ -139,7 +139,7 @@ func CreateRequestWithRawData(ctx context.Context, httpMethod string, baseUrl st
 		content = common.ContentTypeJSON
 	}
 
-	req, err := http.NewRequest(httpMethod, u.String(), bytes.NewReader(jsonEncodedData))
+	req, err := http.NewRequestWithContext(ctx, httpMethod, u.String(), bytes.NewReader(jsonEncodedData))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
@@ -173,7 +173,7 @@ func CreateRequestWithEncodedData(ctx context.Context, httpMethod string, baseUr
 		content = FromContext(ctx, common.ContentType)
 	}
 
-	req, err := http.NewRequest(httpMethod, u.String(), bytes.NewReader(data))
+	req, err := http.NewRequestWithContext(ctx, httpMethod, u.String(), bytes.NewReader(data))
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
@@ -209,7 +209,7 @@ func CreateRequestFromFilePath(ctx context.Context, httpMethod string, baseUrl s
 		return nil, errors.NewCommonEdgeX(errors.KindIOError, "fail to close multipart writer", err)
 	}
 
-	req, err := http.NewRequest(httpMethod, u.String(), body)
+	req, err := http.NewRequestWithContext(ctx, httpMethod, u.String(), body)
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServerError, "failed to create a http request", err)
 	}
