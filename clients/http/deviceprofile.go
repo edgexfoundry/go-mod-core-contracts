@@ -127,13 +127,22 @@ func (client *DeviceProfileClient) DeleteByName(ctx context.Context, name string
 
 // DeviceProfileByName queries the device profile by name
 func (client *DeviceProfileClient) DeviceProfileByName(ctx context.Context, name string) (res responses.DeviceProfileResponse, edgexError errors.EdgeX) {
+	return client.DeviceProfileByNameWithQueryParams(ctx, name, nil)
+}
+
+// DeviceProfileByNameWithQueryParams queries the device profile by name with query parameters
+func (client *DeviceProfileClient) DeviceProfileByNameWithQueryParams(ctx context.Context, name string, queryParams map[string]string) (res responses.DeviceProfileResponse, edgexError errors.EdgeX) {
+	requestParams := url.Values{}
+	for k, v := range queryParams {
+		requestParams.Set(k, v)
+	}
 	requestPath := common.NewPathBuilder().EnableNameFieldEscape(client.enableNameFieldEscape).
 		SetPath(common.ApiDeviceProfileRoute).SetPath(common.Name).SetNameFieldPath(name).BuildPath()
 	baseUrl, err := clients.GetBaseUrl(client.baseUrlFunc)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}
-	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, nil, client.authInjector)
+	err = utils.GetRequest(ctx, &res, baseUrl, requestPath, requestParams, client.authInjector)
 	if err != nil {
 		return res, errors.NewCommonEdgeXWrapper(err)
 	}

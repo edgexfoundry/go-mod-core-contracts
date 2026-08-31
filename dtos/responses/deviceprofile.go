@@ -36,6 +36,19 @@ func NewMultiDeviceProfilesResponse(requestId string, message string, statusCode
 	}
 }
 
+// DeviceProfileBasicInfoResponse defines the Response Content for GET DeviceProfileBasicInfo DTOs.
+type DeviceProfileBasicInfoResponse struct {
+	common.BaseResponse `json:",inline"`
+	Profile             dtos.DeviceProfileBasicInfo `json:"profile"`
+}
+
+func NewDeviceProfileBasicInfoResponse(requestId string, message string, statusCode int, basicInfo dtos.DeviceProfileBasicInfo) DeviceProfileBasicInfoResponse {
+	return DeviceProfileBasicInfoResponse{
+		BaseResponse: common.NewBaseResponse(requestId, message, statusCode),
+		Profile:      basicInfo,
+	}
+}
+
 // MultiDeviceProfileBasicInfoResponse defines the Response Content for GET multiple DeviceProfileBasicInfo DTOs.
 type MultiDeviceProfileBasicInfoResponse struct {
 	common.BaseWithTotalCountResponse `json:",inline"`

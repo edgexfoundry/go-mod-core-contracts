@@ -204,6 +204,52 @@ func TestQueryDeviceProfileByName(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestQueryDeviceProfileByNameWithQueryParams(t *testing.T) {
+	testName := "testName"
+	urlPath := path.Join(common.ApiDeviceProfileRoute, common.Name, testName)
+
+	// newTestServer ignores the query string, so capture it here to prove the params are actually sent
+	var rawQuery string
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		rawQuery = r.URL.RawQuery
+		if r.Method != http.MethodGet || r.URL.EscapedPath() != urlPath {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		b, _ := json.Marshal(responses.DeviceProfileResponse{})
+		_, _ = w.Write(b)
+	}))
+	defer ts.Close()
+	client := NewDeviceProfileClient(ts.URL, NewNullAuthenticationInjector(), false)
+
+	tests := []struct {
+		name             string
+		queryParams      map[string]string
+		expectedRawQuery string
+	}{
+		{"existence only", map[string]string{common.ExistenceOnly: common.ValueTrue}, "existenceOnly=true"},
+		{"basic info only", map[string]string{common.BasicInfoOnly: common.ValueTrue}, "basicInfoOnly=true"},
+		{"no params", nil, ""},
+	}
+	for _, testCase := range tests {
+		t.Run(testCase.name, func(t *testing.T) {
+			rawQuery = ""
+
+			res, err := client.DeviceProfileByNameWithQueryParams(context.Background(), testName, testCase.queryParams)
+
+			require.NoError(t, err)
+			assert.IsType(t, responses.DeviceProfileResponse{}, res)
+			assert.Equal(t, testCase.expectedRawQuery, rawQuery)
+		})
+	}
+
+	// the legacy method must stay byte-identical on the wire
+	rawQuery = ""
+	_, err := client.DeviceProfileByName(context.Background(), testName)
+	require.NoError(t, err)
+	assert.Empty(t, rawQuery)
+}
+
 func TestQueryAllDeviceProfiles(t *testing.T) {
 	ts := newTestServer(http.MethodGet, common.ApiAllDeviceProfileRoute, responses.MultiDeviceProfilesResponse{})
 	defer ts.Close()
