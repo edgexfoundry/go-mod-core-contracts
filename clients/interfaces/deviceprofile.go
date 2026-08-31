@@ -28,6 +28,8 @@ type DeviceProfileClient interface {
 	DeleteByName(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX)
 	// DeviceProfileByName queries profile by name
 	DeviceProfileByName(ctx context.Context, name string) (responses.DeviceProfileResponse, errors.EdgeX)
+	// DeviceProfileByNameWithQueryParams queries profile by name with query parameters
+	DeviceProfileByNameWithQueryParams(ctx context.Context, name string, queryParams map[string]string) (responses.DeviceProfileResponse, errors.EdgeX)
 	// AllDeviceProfiles queries all profiles
 	AllDeviceProfiles(ctx context.Context, labels []string, offset int, limit int) (responses.MultiDeviceProfilesResponse, errors.EdgeX)
 	// AllDeviceProfileBasicInfos queries all profile basic infos

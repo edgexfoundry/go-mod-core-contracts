@@ -213,6 +213,8 @@ const (
 	Plaintext     = "plaintext"      //query string to specify if the response will return the stored plain text value of the key(s) without any encoding
 	Deregistered  = "deregistered"   //query string to specify if the response will return the registries of deregistered services
 	AggregateFunc = "aggregateFunc"  //query string to specify which SQL aggregate function to apply when calculating the reading value
+	BasicInfoOnly = "basicInfoOnly"  //query string to specify if the response returns only basic info of the requested entity
+	ExistenceOnly = "existenceOnly"  //query string to specify if the response returns the existence of the requested entity
 )
 
 // Constants related to the default value of query strings in the v3 service APIs
