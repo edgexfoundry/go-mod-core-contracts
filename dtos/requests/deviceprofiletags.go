@@ -54,7 +54,8 @@ func (dt *DeviceProfileTagsRequest) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// ReplaceDeviceProfileModelTagsWithDTO replace existing DeviceProfile's device resources/commands tags fields with DTO patch
+// ReplaceDeviceProfileModelTagsWithDTO replaces existing DeviceProfile's device resources/commands tags fields with the DTO patch.
+// A tag whose value is null is deleted rather than set (see mergeTags).
 func ReplaceDeviceProfileModelTagsWithDTO(dp *models.DeviceProfile, patch dtos.UpdateDeviceProfileTags) {
 	// Convert UpdateTags list to maps for fast lookup
 	resourceUpdate := convertUpdateTagsToMap(patch.DeviceResources)
@@ -86,11 +87,17 @@ func convertUpdateTagsToMap(list []dtos.UpdateTags) map[string]map[string]any {
 	return tagsMap
 }
 
+// mergeTags merges src into dest, where a nil value deletes the key from dest.
 func mergeTags(dest, src map[string]any) map[string]any {
 	if dest == nil {
 		dest = make(map[string]any)
 	}
 	for key, value := range src {
+		if value == nil {
+			delete(dest, key)
+			continue
+		}
+
 		dv, destOk := dest[key].(map[string]any)
 		sv, srcOk := value.(map[string]any)
 		if destOk && srcOk {
