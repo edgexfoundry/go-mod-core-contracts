@@ -24,11 +24,17 @@ type DeviceClient interface {
 	Update(ctx context.Context, reqs []requests.UpdateDeviceRequest) ([]common.BaseResponse, errors.EdgeX)
 	// UpdateWithQueryParams updates devices with query parameters.
 	UpdateWithQueryParams(ctx context.Context, reqs []requests.UpdateDeviceRequest, queryParams map[string]string) ([]common.BaseResponse, errors.EdgeX)
+	// UpdateDeviceProperties merges the given properties into an existing device.
+	// A property whose value is nil is deleted rather than set.
+	UpdateDeviceProperties(ctx context.Context, deviceName string, request requests.DevicePropertiesRequest) (common.BaseResponse, errors.EdgeX)
 	// AllDevices returns all devices. Devices can also be filtered by labels.
 	// The result can be limited in a certain range by specifying the offset and limit parameters.
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
 	AllDevices(ctx context.Context, labels []string, offset int, limit int) (responses.MultiDevicesResponse, errors.EdgeX)
+	// AllDevicesWithQueryParams returns all devices with the specified query parameters, which are
+	// applied on top of the labels, offset and limit ones.
+	AllDevicesWithQueryParams(ctx context.Context, labels []string, offset int, limit int, queryParams map[string]string) (responses.MultiDevicesResponse, errors.EdgeX)
 	// AllDevicesWithChildren returns all devices who have parent, grandparent, etc. of the
 	// given device name. Devices can also be filtered by labels.
 	// Device tree is descended at most maxLevels. If maxLevels is 0, there is no limit.
@@ -36,6 +42,9 @@ type DeviceClient interface {
 	// offset: The number of items to skip before starting to collect the result set. Default is 0.
 	// limit: The number of items to return. Specify -1 will return all remaining items after offset. The maximum will be the MaxResultCount as defined in the configuration of service. Default is 20.
 	AllDevicesWithChildren(ctx context.Context, parent string, maxLevels uint, labels []string, offset int, limit int) (responses.MultiDevicesResponse, errors.EdgeX)
+	// AllDevicesWithChildrenWithQueryParams returns the device tree with the specified query
+	// parameters, which are applied on top of the ones AllDevicesWithChildren already sets.
+	AllDevicesWithChildrenWithQueryParams(ctx context.Context, parent string, maxLevels uint, labels []string, offset int, limit int, queryParams map[string]string) (responses.MultiDevicesResponse, errors.EdgeX)
 	// DeviceNameExists checks whether the device exists.
 	DeviceNameExists(ctx context.Context, name string) (common.BaseResponse, errors.EdgeX)
 	// DeviceByName returns a device by device name.

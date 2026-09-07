@@ -55,13 +55,14 @@ const (
 	ApiAllDeviceServiceRoute    = ApiDeviceServiceRoute + "/" + All
 	ApiDeviceServiceByNameRoute = ApiDeviceServiceRoute + "/" + Name + "/:" + Name
 
-	ApiDeviceRoute                = ApiBase + "/device"
-	ApiAllDeviceRoute             = ApiDeviceRoute + "/" + All
-	ApiDeviceNameExistsRoute      = ApiDeviceRoute + "/" + Check + "/" + Name + "/:" + Name
-	ApiDeviceByNameRoute          = ApiDeviceRoute + "/" + Name + "/:" + Name
-	ApiDeviceByProfileNameRoute   = ApiDeviceRoute + "/" + Profile + "/" + Name + "/:" + Name
-	ApiDeviceByServiceNameRoute   = ApiDeviceRoute + "/" + Service + "/" + Name + "/:" + Name
-	ApiDeviceNameCommandNameRoute = ApiDeviceByNameRoute + "/:" + Command
+	ApiDeviceRoute                 = ApiBase + "/device"
+	ApiAllDeviceRoute              = ApiDeviceRoute + "/" + All
+	ApiDeviceNameExistsRoute       = ApiDeviceRoute + "/" + Check + "/" + Name + "/:" + Name
+	ApiDeviceByNameRoute           = ApiDeviceRoute + "/" + Name + "/:" + Name
+	ApiDevicePropertiesByNameRoute = ApiDeviceByNameRoute + "/" + Properties
+	ApiDeviceByProfileNameRoute    = ApiDeviceRoute + "/" + Profile + "/" + Name + "/:" + Name
+	ApiDeviceByServiceNameRoute    = ApiDeviceRoute + "/" + Service + "/" + Name + "/:" + Name
+	ApiDeviceNameCommandNameRoute  = ApiDeviceByNameRoute + "/:" + Command
 
 	ApiProvisionWatcherRoute              = ApiBase + "/provisionwatcher"
 	ApiAllProvisionWatcherRoute           = ApiProvisionWatcherRoute + "/" + All
@@ -170,6 +171,7 @@ const (
 	ResourceNames = "resourceNames"
 	CommandName   = "commandName"
 	Tags          = "tags"
+	Properties    = "properties"
 	Start         = "start"
 	End           = "end"
 	Age           = "age"

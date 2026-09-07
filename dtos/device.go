@@ -24,7 +24,7 @@ type Device struct {
 	AutoEvents     []AutoEvent                   `json:"autoEvents,omitempty" yaml:"autoEvents,omitempty" validate:"dive"`
 	Protocols      map[string]ProtocolProperties `json:"protocols" yaml:"protocols" validate:"required"`
 	Tags           map[string]any                `json:"tags,omitempty" yaml:"tags,omitempty"`
-	Properties     map[string]any                `json:"properties" yaml:"properties"`
+	Properties     map[string]any                `json:"properties,omitempty" yaml:"properties,omitempty"`
 }
 
 type UpdateDevice struct {
