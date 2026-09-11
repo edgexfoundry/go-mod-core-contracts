@@ -103,13 +103,34 @@ func (dc DeviceClient) UpdateWithQueryParams(ctx context.Context, reqs []request
 	return res, nil
 }
 
+func (dc DeviceClient) UpdateDeviceProperties(ctx context.Context, deviceName string, request requests.DevicePropertiesRequest) (res dtoCommon.BaseResponse, err errors.EdgeX) {
+	requestPath := common.NewPathBuilder().EnableNameFieldEscape(dc.enableNameFieldEscape).
+		SetPath(common.ApiDeviceRoute).SetPath(common.Name).SetNameFieldPath(deviceName).SetPath(common.Properties).BuildPath()
+	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
+	if goErr != nil {
+		return res, errors.NewCommonEdgeXWrapper(goErr)
+	}
+	err = utils.PatchRequest(ctx, &res, baseUrl, requestPath, nil, request, dc.authInjector)
+	if err != nil {
+		return res, errors.NewCommonEdgeXWrapper(err)
+	}
+	return res, nil
+}
+
 func (dc DeviceClient) AllDevices(ctx context.Context, labels []string, offset int, limit int) (res responses.MultiDevicesResponse, err errors.EdgeX) {
+	return dc.AllDevicesWithQueryParams(ctx, labels, offset, limit, nil)
+}
+
+func (dc DeviceClient) AllDevicesWithQueryParams(ctx context.Context, labels []string, offset int, limit int, queryParams map[string]string) (res responses.MultiDevicesResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
 	if len(labels) > 0 {
 		requestParams.Set(common.Labels, strings.Join(labels, common.CommaSeparator))
 	}
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	for k, v := range queryParams {
+		requestParams.Set(k, v)
+	}
 	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
 	if goErr != nil {
 		return res, errors.NewCommonEdgeXWrapper(goErr)
@@ -122,6 +143,10 @@ func (dc DeviceClient) AllDevices(ctx context.Context, labels []string, offset i
 }
 
 func (dc DeviceClient) AllDevicesWithChildren(ctx context.Context, parent string, maxLevels uint, labels []string, offset int, limit int) (res responses.MultiDevicesResponse, err errors.EdgeX) {
+	return dc.AllDevicesWithChildrenWithQueryParams(ctx, parent, maxLevels, labels, offset, limit, nil)
+}
+
+func (dc DeviceClient) AllDevicesWithChildrenWithQueryParams(ctx context.Context, parent string, maxLevels uint, labels []string, offset int, limit int, queryParams map[string]string) (res responses.MultiDevicesResponse, err errors.EdgeX) {
 	requestParams := url.Values{}
 	if len(labels) > 0 {
 		requestParams.Set(common.Labels, strings.Join(labels, common.CommaSeparator))
@@ -130,6 +155,9 @@ func (dc DeviceClient) AllDevicesWithChildren(ctx context.Context, parent string
 	requestParams.Set(common.MaxLevels, strconv.FormatUint(uint64(maxLevels), 10))
 	requestParams.Set(common.Offset, strconv.Itoa(offset))
 	requestParams.Set(common.Limit, strconv.Itoa(limit))
+	for k, v := range queryParams {
+		requestParams.Set(k, v)
+	}
 	baseUrl, goErr := clients.GetBaseUrl(dc.baseUrlFunc)
 	if goErr != nil {
 		return res, errors.NewCommonEdgeXWrapper(goErr)

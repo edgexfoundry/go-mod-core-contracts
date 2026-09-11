@@ -200,6 +200,10 @@ func TestMergeTags(t *testing.T) {
 	nestedDeleteSrc := map[string]any{testTagsKey: map[string]any{testTagsKey: nil}}
 	expectedNestedDeleteMap := map[string]any{testTagsKey: map[string]any{testNewTagsKey: testNewTagsValue}}
 
+	nestedNewKeyDest := map[string]any{testTagsKey: testTagsValue}
+	nestedNewKeySrc := map[string]any{testNewTagsKey: map[string]any{"keep": "v", "drop": nil}}
+	expectedNestedNewKeyMap := map[string]any{testTagsKey: testTagsValue, testNewTagsKey: map[string]any{"keep": "v"}}
+
 	deleteNoExistKeyDest := map[string]any{testTagsKey: testTagsValue}
 	deleteNoExistKeySrc := map[string]any{testNewTagsKey: nil}
 	expectedDeleteNoExistKeyMap := map[string]any{testTagsKey: testTagsValue}
@@ -223,6 +227,7 @@ func TestMergeTags(t *testing.T) {
 		{"merge tags with nested struct", nestedDest, nestedSrc, expectedNestedMergeMap},
 		{"merge tags with nil value deletes the key", deleteDest, deleteSrc, expectedDeleteMap},
 		{"merge tags with nil value deletes the nested key", nestedDeleteDest, nestedDeleteSrc, expectedNestedDeleteMap},
+		{"merge tags with nil value in a nested map on a new key", nestedNewKeyDest, nestedNewKeySrc, expectedNestedNewKeyMap},
 		{"merge tags with nil value on non-existing key", deleteNoExistKeyDest, deleteNoExistKeySrc, expectedDeleteNoExistKeyMap},
 		{"merge tags with nil value mixed with an update", deleteAndUpdateDest, deleteAndUpdateSrc, expectedDeleteAndUpdateMap},
 		{"merge tags with nil value and nil dest", nil, map[string]any{testTagsKey: nil}, map[string]any{}},

@@ -98,9 +98,8 @@ func mergeTags(dest, src map[string]any) map[string]any {
 			continue
 		}
 
-		dv, destOk := dest[key].(map[string]any)
-		sv, srcOk := value.(map[string]any)
-		if destOk && srcOk {
+		if sv, srcOk := value.(map[string]any); srcOk {
+			dv, _ := dest[key].(map[string]any)
 			dest[key] = mergeTags(dv, sv)
 			continue
 		}
