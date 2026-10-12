@@ -287,7 +287,7 @@ func ValidateIntervalDatetime(fl validator.FieldLevel) bool {
 }
 
 func isNilPointer(value reflect.Value) bool {
-	return value.Kind() == reflect.Ptr && value.IsNil()
+	return value.Kind() == reflect.Pointer && value.IsNil()
 }
 
 // ValidateDtoNoReservedChars used to check if DTO's name pointer value excludes reserved characters= / "/" / "#" / "." / "*" / "+" / "$"

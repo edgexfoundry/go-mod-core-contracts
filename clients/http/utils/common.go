@@ -59,15 +59,15 @@ func getBody(resp *http.Response) ([]byte, errors.EdgeX) {
 
 // Helper method to make the request and return the response
 func makeRequest(req *http.Request, authInjector interfaces.AuthenticationInjector) (*http.Response, errors.EdgeX) {
+	client := &http.Client{}
 	if authInjector != nil {
 		if err := authInjector.AddAuthenticationData(req); err != nil {
 			return nil, errors.NewCommonEdgeXWrapper(err)
 		}
+		client.Transport = authInjector.RoundTripper()
 	}
 
-	client := &http.Client{Transport: authInjector.RoundTripper()}
-
-	resp, err := client.Do(req)
+	resp, err := client.Do(req) // nolint:gosec // request URL comes from the caller's service config by design
 	if err != nil {
 		return nil, errors.NewCommonEdgeX(errors.KindServiceUnavailable, "failed to send a http request", err)
 	}
