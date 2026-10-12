@@ -8,6 +8,7 @@ package utils
 import (
 	"context"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 
@@ -115,4 +116,15 @@ func TestCreateRequestFromFilePath(t *testing.T) {
 			assert.NoError(t, err)
 		})
 	}
+}
+
+func TestMakeRequestWithNilAuthInjector(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {}))
+	defer ts.Close()
+	req, err := http.NewRequest(http.MethodGet, ts.URL, nil)
+	assert.NoError(t, err)
+
+	resp, edgexErr := makeRequest(req, nil)
+	assert.NoError(t, edgexErr)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
