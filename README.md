@@ -10,6 +10,15 @@ The default encoding for the models is JSON, although in at least one case --
 [DeviceProfile](https://github.com/edgexfoundry/go-mod-core-contracts/blob/master/models/deviceprofile.go) --
 YAML encoding is also supported since a device profile is defined as a YAML document.
 
+### Device identity in readings
+
+`dtos.BaseReading.DeviceID` and `models.BaseReading.DeviceID` carry the immutable
+device ID separately from the reading's own `Id`. JSON and CBOR encode it as the
+optional top-level `deviceID` property. An empty ID is omitted, and readings from
+older producers without that property remain supported. DTO/model conversions
+preserve the ID for each reading type. Device SDKs populate it from their device
+cache when constructing readings.
+
 ### Installation ###
 * Make sure you're using at least Go 1.27 and have modules enabled, i.e. have an initialized  go.mod file 
 * If your code is in your GOPATH then make sure ```GO111MODULE=on``` is set

@@ -25,6 +25,7 @@ import (
 
 type BaseReading struct {
 	Id             string         `json:"id,omitempty"`
+	DeviceID       string         `json:"deviceID,omitempty" xml:"DeviceID,omitempty"`
 	Origin         int64          `json:"origin" validate:"required"`
 	DeviceName     string         `json:"deviceName" validate:"required,edgex-dto-none-empty-string"`
 	ResourceName   string         `json:"resourceName" validate:"required,edgex-dto-none-empty-string"`
@@ -369,6 +370,7 @@ func ToReadingModel(r BaseReading) models.Reading {
 	var readingModel models.Reading
 	br := models.BaseReading{
 		Id:           r.Id,
+		DeviceID:     r.DeviceID,
 		Origin:       r.Origin,
 		DeviceName:   r.DeviceName,
 		ResourceName: r.ResourceName,
@@ -407,6 +409,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	case models.BinaryReading:
 		baseReading = BaseReading{
 			Id:            r.Id,
+			DeviceID:      r.DeviceID,
 			Origin:        r.Origin,
 			DeviceName:    r.DeviceName,
 			ResourceName:  r.ResourceName,
@@ -419,6 +422,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	case models.ObjectReading:
 		baseReading = BaseReading{
 			Id:            r.Id,
+			DeviceID:      r.DeviceID,
 			Origin:        r.Origin,
 			DeviceName:    r.DeviceName,
 			ResourceName:  r.ResourceName,
@@ -431,6 +435,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	case models.SimpleReading:
 		baseReading = BaseReading{
 			Id:            r.Id,
+			DeviceID:      r.DeviceID,
 			Origin:        r.Origin,
 			DeviceName:    r.DeviceName,
 			ResourceName:  r.ResourceName,
@@ -443,6 +448,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	case models.NullReading:
 		baseReading = BaseReading{
 			Id:           r.Id,
+			DeviceID:     r.DeviceID,
 			Origin:       r.Origin,
 			DeviceName:   r.DeviceName,
 			ResourceName: r.ResourceName,
@@ -455,6 +461,7 @@ func FromReadingModelToDTO(reading models.Reading) BaseReading {
 	case models.NumericReading:
 		baseReading = BaseReading{
 			Id:             r.Id,
+			DeviceID:       r.DeviceID,
 			Origin:         r.Origin,
 			DeviceName:     r.DeviceName,
 			ResourceName:   r.ResourceName,
@@ -593,6 +600,7 @@ func (b BaseReading) MarshalCBOR() ([]byte, error) {
 func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) {
 	type reading struct {
 		Id           string `json:"id,omitempty" cbor:"id,omitempty"`
+		DeviceID     string `json:"deviceID,omitempty" cbor:"deviceID,omitempty"`
 		Origin       int64  `json:"origin,omitempty" cbor:"origin,omitempty"`
 		DeviceName   string `json:"deviceName,omitempty" cbor:"deviceName,omitempty"`
 		ResourceName string `json:"resourceName,omitempty" cbor:"resourceName,omitempty"`
@@ -610,6 +618,7 @@ func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) 
 		}{
 			reading: reading{
 				Id:           b.Id,
+				DeviceID:     b.DeviceID,
 				Origin:       b.Origin,
 				DeviceName:   b.DeviceName,
 				ResourceName: b.ResourceName,
@@ -625,6 +634,7 @@ func (b BaseReading) marshal(marshal func(any) ([]byte, error)) ([]byte, error) 
 	}
 	r := reading{
 		Id:           b.Id,
+		DeviceID:     b.DeviceID,
 		Origin:       b.Origin,
 		DeviceName:   b.DeviceName,
 		ResourceName: b.ResourceName,
@@ -714,6 +724,9 @@ func (b *BaseReading) populateFromMap(rawMap map[string]any) error {
 
 	var err error
 	if b.Id, err = popStringValueFromKey(rawMap, keyId); err != nil {
+		return err
+	}
+	if b.DeviceID, err = popStringValueFromKey(rawMap, keyDeviceID); err != nil {
 		return err
 	}
 	if b.DeviceName, err = popStringValueFromKey(rawMap, keyDeviceName); err != nil {
